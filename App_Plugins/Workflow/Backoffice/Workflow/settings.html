@@ -1,0 +1,18 @@
+﻿<div ng-controller="Workflow.Settings.Controller as vm">
+    <h3>Final approval group</h3>
+    <select ng-model="vm.finalApprover" ng-options="g.Name for g in vm.groups" >
+        <option></option>
+    </select>
+    <h3>Fast-track document types</h3>
+    <select ng-model="vm.fastTrack" ng-options="d.alias for d in vm.docTypes">
+        <option></option>
+    </select>
+    <h3>Workflow email</h3>
+    <input type="email" ng-model="vm.settings.Email" />
+    <h3>Base site URL</h3>
+    <input type="text" ng-model="vm.settings.SiteUrl" />
+    <h3>Edit site URL</h3>
+    <input type="text" ng-model="vm.settings.EditUrl" />
+    <button ng-click="vm.save()">Save</button>
+</div>
+
