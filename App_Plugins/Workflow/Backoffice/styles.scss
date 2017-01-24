@@ -1,6 +1,6 @@
 ﻿.workflow {
 
-    button, a.action-Edit {
+    button:not([class*="btn-"]), a.action-Edit {
         display: inline-block;
         width: 26px;
         height: 22px;

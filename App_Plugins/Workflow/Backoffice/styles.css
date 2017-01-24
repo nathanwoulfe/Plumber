@@ -1,4 +1,4 @@
-﻿.workflow button, .workflow a.action-Edit {
+﻿.workflow button:not([class*="btn-"]), .workflow a.action-Edit {
   display: inline-block;
   width: 26px;
   height: 22px;
@@ -11,7 +11,7 @@
   text-decoration: none;
 }
 
-.workflow button:hover, .workflow a.action-Edit:hover {
+.workflow button:not([class*="btn-"]):hover, .workflow a.action-Edit:hover {
   background: #ddd;
 }
 

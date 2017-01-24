@@ -1,18 +1,31 @@
-﻿<div ng-controller="Workflow.Settings.Controller as vm">
+﻿<div ng-controller="Workflow.Settings.Controller as vm" class="workflow">
     <h3>Final approval group</h3>
-    <select ng-model="vm.finalApprover" ng-options="g.Name for g in vm.groups" >
+    <select ng-model="vm.finalApprover" ng-options="g.Name for g in vm.groups">
         <option></option>
     </select>
-    <h3>Fast-track document types</h3>
-    <select ng-model="vm.fastTrack" ng-options="d.alias for d in vm.docTypes">
-        <option></option>
-    </select>
+    <div class="user-lists span12">
+        <h3>Fast-track document types</h3>
+        <div class="user-list">
+            <h5>All document types</h5>
+            <input type="text" ng-model="addUserFilter" placeholder="Search" />
+            <ul class="user-list">
+                <li ng-repeat="d in vm.notFastTrack track by $index | orderBy: 'd' | filter:{d:addUserFilter}" ng-click="vm.add(d)" title="Add {{ d }} to fast-track">{{ d }}</li>
+            </ul>
+        </div>
+        <div class="user-list">
+            <h5>Fast-track document types</h5>
+            <input type="text" ng-model="removeUserFilter" placeholder="Search" />
+            <ul>
+                <li ng-repeat="d in vm.fastTrack track by $index | orderBy: 'd' | filter:{d:removeUserFilter}" ng-click="vm.remove(d)" title="Remove {{ d }} from fast-tracl">{{ d }}</li>
+            </ul>
+        </div>
+    </div>
     <h3>Workflow email</h3>
     <input type="email" ng-model="vm.settings.Email" />
     <h3>Base site URL</h3>
     <input type="text" ng-model="vm.settings.SiteUrl" />
     <h3>Edit site URL</h3>
     <input type="text" ng-model="vm.settings.EditUrl" />
-    <button ng-click="vm.save()">Save</button>
+    <button class="btn btn-success" ng-click="vm.save()">Save</button>
 </div>
 
