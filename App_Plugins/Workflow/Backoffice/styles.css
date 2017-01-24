@@ -1,4 +1,13 @@
-﻿.workflow button:not([class*="btn-"]), .workflow a.action-Edit {
+﻿.workflow .span6 {
+  float: left;
+  width: 50%;
+}
+
+.workflow hr {
+  clear: both;
+}
+
+.workflow button:not([class*="btn-"]), .workflow a.action-Edit {
   display: inline-block;
   width: 26px;
   height: 22px;

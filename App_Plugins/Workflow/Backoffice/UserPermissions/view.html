@@ -1,26 +1,30 @@
 ﻿<div class="umb-pane workflow" ng-controller="Workflow.UserPermissions.Controller as vm">
     <div class="umb-dialog-body with-footer">
         <div class="umb-pane">
-            <h5>Workflow authors</h5>
-            <select ng-model="vm.selectedAuthorGroup" ng-change="vm.add(1)" ng-options="g.GroupId as g.Name for g in vm.groups">
-                <option style="display:none">--- Select ---</option>
-            </select>
-            <h6>Currently assigned</h6>
-            <ul class="user-list">
-                <li ng-repeat="u in vm.groups | orderBy: 'Name' | filter: vm.hasPermission(1)" ng-click="vm.remove($event, u.GroupId, 1); $event.stopPropagation();" title="Remove author permissions for {{u.Name}}">{{u.Name}}</li>
-            </ul>
-            <h5>Workflow approvers</h5>
-            <select ng-model="vm.selectedApproverGroup" ng-change="vm.add(2)" ng-options="g.GroupId as g.Name for g in vm.groups">
-                <option style="display:none">--- Select ---</option>
-            </select>
-            <h6>Currently assigned</h6>
-            <ul class="user-list">
-                <li ng-repeat="u in vm.groups | orderBy: 'Name' | filter: vm.hasPermission(2)" ng-click="vm.remove($event, u.GroupId, 2); $event.stopPropagation();" title="Remove approver permissions for {{u.Name}}">{{u.Name}}</li>
-            </ul>
+            <div class="span6">
+                <h5>Workflow authors</h5>
+                <select ng-model="vm.selectedAuthorGroup" ng-change="vm.add(1)" ng-options="g.GroupId as g.Name for g in vm.groups">
+                    <option style="display:none">--- Select ---</option>
+                </select>            
+                <h6>Currently assigned</h6>
+                <ul>
+                    <li ng-repeat="u in vm.groups | orderBy: 'Name' | filter: vm.hasPermission(1)" ng-click="vm.remove($event, u.GroupId, 1); $event.stopPropagation();" title="Remove author permissions for {{u.Name}}">{{u.Name}}</li>
+                </ul>
+            </div>
+            <div class="span6">
+                <h5>Workflow approvers</h5>
+                <select ng-model="vm.selectedApproverGroup" ng-change="vm.add(2)" ng-options="g.GroupId as g.Name for g in vm.groups">
+                    <option style="display:none">--- Select ---</option>
+                </select>
+                <h6>Currently assigned</h6>
+                <ul>
+                    <li ng-repeat="u in vm.groups | orderBy: 'Name' | filter: vm.hasPermission(2)" ng-click="vm.remove($event, u.GroupId, 2); $event.stopPropagation();" title="Remove approver permissions for {{u.Name}}">{{u.Name}}</li>
+                </ul>
+            </div>
             <hr />
             <h5>Inherited permissions</h5>
             <p>Workflow configuration is inherited from ancestor nodes unless explicitly set above.</p>
-            <ul class="user-list">
+            <ul>
                 <li ng-repeat="u in vm.inherited | orderBy: 'Name'">{{ u.Permission }}: <a href="/umbraco/#/users/usergroups/edit/{{ u.GroupId }}">{{ u.Name }}</a> (inherited from {{u.NodeName}})</li>
             </ul>
         </div>

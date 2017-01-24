@@ -1,6 +1,9 @@
 ﻿<div class="umb-pane" ng-controller="Workflow.SendToPublish.Controller as vm">
     <div class="umb-dialog-body with-footer">
         <div class="umb-pane">
+            <div ng-show="vm.dirty" class="alert alert-warning">
+                <strong>WARNING!</strong> Page has unsaved changes.
+            </div>
             <h5>Send to publish</h5>
             <div ng-show="vm.active">
                 <p ng-bind="vm.statusMsg"></p>

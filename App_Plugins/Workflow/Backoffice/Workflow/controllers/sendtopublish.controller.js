@@ -13,6 +13,9 @@
                     vm.statusMsg = resp.msg;
                 }
             });
+
+        var formScope = angular.element($('form[name="contentForm"]')).scope();
+        vm.dirty = formScope.contentForm.$dirty;
         
         function ok() {            
             workflowResource.initiateWorkflow(nodeId, vm.comment, true)
