@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C16349CB-04C0-4319-AA8F-14C43548E57D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Workflow</RootNamespace>
+    <AssemblyName>Workflow</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="businesslogic">
+      <HintPath>..\..\UmbracoCms\bin\businesslogic.dll</HintPath>
+    </Reference>
+    <Reference Include="cms">
+      <HintPath>..\..\UmbracoCms\bin\cms.dll</HintPath>
+    </Reference>
+    <Reference Include="Examine">
+      <HintPath>..\..\UmbracoCms\bin\Examine.dll</HintPath>
+    </Reference>
+    <Reference Include="interfaces">
+      <HintPath>..\..\UmbracoCms\bin\interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\UmbracoCms\bin\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\UmbracoCms\bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\UmbracoCms\bin\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\UmbracoCms\bin\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\UmbracoCms\bin\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="umbraco">
+      <HintPath>..\..\UmbracoCms\bin\umbraco.dll</HintPath>
+    </Reference>
+    <Reference Include="Umbraco.Core">
+      <HintPath>..\..\UmbracoCms\bin\Umbraco.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actions\RegisterEvents.cs" />
+    <Compile Include="Actions\UserGroupsTreeController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Actions\UserPermissionsTreeController.cs" />
+    <Compile Include="Api\GroupPermissionsController.cs" />
+    <Compile Include="Api\WorkflowController.cs" />
+    <Compile Include="Api\UserGroupsController.cs" />
+    <Compile Include="Api\WorkflowTasksController.cs" />
+    <Compile Include="Notifications.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Models\SettingsModel.cs" />
+    <Compile Include="Processes\DocumentPublishProcess.cs" />
+    <Compile Include="Helpers.cs" />
+    <Compile Include="Processes\IWorkflowProcess.cs" />
+    <Compile Include="Processes\DocumentUnpublishProcess.cs" />
+    <Compile Include="Models\UserGroupsModel.cs" />
+    <Compile Include="Models\User2UserGroupPoco.cs" />
+    <Compile Include="Models\UserGroupPermissionsPoco.cs" />
+    <Compile Include="Models\UserGroupPoco.cs" />
+    <Compile Include="Models\WorkflowInstancePoco.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\WorkflowModels.cs" />
+    <Compile Include="Models\WorkflowTaskInstancePoco.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\WorkflowTaskModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Relators\TaskToInstanceRelator.cs" />
+    <Compile Include="Relators\UserToGroupRelator.cs" />
+    <Compile Include="Processes\TwoStepApprovalProcess.cs" />
+    <Compile Include="UrlHelpers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkflowException.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Plugins\Workflow\Backoffice\paging.service.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Partials\paginationTemplate.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\styles.css">
+      <DependentUpon>styles.scss</DependentUpon>
+    </Content>
+    <Content Include="App_Plugins\Workflow\Backoffice\styles.min.css">
+      <DependentUpon>styles.css</DependentUpon>
+    </Content>
+    <Content Include="App_Plugins\Workflow\Backoffice\UserPermissions\controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\workflow.resource.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\approve.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\cancel.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\differences.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\sendtounpublish.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\sendtopublish.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\settings.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dashboard.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\approveDialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\cancelDialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\differencesDialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\publishDialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\unpublishDialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\workflow.directives.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\settings.html" />
+    <None Include="App_Plugins\Workflow\Backoffice\styles.css.map">
+      <DependentUpon>styles.css</DependentUpon>
+    </None>
+    <None Include="App_Plugins\Workflow\Backoffice\styles.scss" />
+    <None Include="App_Plugins\Workflow\Backoffice\Workflow\settings.json" />
+    <None Include="App_Plugins\Workflow\package.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Plugins\Workflow\Backoffice\UserGroups\resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\add.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\controllers\add.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\controllers\delete.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\controllers\edit.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\delete.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\edit.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\groups.resource.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\UserPermissions\view.html" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)UmbracoCms\bin" /Y /I /D
+xcopy "$(ProjectDir)App_Plugins" "$(SolutionDir)UmbracoCms\App_Plugins" /Y /E</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

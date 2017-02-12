@@ -1,0 +1,246 @@
+﻿.workflow {
+
+    .span6 {
+        float:left;
+        width:50%;
+    }
+
+    hr {
+        clear:both;
+    }
+
+    button:not([class*="btn-"]), a.action-Edit {
+        display: inline-block;
+        width: 26px;
+        height: 22px;
+        font-size: 14px;
+        line-height: 20px;
+        vertical-align: top;
+        text-align:center;
+        border:none;
+        background:#fff;
+        text-decoration:none;
+
+        &:hover {
+            background:#ddd;
+        }
+    }
+
+    
+    .icon-delete:hover {
+        color:red;
+    }
+    .icon-check:hover {
+        color:green;
+    }
+    .icon-trafic:hover {
+        color:orange;
+    }
+    .icon-edit:hover {
+        color:orange;
+    }
+
+    td {
+        &:last-child {
+            background:#eee;
+            text-align:right;
+
+            &.btn-count-4 {
+                width:116px;
+            }
+
+            &.btn-count-3 {
+                width:86px;
+            }
+
+            &.btn-count-2 {
+                width:56px;
+            }
+
+            &:hover {
+                background:#ccc;
+            }                
+        }
+    }
+    label {
+        float:left;
+        width:160px;
+        display:block;
+        margin-bottom:5px;
+        padding-top:8px;
+    }
+
+    textarea, input {
+        border:1px solid #ccc;
+    }
+
+    .user-lists {
+        overflow:hidden;
+        margin-bottom:20px;
+        padding-bottom:15px;
+    }
+
+    .user-list { 
+        
+        width:45%;
+        float:left;
+        margin:0 5% 0 0;
+
+        input {
+            width:200px;
+        }
+
+        ul {
+            max-height:300px;
+            overflow-y:scroll;  
+            width:100%;
+            margin:0;          
+
+            li {
+                padding:5px 10px;
+                cursor:pointer;
+
+                &:hover {
+                    background:#ddd;
+                }
+
+                &:nth-child(even) {
+                    background:#f5f5f5;
+
+                    &:hover {
+                        background:#ddd;
+                    }
+                }
+            }
+        }
+    }    
+
+    .permissions-list {
+        &:before {
+            content: attr(data-label);
+            display:block;
+            margin:0 0 5px -25px;
+        }
+    }
+
+    .disabled {
+        display:none;
+    }
+}
+
+
+/*************/
+
+
+.workflow-action-dialog {
+    
+    .umb-pane {
+        overflow:hidden;
+    }
+
+    textarea {
+        width:386px;
+        height:100px;
+    }
+
+    .umb-loader {
+        height:5px;
+        margin-top:15px;
+
+    }
+}
+
+.workflow-differences-dialog {
+    overflow-x: scroll;
+
+    table {
+        text-align: left;
+        -ms-word-break: break-word;
+        word-break: break-word;
+
+        th {
+            width:200px;
+            padding:5px;
+        }
+
+        td {
+            padding:5px;
+        }
+
+        tr {
+
+            &:nth-child(odd) {
+                background:#f5f5f5
+            }
+        }
+    }
+
+    button {
+        float: right;
+    }
+
+    del {
+        background: #ffdcdc;
+    }
+
+    ins {
+        background: #dcffdc;
+    }
+
+    .compare-msg br {
+        line-height:2;
+    }
+}
+
+[id*="workflow-differences"].umb-modal.fade.in {
+    width: 740px !important;
+    margin-left: -740px;
+}
+
+
+/* pagination controls */
+
+.paging {
+
+    margin:5px auto 15px;
+    
+    button {
+        border:none;
+        background:#fff;
+        text-decoration:none;
+        display:inline-block;
+
+        &:hover {
+            background:#ddd;
+        }
+    }
+}
+
+.paged-table {
+    width:100%;
+
+    tr {
+        &:hover {
+            background:#f5f5f5;
+        }
+    }
+
+    th {
+        background:#1d1d1d;
+        padding:5px;
+        text-align:left;
+        color:#d9d9d9;
+    }
+
+    td {
+        padding:5px;
+        text-align:left;        
+        
+        &.pending {
+            color:orange;
+        }
+        &.overdue {
+            color:red;
+        }            
+    }
+}
