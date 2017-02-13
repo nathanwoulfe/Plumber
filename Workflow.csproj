@@ -30,58 +30,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="businesslogic">
-      <HintPath>..\..\UmbracoCms\bin\businesslogic.dll</HintPath>
-    </Reference>
-    <Reference Include="cms">
-      <HintPath>..\..\UmbracoCms\bin\cms.dll</HintPath>
-    </Reference>
-    <Reference Include="Examine">
-      <HintPath>..\..\UmbracoCms\bin\Examine.dll</HintPath>
-    </Reference>
-    <Reference Include="interfaces">
-      <HintPath>..\..\UmbracoCms\bin\interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\..\UmbracoCms\bin\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\UmbracoCms\bin\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\UmbracoCms\bin\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\UmbracoCms\bin\System.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\UmbracoCms\bin\System.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="umbraco">
-      <HintPath>..\..\UmbracoCms\bin\umbraco.dll</HintPath>
-    </Reference>
-    <Reference Include="Umbraco.Core">
-      <HintPath>..\..\UmbracoCms\bin\Umbraco.Core.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Actions\RegisterEvents.cs" />
     <Compile Include="Actions\UserGroupsTreeController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Actions\UserGroupsTreeEvents.cs" />
     <Compile Include="Actions\UserPermissionsTreeController.cs" />
     <Compile Include="Api\GroupPermissionsController.cs" />
     <Compile Include="Api\WorkflowController.cs" />
@@ -124,7 +77,10 @@
     <Content Include="App_Plugins\Workflow\Backoffice\styles.min.css">
       <DependentUpon>styles.css</DependentUpon>
     </Content>
+    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\controllers\dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\dashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\UserPermissions\controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\workflow.interceptors.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\workflow.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\approve.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\cancel.controller.js" />
@@ -141,12 +97,18 @@
     <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\unpublishDialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\workflow.directives.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\Workflow\settings.html" />
+    <None Include="app.config" />
     <None Include="App_Plugins\Workflow\Backoffice\styles.css.map">
       <DependentUpon>styles.css</DependentUpon>
     </None>
     <None Include="App_Plugins\Workflow\Backoffice\styles.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\Workflow\settings.json" />
     <None Include="App_Plugins\Workflow\package.manifest" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Plugins\Workflow\Backoffice\UserGroups\resources\" />
@@ -160,6 +122,97 @@
     <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\edit.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\groups.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\UserPermissions\view.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="businesslogic, Version=1.0.6247.17498, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\businesslogic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="cms, Version=1.0.6247.17499, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\cms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="controls, Version=1.0.6247.17501, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\controls.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="interfaces, Version=1.0.6247.17492, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationBlocks.Data, Version=1.0.1559.20655, Culture=neutral">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\Microsoft.ApplicationBlocks.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SQLCE4Umbraco, Version=1.0.6247.17500, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\SQLCE4Umbraco.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.1, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SqlServerCe.Entity, Version=4.0.0.1, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\System.Data.SqlServerCe.Entity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\UmbracoCMS\UmbracoCms\bin\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\UmbracoCMS\UmbracoCms\bin\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.XML" />
+    <Reference Include="TidyNet, Version=1.0.0.0, Culture=neutral">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\TidyNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="umbraco, Version=1.0.6247.17502, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\umbraco.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Umbraco.Core, Version=1.0.6247.17495, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\Umbraco.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="umbraco.DataLayer, Version=1.0.6247.17498, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\umbraco.DataLayer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="umbraco.editorControls, Version=1.0.6247.17504, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\umbraco.editorControls.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="umbraco.MacroEngines, Version=1.0.6247.17504, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\umbraco.MacroEngines.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="umbraco.providers, Version=1.0.6247.17501, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\umbraco.providers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Umbraco.Web.UI, Version=1.0.6247.17505, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\Umbraco.Web.UI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UmbracoExamine, Version=0.7.0.17500, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\UmbracoCMS\packages\UmbracoCms.Core.7.5.9\lib\UmbracoExamine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

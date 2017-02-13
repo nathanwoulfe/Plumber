@@ -123,9 +123,13 @@
         }
     }
 
-    .disabled {
-        display:none;
+    // listview
+    .umb-table-cell {
+        ul {
+            margin:0;
+        }
     }
+    
 }
 
 

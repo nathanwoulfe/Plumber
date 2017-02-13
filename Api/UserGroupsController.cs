@@ -30,14 +30,20 @@ namespace Usc.Web.UserGroups
         [System.Web.Http.HttpGet]
         public HttpResponseMessage GetAllGroups()
         {
-            var userGroups = db.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups");
+            var userGroups = db.Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
+                new UserToGroupRelator().MapIt,
+                @"SELECT * FROM WorkflowUserGroups LEFT OUTER JOIN WorkflowUser2UserGroup
+                on WorkflowUserGroups.GroupId = WorkflowUser2UserGroup.GroupId");
 
             foreach (var userGroup in userGroups)
             {
-                var permissions = db.Fetch<UserGroupPermissionsPoco>("SELECT * FROM WorkflowUserGroupPermissions WHERE GroupId = @0", userGroup.GroupId);
-                if (permissions.Any())
+                if (!userGroup.Name.Contains("Deleted"))
                 {
-                    userGroup.Permissions = permissions;
+                    var permissions = db.Fetch<UserGroupPermissionsPoco>("SELECT * FROM WorkflowUserGroupPermissions WHERE GroupId = @0", userGroup.GroupId);
+                    if (permissions.Any())
+                    {
+                        userGroup.Permissions = permissions;
+                    }
                 }
             }
 
