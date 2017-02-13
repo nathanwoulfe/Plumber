@@ -92,8 +92,6 @@
 
             controller: function ($scope, $element, $attrs) {
 
-                console.log($scope.items);
-
                 function setPaging() {
                     var paging = workflowPagingService.updatePaging($scope.items, ($scope.filter !== undefined ? $scope.filter : ''), ($scope.currentPage === undefined ? 1 : $scope.currentPage), $scope.numPerPage);
                     $scope.filter = paging.filter;

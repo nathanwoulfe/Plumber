@@ -8,7 +8,6 @@
     function interceptor($q) {
         return {
             request: function (request) {
-                console.log(request);
                 if (request.url.toLowerCase().indexOf('views/usergroups/dashboard') !== -1) {
                     request.url = '/App_Plugins/Workflow/Backoffice/UserGroups/dashboard.html';
                 }

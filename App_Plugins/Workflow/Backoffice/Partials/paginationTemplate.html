@@ -1,6 +1,4 @@
-﻿
-
-<div class="pagination" ng-show="numPages > -1">
+﻿<div class="pagination" ng-show="numPages > -1">
     <ul>
         <li ng-class="{disabled:currentPage <= 1}">
             <a href="#" ng-click="prev()" prevent-default>
@@ -23,11 +21,4 @@
             </a>
         </li>
     </ul>
-
-    <!--<div class="buttons paging" ng-hide="numPages === 1 || !items.length">
-        <button class="btn icon icon-previous next-btn" ng-click="prev()" ng-class="{'disabled': currentPage === 1}" title="Previous page"></button>
-        Page {{currentPage}} of {{numPages}}
-        <button class="btn icon icon-next prev-btn" ng-click="next()" ng-class="{'disabled': currentPage === numPages}" title="Next page"></button>
-    </div>-->
-
 </div>
