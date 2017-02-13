@@ -189,7 +189,7 @@ namespace Workflow
                     instance.CompletedDate = DateTime.Now;
                     taskInstance.Status = (int)Workflow.Models.TaskStatus.Rejected;
                     emailRequired = true;
-                    if (taskInstance._Type == Workflow.Models.TaskType.CoordinatorApproval)
+                    if (taskInstance._Type == TaskType.CoordinatorApproval)
                     {
                         emailType = EmailType.CoordinatorApprovalRejection;
                     }
@@ -215,7 +215,7 @@ namespace Workflow
 
         private void GetCoordinatorUserGroup(WorkflowTaskInstancePoco taskInstance, int nodeId)
         {
-            var wfCoordNodePerm = db.Fetch<UserGroupPermissionsPoco>("SELECT * FROM WorkflowUserGroupPermissions WHERE NodeId = @0 AND Permission = @1", nodeId, 2);
+            var wfCoordNodePerm = db.Fetch<UserGroupPermissionsPoco>(SqlHelpers.PermissionsByNodeAndType, nodeId, 2);
 
             if (wfCoordNodePerm.Any())
             {
@@ -236,16 +236,13 @@ namespace Workflow
 
         private WorkflowTaskInstancePoco CreateCoordinatorApprovalTask(int nodeId)
         {
-            var taskInstance = new WorkflowTaskInstancePoco(Workflow.Models.TaskType.CoordinatorApproval);
+            var taskInstance = new WorkflowTaskInstancePoco(TaskType.CoordinatorApproval);
             instance.TaskInstances.Add(taskInstance);
             GetCoordinatorUserGroup(taskInstance, nodeId);
-            //taskInstance.UserGroup = Helpers.GetUserGroup(taskInstance.Id);
             taskInstance.UserGroup = db.Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
-                new UserToGroupRelator().MapIt,
-                @"SELECT * FROM WorkflowUserGroups LEFT OUTER JOIN WorkflowUser2UserGroup
-                                    on WorkflowUserGroups.GroupId = WorkflowUser2UserGroup.GroupId
-                                    WHERE WorkflowUserGroups.GroupId = @0"
-                , taskInstance.GroupId).First();
+                new UserToGroupRelator().MapIt, 
+                SqlHelpers.UserGroupWithUsersById,
+                taskInstance.GroupId).First();
             return taskInstance;
         }
 
@@ -262,7 +259,7 @@ namespace Workflow
             }
             else
             {    // Not required
-                taskInstance.Status = (int)Workflow.Models.TaskStatus.NotRequired;
+                taskInstance.Status = (int)TaskStatus.NotRequired;
                 return false;
             }
         }
@@ -270,7 +267,7 @@ namespace Workflow
         private void InitiateCoordinatorApprovalTask(WorkflowTaskInstancePoco taskInstance)
         {
             // Set task and workflow information.
-            taskInstance.Status = (int)Workflow.Models.TaskStatus.PendingApproval;
+            taskInstance.Status = (int)TaskStatus.PendingApproval;
             instance.Status = (int)WorkflowStatus.PendingCoordinatorApproval;
 
             Notifications.Send(instance, EmailType.CoordinatorApprovalRequest);
@@ -278,17 +275,15 @@ namespace Workflow
 
         private WorkflowTaskInstancePoco CreateFinalApprovalTask()
         {
-            var taskInstance = new WorkflowTaskInstancePoco(Workflow.Models.TaskType.FinalApproval);
+            var taskInstance = new WorkflowTaskInstancePoco(TaskType.FinalApproval);
             instance.TaskInstances.Add(taskInstance);
             string finalApprover = Helpers.GetSettings().FinalApprover;
             if (!string.IsNullOrEmpty(finalApprover))
             {
                 taskInstance.UserGroup = db.Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
                     new UserToGroupRelator().MapIt,
-                    @"SELECT * FROM WorkflowUserGroups LEFT OUTER JOIN WorkflowUser2UserGroup
-                        on WorkflowUserGroups.GroupId = WorkflowUser2UserGroup.GroupId
-                        WHERE WorkflowUserGroups.GroupId = @0"
-                    , finalApprover).First();
+                    SqlHelpers.UserGroupWithUsersById,
+                    finalApprover).First();
             }
             if (taskInstance.UserGroup != null)
             {
@@ -314,14 +309,14 @@ namespace Workflow
                 return true;
             }
             // Not required
-            taskInstance.Status = (int)Workflow.Models.TaskStatus.NotRequired;
+            taskInstance.Status = (int)TaskStatus.NotRequired;
             return false;
         }
 
         private void InitiateFinalApprovalTask(WorkflowTaskInstancePoco taskInstance)
         {
             // Set task and workflow information.
-            taskInstance.Status = (int)Workflow.Models.TaskStatus.PendingApproval;
+            taskInstance.Status = (int)TaskStatus.PendingApproval;
             instance.Status = (int)WorkflowStatus.PendingFinalApproval;
 
             Notifications.Send(instance, EmailType.FinalApprovalRequest);

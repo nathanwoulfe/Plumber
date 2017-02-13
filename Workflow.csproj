@@ -40,6 +40,7 @@
     <Compile Include="Api\WorkflowController.cs" />
     <Compile Include="Api\UserGroupsController.cs" />
     <Compile Include="Api\WorkflowTasksController.cs" />
+    <Compile Include="Queries.cs" />
     <Compile Include="Notifications.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Models\SettingsModel.cs" />

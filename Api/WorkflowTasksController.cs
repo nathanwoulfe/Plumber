@@ -28,16 +28,10 @@ namespace Workflow.Dashboard
         /// Returns all tasks currently in workflow processes
         /// </summary>
         /// <returns></returns>
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IEnumerable<WorkflowItem> GetActiveTasks()
         {
-            var taskInstances = db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(
-                @"SELECT * FROM WorkflowTaskInstance LEFT JOIN WorkflowInstance
-                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
-                            LEFT JOIN WorkflowUserGroups
-                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
-                            WHERE WorkflowTaskInstance.Status = @0"
-                , (int)TaskStatus.PendingApproval);
+            var taskInstances = db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.GroupsWithUsersByStatus, (int)TaskStatus.PendingApproval);
             
             var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
 
@@ -48,7 +42,7 @@ namespace Workflow.Dashboard
         /// Gets all tasks requiring actioning by the current user
         /// </summary>
         /// <returns></returns>
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public IEnumerable<WorkflowItem> GetApprovalsForUser(string userId)
         {
 
@@ -58,12 +52,8 @@ namespace Workflow.Dashboard
 
             try
             {
-                var userUserGroups = db.Fetch<User2UserGroupPoco>("SELECT * FROM WorkflowUser2UserGroup WHERE UserId = @0", userId);
-                var taskInstances = db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(
-                    @"SELECT * FROM WorkflowTaskInstance LEFT JOIN WorkflowInstance
-                    on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
-                    LEFT JOIN WorkflowUserGroups
-                    on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId").ApprovalTasksForUserGroups(userUserGroups).ToList();
+                var userUserGroups = db.Fetch<User2UserGroupPoco>(SqlHelpers.UserGroupById, userId);
+                var taskInstances = db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.Tasks).ApprovalTasksForUserGroups(userUserGroups).ToList();
 
                 workflowItems = BuildWorkflowItemList(taskInstances, _userId);
             }
@@ -80,7 +70,7 @@ namespace Workflow.Dashboard
         /// Gets all current workflow processes initiated by the requesting user
         /// </summary>
         /// <returns>IEnumerable<WorkflowItem></returns>
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public IEnumerable<WorkflowItem> GetSubmissionsForUser(string userId)
         {
             int _userId = int.Parse(userId);
@@ -89,13 +79,7 @@ namespace Workflow.Dashboard
             try
             {
                 var taskInstances = db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(
-                    @"SELECT * FROM WorkflowTaskInstance LEFT JOIN WorkflowInstance
-                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
-                            LEFT JOIN WorkflowUserGroups
-                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId                            
-                            WHERE WorkflowInstance.AuthorUserId = @0
-                            AND WorkflowTaskInstance.Status = @1"
-                    , userId, (int)TaskStatus.PendingApproval);
+                    SqlHelpers.TasksByAuthorAndStatus, userId, (int)TaskStatus.PendingApproval);
 
                 workflowItems = BuildWorkflowItemList(taskInstances, _userId);
 
@@ -115,13 +99,13 @@ namespace Workflow.Dashboard
         /// <param name="nodeId">Id of the published node</param>
         /// <param name="taskId">Id of the workflow task</param>
         /// <returns>DifferencesResponseItem</returns>
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public HttpResponseMessage ShowDifferences(string nodeId, string taskId)
         {
             int _nodeId = int.Parse(nodeId);
             int _taskId = int.Parse(taskId);
 
-            var _instance = db.Fetch<WorkflowInstancePoco>("SELECT * FROM WorkflowInstance WHERE Id = @0", _taskId).First();
+            var _instance = db.Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByTaskId, _taskId).First();
             var publishedVersion = Umbraco.TypedContent(nodeId); // most recent published version
             var revisedVersion = Services.ContentService.GetById(_nodeId); // current version from database
 
@@ -207,7 +191,7 @@ namespace Workflow.Dashboard
         /// <param name="taskId"></param>
         /// <param name="comment"></param>
         /// <returns></returns>
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public HttpResponseMessage ApproveWorkflowTask(string taskId, string comment = "")
         {
             var _instance = GetInstance(taskId);
@@ -259,7 +243,7 @@ namespace Workflow.Dashboard
         /// <param name="taskId"></param>
         /// <param name="comment"></param>
         /// <returns></returns>
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public HttpResponseMessage RejectWorkflowTask(string taskId, string comment = "")
         {
             var _instance = GetInstance(taskId);
@@ -297,7 +281,7 @@ namespace Workflow.Dashboard
         /// <param name="taskId">The workflow task id</param>
         /// <param name="comment"></param>
         /// <returns></returns>
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public HttpResponseMessage CancelWorkflowTask(string taskId, string comment = null)
         {
             var _instance = GetInstance(taskId);
@@ -344,12 +328,12 @@ namespace Workflow.Dashboard
                     foreach (var taskInstance in taskInstances)
                     {
                         // TODO -> fix this
-                        var tasks = db.Fetch<WorkflowTaskInstancePoco>("SELECT * FROM WorkflowTaskInstance WHERE WorkflowInstanceGuid = @0", taskInstance.WorkflowInstanceGuid);
+                        var tasks = db.Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TaskByInstanceId, taskInstance.WorkflowInstanceGuid);
                         if (tasks.Any())
                         {
                             taskInstance.WorkflowInstance.TaskInstances = tasks;
                         }
-                        var users = db.Fetch<User2UserGroupPoco>("SELECT * FROM WorkflowUser2UserGroup WHERE GroupId = @0", taskInstance.GroupId);
+                        var users = db.Fetch<User2UserGroupPoco>(SqlHelpers.UsersByGroupId, taskInstance.GroupId);
                         if (users.Any())
                         {
                             taskInstance.UserGroup.Users = users;
@@ -422,16 +406,11 @@ namespace Workflow.Dashboard
 
         private WorkflowInstancePoco GetInstance(string taskId)
         {
-            var _instance = db.Fetch<WorkflowInstancePoco>(
-                @"SELECT * FROM WorkflowInstance 
-                WHERE Id = @0", taskId).First();
+            var _instance = db.Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByTaskId, taskId).First();
 
             // TODO -> fix this
             var tasks = db.Fetch<WorkflowTaskInstancePoco, UserGroupPoco>(
-                @"SELECT * FROM WorkflowTaskInstance 
-                LEFT JOIN WorkflowUserGroups
-                ON WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
-                WHERE WorkflowInstanceGuid = @0"
+                SqlHelpers.TaskAndGroupByInstanceId
                 , _instance.Guid);
 
             if (tasks.Any())
