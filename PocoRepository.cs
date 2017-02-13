@@ -13,7 +13,6 @@ namespace Workflow
     class PocoRepository
     {
         private static Database db = ApplicationContext.Current.DatabaseContext.Database;
-        private static string instanceByNodeStr = "SELECT * FROM WorkflowInstance WHERE NodeId = @0 AND ";
 
         /// <summary>
         /// 
@@ -104,7 +103,7 @@ namespace Workflow
         public static List<WorkflowInstancePoco> InstancesByNodeAndStatus(int node, List<string> status)
         {            
             var statusStr = string.Join(" OR ", status);
-            return db.Fetch<WorkflowInstancePoco>(string.Concat(instanceByNodeStr, statusStr), node);
+            return db.Fetch<WorkflowInstancePoco>(string.Concat(SqlHelpers.InstanceByNodeStr, statusStr), node);
         }
 
         /// <summary>

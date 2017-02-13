@@ -18,6 +18,7 @@
 
         // instance
         public const string InstanceByTaskId = @"SELECT * FROM WorkflowInstance WHERE Id = @0";
+        public const string InstanceByNodeStr = @"SELECT * FROM WorkflowInstance WHERE NodeId = @0 AND ";
 
         // tasks
         public const string TasksWithGroup = @"SELECT * FROM WorkflowTaskInstance LEFT JOIN WorkflowInstance
