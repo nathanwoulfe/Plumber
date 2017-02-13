@@ -30,16 +30,13 @@ namespace Usc.Web.UserGroups
         [System.Web.Http.HttpGet]
         public HttpResponseMessage GetAllGroups()
         {
-            var userGroups = db.Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
-                new UserToGroupRelator().MapIt,
-                @"SELECT * FROM WorkflowUserGroups LEFT OUTER JOIN WorkflowUser2UserGroup
-                on WorkflowUserGroups.GroupId = WorkflowUser2UserGroup.GroupId");
+            var userGroups = PocoRepository.UserGroups();
 
             foreach (var userGroup in userGroups)
             {
                 if (!userGroup.Name.Contains("Deleted"))
                 {
-                    var permissions = db.Fetch<UserGroupPermissionsPoco>("SELECT * FROM WorkflowUserGroupPermissions WHERE GroupId = @0", userGroup.GroupId);
+                    var permissions = PocoRepository.PermissionsForGroup(userGroup.GroupId);
                     if (permissions.Any())
                     {
                         userGroup.Permissions = permissions;
@@ -66,7 +63,7 @@ namespace Usc.Web.UserGroups
                         on WorkflowUserGroups.GroupId = WorkflowUserGroupPermissions.GroupId 
                         WHERE WorkflowUserGroups.GroupId = @0"
                 , id);
-            var permissions = db.Fetch<UserGroupPermissionsPoco>("SELECT * FROM WorkflowUserGroupPermissions WHERE GroupId = @0", id);
+            var permissions = PocoRepository.PermissionsForGroup(int.Parse(id));
 
             if (result.Any())
             {
@@ -117,7 +114,7 @@ namespace Usc.Web.UserGroups
             try
             {
                 // check that it doesn't already exist
-                if (db.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE name = @0", name).Any())
+                if (PocoRepository.UserGroupsByProperty("Name", name).Any())
                 {
                     return Request.CreateResponse(HttpStatusCode.NoContent, "Cannot create user group; a group with that name already exists.");
                 }
@@ -142,7 +139,7 @@ namespace Usc.Web.UserGroups
                 return Request.CreateResponse(HttpStatusCode.NoContent, error);
             }
 
-            var id = db.Fetch<UserGroupPoco>("SELECT TOP 1 * FROM WorkflowUserGroups ORDER BY GroupId DESC").First().GroupId;
+            var id = PocoRepository.NewestGroup().GroupId;
 
             var msg = "Successfully created new user group '" + name + "'.";
             log.Debug(msg);
@@ -160,12 +157,12 @@ namespace Usc.Web.UserGroups
         public HttpResponseMessage SaveGroup(UserGroupPoco ug)
         {
             var msgText = "";
-            var nameExists = db.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE name = @0", ug.Name).Any();
-            var aliasExists = db.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE alias = @0", ug.Alias).Any();
+            var nameExists = PocoRepository.UserGroupsByProperty("Name", ug.Name).Any();
+            var aliasExists = PocoRepository.UserGroupsByProperty("Alias", ug.Alias).Any();
 
             try
             {
-                var userGroup = db.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE GroupId = @0", ug.GroupId).First();
+                var userGroup = PocoRepository.UserGroupsByProperty("GroupId", ug.GroupId.ToString()).First();
 
                 if (userGroup.Name != ug.Name && nameExists)
                     return Request.CreateResponse(HttpStatusCode.NoContent, "Group name already exists");

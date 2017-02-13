@@ -3,6 +3,7 @@ using Umbraco.Core.Persistence.DatabaseAnnotations;
 using Umbraco.Core;
 using Umbraco.Web;
 using Workflow;
+using System.Linq;
 
 namespace Workflow.Models
 {
@@ -49,7 +50,7 @@ namespace Workflow.Models
         public UserGroupPoco UserGroup { 
             get 
             {
-                return Helpers.GetUserGroup(GroupId);
+                return PocoRepository.UserGroupsByProperty("GroupId", GroupId.ToString()).First();
             }
         }
     }  

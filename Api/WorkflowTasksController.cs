@@ -31,11 +31,9 @@ namespace Workflow.Dashboard
         [HttpGet]
         public IEnumerable<WorkflowItem> GetActiveTasks()
         {
-            var taskInstances = db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.GroupsWithUsersByStatus, (int)TaskStatus.PendingApproval);
-            
+            var taskInstances = PocoRepository.TasksByStatus((int)TaskStatus.PendingApproval);            
             var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
-
-            return workflowItems.AsEnumerable<WorkflowItem>();
+            return workflowItems.AsEnumerable();
         }
 
         /// <summary>
@@ -45,15 +43,13 @@ namespace Workflow.Dashboard
         [HttpPost]
         public IEnumerable<WorkflowItem> GetApprovalsForUser(string userId)
         {
-
-            int _userId = int.Parse(userId);
-
+            var _userId = int.Parse(userId);
             var workflowItems = new List<WorkflowItem>();
 
             try
             {
-                var userUserGroups = db.Fetch<User2UserGroupPoco>(SqlHelpers.UserGroupById, userId);
-                var taskInstances = db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.Tasks).ApprovalTasksForUserGroups(userUserGroups).ToList();
+                var userUserGroups = PocoRepository.GroupsForUserById(_userId);
+                var taskInstances = PocoRepository.TasksWithGroup().ApprovalTasksForUserGroups(userUserGroups).ToList();
 
                 workflowItems = BuildWorkflowItemList(taskInstances, _userId);
             }
@@ -62,7 +58,7 @@ namespace Workflow.Dashboard
                 log.Error("Error trying to build user workflow tasks list for user " + Services.UserService.GetUserById(_userId).Name, ex);
             }
 
-            return workflowItems.AsEnumerable<WorkflowItem>();
+            return workflowItems.AsEnumerable();
         }
 
 
@@ -78,9 +74,7 @@ namespace Workflow.Dashboard
 
             try
             {
-                var taskInstances = db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(
-                    SqlHelpers.TasksByAuthorAndStatus, userId, (int)TaskStatus.PendingApproval);
-
+                var taskInstances = PocoRepository.TasksByUserAndStatus(_userId, (int)TaskStatus.PendingApproval);
                 workflowItems = BuildWorkflowItemList(taskInstances, _userId);
 
             }
@@ -89,7 +83,7 @@ namespace Workflow.Dashboard
                 log.Error("Error trying to build user workflow tasks list for user " + Services.UserService.GetUserById(_userId).Name, ex);
             }
 
-            return workflowItems.AsEnumerable<WorkflowItem>();
+            return workflowItems.AsEnumerable();
         }
 
 
@@ -105,7 +99,7 @@ namespace Workflow.Dashboard
             int _nodeId = int.Parse(nodeId);
             int _taskId = int.Parse(taskId);
 
-            var _instance = db.Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByTaskId, _taskId).First();
+            var _instance = PocoRepository.InstanceByTaskId(_taskId);
             var publishedVersion = Umbraco.TypedContent(nodeId); // most recent published version
             var revisedVersion = Services.ContentService.GetById(_nodeId); // current version from database
 
@@ -138,7 +132,7 @@ namespace Workflow.Dashboard
                         {
                             string cThevalue = library.StripHtml(cP.Value.ToString());
                             string compared = Diff.Diff2Html(cThevalue, thevalue);
-                            bool hasChanges = !Diff.Equals(compared, thevalue);
+                            bool hasChanges = !Equals(compared, thevalue);
 
                             // only add comparison rows if changes exist or the property is not empty
                             if (hasChanges)
@@ -328,12 +322,13 @@ namespace Workflow.Dashboard
                     foreach (var taskInstance in taskInstances)
                     {
                         // TODO -> fix this
-                        var tasks = db.Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TaskByInstanceId, taskInstance.WorkflowInstanceGuid);
+                        var tasks = PocoRepository.TasksByInstanceId(taskInstance.WorkflowInstanceGuid);
                         if (tasks.Any())
                         {
                             taskInstance.WorkflowInstance.TaskInstances = tasks;
                         }
-                        var users = db.Fetch<User2UserGroupPoco>(SqlHelpers.UsersByGroupId, taskInstance.GroupId);
+
+                        var users = PocoRepository.UsersByGroupId(taskInstance.GroupId);
                         if (users.Any())
                         {
                             taskInstance.UserGroup.Users = users;
@@ -406,12 +401,10 @@ namespace Workflow.Dashboard
 
         private WorkflowInstancePoco GetInstance(string taskId)
         {
-            var _instance = db.Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByTaskId, taskId).First();
+            var _instance = PocoRepository.InstanceByTaskId(int.Parse(taskId));
 
             // TODO -> fix this
-            var tasks = db.Fetch<WorkflowTaskInstancePoco, UserGroupPoco>(
-                SqlHelpers.TaskAndGroupByInstanceId
-                , _instance.Guid);
+            var tasks = PocoRepository.TasksAndGroupByInstanceId(_instance.Guid);
 
             if (tasks.Any())
             {

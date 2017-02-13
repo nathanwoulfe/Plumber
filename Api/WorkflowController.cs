@@ -1,6 +1,7 @@
 ﻿using log4net;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -57,13 +58,9 @@ namespace Workflow.Api
         [System.Web.Http.HttpGet]
         public HttpResponseMessage GetStatus(int nodeId)
         {
-            var instance = db.Fetch<WorkflowInstancePoco>("SELECT * FROM WorkflowInstance WHERE NodeId = @0 AND Status = @1 OR Status = @2", 
-                nodeId, 
-                (int)WorkflowStatus.PendingCoordinatorApproval, 
-                (int)WorkflowStatus.PendingFinalApproval
-            );
+            var instances = PocoRepository.InstancesByNodeAndStatus(nodeId, new List<string> { WorkflowStatus.PendingCoordinatorApproval.ToString(), WorkflowStatus.PendingFinalApproval.ToString() });
 
-            if (instance.Any())
+            if (instances.Any())
             {
                 return Request.CreateResponse(HttpStatusCode.OK, new { msg = "This node is currently in a workflow", status = 0 });
             }

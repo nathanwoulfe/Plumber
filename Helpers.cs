@@ -32,10 +32,6 @@ namespace Workflow
             return _us.GetUserById(id);
         }
 
-        public static UserGroupPoco GetUserGroup(int id) {
-            return _db.Fetch<UserGroupPoco>("SELECT * FROM WorkFlowUserGroups WHERE GroupId = @0", id).First(); 
-        }
-
         public static IUser GetCurrentUser()
         {
             return UmbracoContext.Current.Security.CurrentUser;
@@ -78,7 +74,7 @@ namespace Workflow
 
         public static bool IsNotFastTrack(WorkflowInstancePoco instance)
         {
-            var fasttrackDoctypes = Helpers.GetSettings().FastTrack.Select(x => x.ToLower()).Where(x => !String.IsNullOrWhiteSpace(x)).ToArray();
+            var fasttrackDoctypes = GetSettings().FastTrack.Select(x => x.ToLower()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
             string nodeAlias = ApplicationContext.Current.Services.ContentService.GetById(instance.NodeId).ContentType.Alias.ToLower();
             return (fasttrackDoctypes.IndexOf(nodeAlias) == -1);
         }
