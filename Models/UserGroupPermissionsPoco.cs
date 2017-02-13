@@ -12,6 +12,9 @@ namespace Workflow.Models
     [PrimaryKey("Id", autoIncrement = true)]
     public class UserGroupPermissionsPoco
     {
+        private static Database db = ApplicationContext.Current.DatabaseContext.Database;
+        private static PocoRepository _pr = new PocoRepository(db);
+
         [Column("Id")]
         [PrimaryKeyColumn(AutoIncrement = true)]
         public int Id { get; set; }
@@ -50,7 +53,7 @@ namespace Workflow.Models
         public UserGroupPoco UserGroup { 
             get 
             {
-                return PocoRepository.UserGroupsByProperty("GroupId", GroupId.ToString()).First();
+                return _pr.UserGroupsByProperty("GroupId", GroupId.ToString()).First();
             }
         }
     }  

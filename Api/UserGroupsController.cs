@@ -19,7 +19,8 @@ namespace Usc.Web.UserGroups
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Database db = ApplicationContext.Current.DatabaseContext.Database;
+        private static Database db = ApplicationContext.Current.DatabaseContext.Database;
+        private static PocoRepository _pr = new PocoRepository(db);
         private IUserService _us = ApplicationContext.Current.Services.UserService;
 
         /// <summary>
@@ -30,13 +31,13 @@ namespace Usc.Web.UserGroups
         [System.Web.Http.HttpGet]
         public HttpResponseMessage GetAllGroups()
         {
-            var userGroups = PocoRepository.UserGroups();
+            var userGroups = _pr.UserGroups();
 
             foreach (var userGroup in userGroups)
             {
                 if (!userGroup.Name.Contains("Deleted"))
                 {
-                    var permissions = PocoRepository.PermissionsForGroup(userGroup.GroupId);
+                    var permissions = _pr.PermissionsForGroup(userGroup.GroupId);
                     if (permissions.Any())
                     {
                         userGroup.Permissions = permissions;
@@ -63,7 +64,7 @@ namespace Usc.Web.UserGroups
                         on WorkflowUserGroups.GroupId = WorkflowUserGroupPermissions.GroupId 
                         WHERE WorkflowUserGroups.GroupId = @0"
                 , id);
-            var permissions = PocoRepository.PermissionsForGroup(int.Parse(id));
+            var permissions = _pr.PermissionsForGroup(int.Parse(id));
 
             if (result.Any())
             {
@@ -114,7 +115,7 @@ namespace Usc.Web.UserGroups
             try
             {
                 // check that it doesn't already exist
-                if (PocoRepository.UserGroupsByProperty("Name", name).Any())
+                if (_pr.UserGroupsByProperty("Name", name).Any())
                 {
                     return Request.CreateResponse(HttpStatusCode.NoContent, "Cannot create user group; a group with that name already exists.");
                 }
@@ -139,7 +140,7 @@ namespace Usc.Web.UserGroups
                 return Request.CreateResponse(HttpStatusCode.NoContent, error);
             }
 
-            var id = PocoRepository.NewestGroup().GroupId;
+            var id = _pr.NewestGroup().GroupId;
 
             var msg = "Successfully created new user group '" + name + "'.";
             log.Debug(msg);
@@ -157,12 +158,12 @@ namespace Usc.Web.UserGroups
         public HttpResponseMessage SaveGroup(UserGroupPoco ug)
         {
             var msgText = "";
-            var nameExists = PocoRepository.UserGroupsByProperty("Name", ug.Name).Any();
-            var aliasExists = PocoRepository.UserGroupsByProperty("Alias", ug.Alias).Any();
+            var nameExists = _pr.UserGroupsByProperty("Name", ug.Name).Any();
+            var aliasExists = _pr.UserGroupsByProperty("Alias", ug.Alias).Any();
 
             try
             {
-                var userGroup = PocoRepository.UserGroupsByProperty("GroupId", ug.GroupId.ToString()).First();
+                var userGroup = _pr.UserGroupsByProperty("GroupId", ug.GroupId.ToString()).First();
 
                 if (userGroup.Name != ug.Name && nameExists)
                     return Request.CreateResponse(HttpStatusCode.NoContent, "Group name already exists");

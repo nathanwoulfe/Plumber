@@ -22,7 +22,8 @@ namespace Workflow.Dashboard
     public class WorkflowTasksController : UmbracoAuthorizedApiController
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private Database db = ApplicationContext.Current.DatabaseContext.Database;
+        private static Database db = ApplicationContext.Current.DatabaseContext.Database;
+        private static PocoRepository _pr = new PocoRepository(db);
 
         /// <summary>
         /// Returns all tasks currently in workflow processes
@@ -31,7 +32,7 @@ namespace Workflow.Dashboard
         [HttpGet]
         public IEnumerable<WorkflowItem> GetActiveTasks()
         {
-            var taskInstances = PocoRepository.TasksByStatus((int)TaskStatus.PendingApproval);            
+            var taskInstances = _pr.TasksByStatus((int)TaskStatus.PendingApproval);            
             var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
             return workflowItems.AsEnumerable();
         }
@@ -48,8 +49,8 @@ namespace Workflow.Dashboard
 
             try
             {
-                var userUserGroups = PocoRepository.GroupsForUserById(_userId);
-                var taskInstances = PocoRepository.TasksWithGroup().ApprovalTasksForUserGroups(userUserGroups).ToList();
+                var userUserGroups = _pr.GroupsForUserById(_userId);
+                var taskInstances = _pr.TasksWithGroup().ApprovalTasksForUserGroups(userUserGroups).ToList();
 
                 workflowItems = BuildWorkflowItemList(taskInstances, _userId);
             }
@@ -74,7 +75,7 @@ namespace Workflow.Dashboard
 
             try
             {
-                var taskInstances = PocoRepository.TasksByUserAndStatus(_userId, (int)TaskStatus.PendingApproval);
+                var taskInstances = _pr.TasksByUserAndStatus(_userId, (int)TaskStatus.PendingApproval);
                 workflowItems = BuildWorkflowItemList(taskInstances, _userId);
 
             }
@@ -99,7 +100,7 @@ namespace Workflow.Dashboard
             int _nodeId = int.Parse(nodeId);
             int _taskId = int.Parse(taskId);
 
-            var _instance = PocoRepository.InstanceByTaskId(_taskId);
+            var _instance = _pr.InstanceByTaskId(_taskId);
             var publishedVersion = Umbraco.TypedContent(nodeId); // most recent published version
             var revisedVersion = Services.ContentService.GetById(_nodeId); // current version from database
 
@@ -322,13 +323,13 @@ namespace Workflow.Dashboard
                     foreach (var taskInstance in taskInstances)
                     {
                         // TODO -> fix this
-                        var tasks = PocoRepository.TasksByInstanceId(taskInstance.WorkflowInstanceGuid);
+                        var tasks = _pr.TasksByInstanceId(taskInstance.WorkflowInstanceGuid);
                         if (tasks.Any())
                         {
                             taskInstance.WorkflowInstance.TaskInstances = tasks;
                         }
 
-                        var users = PocoRepository.UsersByGroupId(taskInstance.GroupId);
+                        var users = _pr.UsersByGroupId(taskInstance.GroupId);
                         if (users.Any())
                         {
                             taskInstance.UserGroup.Users = users;
@@ -401,10 +402,10 @@ namespace Workflow.Dashboard
 
         private WorkflowInstancePoco GetInstance(string taskId)
         {
-            var _instance = PocoRepository.InstanceByTaskId(int.Parse(taskId));
+            var _instance = _pr.InstanceByTaskId(int.Parse(taskId));
 
             // TODO -> fix this
-            var tasks = PocoRepository.TasksAndGroupByInstanceId(_instance.Guid);
+            var tasks = _pr.TasksAndGroupByInstanceId(_instance.Guid);
 
             if (tasks.Any())
             {

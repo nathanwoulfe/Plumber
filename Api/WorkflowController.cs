@@ -19,7 +19,8 @@ namespace Workflow.Api
     public class WorkflowController : UmbracoAuthorizedApiController
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private Database db = ApplicationContext.Current.DatabaseContext.Database;
+        private static Database db = ApplicationContext.Current.DatabaseContext.Database;
+        private static PocoRepository _pr = new PocoRepository(db);
         private IUserService _us = ApplicationContext.Current.Services.UserService;
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace Workflow.Api
         [System.Web.Http.HttpGet]
         public HttpResponseMessage GetStatus(int nodeId)
         {
-            var instances = PocoRepository.InstancesByNodeAndStatus(nodeId, new List<string> { WorkflowStatus.PendingCoordinatorApproval.ToString(), WorkflowStatus.PendingFinalApproval.ToString() });
+            var instances = _pr.InstancesByNodeAndStatus(nodeId, new List<int> { (int)WorkflowStatus.PendingCoordinatorApproval, (int)WorkflowStatus.PendingFinalApproval });
 
             if (instances.Any())
             {
