@@ -1,6 +1,7 @@
 ﻿using log4net;
 using System;
 using umbraco.BasePages;
+using Umbraco.Core;
 using Umbraco.Core.Persistence;
 using Workflow.Models;
 
@@ -14,8 +15,7 @@ namespace Workflow
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static string NodeName;
 
-        public DocumentUnpublishProcess(Database db)
-            : base(db)
+        public DocumentUnpublishProcess(): base()
         {            
             this.Type = WorkflowType.Unpublish;
         }
@@ -54,7 +54,7 @@ namespace Workflow
                 // Have to do this prior to the publish due to workaround for "unpublish at" handling.
                 instance.Status = (int)WorkflowStatus.Completed;
                 instance.CompletedDate = DateTime.Now;
-                db.Update(instance);
+                ApplicationContext.Current.DatabaseContext.Database.Update(instance);
 
                 // Perform the unpublish by removing the document from the live site.
                 //this.instance.Node.Id;
@@ -71,7 +71,7 @@ namespace Workflow
                     // rollback the process completion.
                     instance.Status = (int)originalWFStatus;
                     instance.CompletedDate = null;
-                    db.Update(instance);
+                    ApplicationContext.Current.DatabaseContext.Database.Update(instance);
                 }
                 catch (Exception ex)
                 {
@@ -109,7 +109,7 @@ namespace Workflow
                 // Just complete the workflow
                 instance.Status = (int)WorkflowStatus.Completed;
                 instance.CompletedDate = DateTime.Now;
-                db.Update(instance);
+                ApplicationContext.Current.DatabaseContext.Database.Update(instance);
                 success = true;
 
                 // Unpublish will occur via scheduler.

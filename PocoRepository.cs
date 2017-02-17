@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Umbraco.Core;
 using Umbraco.Core.Persistence;
 using Workflow.Models;
 using Workflow.Relators;
@@ -9,10 +10,10 @@ namespace Workflow
 {
     class PocoRepository
     {
-        private Database db;
-        public PocoRepository(Database database)
+        /// ensure GetDb() connection exists
+        private Database GetDb()
         {
-            db = database;
+            return ApplicationContext.Current.DatabaseContext.Database;
         }
 
         /// <summary>
@@ -22,7 +23,7 @@ namespace Workflow
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> TasksByStatus(int status)
         {
-            return db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksByStatus, status);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksByStatus, status);
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace Workflow
         /// <returns></returns>
         public List<User2UserGroupPoco> GroupsForUserById(int id)
         {
-            return db.Fetch<User2UserGroupPoco>(SqlHelpers.GroupsForUserById, id);
+            return GetDb().Fetch<User2UserGroupPoco>(SqlHelpers.GroupsForUserById, id);
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace Workflow
         /// <returns></returns>
         public  List<WorkflowTaskInstancePoco> TasksWithGroup()
         {
-            return db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksWithGroup);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksWithGroup);
         }
         
         /// <summary>
@@ -52,7 +53,7 @@ namespace Workflow
         /// <returns></returns>
         public  List<WorkflowTaskInstancePoco> TasksByUserAndStatus(int id, int status)
         {
-            return db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksByUserAndStatus, id, status);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksByUserAndStatus, id, status);
         }
 
         /// <summary>
@@ -62,7 +63,7 @@ namespace Workflow
         /// <returns></returns>
         public  WorkflowInstancePoco InstanceByTaskId(int id)
         {
-            return db.Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByTaskId, id).First();
+            return GetDb().Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByTaskId, id).First();
         }        
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace Workflow
         /// <returns></returns>
         public  List<WorkflowTaskInstancePoco> TasksByInstanceId(Guid guid)
         {
-            return db.Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TasksByInstanceId, guid);
+            return GetDb().Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TasksByInstanceId, guid);
         }
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace Workflow
         /// <returns></returns>
         public  List<WorkflowTaskInstancePoco> TasksAndGroupByInstanceId(Guid guid)
         {
-            return db.Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TasksByInstanceId, guid);
+            return GetDb().Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TasksByInstanceId, guid);
         }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace Workflow
         /// <returns></returns>
         public  List<User2UserGroupPoco> UsersByGroupId(int id)
         {
-            return db.Fetch<User2UserGroupPoco>(SqlHelpers.UsersByGroupId, id);
+            return GetDb().Fetch<User2UserGroupPoco>(SqlHelpers.UsersByGroupId, id);
         }
 
         /// <summary>
@@ -103,8 +104,8 @@ namespace Workflow
         /// <returns></returns>
         public  List<WorkflowInstancePoco> InstancesByNodeAndStatus(int node, List<int> status)
         {            
-            var statusStr = string.Join(" OR ", status);
-            return db.Fetch<WorkflowInstancePoco>(string.Concat(SqlHelpers.InstanceByNodeStr, statusStr), node);
+            var statusStr = string.Concat("Status = ", string.Join(" OR Status = ", status));
+            return GetDb().Fetch<WorkflowInstancePoco>(string.Concat(SqlHelpers.InstanceByNodeStr, statusStr), node);
         }
 
         /// <summary>
@@ -113,17 +114,37 @@ namespace Workflow
         /// <returns></returns>
         public  List<UserGroupPoco> UserGroups()
         {
-            return db.Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(new UserToGroupRelator().MapIt, SqlHelpers.UserGroups);
+            return GetDb().Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(new UserToGroupRelator().MapIt, SqlHelpers.UserGroups);
         }
 
-        public  List<UserGroupPoco> UserGroupsByProperty(string property, string value)
+        public List<UserGroupPoco> AllUserGroups()
         {
-            return db.Fetch<UserGroupPoco>(SqlHelpers.UserGroupByProperty, property, value);
+            return GetDb().Fetch<UserGroupPoco>(SqlHelpers.UserGroups);
+        }
+
+        public List<UserGroupPoco> UserGroupsByProperty(string property, string value)
+        {
+            return GetDb().Fetch<UserGroupPoco>(SqlHelpers.UserGroupByProperty, property, value);
+        }
+
+        public List<UserGroupPoco> UserGroupsByName(string value)
+        {
+            return GetDb().Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE Name = @0", value);
+        }
+
+        public List<UserGroupPoco> UserGroupsByAlias(string value)
+        {
+            return GetDb().Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE Alias = @0", value);
+        }
+
+        public List<UserGroupPoco> UserGroupsById(string value)
+        {
+            return GetDb().Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE GroupId = @0", value);
         }
 
         public  UserGroupPoco NewestGroup()
         {
-            return db.Fetch<UserGroupPoco>(SqlHelpers.NewestGroup).First();
+            return GetDb().Fetch<UserGroupPoco>(SqlHelpers.NewestGroup).First();
         }
 
         /// <summary>
@@ -133,7 +154,7 @@ namespace Workflow
         /// <returns></returns>
         public  List<UserGroupPermissionsPoco> PermissionsForGroup(int id)
         {
-            return db.Fetch<UserGroupPermissionsPoco>(SqlHelpers.PermissionsForGroup, id);
+            return GetDb().Fetch<UserGroupPermissionsPoco>(SqlHelpers.PermissionsForGroup, id);
         }
 
     }

@@ -1,7 +1,11 @@
 ﻿using log4net;
+using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Web;
+using Umbraco.Core;
 using Umbraco.Core.Persistence;
 using Workflow.Models;
 using Workflow.Relators;
@@ -12,14 +16,14 @@ namespace Workflow
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected Database db;
         protected WorkflowType Type { get; set; }
         protected WorkflowInstancePoco instance;
 
-        public TwoStepApprovalProcess(Database db)
+        private Database GetDb()
         {
-            this.db = db;
+            return ApplicationContext.Current.DatabaseContext.Database;
         }
+
         # region Public methods
         /// <summary>
         /// Initiates a workflow process instance for this workflow type and persists it to the database.
@@ -48,7 +52,7 @@ namespace Workflow
             {
                 InitiateCoordinatorApprovalTask(coordinatorTaskInstance);
                 coordinatorTaskInstance.WorkflowInstanceGuid = g;
-                db.Insert(coordinatorTaskInstance);
+                GetDb().Insert(coordinatorTaskInstance);
             }
             else
             {
@@ -63,7 +67,7 @@ namespace Workflow
                 }
             }
 
-            db.Insert(instance);            
+            GetDb().Insert(instance);            
 
             return instance;
         }
@@ -94,7 +98,7 @@ namespace Workflow
                             {
                                 InitiateFinalApprovalTask(finalTaskInstance);
                                 finalTaskInstance.WorkflowInstanceGuid = instance.Guid;
-                                db.Insert(finalTaskInstance);
+                                GetDb().Insert(finalTaskInstance);
                             }
                             else
                             {
@@ -112,7 +116,7 @@ namespace Workflow
                     default:
                         throw new WorkflowException("Workflow instance " + instance.Id + " is not pending any action.");
                 }
-                db.Update(instance);
+                GetDb().Update(instance);
             }
             else
             {
@@ -147,11 +151,11 @@ namespace Workflow
                     taskInstance.Comment = reason;
                     taskInstance.CompletedDate = instance.CompletedDate;
 
-                    db.Update(taskInstance);
+                    GetDb().Update(taskInstance);
                 }
 
                 // Send the notification
-                db.Update(instance);
+                GetDb().Update(instance);
                 Notifications.Send(instance, EmailType.WorkflowCancelled);
             }
             else
@@ -210,12 +214,12 @@ namespace Workflow
                 Notifications.Send(instance, emailType.Value);
             }
 
-            db.Update(taskInstance);
+            GetDb().Update(taskInstance);
         }
 
-        private void GetCoordinatorUserGroup(WorkflowTaskInstancePoco taskInstance, int nodeId)
+        private void SetCoordinatorUserGroup(WorkflowTaskInstancePoco taskInstance, int nodeId)
         {
-            var wfCoordNodePerm = db.Fetch<UserGroupPermissionsPoco>(SqlHelpers.PermissionsByNodeAndType, nodeId, 2);
+            var wfCoordNodePerm = GetDb().Fetch<UserGroupPermissionsPoco>(SqlHelpers.PermissionsByNodeAndType, nodeId, 2);
 
             if (wfCoordNodePerm.Any())
             {
@@ -229,7 +233,18 @@ namespace Workflow
                 var node = Helpers.GetNode(nodeId);
                 if (node.Level != 1)
                 {
-                    GetCoordinatorUserGroup(taskInstance, node.Parent.Id);
+                    SetCoordinatorUserGroup(taskInstance, node.Parent.Id);
+                }
+                else // no coordinator set, default to final approver group
+                {
+
+                    var jsonFile = HttpContext.Current.Server.MapPath("/App_plugins/workflow/backoffice/workflow/settings.json");
+                    var settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(jsonFile));
+
+                    var finalApproverGroup = GetDb().Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupById, settings.FinalApprover).First();
+
+                    taskInstance.GroupId = finalApproverGroup.GroupId;
+                    taskInstance.UserGroup = finalApproverGroup.UserGroup;
                 }
             }
         }
@@ -238,11 +253,14 @@ namespace Workflow
         {
             var taskInstance = new WorkflowTaskInstancePoco(TaskType.CoordinatorApproval);
             instance.TaskInstances.Add(taskInstance);
-            GetCoordinatorUserGroup(taskInstance, nodeId);
-            taskInstance.UserGroup = db.Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
+
+            SetCoordinatorUserGroup(taskInstance, nodeId);
+
+            taskInstance.UserGroup = GetDb().Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
                 new UserToGroupRelator().MapIt, 
                 SqlHelpers.UserGroupWithUsersById,
                 taskInstance.GroupId).First();
+
             return taskInstance;
         }
 
@@ -280,7 +298,7 @@ namespace Workflow
             string finalApprover = Helpers.GetSettings().FinalApprover;
             if (!string.IsNullOrEmpty(finalApprover))
             {
-                taskInstance.UserGroup = db.Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
+                taskInstance.UserGroup = GetDb().Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
                     new UserToGroupRelator().MapIt,
                     SqlHelpers.UserGroupWithUsersById,
                     finalApprover).First();

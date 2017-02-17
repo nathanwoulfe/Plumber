@@ -10,7 +10,6 @@ using System.Web.Http;
 using umbraco;
 using umbraco.cms.businesslogic.utilities;
 using Umbraco.Core;
-using Umbraco.Core.Persistence;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 
@@ -22,8 +21,7 @@ namespace Workflow.Dashboard
     public class WorkflowTasksController : UmbracoAuthorizedApiController
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static Database db = ApplicationContext.Current.DatabaseContext.Database;
-        private static PocoRepository _pr = new PocoRepository(db);
+        private static PocoRepository _pr = new PocoRepository();
 
         /// <summary>
         /// Returns all tasks currently in workflow processes
@@ -193,7 +191,7 @@ namespace Workflow.Dashboard
 
             try
             {
-                TwoStepApprovalProcess process = GetProcess(_instance, db);
+                TwoStepApprovalProcess process = GetProcess(_instance.Type);
 
                 _instance = process.ActionWorkflow(
                     _instance,
@@ -245,7 +243,7 @@ namespace Workflow.Dashboard
 
             try
             {
-                TwoStepApprovalProcess process = GetProcess(_instance, db);
+                TwoStepApprovalProcess process = GetProcess(_instance.Type);
 
                 _instance = process.ActionWorkflow(
                     _instance,
@@ -283,7 +281,7 @@ namespace Workflow.Dashboard
 
             try
             {
-                TwoStepApprovalProcess process = GetProcess(_instance, db);
+                TwoStepApprovalProcess process = GetProcess(_instance.Type);
 
                 _instance = process.CancelWorkflow(
                     _instance,
@@ -376,16 +374,15 @@ namespace Workflow.Dashboard
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="_instance"></param>
-        /// <param name="dbContext"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
-        private dynamic GetProcess(WorkflowInstancePoco _instance, Database db)
+        private dynamic GetProcess(int type)
         {
-            if (_instance._Type == WorkflowType.Publish)
+            if ((WorkflowType)type == WorkflowType.Publish)
             {
-                return new DocumentPublishProcess(db);
+                return new DocumentPublishProcess();
             }
-            return new DocumentUnpublishProcess(db);
+            return new DocumentUnpublishProcess();
         }
 
 

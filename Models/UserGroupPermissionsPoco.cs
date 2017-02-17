@@ -1,8 +1,5 @@
 ﻿using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
-using Umbraco.Core;
-using Umbraco.Web;
-using Workflow;
 using System.Linq;
 
 namespace Workflow.Models
@@ -12,8 +9,7 @@ namespace Workflow.Models
     [PrimaryKey("Id", autoIncrement = true)]
     public class UserGroupPermissionsPoco
     {
-        private static Database db = ApplicationContext.Current.DatabaseContext.Database;
-        private static PocoRepository _pr = new PocoRepository(db);
+        private static PocoRepository _pr = new PocoRepository();
 
         [Column("Id")]
         [PrimaryKeyColumn(AutoIncrement = true)]
@@ -53,7 +49,8 @@ namespace Workflow.Models
         public UserGroupPoco UserGroup { 
             get 
             {
-                return _pr.UserGroupsByProperty("GroupId", GroupId.ToString()).First();
+                var groups = _pr.UserGroupsById(GroupId.ToString());
+                return groups.Any() ? groups.First() : null;
             }
         }
     }  

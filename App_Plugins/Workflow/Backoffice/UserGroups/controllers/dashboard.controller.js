@@ -14,8 +14,6 @@
                 $scope.items = resp.filter(function (v) {
                     return v.Name.indexOf('Deleted') === -1;
                 });
-
-                console.log($scope.items);
             });
 
         $scope.getEmail = function (users) {

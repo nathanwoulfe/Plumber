@@ -8,7 +8,6 @@
             urlBase: '/umbraco/backoffice/api/workflow/',
             urlTasksBase: '/umbraco/backoffice/api/workflowtasks/',
 
-            /*** GET ALL GROUPS ***/
             getStatus: function (id) {
                 var deferred = $q.defer();
                 $http({ method: 'GET', url: this.urlBase + 'getStatus?nodeId=' + id, cache: false })
@@ -20,7 +19,6 @@
                 return deferred.promise;
             },
 
-            /*** ADD NEW GROUP ***/
             initiateWorkflow: function (nodeId, comment, publish) {
                 var deferred = $q.defer();
                 $http({ method: 'POST', url: this.urlBase + 'initiateWorkflow?nodeId=' + nodeId + '&comment=' + comment + '&publish=' + publish, cache: false })

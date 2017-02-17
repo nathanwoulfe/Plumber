@@ -17,7 +17,7 @@ namespace Workflow
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public DocumentPublishProcess(Database db) : base(db)
+        public DocumentPublishProcess() : base()
         {
             Type = WorkflowType.Publish;
         }
@@ -52,7 +52,7 @@ namespace Workflow
                 // Have to do this prior to the publish due to workaround for "publish at" handling.
                 instance.Status = (int)WorkflowStatus.Completed;
                 instance.CompletedDate = DateTime.Now;
-                db.Update(instance);
+                ApplicationContext.Current.DatabaseContext.Database.Update(instance);
 
                 // Perform the publish
                 var cs = ApplicationContext.Current.Services.ContentService;
@@ -78,7 +78,7 @@ namespace Workflow
                 log.Error(errorText, e);
             }
 
-            db.Update(instance);
+            ApplicationContext.Current.DatabaseContext.Database.Update(instance);
 
             if (success)
             {

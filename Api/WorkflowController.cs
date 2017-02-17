@@ -20,7 +20,7 @@ namespace Workflow.Api
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static Database db = ApplicationContext.Current.DatabaseContext.Database;
-        private static PocoRepository _pr = new PocoRepository(db);
+        private static PocoRepository _pr = new PocoRepository();
         private IUserService _us = ApplicationContext.Current.Services.UserService;
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Workflow.Api
             {
                 if (publish)
                 {
-                    process = new DocumentPublishProcess(db);
+                    process = new DocumentPublishProcess();
                 }
                 else
                 {

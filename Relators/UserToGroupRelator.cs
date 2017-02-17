@@ -14,7 +14,7 @@ namespace Workflow.Relators
                 return current;
             }
 
-            if (a != null  && current != null && a.GroupId == b.GroupId) {
+            if (current != null && current.GroupId == a.GroupId) {
                 current.Users.Add(b);                
                 return null;
             }

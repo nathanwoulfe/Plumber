@@ -18,9 +18,8 @@ namespace Usc.Web.UserGroups
     public class UserGroupsController : UmbracoAuthorizedApiController
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-        private static Database db = ApplicationContext.Current.DatabaseContext.Database;
-        private static PocoRepository _pr = new PocoRepository(db);
+        private static readonly Database db = ApplicationContext.Current.DatabaseContext.Database;
+        private static readonly PocoRepository _pr = new PocoRepository();
         private IUserService _us = ApplicationContext.Current.Services.UserService;
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace Usc.Web.UserGroups
             try
             {
                 // check that it doesn't already exist
-                if (_pr.UserGroupsByProperty("Name", name).Any())
+                if (_pr.UserGroupsByName(name).Any())
                 {
                     return Request.CreateResponse(HttpStatusCode.NoContent, "Cannot create user group; a group with that name already exists.");
                 }
@@ -158,12 +157,12 @@ namespace Usc.Web.UserGroups
         public HttpResponseMessage SaveGroup(UserGroupPoco ug)
         {
             var msgText = "";
-            var nameExists = _pr.UserGroupsByProperty("Name", ug.Name).Any();
-            var aliasExists = _pr.UserGroupsByProperty("Alias", ug.Alias).Any();
+            var nameExists = _pr.UserGroupsByName(ug.Name).Any();
+            var aliasExists = _pr.UserGroupsByAlias(ug.Alias).Any();
 
             try
             {
-                var userGroup = _pr.UserGroupsByProperty("GroupId", ug.GroupId.ToString()).First();
+                var userGroup = _pr.UserGroupsById(ug.GroupId.ToString()).First();
 
                 if (userGroup.Name != ug.Name && nameExists)
                     return Request.CreateResponse(HttpStatusCode.NoContent, "Group name already exists");
