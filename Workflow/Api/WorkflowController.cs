@@ -1,13 +1,10 @@
 ﻿using log4net;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using System.Web;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Services;
