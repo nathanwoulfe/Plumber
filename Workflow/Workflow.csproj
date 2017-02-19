@@ -36,6 +36,7 @@
     </Compile>
     <Compile Include="Actions\UserGroupsTreeEvents.cs" />
     <Compile Include="Actions\UserPermissionsTreeController.cs" />
+    <Compile Include="Actions\WorkflowSection.cs" />
     <Compile Include="Api\GroupPermissionsController.cs" />
     <Compile Include="Api\WorkflowController.cs" />
     <Compile Include="Api\UserGroupsController.cs" />
@@ -80,11 +81,13 @@
     <Content Include="App_Plugins\Workflow\Backoffice\styles.min.css">
       <DependentUpon>styles.css</DependentUpon>
     </Content>
+    <Content Include="App_Plugins\Workflow\Backoffice\Tree\view.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\controllers\dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\dashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\UserPermissions\controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\workflow.interceptors.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\workflow.resource.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Tree\view.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\approve.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\cancel.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\dashboard.controller.js" />
@@ -99,7 +102,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\publishDialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\unpublishDialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\workflow.directives.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\settings.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\Tree\settings.html" />
     <None Include="app.config" />
     <None Include="App_Plugins\Workflow\Backoffice\styles.css.map">
       <DependentUpon>styles.css</DependentUpon>

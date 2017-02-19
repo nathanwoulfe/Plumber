@@ -80,6 +80,7 @@
             save: save,
             add: add,
             remove: remove,
+            name: 'Workflow settings',
 
             email: '',
             fastTrack: [],

@@ -16,7 +16,8 @@
 		'~/App_Plugins/Workflow/backoffice/workflow/controllers/cancel.controller.js',
 		'~/App_Plugins/Workflow/backoffice/workflow/controllers/differences.controller.js',
 		'~/App_Plugins/Workflow/backoffice/workflow/controllers/dashboard.controller.js',
-		'~/App_Plugins/Workflow/backoffice/workflow/controllers/settings.controller.js'
+		'~/App_Plugins/Workflow/backoffice/workflow/controllers/settings.controller.js',
+		'~/App_Plugins/Workflow/backoffice/tree/view.controller.js'
     ],
     css: [
 		'~/App_Plugins/Workflow/backoffice/styles.css'
