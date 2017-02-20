@@ -29,6 +29,17 @@ namespace Workflow
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public List<WorkflowTaskInstancePoco> TasksByNode(string nodeId)
+        {
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksByNode, nodeId);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public List<User2UserGroupPoco> GroupsForUserById(int id)

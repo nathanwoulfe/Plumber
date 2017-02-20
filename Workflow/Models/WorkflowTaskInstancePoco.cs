@@ -16,10 +16,10 @@ namespace Workflow.Models
         {
             CreatedDate = DateTime.Now;
             CompletedDate = null;
-            Status = (int)Workflow.Models.TaskStatus.New;
+            Status = (int)TaskStatus.New;
         }
 
-        public WorkflowTaskInstancePoco(Workflow.Models.TaskType type)
+        public WorkflowTaskInstancePoco(TaskType type)
             : this()
         {
             Type = (int)type;
@@ -51,18 +51,18 @@ namespace Workflow.Models
 
         [Column("CompletedDate")]
         [NullSetting(NullSetting = NullSettings.Null)]
-        public Nullable<DateTime> CompletedDate { get; set; }
+        public DateTime? CompletedDate { get; set; }
 
         [Column("ActionedByUserId")]
         [NullSetting(NullSetting = NullSettings.Null)]
-        public Nullable<int> ActionedByUserId { get; set; }
+        public int? ActionedByUserId { get; set; }
 
         [Ignore]
-        public Nullable<Workflow.Models.TaskStatus> _Status
+        public TaskStatus? _Status
         {
             get
             {
-                return (Nullable<Workflow.Models.TaskStatus>)Status;
+                return (TaskStatus?)Status;
             }
         }
 

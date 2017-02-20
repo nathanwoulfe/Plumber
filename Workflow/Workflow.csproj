@@ -36,6 +36,7 @@
     </Compile>
     <Compile Include="Actions\UserGroupsTreeEvents.cs" />
     <Compile Include="Actions\UserPermissionsTreeController.cs" />
+    <Compile Include="Actions\WorkflowApplication.cs" />
     <Compile Include="Actions\WorkflowSection.cs" />
     <Compile Include="Api\GroupPermissionsController.cs" />
     <Compile Include="Api\WorkflowController.cs" />
@@ -73,36 +74,39 @@
     <Compile Include="Helpers\WorkflowException.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Plugins\Workflow\Backoffice\paging.service.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Partials\paginationTemplate.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\resources\paging.service.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\partials\paginationTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\styles.css">
       <DependentUpon>styles.scss</DependentUpon>
     </Content>
     <Content Include="App_Plugins\Workflow\Backoffice\styles.min.css">
       <DependentUpon>styles.css</DependentUpon>
     </Content>
-    <Content Include="App_Plugins\Workflow\Backoffice\Tree\view.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\controllers\dashboard.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\dashboard.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\UserPermissions\controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\workflow.interceptors.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\workflow.resource.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Tree\view.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\approve.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\cancel.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\dashboard.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\differences.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\sendtounpublish.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\sendtopublish.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\controllers\settings.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dashboard.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\approveDialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\cancelDialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\differencesDialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\publishDialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Workflow\dialogs\unpublishDialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\workflow.directives.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\Tree\settings.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\tree\history.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\tree\tree.view.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\usergroups.dashboard.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\userpermissions.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\interceptors\workflow.interceptors.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\resources\workflow.resource.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\tree\view.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.approve.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.cancel.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.differences.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.sendtounpublish.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.sendtopublish.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.settings.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.dashboard.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\approveDialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\cancelDialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\differencesDialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\publishDialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\unpublishDialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.directives.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\tree\settings.html" />
+    <Content Include="App_Plugins\Workflow\Lang\en-US.xml" />
     <None Include="app.config" />
     <None Include="App_Plugins\Workflow\Backoffice\styles.css.map">
       <DependentUpon>styles.css</DependentUpon>
@@ -115,18 +119,16 @@
     </None>
     <None Include="..\packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="App_Plugins\Workflow\Backoffice\UserGroups\resources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\add.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\controllers\add.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\controllers\delete.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\controllers\edit.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\delete.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\UserGroups\edit.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\groups.resource.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\UserPermissions\view.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\usergroups.add.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.add.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.delete.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.edit.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\usergroups.delete.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\usergroups.edit.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\resources\groups.resource.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\userpermissions.view.html" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="businesslogic">

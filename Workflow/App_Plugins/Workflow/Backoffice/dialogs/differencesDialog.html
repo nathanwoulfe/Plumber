@@ -1,0 +1,17 @@
+﻿<div class="workflow-differences-dialog umb-dialog" ng-controller="Workflow.Differences.Controller">
+    <div class="umb-pane">
+        <button ng-click="close()" data-hotkey="ctrl+x" class="btn btn-default">
+            Close
+        </button>
+        <h3>Differences</h3>
+        <h5>Document: {{dialogData.PageName}}</h5>
+        <p>Current version: {{differences.CurrentVersionPubDate}}</p>
+        <p>Revised version: {{differences.RevisedVersionPubDate}}</p>
+
+        <p class="compare-msg" ng-bind-html="differences.CompareMessage"></p>
+
+        <p ng-bind-html="differences.CompareData"></p>
+
+
+    </div>
+</div>

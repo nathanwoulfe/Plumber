@@ -9,7 +9,7 @@
 
                 var begin = (currentPage - 1) * numPerPage,
                     end = begin + numPerPage,
-                    numPages,
+                    numPages, 
                     paged = items;
 
                 if (filter.length) {

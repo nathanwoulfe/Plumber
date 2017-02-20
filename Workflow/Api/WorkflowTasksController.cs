@@ -36,6 +36,19 @@ namespace Workflow.Dashboard
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IEnumerable<WorkflowItem> GetNodeTasks(string id)
+        {
+            var taskInstances = _pr.TasksByNode(id);
+            var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
+            return workflowItems.AsEnumerable();
+        }
+
+        /// <summary>
         /// Gets all tasks requiring actioning by the current user
         /// </summary>
         /// <returns></returns>

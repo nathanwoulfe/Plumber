@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 using Umbraco.Core.Models.Membership;
 using Workflow.Models;
 
@@ -27,8 +24,8 @@ namespace Workflow
                 string docTitle = instance.Node.Name;
                 string docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
 
-                WorkflowTaskInstancePoco coordTaskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Type == Workflow.Models.TaskType.CoordinatorApproval);
-                WorkflowTaskInstancePoco finalTaskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Type == Workflow.Models.TaskType.FinalApproval);
+                WorkflowTaskInstancePoco coordTaskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Type == TaskType.CoordinatorApproval);
+                WorkflowTaskInstancePoco finalTaskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Type == TaskType.FinalApproval);
 
                 MailAddressCollection to = new MailAddressCollection();
                 string email = Helpers.GetSettings().Email;
@@ -39,21 +36,21 @@ namespace Workflow
                 {
                     case EmailType.CoordinatorApprovalRequest:
                         to = coordTaskInstance.UserGroup.PreferredEmailAddresses();
-                        body = String.Format(EmailApprovalRequestString,
+                        body = string.Format(EmailApprovalRequestString,
                             coordTaskInstance.UserGroup.Name, docUrl, docTitle, instance.AuthorComment, instance.AuthorUser.Name, instance.TypeDescription);
 
                         break;
 
                     case EmailType.CoordinatorApprovalRejection:
                         to.Add(instance.AuthorUser.Email);
-                        body = String.Format(EmailRejectedString,
+                        body = string.Format(EmailRejectedString,
                             instance.AuthorUser.Name, docUrl, docTitle, coordTaskInstance.Comment, coordTaskInstance.ActionedByUser.Name, instance.TypeDescription.ToLower());
 
                         break;
 
                     case EmailType.FinalApprovalRequest:
                         to = finalTaskInstance.UserGroup.PreferredEmailAddresses();
-                        body = String.Format(EmailApprovalRequestString,
+                        body = string.Format(EmailApprovalRequestString,
                             finalTaskInstance.UserGroup.Name, docUrl, docTitle, instance.AuthorComment, instance.AuthorUser.Name, instance.TypeDescription.ToLower());
 
                         break;
@@ -61,7 +58,7 @@ namespace Workflow
                     case EmailType.FinalApprovalRejection:
                         to = coordTaskInstance.UserGroup.PreferredEmailAddresses();
                         to.Add(instance.AuthorUser.Email);
-                        body = String.Format(EmailRejectedString,
+                        body = string.Format(EmailRejectedString,
                             instance.AuthorUser.Name, docUrl, docTitle, finalTaskInstance.Comment, finalTaskInstance.ActionedByUser.Name, instance.TypeDescription.ToLower());
 
                         break;
@@ -86,7 +83,7 @@ namespace Workflow
                             docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
                         }
 
-                        body = String.Format(EmailApprovedString,
+                        body = string.Format(EmailApprovedString,
                             instance.AuthorUser.Name, docUrl, docTitle, instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
 
                         body += Helpers.BuildProcessSummary(instance, false, false, true);
@@ -99,7 +96,7 @@ namespace Workflow
 
                         docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
 
-                        body = String.Format(EmailApprovedString,
+                        body = string.Format(EmailApprovedString,
                             instance.AuthorUser.Name, docUrl, docTitle, instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
 
                         body += Helpers.BuildProcessSummary(instance, false, false, true);

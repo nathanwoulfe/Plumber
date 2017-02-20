@@ -36,6 +36,9 @@
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
                             WHERE WorkflowTaskInstance.Status = @0";
+        public const string TasksByNode = @"SELECT * FROM WorkflowTaskInstance LEFT JOIN WorkflowInstance
+                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
+                            WHERE WorkflowInstance.NodeId = @0";                                                                
         public const string TasksByInstanceId = @"SELECT * FROM WorkflowTaskInstance WHERE WorkflowInstanceGuid = @0";
         public const string TasksAndGroupByInstanceId = @"SELECT * FROM WorkflowTaskInstance 
                             LEFT JOIN WorkflowUserGroups
