@@ -13,7 +13,7 @@ namespace Workflow
     /// <summary>
     /// Process definition for the Document Publish workflow process.
     /// </summary>
-    public class DocumentPublishProcess : TwoStepApprovalProcess
+    public class DocumentPublishProcess : WorkflowApprovalProcess
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -50,7 +50,7 @@ namespace Workflow
             try
             {
                 // Have to do this prior to the publish due to workaround for "publish at" handling.
-                instance.Status = (int)WorkflowStatus.Completed;
+                instance.Status = (int)WorkflowStatus.Approved;
                 instance.CompletedDate = DateTime.Now;
                 ApplicationContext.Current.DatabaseContext.Database.Update(instance);
 

@@ -1,5 +1,4 @@
-﻿
-namespace Workflow.Models
+﻿namespace Workflow.Models
 {
     public enum TaskStatus
     {
@@ -8,13 +7,14 @@ namespace Workflow.Models
         Rejected = 3,
         PendingApproval = 4,
         NotRequired = 5,
-        Cancelled = 6
+        Cancelled = 6,
+        Errored = 7
     }
 
     public enum TaskType
     {
-        CoordinatorApproval = 1,
-        FinalApproval = 2
+        Approve = 1,
+        Publish = 2
     }
 
     /// <summary>
@@ -33,11 +33,11 @@ namespace Workflow.Models
     public enum WorkflowStatus
     {
         New = 1,
-        PendingCoordinatorApproval = 2,
-        PendingFinalApproval = 3,
-        Rejected = 4,
-        Cancelled = 5,
-        Completed = 6,
+        Approved = 2,
+        Rejected = 3,
+        PendingApproval = 4,
+        NotRequired = 5,
+        Cancelled = 6,
         Errored = 7
     }
 
@@ -55,14 +55,12 @@ namespace Workflow.Models
     /// </summary>
     public enum EmailType
     {
-        CoordinatorApprovalRequest = 1,
-        CoordinatorApprovalRejection = 2,
-        FinalApprovalRequest = 3,
-        FinalApprovalRejection = 4,
-        ApprovedAndCompleted = 5,
-        ApprovedAndCompletedForScheduler = 6,
-        SchedulerActionCancelled = 7,
-        WorkflowCancelled = 8,
+        ApprovalRequest = 1,
+        ApprovalRejection = 2,
+        ApprovedAndCompleted = 3,
+        ApprovedAndCompletedForScheduler = 4,
+        SchedulerActionCancelled = 5,
+        WorkflowCancelled = 6,
     }
     
 }

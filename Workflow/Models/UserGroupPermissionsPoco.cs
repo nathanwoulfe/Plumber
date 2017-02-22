@@ -46,12 +46,7 @@ namespace Workflow.Models
         }
 
         [ResultColumn]
-        public UserGroupPoco UserGroup { 
-            get 
-            {
-                var groups = _pr.UserGroupsById(GroupId.ToString());
-                return groups.Any() ? groups.First() : null;
-            }
-        }
+        public UserGroupPoco UserGroup { get; set; }
+        
     }  
 }

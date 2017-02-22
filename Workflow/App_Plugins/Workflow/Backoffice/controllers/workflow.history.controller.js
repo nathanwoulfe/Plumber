@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function historyController($scope, workflowResource, contentResource, dialogService) {
+    function historyController($scope, workflowResource, contentResource, dialogService, $timeout) {
 
         var vm = this;
 
@@ -16,18 +16,6 @@
                     vm.loading = false;
                 });
         }());
-
-        $scope.$on('LastRepeaterElement', function () {
-            angular.forEach($scope.pagedItems, function (v, i) {
-                if (v.NodeName === undefined) {
-                    contentResource.getById(v.NodeId)
-                        .then(function (resp) {
-                            v.NodeName = resp.name;
-                            v.ContentType = resp.contentTypeName;
-                        });
-                }
-            });
-        });
 
         function selectNode() {
             var dialog = dialogService.contentPicker({

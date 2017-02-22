@@ -19,6 +19,28 @@ namespace Workflow
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public WorkflowSettingsPoco GetSettings()
+        {
+            var wsp = new WorkflowSettingsPoco();
+            var db = GetDb();
+            var settings = db.Fetch<WorkflowSettingsPoco>("SELECT * FROM WorkflowSettings");
+
+            if (settings.Any())
+            {
+                wsp = settings.First();
+            }
+            else
+            {
+                db.Insert(wsp);
+            }
+
+            return wsp;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> TasksByStatus(int status)
@@ -125,7 +147,7 @@ namespace Workflow
         /// <returns></returns>
         public  List<UserGroupPoco> UserGroups()
         {
-            return GetDb().Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(new UserToGroupRelator().MapIt, SqlHelpers.UserGroups);
+            return GetDb().Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(new UsersToGroupsRelator().MapIt, SqlHelpers.UserGroups);
         }
 
         public List<UserGroupPoco> AllUserGroups()

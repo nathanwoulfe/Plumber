@@ -10,7 +10,7 @@
         public const string UserGroupById = @"SELECT * FROM WorkFlowUserGroups WHERE GroupId = @0";
         public const string UserGroupByProperty = @"SELECT * FROM WorkflowUserGroups WHERE @0 = @1";
         public const string NewestGroup = @"SELECT TOP 1 * FROM WorkflowUserGroups ORDER BY GroupId DESC";
-        public const string UserGroups = @"SELECT * FROM WorkflowUserGroups LEFT OUTER JOIN WorkflowUser2UserGroup
+        public const string UserGroups = @"SELECT * FROM WorkflowUserGroups LEFT JOIN WorkflowUser2UserGroup
                             on WorkflowUserGroups.GroupId = WorkflowUser2UserGroup.GroupId";
         public const string UserGroupWithUsersById =@"SELECT * FROM WorkflowUserGroups LEFT OUTER JOIN WorkflowUser2UserGroup
                             on WorkflowUserGroups.GroupId = WorkflowUser2UserGroup.GroupId
@@ -36,8 +36,11 @@
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
                             WHERE WorkflowTaskInstance.Status = @0";
-        public const string TasksByNode = @"SELECT * FROM WorkflowTaskInstance LEFT JOIN WorkflowInstance
-                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
+        public const string TasksByNode = @"SELECT * FROM WorkflowTaskInstance 
+                            LEFT JOIN WorkflowInstance
+                            ON WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
+                            LEFT JOIN WorkflowUserGroups
+                            ON WorkflowUserGroups.GroupId = WorkflowTaskInstance.GroupId
                             WHERE WorkflowInstance.NodeId = @0";                                                                
         public const string TasksByInstanceId = @"SELECT * FROM WorkflowTaskInstance WHERE WorkflowInstanceGuid = @0";
         public const string TasksAndGroupByInstanceId = @"SELECT * FROM WorkflowTaskInstance 
@@ -46,7 +49,14 @@
                             WHERE WorkflowInstanceGuid = @0";
 
         // permissions
-        public const string PermissionsByNodeAndType = @"SELECT * FROM WorkflowUserGroupPermissions WHERE NodeId = @0 AND Permission = @1";
+        public const string PermissionsByNodeAndType = @"SELECT * FROM WorkflowUserGroupPermissions
+                            LEFT JOIN WorkflowUserGroups
+                            ON WorkflowUserGroups.GroupId = WorkflowUserGroupPermissions.GroupId                            
+                            WHERE WorkflowUserGroupPermissions.NodeId = @0 AND WorkflowUserGroupPermissions.Permission = @1";
+        public const string PermissionsByNode = @"SELECT * FROM WorkflowUserGroupPermissions
+                            LEFT JOIN WorkflowUserGroups
+                            ON WorkflowUserGroups.GroupId = WorkflowUserGroupPermissions.GroupId                            
+                            WHERE WorkflowUserGroupPermissions.NodeId = @0";
         public const string PermissionsForGroup = @"SELECT * FROM WorkflowUserGroupPermissions WHERE GroupId = @0";
     }
 }

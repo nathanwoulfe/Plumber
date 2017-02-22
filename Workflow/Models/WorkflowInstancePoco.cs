@@ -182,10 +182,7 @@ namespace Workflow.Models
         {
             get
             {
-                return _Status != WorkflowStatus.Cancelled
-                    && _Status != WorkflowStatus.Completed
-                    && _Status != WorkflowStatus.Errored
-                    && _Status != WorkflowStatus.Rejected;
+                return _Status != WorkflowStatus.Cancelled && _Status != WorkflowStatus.Rejected;
             }
         }
 

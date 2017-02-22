@@ -144,7 +144,10 @@ namespace Usc.Web.UserGroups
             var msg = "Successfully created new user group '" + name + "'.";
             log.Debug(msg);
 
-            return Request.CreateResponse(HttpStatusCode.OK, id);
+            return Request.CreateResponse(new {
+                status = HttpStatusCode.OK,
+                data = id
+            });
         }
 
 
@@ -195,7 +198,11 @@ namespace Usc.Web.UserGroups
             msgText = "User group '" + ug.Name + "' has been saved.";
             log.Debug(msgText);
 
-            return Request.CreateResponse(HttpStatusCode.OK, msgText);
+            return Request.CreateResponse(new
+            {
+                status = HttpStatusCode.OK,
+                data = msgText
+            });
         }
 
         [System.Web.Http.HttpPost]

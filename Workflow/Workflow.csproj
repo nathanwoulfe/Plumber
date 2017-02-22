@@ -35,13 +35,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Actions\UserGroupsTreeEvents.cs" />
-    <Compile Include="Actions\UserPermissionsTreeController.cs" />
+    <Compile Include="Actions\WorkflowContextMenuController.cs" />
     <Compile Include="Actions\WorkflowApplication.cs" />
     <Compile Include="Actions\WorkflowSection.cs" />
-    <Compile Include="Api\GroupPermissionsController.cs" />
+    <Compile Include="Api\WorkflowConfigController.cs" />
     <Compile Include="Api\WorkflowController.cs" />
     <Compile Include="Api\UserGroupsController.cs" />
     <Compile Include="Api\WorkflowTasksController.cs" />
+    <Compile Include="Models\InitiateWorkflowModel.cs" />
     <Compile Include="Models\SettingsPoco.cs" />
     <Compile Include="PocoRepository.cs" />
     <Compile Include="Helpers\SqlHelpers.cs" />
@@ -66,8 +67,9 @@
     <Compile Include="Models\WorkflowTaskModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Relators\TaskToInstanceRelator.cs" />
+    <Compile Include="Relators\UsersToGroupsRelator.cs" />
     <Compile Include="Relators\UserToGroupRelator.cs" />
-    <Compile Include="Processes\TwoStepApprovalProcess.cs" />
+    <Compile Include="Processes\WorkflowApprovalProcess.cs" />
     <Compile Include="Helpers\UrlHelpers.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -87,7 +89,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\tree\tree.view.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\usergroups.dashboard.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\userpermissions.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.config.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\interceptors\workflow.interceptors.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\workflow.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\tree\view.html" />
@@ -99,11 +101,11 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.sendtopublish.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.settings.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.dashboard.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\approveDialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\cancelDialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\differencesDialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\publishDialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\unpublishDialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.approve.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.cancel.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.differences.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.publish.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.unpublish.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.directives.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\tree\settings.html" />
     <Content Include="App_Plugins\Workflow\Lang\en-US.xml" />
@@ -128,7 +130,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\views\usergroups.delete.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\usergroups.edit.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\groups.resource.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\views\userpermissions.view.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.config.dialog.html" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="businesslogic">

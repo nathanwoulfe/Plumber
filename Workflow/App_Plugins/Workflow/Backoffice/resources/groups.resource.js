@@ -41,11 +41,6 @@
             /*** DELETE GROUP ***/
             deleteGroup: function (id) {
                 return this.request('POST', this.urlBase + 'deleteGroup?id=' + id);                
-            },
-
-            /*** SAVE PERMISSIONS ***/
-            savePermissions: function (p) {
-                return this.request('POST', '/umbraco/backoffice/api/grouppermissions/savePermissions', p);              
             }
         };
 

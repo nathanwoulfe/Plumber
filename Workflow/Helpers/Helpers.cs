@@ -21,6 +21,7 @@ namespace Workflow
         private static UmbracoHelper _helper = new UmbracoHelper(UmbracoContext.Current);
         private static IUserService _us = ApplicationContext.Current.Services.UserService;
         private static Database _db = ApplicationContext.Current.DatabaseContext.Database;
+        private static PocoRepository _pr = new PocoRepository();
 
         public static IPublishedContent GetNode(int id)
         {
@@ -51,9 +52,9 @@ namespace Workflow
             return null;
         }
 
-        public static SettingsModel GetSettings()
+        public static WorkflowSettingsPoco GetSettings()
         {
-            return JsonConvert.DeserializeObject<SettingsModel>(System.IO.File.ReadAllText(HttpContext.Current.Server.MapPath("/App_plugins/workflow/backoffice/workflow/settings.json")));
+            return _pr.GetSettings();
         }
 
         /// <summary>Checks whether the email address is valid.</summary>
@@ -74,9 +75,10 @@ namespace Workflow
 
         public static bool IsNotFastTrack(WorkflowInstancePoco instance)
         {
-            var fasttrackDoctypes = GetSettings().FastTrack.Select(x => x.ToLower()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
-            string nodeAlias = ApplicationContext.Current.Services.ContentService.GetById(instance.NodeId).ContentType.Alias.ToLower();
-            return (fasttrackDoctypes.IndexOf(nodeAlias) == -1);
+            //var fasttrackDoctypes = GetSettings().FastTrack.Where(x => !string.IsNullOrWhiteSpace(x.ToString())).ToArray();
+            //string nodeAlias = ApplicationContext.Current.Services.ContentService.GetById(instance.NodeId).ContentType.Alias.ToLower();
+            //return (fasttrackDoctypes.IndexOf(nodeAlias) == -1);
+            return true;
         }
 
         /// <summary>

@@ -34,7 +34,7 @@
                 return this.request('GET', this.urlTasksBase + 'getnodetasks?id=' + id);
             },
             initiateWorkflow: function (nodeId, comment, publish) {
-                return this.request('POST', this.urlBase + 'initiateWorkflow?nodeId=' + nodeId + '&comment=' + comment + '&publish=' + publish);
+                return this.request('POST', this.urlTasksBase + 'initiateWorkflow', {'nodeId': nodeId, 'comment': comment, 'publish': publish });
             },
             approveWorkflowTask: function (taskId, comment) {
                 return this.request('POST', this.urlTasksBase + 'approveworkflowtask?taskId=' + taskId + (comment !== null ? '&comment=' + comment : ''));
@@ -55,6 +55,11 @@
             },
             saveSettings: function (settings) {
                 return this.request('POST', this.urlBase + 'saveSettings', settings);
+            },
+
+            /*** SAVE PERMISSIONS ***/
+            saveConfig: function (p) {
+                return this.request('POST', '/umbraco/backoffice/api/workflowconfig/saveconfig', p);              
             }
 
         };

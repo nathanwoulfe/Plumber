@@ -18,6 +18,9 @@
                     </umb-editor-sub-header-left>                   
                 </umb-editor-sub-header>
                 <div>
+                    <div ng-show="vm.isNode">
+                        <h4>Workflow data for: <a ng-href="/umbraco#/content/content/edit/{{ vm.node.id }}">{{ vm.node.name }}</a></h4>
+                    </div>
                     <div class="umb-table" ng-if="items">
                         <div class="umb-table-head">
                             <div class="umb-table-row">
@@ -26,7 +29,7 @@
                                            ng-click="selectAll($event)"
                                            ng-checked="isSelectedAll()">
                                 </div>
-                                <div class="umb-table-cell umb-table">
+                                <div class="umb-table-cell">
                                     <a class="umb-table-head__link" href="#" prevent-default>
                                         Type
                                     </a>
@@ -34,11 +37,6 @@
                                 <div class="umb-table-cell">
                                     <a class="umb-table-head__link" href="#" prevent-default>
                                         Node
-                                    </a>
-                                </div>
-                                <div class="umb-table-cell">
-                                    <a class="umb-table-head__link" href="#" prevent-default>
-                                        Node type
                                     </a>
                                 </div>
                                 <div class="umb-table-cell">
@@ -65,28 +63,28 @@
                         </div>
                         <div class="umb-table-body">
                             <div class="umb-table-row"
-                                 ng-repeat="item in pagedItems | filter:search" emit-last-repeater-element>
+                                 ng-repeat="item in pagedItems | filter:search">
 
                                 <div class="umb-table-cell">
-                                    <i class="umb-table-body__icon icon-users"></i>
+                                    <i class="umb-table-body__icon icon-document"></i>
                                 </div>
                                 <div class="umb-table-cell umb-table__name">
-                                    <a class="umb-table-body__link" ng-href="#/users/usergroups/edit/{{ item.GroupId }}" title="Edit group: {{ item.Name }}">{{ item.Name }}</a>
+                                    {{ item.Type }}
                                 </div>
                                 <div class="umb-table-cell umb-table__name">
-                                    <a class="umb-table-body__link" ng-href="#/users/usergroups/edit/{{ item.GroupId }}" title="Edit group: {{ item.Name }}">{{ item.Name }}</a>
+                                    <node-name node-id="{{ item.NodeId }}"></node-name>
                                 </div>   
                                 <div class="umb-table-cell umb-table__name">
-                                    <a class="umb-table-body__link" ng-href="#/users/usergroups/edit/{{ item.GroupId }}" title="Edit group: {{ item.Name }}">{{ item.Name }}</a>
+                                    {{ item.RequestedBy }}
                                 </div>   
                                 <div class="umb-table-cell umb-table__name">
-                                    <a class="umb-table-body__link" ng-href="#/users/usergroups/edit/{{ item.GroupId }}" title="Edit group: {{ item.Name }}">{{ item.Name }}</a>
+                                    {{ item.RequestedOn }}
                                 </div>   
                                 <div class="umb-table-cell umb-table__name">
-                                    <a class="umb-table-body__link" ng-href="#/users/usergroups/edit/{{ item.GroupId }}" title="Edit group: {{ item.Name }}">{{ item.Name }}</a>
+                                    {{ item.Comments }}
                                 </div>   
                                 <div class="umb-table-cell umb-table__name">
-                                    <a class="umb-table-body__link" ng-href="#/users/usergroups/edit/{{ item.GroupId }}" title="Edit group: {{ item.Name }}">{{ item.Name }}</a>
+                                    {{ item.ApprovalGroup }}
                                 </div>   
                             </div>
                         </div>

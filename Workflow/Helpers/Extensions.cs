@@ -62,8 +62,6 @@ namespace Workflow
         {
             return instances.Where(wi =>
                 wi._Status != WorkflowStatus.Cancelled
-                && wi._Status != WorkflowStatus.Completed
-                && wi._Status != WorkflowStatus.Errored
                 && wi._Status != WorkflowStatus.Rejected).ToList();
         }
 
@@ -76,8 +74,8 @@ namespace Workflow
         public static IQueryable<WorkflowInstancePoco> WorkflowHistory(this IQueryable<WorkflowInstancePoco> instances, int docId)
         {
             return instances.Where(wi => wi.NodeId == docId 
-                && wi._Status != WorkflowStatus.PendingCoordinatorApproval 
-                && wi._Status != WorkflowStatus.PendingFinalApproval)
+                && wi._Status != WorkflowStatus.PendingApproval 
+                && wi._Status != WorkflowStatus.Approved)
                 .OrderByDescending(wi => wi.CreatedDate)
                 .Take(10);
         }      

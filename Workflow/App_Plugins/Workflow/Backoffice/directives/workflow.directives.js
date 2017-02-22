@@ -1,4 +1,16 @@
-﻿angular.module('umbraco').directive('wfComments', function () {
+﻿angular.module('umbraco').directive('nodeName', function (contentResource) {
+    return {
+        restrict: 'E',
+        link: function (scope, element, attr) {
+            contentResource.getById(attr.nodeId)
+                .then(function (resp) {
+                    element.html(resp.name);
+                });
+        }
+    }
+});
+
+angular.module('umbraco').directive('wfComments', function () {
     return {
         restrict: 'AEC',
         scope: {

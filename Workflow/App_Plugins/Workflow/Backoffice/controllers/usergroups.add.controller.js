@@ -7,6 +7,7 @@
         $scope.add = function (name) {
             userGroupsResource.addGroup(name)
                 .then(function (resp) {
+                    console.log(resp);
                     if (resp.status === 200) {
                         notificationsService.success('SUCCESS', 'Successfully created new user group \'' + name + '\'.');
                         window.location = '/umbraco/#/users/usergroups/edit/' + resp.data;

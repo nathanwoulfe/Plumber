@@ -26,13 +26,16 @@ namespace Workflow.Dashboard
         /// <summary>
         /// Returns all tasks currently in workflow processes
         /// </summary>
-        /// <returns></returns>
+        /// <returns></returns>        
         [HttpGet]
-        public IEnumerable<WorkflowItem> GetActiveTasks()
+        public HttpResponseMessage GetActiveTasks()
         {
-            var taskInstances = _pr.TasksByStatus((int)TaskStatus.PendingApproval);            
+            var taskInstances = _pr.TasksByStatus((int)TaskStatus.PendingApproval);
             var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
-            return workflowItems.AsEnumerable();
+            return Request.CreateResponse(new {
+                status = HttpStatusCode.OK,
+                data = workflowItems
+            });
         }
 
         /// <summary>
@@ -41,11 +44,15 @@ namespace Workflow.Dashboard
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<WorkflowItem> GetNodeTasks(string id)
+        public HttpResponseMessage GetNodeTasks(string id)
         {
             var taskInstances = _pr.TasksByNode(id);
             var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
-            return workflowItems.AsEnumerable();
+            return Request.CreateResponse(new
+            {
+                status = HttpStatusCode.OK,
+                data = workflowItems
+            });
         }
 
         /// <summary>
@@ -53,7 +60,7 @@ namespace Workflow.Dashboard
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IEnumerable<WorkflowItem> GetApprovalsForUser(string userId)
+        public HttpResponseMessage GetApprovalsForUser(string userId)
         {
             var _userId = int.Parse(userId);
             var workflowItems = new List<WorkflowItem>();
@@ -70,7 +77,11 @@ namespace Workflow.Dashboard
                 log.Error("Error trying to build user workflow tasks list for user " + Services.UserService.GetUserById(_userId).Name, ex);
             }
 
-            return workflowItems.AsEnumerable();
+            return Request.CreateResponse(new
+            {
+                status = HttpStatusCode.OK,
+                data = workflowItems
+            });
         }
 
 
@@ -79,7 +90,7 @@ namespace Workflow.Dashboard
         /// </summary>
         /// <returns>IEnumerable<WorkflowItem></returns>
         [HttpPost]
-        public IEnumerable<WorkflowItem> GetSubmissionsForUser(string userId)
+        public HttpResponseMessage GetSubmissionsForUser(string userId)
         {
             int _userId = int.Parse(userId);
             List<WorkflowItem> workflowItems = new List<WorkflowItem>();
@@ -95,7 +106,11 @@ namespace Workflow.Dashboard
                 log.Error("Error trying to build user workflow tasks list for user " + Services.UserService.GetUserById(_userId).Name, ex);
             }
 
-            return workflowItems.AsEnumerable();
+            return Request.CreateResponse(new
+            {
+                status = HttpStatusCode.OK,
+                data = workflowItems
+            });
         }
 
 
@@ -190,6 +205,68 @@ namespace Workflow.Dashboard
             return Request.CreateResponse(HttpStatusCode.OK, differences);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <param name="authorId"></param>
+        /// <param name="comment"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage InitiateWorkflow(InitiateWorkflowModel model)
+        {
+            WorkflowInstancePoco instance = null;
+            WorkflowApprovalProcess process = null;
+
+            try
+            {
+                if (model.Publish)
+                {
+                    process = new DocumentPublishProcess();
+                }
+                else
+                {
+                    process = null;
+                }
+
+                instance = process.InitiateWorkflow(int.Parse(model.NodeId), Helpers.GetCurrentUser().Id, model.Comment);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(new
+                {
+                    status = HttpStatusCode.BadRequest,
+                    data = "Something went wrong " + e.Message
+                });
+            }
+
+            if (instance != null)
+            {
+                var msg = string.Empty;
+
+                switch (instance._Status)
+                {
+                    case WorkflowStatus.PendingApproval:
+                        msg = "Page submitted for approval";
+                        break;
+                    case WorkflowStatus.Approved:
+                        msg = "Workflow complete";
+                        break;
+                }
+                return Request.CreateResponse(new
+                {
+                    status = HttpStatusCode.OK,
+                    data = msg
+                });
+            }
+
+            return Request.CreateResponse(new
+            {
+                status = HttpStatusCode.BadRequest,
+                data = "Something went wrong"
+            });
+        }
+
 
         /// <summary>
         /// Processes the workflow task for the given task id
@@ -204,7 +281,7 @@ namespace Workflow.Dashboard
 
             try
             {
-                TwoStepApprovalProcess process = GetProcess(_instance.Type);
+                WorkflowApprovalProcess process = GetProcess(_instance.Type);
 
                 _instance = process.ActionWorkflow(
                     _instance,
@@ -217,10 +294,10 @@ namespace Workflow.Dashboard
 
                 switch (_instance._Status)
                 {
-                    case WorkflowStatus.PendingFinalApproval:
+                    case WorkflowStatus.PendingApproval:
                         msg = "Coordinator approval completed successfully. Page will be " + _instance.TypeDescriptionPastTense.ToLower() + " pending final approval.";
                         break;
-                    case WorkflowStatus.Completed:
+                    case WorkflowStatus.Approved:
                         msg = "Workflow approved successfully and page " + _instance.TypeDescriptionPastTense.ToLower();
                         break;
                 }
@@ -231,7 +308,11 @@ namespace Workflow.Dashboard
                     Type = _instance._Type
                 };
 
-                return Request.CreateResponse(HttpStatusCode.OK, respMessage);
+                return Request.CreateResponse(new
+                {
+                    status = HttpStatusCode.OK,
+                    data = respMessage
+                });
             }
             catch (Exception ex)
             {
@@ -256,7 +337,7 @@ namespace Workflow.Dashboard
 
             try
             {
-                TwoStepApprovalProcess process = GetProcess(_instance.Type);
+                WorkflowApprovalProcess process = GetProcess(_instance.Type);
 
                 _instance = process.ActionWorkflow(
                     _instance,
@@ -294,7 +375,7 @@ namespace Workflow.Dashboard
 
             try
             {
-                TwoStepApprovalProcess process = GetProcess(_instance.Type);
+                WorkflowApprovalProcess process = GetProcess(_instance.Type);
 
                 _instance = process.CancelWorkflow(
                     _instance,
@@ -363,7 +444,7 @@ namespace Workflow.Dashboard
                             item.ShowActionLink = ShowActionLink(taskInstance, _userId);
                         }
 
-                        var coordTaskInstance = taskInstance.WorkflowInstance.TaskInstances.First(ti => ti._Type == TaskType.CoordinatorApproval);
+                        var coordTaskInstance = taskInstance.WorkflowInstance.TaskInstances.First(ti => ti._Type == TaskType.Approve);
 
                         if (coordTaskInstance._Status == TaskStatus.Approved)
                         {

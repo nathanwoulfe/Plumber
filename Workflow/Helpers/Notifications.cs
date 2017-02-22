@@ -24,8 +24,8 @@ namespace Workflow
                 string docTitle = instance.Node.Name;
                 string docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
 
-                WorkflowTaskInstancePoco coordTaskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Type == TaskType.CoordinatorApproval);
-                WorkflowTaskInstancePoco finalTaskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Type == TaskType.FinalApproval);
+                WorkflowTaskInstancePoco coordTaskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Type == TaskType.Approve);
+                WorkflowTaskInstancePoco finalTaskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Type == TaskType.Publish);
 
                 MailAddressCollection to = new MailAddressCollection();
                 string email = Helpers.GetSettings().Email;
@@ -34,32 +34,17 @@ namespace Workflow
 
                 switch (emailType)
                 {
-                    case EmailType.CoordinatorApprovalRequest:
+                    case EmailType.ApprovalRequest:
                         to = coordTaskInstance.UserGroup.PreferredEmailAddresses();
                         body = string.Format(EmailApprovalRequestString,
                             coordTaskInstance.UserGroup.Name, docUrl, docTitle, instance.AuthorComment, instance.AuthorUser.Name, instance.TypeDescription);
 
                         break;
 
-                    case EmailType.CoordinatorApprovalRejection:
+                    case EmailType.ApprovalRejection:
                         to.Add(instance.AuthorUser.Email);
                         body = string.Format(EmailRejectedString,
                             instance.AuthorUser.Name, docUrl, docTitle, coordTaskInstance.Comment, coordTaskInstance.ActionedByUser.Name, instance.TypeDescription.ToLower());
-
-                        break;
-
-                    case EmailType.FinalApprovalRequest:
-                        to = finalTaskInstance.UserGroup.PreferredEmailAddresses();
-                        body = string.Format(EmailApprovalRequestString,
-                            finalTaskInstance.UserGroup.Name, docUrl, docTitle, instance.AuthorComment, instance.AuthorUser.Name, instance.TypeDescription.ToLower());
-
-                        break;
-
-                    case EmailType.FinalApprovalRejection:
-                        to = coordTaskInstance.UserGroup.PreferredEmailAddresses();
-                        to.Add(instance.AuthorUser.Email);
-                        body = string.Format(EmailRejectedString,
-                            instance.AuthorUser.Name, docUrl, docTitle, finalTaskInstance.Comment, finalTaskInstance.ActionedByUser.Name, instance.TypeDescription.ToLower());
 
                         break;
 
@@ -67,11 +52,8 @@ namespace Workflow
                         to = coordTaskInstance.UserGroup.PreferredEmailAddresses();
                         to.Add(instance.AuthorUser.Email);
 
-                        //Notify web admins as well if it's a by pass document type
-                        if (!Helpers.IsNotFastTrack(instance))
-                        {
-                            to.Add(email);
-                        }
+                        //Notify web admins
+                        to.Add(email);                        
 
                         if (instance._Type == WorkflowType.Publish)
                         {

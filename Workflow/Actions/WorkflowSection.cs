@@ -21,8 +21,9 @@ namespace Workflow.Actions
                 var route = "/workflow/tree/view/";
                 var treeNodes = new List<SectionTreeNode>();
 
-                treeNodes.Add(new SectionTreeNode() { Id = "settings", Title = "Workflow settings", Icon = "icon-link", Route = string.Format("{0}{1}", route, "settings") });
-                treeNodes.Add(new SectionTreeNode() { Id = "history", Title = "Workflow history", Icon = "icon-link", Route = string.Format("{0}{1}", route, "history") });
+                treeNodes.Add(new SectionTreeNode() { Id = "settings", Title = "Settings", Icon = "icon-link", Route = string.Format("{0}{1}", route, "settings") });
+                treeNodes.Add(new SectionTreeNode() { Id = "history", Title = "History", Icon = "icon-link", Route = string.Format("{0}{1}", route, "history") });
+                treeNodes.Add(new SectionTreeNode() { Id = "groups", Title = "Groups", Icon = "icon-link", Route = string.Format("{0}{1}", route, "groups") });
 
                 foreach (var n in treeNodes)
                 {

@@ -27,19 +27,8 @@ namespace Workflow.Api
         [System.Web.Http.HttpGet]
         public HttpResponseMessage GetSettings()
         {
-            var wsp = new WorkflowSettingsPoco();        
-            var settings = db.Fetch<WorkflowSettingsPoco>("SELECT * FROM WorkflowSettings");
-
-            if (settings.Any())
-            {
-                wsp = settings.First();
-            } else
-            {
-                db.Insert(wsp);
-                wsp = db.Fetch<WorkflowSettingsPoco>("SELECT * FROM WorkflowSettings").First();
-            }
-
-            return Request.CreateResponse(HttpStatusCode.OK, wsp);
+            var settings = _pr.GetSettings();
+            return Request.CreateResponse(HttpStatusCode.OK, settings);
         }
 
         /// <summary>
@@ -61,7 +50,7 @@ namespace Workflow.Api
         [System.Web.Http.HttpGet]
         public HttpResponseMessage GetStatus(int nodeId)
         {
-            var instances = _pr.InstancesByNodeAndStatus(nodeId, new List<int> { (int)WorkflowStatus.PendingCoordinatorApproval, (int)WorkflowStatus.PendingFinalApproval });
+            var instances = _pr.InstancesByNodeAndStatus(nodeId, new List<int> { (int)WorkflowStatus.PendingApproval });
 
             if (instances.Any())
             {
@@ -69,59 +58,6 @@ namespace Workflow.Api
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, new { msg = string.Empty, status = 1 });
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="nodeId"></param>
-        /// <param name="authorId"></param>
-        /// <param name="comment"></param>
-        /// <returns></returns>
-        [System.Web.Http.HttpPost]
-        public HttpResponseMessage InitiateWorkflow(string nodeId, string comment, bool publish)
-        {
-            WorkflowInstancePoco instance = null;
-            TwoStepApprovalProcess process = null;
-
-            try
-            {
-                if (publish)
-                {
-                    process = new DocumentPublishProcess();
-                }
-                else
-                {
-                    process = null;
-                }
-
-                instance = process.InitiateWorkflow(int.Parse(nodeId), Helpers.GetCurrentUser().Id, comment);
-            }
-            catch (Exception e)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "Something went wrong " + e.Message );
-            }
-
-            if (instance != null)
-            {
-                var msg = string.Empty;
-
-                switch (instance._Status)
-                {
-                    case WorkflowStatus.PendingCoordinatorApproval:
-                        msg = "Page submitted for coordinator approval";
-                        break;
-                    case WorkflowStatus.PendingFinalApproval:
-                        msg = "Page submitted for final approval";
-                        break;
-                    case WorkflowStatus.Completed:
-                        msg = "Workflow complete";
-                        break;
-                }
-                return Request.CreateResponse(HttpStatusCode.OK, msg);
-            }
-
-            return Request.CreateResponse(HttpStatusCode.BadRequest, "Something went wrong");
-        }
+        }        
     }
 }

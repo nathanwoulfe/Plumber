@@ -4,7 +4,7 @@
         '~/App_Plugins/Workflow/backoffice/controllers/usergroups.delete.controller.js',
         '~/App_Plugins/Workflow/backoffice/controllers/usergroups.add.controller.js',		
         '~/App_Plugins/Workflow/backoffice/controllers/usergroups.dashboard.controller.js',						
-		'~/App_Plugins/Workflow/backoffice/controllers/userpermissions.controller.js',
+		'~/App_Plugins/Workflow/backoffice/controllers/workflow.config.controller.js',
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.sendtopublish.controller.js',
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.sendtounpublish.controller.js',
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.approve.controller.js',
