@@ -7,6 +7,9 @@
 *.suo
 *.user
 *.sln.docstates
+**/App_Data/Logs/*.txt
+**/App_Data/Temp/*
+**/App_Data/cache/*
 
 # Build results
 
@@ -126,7 +129,6 @@ ClientBin/
 *.publishsettings
 modulesbin/
 tempbin/
-AppData/Logs/*
 
 # EPiServer Site file (VPP)
 AppData/

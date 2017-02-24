@@ -1,3 +1,0 @@
-﻿ 2017-02-24 02:56:50,484 [P21308/D56/T101] INFO  umbraco.BusinessLogic.Log - Log scrubbed.  Removed all items older than 2017-02-23 02:56:50
- 2017-02-24 06:56:50,498 [P21308/D56/T140] INFO  umbraco.BusinessLogic.Log - Log scrubbed.  Removed all items older than 2017-02-23 06:56:50
- 2017-02-24 10:56:52,347 [P21308/D56/T115] INFO  umbraco.BusinessLogic.Log - Log scrubbed.  Removed all items older than 2017-02-23 10:56:52
