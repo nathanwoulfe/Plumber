@@ -42,13 +42,10 @@
                     </div>
                 </div>
             </div>
-            <div class="span3 permissions" ng-if="$routeParams.id !== '-1' && group.Permissions.length">
-                <h4>Group permissions</h4>
-                <ul class="permissions-list" data-label="Author for:" ng-if="hasAuthorPermissions">
-                    <li ng-repeat="p in group.Permissions | filter:{Permission:1}:true" ng-show="p.NodeName.length"><a ng-href="{{p.Url}}">{{p.NodeName}}</a></li>
-                </ul>
-                <ul class="permissions-list" data-label="Coordinator for:" ng-if="hasCoordinatorPermissions">
-                    <li ng-repeat="p in group.Permissions | filter:{Permission:2}:true" ng-show="p.NodeName.length"><a ng-href="{{p.Url}}">{{p.NodeName}}</a></li>
+            <div class="span5 permissions" ng-if="$routeParams.id !== '-1' && group.Permissions.length">
+                <h4>Current approval flows</h4>
+                <ul class="permissions-list">
+                    <li ng-repeat="p in group.Permissions" ng-show="p.NodeName.length"><a ng-href="{{p.Url}}">{{p.NodeName}} (stage: {{p.Permission}})</a></li>
                 </ul>
             </div>
         </div>

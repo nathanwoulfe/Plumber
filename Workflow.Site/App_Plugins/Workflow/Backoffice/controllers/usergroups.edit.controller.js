@@ -16,8 +16,6 @@
         });
 
         $scope.action = $routeParams.id !== '-1' ? 'Edit' : 'Create';
-        $scope.hasAuthorPermissions = false;
-        $scope.hasCoordinatorPermissions = false;
 
         // fetch all active users, then get the group
         // this kicks it all off...
@@ -34,9 +32,10 @@
             if ($routeParams.id !== '-1') {
                 userGroupsResource.getGroup($routeParams.id)
                     .then(function (resp) {
-                        $scope.group = resp;
-                        getUsersNotInGroup();
-                        checkPermissions();
+                        if (resp.status === 200) {
+                            $scope.group = resp.data;
+                            getUsersNotInGroup();
+                        }
                     });
             } else {
                 $scope.group = {
@@ -49,7 +48,6 @@
                     UsersSummary: ''
                 };
                 getUsersNotInGroup();
-                checkPermissions();
             }
         };
 
@@ -62,20 +60,6 @@
                 }
             });
         };
-
-        function checkPermissions() {
-
-            if ($scope.group.Permissions !== undefined) {
-                angular.forEach($scope.group.Permissions, function (p) {
-                    if (p.Permission === 1) {
-                        $scope.hasAuthorPermissions = true;
-                    }
-                    else if (p.Permission === 2) {
-                        $scope.hasCoordinatorPermissions = true;
-                    }
-                });
-            }
-        }
 
         // add a user to the group, and remove from notInGroup
         $scope.add = function (id) {

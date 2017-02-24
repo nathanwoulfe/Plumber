@@ -10,10 +10,12 @@
 
         userGroupsResource.getAllGroups()
             .then(function (resp) {
-                $scope.loading = false;
-                $scope.items = resp.filter(function (v) {
-                    return v.Name.indexOf('Deleted') === -1;
-                });
+                if (resp.data) {
+                    $scope.loading = false;
+                    $scope.items = resp.data.filter(function (v) {
+                        return v.Name.indexOf('Deleted') === -1;
+                    });
+                }
             });
 
         $scope.getEmail = function (users) {
