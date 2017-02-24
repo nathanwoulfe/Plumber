@@ -319,7 +319,10 @@ namespace Workflow.Dashboard
                 string msg = "An error occurred processing the approval: " + ex.Message + ex.StackTrace;
                 log.Error(msg + " for workflow " + _instance.Id, ex);
 
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, new HttpError(msg));
+                return Request.CreateResponse(new {
+                    status = HttpStatusCode.BadRequest,
+                    data = new HttpError(msg)
+                });
             }
         }
 
@@ -357,7 +360,11 @@ namespace Workflow.Dashboard
                 string msg = "An error occurred rejecting the workflow: " + ex.Message + ex.StackTrace;
                 log.Error(msg + " for workflow " + _instance.Id, ex);
 
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, new HttpError(msg));
+                return Request.CreateResponse(new
+                {
+                    status = HttpStatusCode.BadRequest,
+                    data = new HttpError(msg)
+                });
             }
         }
 

@@ -10,7 +10,7 @@
                     console.log(resp);
                     if (resp.status === 200) {
                         notificationsService.success('SUCCESS', 'Successfully created new user group \'' + name + '\'.');
-                        window.location = '/umbraco/#/users/usergroups/edit/' + resp.data;
+                        window.location = '/umbraco/#/workflow/tree/edit/' + resp.data;
                     } else {
                         notificationsService.error('ERROR', resp.data);
                     }

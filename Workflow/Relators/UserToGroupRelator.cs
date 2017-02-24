@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Workflow.Models;
 
 namespace Workflow.Relators
@@ -15,7 +16,10 @@ namespace Workflow.Relators
             }
 
             if (current != null && current.GroupId == a.GroupId) {
-                current.Users.Add(b);                
+                if (!current.Users.Where(u => u.UserId == b.UserId).Any())
+                {
+                    current.Users.Add(b);
+                }   
                 return null;
             }
 

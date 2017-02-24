@@ -25,7 +25,7 @@
         function refreshTree() {
             treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'users' })
                 .then(function (r) {
-                    window.location = '/umbraco/#/users';
+                    window.location = '/umbraco/#/workflow';
                 });
         }
 

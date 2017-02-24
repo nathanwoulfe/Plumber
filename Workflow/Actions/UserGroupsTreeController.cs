@@ -12,7 +12,7 @@ using Workflow.Models;
 
 namespace Workflow.UserGroups
 {
-    [Tree("users", "usergroups", "User groups")]
+    [Tree("workflow", "usergroups", "User groups")]
     [PluginController("Workflow")]
     public class UserGroupsTreeController : TreeController
     {
@@ -24,7 +24,7 @@ namespace Workflow.UserGroups
 
                 var nodes = new TreeNodeCollection();
                 var treeNodes = new List<SectionTreeNode>();
-                var route = "/users/usergroups/edit/";
+                var route = "/workflow/usergroups/edit/";
 
                 var userGroups = db.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups ORDER BY name DESC");
 

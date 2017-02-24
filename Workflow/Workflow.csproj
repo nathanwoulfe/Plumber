@@ -31,9 +31,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actions\RegisterEvents.cs" />
-    <Compile Include="Actions\UserGroupsTreeController.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Actions\UserGroupsTreeEvents.cs" />
     <Compile Include="Actions\WorkflowContextMenuController.cs" />
     <Compile Include="Actions\WorkflowApplication.cs" />
@@ -88,7 +85,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\tree\history.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\tree\tree.view.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.dashboard.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\views\usergroups.dashboard.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\tree\usergroups.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.config.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\interceptors\workflow.interceptors.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\workflow.resource.js" />
@@ -123,12 +120,12 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="App_Plugins\Workflow\Backoffice\views\usergroups.add.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\usergroups.add.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.add.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.delete.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.edit.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\views\usergroups.delete.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\views\usergroups.edit.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\usergroups.delete.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\tree\edit.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\groups.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.config.dialog.html" />
   </ItemGroup>

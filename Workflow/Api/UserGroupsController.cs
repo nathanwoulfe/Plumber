@@ -44,7 +44,11 @@ namespace Usc.Web.UserGroups
                 }
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, userGroups);
+            return Request.CreateResponse(new
+            {
+                stats = HttpStatusCode.OK,
+                data = userGroups
+            });
         }
 
         /// <summary>
@@ -57,9 +61,9 @@ namespace Usc.Web.UserGroups
         {
             var result = db.Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
                 new UserToGroupRelator().MapIt,
-                @"SELECT * FROM WorkflowUserGroups LEFT OUTER JOIN WorkflowUser2UserGroup
+                @"SELECT * FROM WorkflowUserGroups LEFT JOIN WorkflowUser2UserGroup
                         on WorkflowUserGroups.GroupId = WorkflowUser2UserGroup.GroupId
-                        LEFT OUTER JOIN WorkflowUserGroupPermissions
+                        LEFT JOIN WorkflowUserGroupPermissions
                         on WorkflowUserGroups.GroupId = WorkflowUserGroupPermissions.GroupId 
                         WHERE WorkflowUserGroups.GroupId = @0"
                 , id);
@@ -98,9 +102,17 @@ namespace Usc.Web.UserGroups
                     userGroup.UsersSummary = string.Concat("|", string.Join("|", usersSummary), "|");
                 }
 
-                return Request.CreateResponse(HttpStatusCode.OK, userGroup);
+                return Request.CreateResponse(new
+                {
+                    status = HttpStatusCode.OK,
+                    data = userGroup
+                });
             }
-            return Request.CreateResponse(HttpStatusCode.NotFound, "Group not found");
+            return Request.CreateResponse(new
+            {
+                status = HttpStatusCode.NotFound,
+                data = "Group not found"
+            });
         }
 
         /// <summary>
@@ -220,10 +232,18 @@ namespace Usc.Web.UserGroups
             {
                 var error = "Error deleting UserGroup '" + name + "'. " + ex.Message;
                 log.Error(error, ex);
-                return Request.CreateResponse(HttpStatusCode.NoContent, error);
+                return Request.CreateResponse(new
+                {
+                    status = HttpStatusCode.NoContent,
+                    data = error
+                });
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, "User group '" + name + "' has been deleted");
+            return Request.CreateResponse(new
+            {
+                status = HttpStatusCode.OK,
+                data = string.Concat("User group '", name, "' has been deleted")
+            });
         }
     }
 }
