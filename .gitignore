@@ -7,7 +7,7 @@
 *.suo
 *.user
 *.sln.docstates
-**/App_Data/Logs/*.txt
+**/App_Data/Logs/*
 **/App_Data/Temp/*
 **/App_Data/cache/*
 
