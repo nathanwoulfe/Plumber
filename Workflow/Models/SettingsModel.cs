@@ -4,7 +4,7 @@ namespace Workflow.Models
 {
     public class SettingsModel
     {
-        public string FinalApprover { get; set; }
+        public string DefaultApprover { get; set; }
         public List<string> FastTrack { get; set; }
         public string Email { get; set; }
         public string EditUrl { get; set; }

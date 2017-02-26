@@ -1,4 +1,6 @@
-﻿using Umbraco.Core.Persistence;
+﻿using System.Collections.Generic;
+using Umbraco.Core;
+using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
 
 namespace Workflow.Models
@@ -12,13 +14,9 @@ namespace Workflow.Models
         [PrimaryKeyColumn(AutoIncrement = true)]
         public int Id { get; set; }
 
-        [Column("FinalApprover")]
+        [Column("DefaultApprover")]
         [NullSetting(NullSetting = NullSettings.Null)]
-        public string FinalApprover { get; set; }
-
-        [Column("FastTrack")]
-        [NullSetting(NullSetting = NullSettings.Null)]
-        public string FastTrack { get; set; }
+        public string DefaultApprover { get; set; }
 
         [Column("Email")]
         [NullSetting(NullSetting = NullSettings.Null)]
@@ -30,6 +28,6 @@ namespace Workflow.Models
 
         [Column("SiteUrl")]
         [NullSetting(NullSetting = NullSettings.Null)]
-        public string SiteUrl { get; set; }
+        public string SiteUrl { get; set; }    
     }
 }

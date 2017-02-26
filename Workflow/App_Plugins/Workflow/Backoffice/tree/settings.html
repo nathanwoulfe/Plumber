@@ -11,34 +11,13 @@
             <umb-editor-container>
                 <div class="umb-property">
                     <div class="control-group umb-control-group">
-                        <label class="control-label" for="Final approvers" ng-attr-title="finalApprovers">
-                            Final approval group
+                        <label class="control-label" for="Default approval group" ng-attr-title="defaultApprover">
+                            Default approval group                            
                         </label>
                         <div class="controls">
-                            <select ng-model="vm.finalApprover" ng-options="g.Name for g in vm.groups" name="Final approvers">
+                            <select ng-model="vm.defaultApprover" ng-options="g.Name for g in vm.groups" name="Default approval group">
                                 <option></option>
                             </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="umb-property">
-                    <div class="control-group umb-control-group">
-                        <label class="control-label">Fast-track document types</label>
-                        <div class="controls">
-                            <div class="user-list">
-                                <h5>All document types</h5>
-                                <input type="text" ng-model="addUserFilter" placeholder="Search" />
-                                <ul class="user-list">
-                                    <li ng-repeat="d in vm.notFastTrack track by $index | orderBy: 'd' | filter:{d:addUserFilter}" ng-click="vm.add(d)" title="Add {{ d }} to fast-track">{{ d }}</li>
-                                </ul>
-                            </div>
-                            <div class="user-list">
-                                <h5>Fast-track document types</h5>
-                                <input type="text" ng-model="removeUserFilter" placeholder="Search" />
-                                <ul>
-                                    <li ng-repeat="d in vm.fastTrack track by $index | orderBy: 'd' | filter:{d:removeUserFilter}" ng-click="vm.remove(d)" title="Remove {{ d }} from fast-tracl">{{ d }}</li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -63,6 +42,30 @@
                         <label class="control-label">Edit site URL</label>
                         <div class="controls">
                             <input type="text" ng-model="vm.settings.EditUrl" />
+                        </div>
+                    </div>
+                </div>
+                <div class="umb-property">
+                    <div class="control-group umb-control-group">
+                        <label class="control-label">
+                            Document-based approval flows
+                            <small>Default workflow for all nodes of a given document type</small>
+                        </label>
+                        <div class="controls">
+                            <input type="text" ng-model="search.$" placeholder="Search" prevent-enter-submit no-dirty-check />
+                            <div class="control-panel" ng-repeat="d in vm.docTypes | filter:search | limitTo:5 ">
+                                <h5 ng-bind="d.name"></h5>
+                                <select ng-model="d.selectedApprovalGroup" ng-options="g as g.Name for g in vm.groups">
+                                    <option selected disabled>--- Add ---</option>
+                                </select>
+                                <button class="btn btn-default" ng-click="vm.add(d)">Add</button>
+                                <div ng-show="d.approvalPath">
+                                    <h6>Current flow</h6>
+                                    <ul class="current-flow">
+                                        <li ng-class="{'last': $last}" ng-repeat="u in d.approvalPath track by $index" ng-click="vm.remove(d, $index)" title="Remove approval role for {{u.Name}}">{{u.Name}}</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

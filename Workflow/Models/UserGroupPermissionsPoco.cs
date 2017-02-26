@@ -1,6 +1,6 @@
 ﻿using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
-using System.Linq;
+using Umbraco.Core.Models;
 
 namespace Workflow.Models
 {
@@ -20,8 +20,12 @@ namespace Workflow.Models
         public int GroupId { get; set; }
 
         [Column("NodeId")]
-        [NullSetting(NullSetting = NullSettings.NotNull)]
+        [NullSetting(NullSetting = NullSettings.Null)]
         public int NodeId { get; set; }
+
+        [Column("ContentTypeId")]
+        [NullSetting(NullSetting = NullSettings.Null)]
+        public int ContentTypeId { get; set; }
 
         [Column("Permission")]
         [NullSetting(NullSetting = NullSettings.Null)]
@@ -32,18 +36,19 @@ namespace Workflow.Models
         {
             get
             {
-                return Helpers.GetNode(NodeId).Name;
+                return NodeId > 0 ? Helpers.GetNode(NodeId).Name : string.Empty;
             }
         }
 
         [ResultColumn]
-        public string Url
+        public string ContentTypeName
         {
             get
             {
-                return Helpers.GetNode(NodeId).Url;
+                return ContentTypeId > 0 ? Helpers.GetContentType(ContentTypeId).Name : string.Empty;
             }
         }
+
 
         [ResultColumn]
         public UserGroupPoco UserGroup { get; set; }

@@ -9,7 +9,7 @@
 		function init() {
 			userGroupsResource.getAllGroups()
 				.then(function (resp) {
-					vm.groups = resp;
+					vm.groups = resp.data;
 
 					var hasExplicit = false;
 					angular.forEach(vm.groups, function (v, i) {

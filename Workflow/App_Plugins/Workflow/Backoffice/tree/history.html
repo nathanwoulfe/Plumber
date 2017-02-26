@@ -71,8 +71,9 @@
                                 <div class="umb-table-cell umb-table__name">
                                     {{ item.Type }}
                                 </div>
-                                <div class="umb-table-cell umb-table__name">
-                                    <node-name node-id="{{ item.NodeId }}"></node-name>
+                                <div class="umb-table-cell umb-table__name">                                    
+                                    <node-name node-id="{{ item.NodeId }}" ng-if="!vm.isNode"></node-name>
+                                    <span ng-if="vm.node" ng-bind="vm.node.name"></span>
                                 </div>   
                                 <div class="umb-table-cell umb-table__name">
                                     {{ item.RequestedBy }}

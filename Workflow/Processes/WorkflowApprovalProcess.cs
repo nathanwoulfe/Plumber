@@ -234,7 +234,7 @@ namespace Workflow
                 {
 
                     var settings = _pr.GetSettings();
-                    var finalApproverGroup = GetDb().Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupById, settings.FinalApprover).First();
+                    var finalApproverGroup = GetDb().Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupById, settings.DefaultApprover).First();
 
                     taskInstance.GroupId = finalApproverGroup.GroupId;
                     taskInstance.UserGroup = finalApproverGroup.UserGroup;
@@ -296,7 +296,7 @@ namespace Workflow
         {
             var taskInstance = new WorkflowTaskInstancePoco(TaskType.Publish);
             instance.TaskInstances.Add(taskInstance);
-            string finalApprover = Helpers.GetSettings().FinalApprover;
+            string finalApprover = Helpers.GetSettings().DefaultApprover;
             if (!string.IsNullOrEmpty(finalApprover))
             {
                 taskInstance.UserGroup = GetDb().Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(

@@ -28,25 +28,49 @@ namespace Workflow.Api
             var msgText = "";
 
             try
-            {                    
-                foreach (var m in model) {
-                    // if an id exists, update existing
-                    if (m.Id > 0)
+            {
+                if (model.Where(p => p.ContentTypeId > 0).Any())
+                {
+                    // set defaults for doctype - delete all previous
+                    db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE ContentTypeId != 0");
+
+                    foreach (var m in model)
                     {
-                        db.Update(m);
-                    }
-                    else
-                    {
-                        // an id may not exist, but an existing record may be set to 0, update it if so, otherwise insert new
-                        var exists = db.Fetch<UserGroupPermissionsPoco>("SELECT * FROM WorkflowUserGroupPermissions WHERE GroupId = @0 AND NodeId = @1 AND Permission = @2", m.GroupId, m.NodeId, 0);
-                        if (exists.Any())
+                        // if an id exists, update existing
+                        if (m.Id > 0)
                         {
-                            exists.First().Permission = m.Permission;
-                            db.Update(exists.First());
+                            db.Update(m);
                         }
                         else
                         {
-                            db.Insert(m);
+                            db.Insert(m);                            
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var m in model)
+                    {
+                        // if an id exists, update existing
+                        if (m.Id > 0)
+                        {
+                            db.Update(m);
+                        }
+                        else
+                        {
+                            var exists = db.Fetch<UserGroupPermissionsPoco>(@"SELECT * FROM WorkflowUserGroupPermissions 
+                                                                    WHERE GroupId = @0 
+                                                                    AND NodeId = @1 
+                                                                    AND Permission = @2", m.GroupId, m.NodeId, 0);
+                            if (exists.Any())
+                            {
+                                exists.First().Permission = m.Permission;
+                                db.Update(exists.First());
+                            }
+                            else
+                            {
+                                db.Insert(m);
+                            }
                         }
                     }
                 }

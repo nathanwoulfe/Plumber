@@ -28,7 +28,11 @@ namespace Workflow.Api
         public HttpResponseMessage GetSettings()
         {
             var settings = _pr.GetSettings();
-            return Request.CreateResponse(HttpStatusCode.OK, settings);
+            return Request.CreateResponse(new
+            {
+                status = HttpStatusCode.OK,
+                data = settings
+            });
         }
 
         /// <summary>
@@ -39,7 +43,11 @@ namespace Workflow.Api
         public HttpResponseMessage SaveSettings(WorkflowSettingsPoco model)
         {
             db.Update(model);            
-            return Request.CreateResponse(HttpStatusCode.OK, "Settings updated");
+
+            return Request.CreateResponse(new {
+                status = HttpStatusCode.OK, 
+                data = "Settings updated"
+            });
         }
 
         /// <summary>

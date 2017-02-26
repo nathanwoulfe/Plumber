@@ -20,6 +20,7 @@ namespace Workflow
     {
         private static UmbracoHelper _helper = new UmbracoHelper(UmbracoContext.Current);
         private static IUserService _us = ApplicationContext.Current.Services.UserService;
+        private static IContentTypeService _cs = ApplicationContext.Current.Services.ContentTypeService;
         private static Database _db = ApplicationContext.Current.DatabaseContext.Database;
         private static PocoRepository _pr = new PocoRepository();
 
@@ -31,6 +32,11 @@ namespace Workflow
         public static IUser GetUser(int id)
         {
             return _us.GetUserById(id);
+        }
+
+        public static IContentType GetContentType(int id)
+        {
+            return _cs.GetContentType(id);
         }
 
         public static IUser GetCurrentUser()
@@ -209,8 +215,8 @@ namespace Workflow
             }
             else // Unpublished
             {
-                Document document = new Document(docId);
-                docTitle = document.Text;
+                var document = ApplicationContext.Current.Services.ContentService.GetById(docId);
+                docTitle = document.Name;
                 differencesLink = "<a href=\"javascript:window.alert('This document has not previously been published.')\">Differences</a>";
             }
             docUrl = GetDocPreviewUrl(docId);
