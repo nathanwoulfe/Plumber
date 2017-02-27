@@ -2,18 +2,7 @@
     'use strict';
 
     // create controller 
-    function EditController($scope, $routeParams, userGroupsResource, entityResource, notificationsService, eventsService) {
-
-        // set the current node state in the menu 
-        eventsService.on('appState.treeState.changed', function (event, args) {
-            if (args.key === 'selectedNode') {
-                event.currentScope.nav.syncTree({
-                    tree: $routeParams.tree,
-                    path: args.value.id,
-                    forceReload: false
-                });
-            }
-        });
+    function EditController($scope, $routeParams, userGroupsResource, entityResource, notificationsService) {
 
         $scope.action = $routeParams.id !== '-1' ? 'Edit' : 'Create';
 

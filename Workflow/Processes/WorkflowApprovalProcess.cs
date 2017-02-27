@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Web;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
+using Umbraco.Core.Services;
 using Workflow.Models;
 using Workflow.Relators;
 
@@ -209,18 +210,29 @@ namespace Workflow
         private bool SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId, int authorId, int groupIndex)
         {
             // 0 is the first group set on a given node workflow path
-            var approvalGroup = GetDb().Fetch<UserGroupPermissionsPoco, UserGroupPoco>(SqlHelpers.PermissionsByNode, nodeId);
+            var contentTypeId = Helpers.GetNode(nodeId).ContentType.Id;
+            var approvalGroup = GetDb().Fetch<UserGroupPermissionsPoco, UserGroupPoco>(SqlHelpers.PermissionsByNode, nodeId, contentTypeId);
 
             if (approvalGroup.Any())
             {
                 // approval group length will match the number of groups mapped to the node
                 // only interested in the one that corresponds with the index of the most recently added group
-                var group = approvalGroup.Where(g => g.Permission == groupIndex);
+                // also check the flow type = defined or contenttype, then use the appropriate group reference
+                var byContentType = approvalGroup.Where(g => g.ContentTypeId != 0);
+                UserGroupPermissionsPoco group;
+                if (byContentType.Any())
+                {
+                    group = byContentType.Where(g => g.Permission == groupIndex).First();
+                }
+                else {
+                    group = approvalGroup.Where(g => g.Permission == groupIndex).First();
+                }
                 // This node has a permission set directly so use its group.
-                taskInstance.GroupId = approvalGroup.First().GroupId;
-                taskInstance.UserGroup = approvalGroup.First().UserGroup;
+                taskInstance.GroupId = group.GroupId;
+                taskInstance.UserGroup = group.UserGroup;
 
-                return approvalGroup.OrderBy(g => g.Permission).Last().Permission == groupIndex;
+                // check the last permission is equal to the current group, if so, the request should be published
+                return (byContentType.Any() ? byContentType : approvalGroup).OrderBy(g => g.Permission).Last().Permission == groupIndex;
             }
             else
             {
@@ -232,7 +244,6 @@ namespace Workflow
                 }
                 else // no coordinator set, default to final approver group
                 {
-
                     var settings = _pr.GetSettings();
                     var finalApproverGroup = GetDb().Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupById, settings.DefaultApprover).First();
 

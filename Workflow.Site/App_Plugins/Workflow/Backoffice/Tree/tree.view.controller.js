@@ -1,14 +1,35 @@
 ﻿(function () {
     'use strict';
 
-    function viewController($scope, $routeParams) {
+    function viewController($scope, $routeParams, eventsService) {
         $scope.templatePartialUrl = '../App_Plugins/Workflow/backoffice/tree/' + $routeParams.id.replace('%20', '-').replace(' ', '-') + '.html';
 
         $scope.$on('loadStateChange', function (e, args) {
             $scope.loading = args.state;
         });
+
+        // set the current node state in the menu 
+        eventsService.on('appState.treeState.changed', function (event, args) {
+            
+            if (args.key === 'selectedNode') {
+
+                function buildPath(node, path) {
+                    path.push(node.id);
+                    if (node.id === '-1') return path.reverse();
+                    var parent = node.parent(); 
+                    if (parent === undefined) return path;
+                    return buildPath(parent, path);
+                }
+
+                event.currentScope.nav.syncTree({
+                    tree: $routeParams.tree || 'tree',
+                    path: buildPath(args.value, []),
+                    forceReload: false
+                });
+            }
+        });
     }
 
-    angular.module('umbraco').controller('WorkflowTree.View.Controller', ['$scope', '$routeParams', viewController]);
+    angular.module('umbraco').controller('WorkflowTree.View.Controller', viewController);
 
 }());

@@ -3,7 +3,7 @@
 
 	// create controller 
 	function Controller($scope, $routeParams, userGroupsResource, workflowResource, notificationsService, contentResource) {
-		var vm = this,
+	    var vm = this,
 			nodeId = $routeParams.id;
 
 		function init() {
@@ -11,25 +11,29 @@
 				.then(function (resp) {
 					vm.groups = resp.data;
 
-					var hasExplicit = false;
-					angular.forEach(vm.groups, function (v, i) {
-					    angular.forEach(v.Permissions, function (p) {
-						    if (p.NodeId == nodeId) {
-						        vm.approvalPath[p.Permission] = v;
-								hasExplicit = true;
-							}
-						});						
-					});
-
-					if (!hasExplicit) {
-						contentResource.getById(nodeId)
-							.then(function (resp) {
-								checkAncestorPermissions(resp.path.split(','));
-							});						
-					}
+					contentResource.getById(nodeId)
+						.then(function (resp) {
+						    vm.contentTypeName = resp.contentTypeName;
+						    checkNodePermissions();
+						    checkAncestorPermissions(resp.path.split(','));
+						});					
 				});
 		};
 		init();
+
+		function checkNodePermissions() {
+		    angular.forEach(vm.groups, function (v, i) {
+		        angular.forEach(v.Permissions, function (p) {
+		            if (p.NodeId == nodeId) {
+		                vm.approvalPath[p.Permission] = v;
+		            }
+
+		            if (p.ContentTypeName === vm.contentTypeName) {
+		                vm.contentTypeApprovalPath[p.Permission] = v;
+		            }
+		        });
+		    });
+		}
 
 		function checkAncestorPermissions(path) {
 			// first is -1, last is the current node
@@ -92,7 +96,8 @@
 
 		angular.extend(vm, {
 		    inherited: [],
-            approvalPath: [],
+		    approvalPath: [],
+		    contentTypeApprovalPath: [],
 
 			save: save,
 			add: add,

@@ -18,7 +18,7 @@
         '~/App_Plugins/Workflow/backoffice/resources/workflow.resource.js',
         '~/App_Plugins/Workflow/backoffice/directives/workflow.directives.js',
         '~/App_Plugins/Workflow/backoffice/interceptors/workflow.interceptors.js',
-		'~/App_Plugins/Workflow/backoffice/tree/view.controller.js'
+		'~/App_Plugins/Workflow/backoffice/tree/tree.view.controller.js'
     ],
     css: [
 		'~/App_Plugins/Workflow/backoffice/styles.css'

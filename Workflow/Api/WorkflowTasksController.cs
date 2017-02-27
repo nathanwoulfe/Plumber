@@ -10,6 +10,7 @@ using System.Web.Http;
 using umbraco;
 using umbraco.cms.businesslogic.utilities;
 using Umbraco.Core;
+using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 

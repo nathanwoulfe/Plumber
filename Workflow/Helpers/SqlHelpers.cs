@@ -56,7 +56,8 @@
         public const string PermissionsByNode = @"SELECT * FROM WorkflowUserGroupPermissions
                             LEFT JOIN WorkflowUserGroups
                             ON WorkflowUserGroups.GroupId = WorkflowUserGroupPermissions.GroupId                            
-                            WHERE WorkflowUserGroupPermissions.NodeId = @0";
+                            WHERE WorkflowUserGroupPermissions.NodeId = @0
+                            OR WorkflowUserGroupPermissions.ContentTypeId = @1";
         public const string PermissionsForGroup = @"SELECT * FROM WorkflowUserGroupPermissions WHERE GroupId = @0";
     }
 }

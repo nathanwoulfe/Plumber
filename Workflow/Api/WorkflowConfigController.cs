@@ -33,8 +33,25 @@ namespace Workflow.Api
                 {
                     // set defaults for doctype - delete all previous
                     db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE ContentTypeId != 0");
-                    db.Update(model.Where(m => m.Id > 0));
-                    db.Update(model.Where(m => m.Id == 0));                    
+
+                    var newConfig = model.Where(x => x.Id == 0);
+                    var existingConfig = model.Where(x => x.Id > 0);
+
+                    if (newConfig.Any())
+                    {
+                        foreach (var c in newConfig)
+                        {
+                            db.Insert(c);
+                        }
+                    }
+                    if (existingConfig.Any())
+                    {
+                        foreach (var c in existingConfig)
+                        {
+                            db.Update(c);
+                        }
+                    }
+                 
                 }
                 else
                 {
