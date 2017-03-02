@@ -31,7 +31,7 @@ namespace Workflow.Dashboard
         [HttpGet]
         public HttpResponseMessage GetActiveTasks()
         {
-            var taskInstances = _pr.TasksByStatus((int)TaskStatus.PendingApproval);
+            var taskInstances = _pr.TasksByStatus((int)TaskStatus.PendingApproval);            
             var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
             return Request.CreateResponse(new {
                 status = HttpStatusCode.OK,
@@ -423,11 +423,11 @@ namespace Workflow.Dashboard
                     foreach (var taskInstance in taskInstances)
                     {
                         // TODO -> fix this
-                        var tasks = _pr.TasksByInstanceId(taskInstance.WorkflowInstanceGuid);
-                        if (tasks.Any())
-                        {
-                            taskInstance.WorkflowInstance.TaskInstances = tasks;
-                        }
+                        //var tasks = _pr.TasksByInstanceId(taskInstance.WorkflowInstanceGuid);
+                        //if (tasks.Any())
+                        //{
+                        //    taskInstance.WorkflowInstance.TaskInstances = tasks;
+                        //}
 
                         var users = _pr.UsersByGroupId(taskInstance.GroupId);
                         if (users.Any())
@@ -435,31 +435,44 @@ namespace Workflow.Dashboard
                             taskInstance.UserGroup.Users = users;
                         }
 
+                        var perms = _pr.PermissionsForNode(taskInstance.WorkflowInstance.NodeId, null);
+                        int currentStep = 0;
+
+                        if (perms.Any())
+                        {
+                            currentStep = perms.Where(p => p.GroupId == taskInstance.UserGroup.GroupId).FirstOrDefault().Permission;                          
+                        }
+
                         var item = new WorkflowItem
                         {
                             Type = taskInstance.WorkflowInstance.TypeDescription,
                             NodeId = taskInstance.WorkflowInstance.NodeId,
                             TaskId = taskInstance.WorkflowInstance.Id,
+                            ApprovalGroupId = taskInstance.UserGroup.GroupId,
+                            NodeName = taskInstance.WorkflowInstance.Node.Name,
                             RequestedBy = taskInstance.WorkflowInstance.AuthorUser.Name,
                             RequestedOn = taskInstance.CreatedDate.ToString("d MMM yyyy"),
                             ApprovalGroup = taskInstance.UserGroup.Name,
                             Comments = taskInstance.WorkflowInstance.AuthorComment,
-                            ActiveTask = taskInstance.WorkflowInstance.StatusName
-                        };
+                            ActiveTask = taskInstance.WorkflowInstance.StatusName,
+                            Permissions = perms,
+                            CurrentStep = currentStep
+                    };
 
                         if (_userId != -1 && includeActionLinks)
                         {
                             item.ShowActionLink = ShowActionLink(taskInstance, _userId);
                         }
 
-                        var coordTaskInstance = taskInstance.WorkflowInstance.TaskInstances.First(ti => ti._Type == TaskType.Approve);
 
-                        if (coordTaskInstance._Status == TaskStatus.Approved)
-                        {
-                            item.CoordinatedBy = coordTaskInstance.ActionedByUser.Name;
-                            item.CoordinatedOn = coordTaskInstance.CompletedDate.Value.ToString("d MMM yyyy");
-                            item.CoordinatorComments = coordTaskInstance.Comment;
-                        }
+                        //var coordTaskInstance = taskInstance.WorkflowInstance.TaskInstances.First(ti => ti._Type == TaskType.Approve);
+
+                        //if (coordTaskInstance._Status == TaskStatus.Approved)
+                        //{
+                        //    item.ApprovedBy = coordTaskInstance.ActionedByUser.Name;
+                        //    item.ApprovedOn = coordTaskInstance.CompletedDate.Value.ToString("d MMM yyyy");
+                        //    item.ApprovalComment = coordTaskInstance.Comment;
+                        //}
 
                         workflowItems.Add(item);
                     }

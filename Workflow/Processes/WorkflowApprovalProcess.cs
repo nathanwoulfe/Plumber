@@ -211,7 +211,7 @@ namespace Workflow
         {
             // 0 is the first group set on a given node workflow path
             var contentTypeId = Helpers.GetNode(nodeId).ContentType.Id;
-            var approvalGroup = GetDb().Fetch<UserGroupPermissionsPoco, UserGroupPoco>(SqlHelpers.PermissionsByNode, nodeId, contentTypeId);
+            var approvalGroup = _pr.PermissionsForNode(nodeId, contentTypeId);
 
             if (approvalGroup.Any())
             {

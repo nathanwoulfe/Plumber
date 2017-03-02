@@ -134,6 +134,116 @@
         padding:10px 0;
         margin-bottom:10px;
     }
+
+    // progress bar
+    .workflow-progress {
+        margin:10px;
+        padding-top:10px;
+        border-top:1px solid #d9d9d9;
+        display:flex;
+        position:relative;
+    }
+
+    .progress-step {
+        text-align:center;
+        z-index:1050;
+        position:relative;
+
+        &::before, &::after {
+            content:'';
+            width:50%;
+            height:1px;
+            position:absolute;
+            top:6px;
+            background:#d9d9d9;
+        }
+
+        &::before {
+            left:0;
+        }
+
+        &::after {
+            right:0;
+        }
+
+        &.done {
+
+            .tooltip-done {
+                display:block;
+            }
+
+            &::before, &::after, .marker, .tooltip::after {
+                background:#53a93f;
+            }
+
+            .tooltip {
+                border-color:#53a93f;
+            }
+        }
+
+        &.current {
+
+            .tooltip-current {
+                display:block;
+            }
+
+            .marker, .tooltip::after {
+                background:#df7f48;
+            }
+            &::before {
+                background:linear-gradient(90deg, #53a93f, #df7f48);
+            }
+            &::after {
+                background:linear-gradient(90deg, #df7f48, #d9d9d9);
+            }
+            .tooltip {
+                border-color:#df7f48;
+            }
+        }
+    }
+
+    .marker {
+        display:block;
+        width:15px;
+        height:15px;
+        border-radius:50%;
+        margin:0 auto;
+        background:#d9d9d9;            
+        position:relative;
+        z-index:1050;
+        cursor:pointer;
+
+        &:hover {
+            + .tooltip {
+                display:block;
+                bottom:calc(100% + 5px);
+                left: 50%;
+                transform: translateX(-50%);
+                opacity: 1;
+             
+            }
+        }
+
+        + .tooltip {
+            display:none;
+            background: #f8f8f8;
+            padding: 5px;
+            border:1px solid #d9d9d9;   
+            &::after {
+                content:'';
+                width:1px;
+                height:10px;
+                background:#d9d9d9;
+                position: absolute;
+                top: 100%;
+                left: calc(50% - 1px);
+            }
+
+            span {
+                display:none;
+            }
+        }
+    }
 }
 
 

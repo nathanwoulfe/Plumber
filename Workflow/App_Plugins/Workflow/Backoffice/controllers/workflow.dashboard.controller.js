@@ -21,14 +21,14 @@
             // api call for tasks assigned to the current user
             workflowResource.getApprovalsForUser(vm.currentUser.id)
                 .then(function (resp) {
-                    vm.tasks = getAdditionalNodeData(resp.data);
+                    vm.tasks = resp.data;
                     vm.loaded[0] = 1;
                 });
 
             // api call for tasks created by the current user
             workflowResource.getSubmissionsForUser(vm.currentUser.id)
                 .then(function (resp) {
-                    vm.submissions = getAdditionalNodeData(resp.data);
+                    vm.submissions = resp.data;
                     vm.loaded[1] = 1;
                 });
 
@@ -36,23 +36,16 @@
             if (vm.adminUser) {
                 workflowResource.getActiveTasks()
                     .then(function (resp) {
-                        vm.activeTasks = getAdditionalNodeData(resp.data);
+                        vm.activeTasks = resp.data;
                         vm.loaded[2] = 1;
                     });
             }
-        };
+        };    
 
+        function checkApprovalForStep(p, item) {
+            console.log(p, item);
 
-        function getAdditionalNodeData(data) {
-            angular.forEach(data, function (t) {
-                entityResource.getById(t.NodeId, 'Document')
-                    .then(function (ent) {
-                        t.PageName = ent.name;
-                        t.IsPublished = ent.metaData.IsPublished;
-                    });
-            });
-
-            return data;
+            return true;
         }
 
         function approveTask(task) {
@@ -97,6 +90,7 @@
             approveTask: approveTask,
             cancelTask: cancelTask,
             showDifferences: showDifferences,
+            checkApprovalForStep: checkApprovalForStep,
 
             tasks: [],
             submissions: [],

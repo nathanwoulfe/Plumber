@@ -83,6 +83,81 @@
 .workflow .controls h5 {
   margin-top: 0; }
 
+.workflow .control-panel {
+  padding: 10px 0;
+  margin-bottom: 10px; }
+
+.workflow .workflow-progress {
+  margin: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #d9d9d9;
+  display: flex;
+  position: relative; }
+
+.workflow .progress-step {
+  text-align: center;
+  z-index: 1050;
+  position: relative; }
+  .workflow .progress-step::before, .workflow .progress-step::after {
+    content: '';
+    width: 50%;
+    height: 1px;
+    position: absolute;
+    top: 6px;
+    background: #d9d9d9; }
+  .workflow .progress-step::before {
+    left: 0; }
+  .workflow .progress-step::after {
+    right: 0; }
+  .workflow .progress-step.done .tooltip-done {
+    display: block; }
+  .workflow .progress-step.done::before, .workflow .progress-step.done::after, .workflow .progress-step.done .marker, .workflow .progress-step.done .tooltip::after {
+    background: #53a93f; }
+  .workflow .progress-step.done .tooltip {
+    border-color: #53a93f; }
+  .workflow .progress-step.current .tooltip-current {
+    display: block; }
+  .workflow .progress-step.current .marker, .workflow .progress-step.current .tooltip::after {
+    background: #df7f48; }
+  .workflow .progress-step.current::before {
+    background: linear-gradient(90deg, #53a93f, #df7f48); }
+  .workflow .progress-step.current::after {
+    background: linear-gradient(90deg, #df7f48, #d9d9d9); }
+  .workflow .progress-step.current .tooltip {
+    border-color: #df7f48; }
+
+.workflow .marker {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin: 0 auto;
+  background: #d9d9d9;
+  position: relative;
+  z-index: 1050;
+  cursor: pointer; }
+  .workflow .marker:hover + .tooltip {
+    display: block;
+    bottom: calc(100% + 5px);
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 1; }
+  .workflow .marker + .tooltip {
+    display: none;
+    background: #f8f8f8;
+    padding: 5px;
+    border: 1px solid #d9d9d9; }
+    .workflow .marker + .tooltip::after {
+      content: '';
+      width: 1px;
+      height: 10px;
+      background: #d9d9d9;
+      position: absolute;
+      top: 100%;
+      left: calc(50% - 1px); }
+    .workflow .marker + .tooltip span {
+      display: none; }
+
 /*************/
 .workflow-action-dialog .umb-pane {
   overflow: hidden; }

@@ -78,7 +78,7 @@ namespace Workflow.Models
             }
         }
 
-        public void SetScheduledDate() 
+        public void SetScheduledDate()
         {
             //if (Type == WorkflowType.Publish && _node.ReleaseDate.Ticks != 0)
             //{
@@ -99,12 +99,12 @@ namespace Workflow.Models
         /// Title case text name for the workflow type.
         /// </summary>
         [ResultColumn]
-        public string TypeName 
-        { 
-            get 
-            { 
-                return WorkflowTypeName(_Type); 
-            } 
+        public string TypeName
+        {
+            get
+            {
+                return WorkflowTypeName(_Type);
+            }
         }
 
         [ResultColumn]
@@ -119,7 +119,7 @@ namespace Workflow.Models
         /// <summary>
         /// Describe the workflow type by including details for release at / expire at scheduling.
         /// </summary>
-        [ResultColumn] 
+        [ResultColumn]
         public string TypeDescription
         {
             get
@@ -132,16 +132,16 @@ namespace Workflow.Models
         /// The document object associated with this workflow.
         /// </summary>
         [ResultColumn]
-        public IPublishedContent Node 
-        { 
-            get 
+        public IPublishedContent Node
+        {
+            get
             {
                 if (_node == null)
                 {
                     _node = Helpers.GetNode(NodeId);
                 }
                 return _node;
-            } 
+            }
         }
 
         /// <summary>
@@ -158,9 +158,7 @@ namespace Workflow.Models
                 }
                 return _authorUser;
             }
-        } 
-
-
+        }
 
         /// <summary>
         /// Title case text name for the workflow status.

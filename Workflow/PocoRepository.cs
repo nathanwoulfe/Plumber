@@ -190,5 +190,9 @@ namespace Workflow
             return GetDb().Fetch<UserGroupPermissionsPoco>(SqlHelpers.PermissionsForGroup, id);
         }
 
+        public List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int? contentTypeId)
+        {
+            return GetDb().Fetch<UserGroupPermissionsPoco, UserGroupPoco>(SqlHelpers.PermissionsByNode, nodeId, contentTypeId);
+        }
     }
 }

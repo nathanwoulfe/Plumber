@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Workflow.Models
 {
     /// <summary>
@@ -9,15 +11,19 @@ namespace Workflow.Models
         public string Type { get; set; }
         public int NodeId { get; set; }
         public int TaskId { get; set; }
+        public int ApprovalGroupId { get; set; }
+        public int CurrentStep { get; set; }
+        public string NodeName { get; set; }
         public string RequestedBy { get; set; }
         public string RequestedOn { get; set; }
         public string Comments { get; set; }
-        public string CoordinatedBy { get; set; }
-        public string CoordinatedOn { get; set; }
-        public string CoordinatorComments { get; set; }
+        public string ApprovedBy { get; set; }
+        public string ApprovedOn { get; set; }
+        public string ApprovalComment { get; set; }
         public string ApprovalGroup { get; set; }
         public bool ShowActionLink { get; set; }
         public string ActiveTask { get; set; }
+        public List<UserGroupPermissionsPoco> Permissions { get; set; }
     }
 
 

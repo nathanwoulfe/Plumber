@@ -69,6 +69,12 @@ angular.module('umbraco').directive('wfComments', function () {
             $scope.showDifferences = function (task) {
                 $scope.$parent.vm.showDifferences(task);
             };
+
+            $scope.checkApprovalForStep = function (p, item) {
+                console.log(p, item);
+
+                return 'classvalue';
+            };
         },
         link: function (scope, element, attrs) {
 
