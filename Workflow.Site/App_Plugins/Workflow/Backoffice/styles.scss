@@ -1,4 +1,8 @@
-﻿.workflow {
+﻿$danger: #ee5f5b;
+$umbraco: #df7f48;
+$success: #53a93f;
+
+.workflow {
 
     .span6 {
         float:left;
@@ -122,6 +126,10 @@
         ul {
             margin:0;
         }
+
+        &.show-overflow, &.show-overflow>* {
+            overflow:visible;
+        }
     }
     
     .controls {
@@ -146,7 +154,6 @@
 
     .progress-step {
         text-align:center;
-        z-index:1050;
         position:relative;
 
         &::before, &::after {
@@ -173,11 +180,11 @@
             }
 
             &::before, &::after, .marker, .tooltip::after {
-                background:#53a93f;
+                background:$success;
             }
 
             .tooltip {
-                border-color:#53a93f;
+                border-color:$success;
             }
         }
 
@@ -188,16 +195,16 @@
             }
 
             .marker, .tooltip::after {
-                background:#df7f48;
+                background:$umbraco;
             }
             &::before {
-                background:linear-gradient(90deg, #53a93f, #df7f48);
+                background:linear-gradient(90deg, $success, $umbraco);
             }
             &::after {
-                background:linear-gradient(90deg, #df7f48, #d9d9d9);
+                background:linear-gradient(90deg, $umbraco, #d9d9d9);
             }
             .tooltip {
-                border-color:#df7f48;
+                border-color:$umbraco;
             }
         }
     }
@@ -210,7 +217,6 @@
         margin:0 auto;
         background:#d9d9d9;            
         position:relative;
-        z-index:1050;
         cursor:pointer;
 
         &:hover {
@@ -242,6 +248,15 @@
             span {
                 display:none;
             }
+        }
+    }
+
+    .dropdown-menu {
+        .warning {
+            color:$umbraco;
+        }
+        .danger {
+            color:$danger;
         }
     }
 }

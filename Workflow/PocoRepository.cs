@@ -190,9 +190,24 @@ namespace Workflow
             return GetDb().Fetch<UserGroupPermissionsPoco>(SqlHelpers.PermissionsForGroup, id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <param name="contentTypeId"></param>
+        /// <returns></returns>
         public List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int? contentTypeId)
         {
-            return GetDb().Fetch<UserGroupPermissionsPoco, UserGroupPoco>(SqlHelpers.PermissionsByNode, nodeId, contentTypeId);
+            // TODO: Get all this in one request - permissions with groups and users
+            var perms = GetDb().Fetch<UserGroupPermissionsPoco, UserGroupPoco>(SqlHelpers.PermissionsByNode, nodeId, contentTypeId);
+            if (perms.Any())
+            {
+                foreach (var p in perms)
+                {
+                    p.UserGroup.Users = UsersByGroupId(p.GroupId);
+                }
+            }
+            return perms;
         }
     }
 }

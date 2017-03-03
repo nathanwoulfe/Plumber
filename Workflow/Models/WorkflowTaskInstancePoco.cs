@@ -17,6 +17,7 @@ namespace Workflow.Models
             CreatedDate = DateTime.Now;
             CompletedDate = null;
             Status = (int)TaskStatus.New;
+            ApprovalStep = 0;
         }
 
         public WorkflowTaskInstancePoco(TaskType type)
@@ -31,6 +32,9 @@ namespace Workflow.Models
 
         [Column("Type")]
         public int Type { get; set; }
+
+        [Column("ApprovalStep")]
+        public int ApprovalStep { get; set; }
 
         [Column("WorkflowInstanceGuid")]
         public Guid WorkflowInstanceGuid { get; set; }
@@ -102,6 +106,8 @@ namespace Workflow.Models
 
         [ResultColumn]
         public virtual WorkflowInstancePoco WorkflowInstance { get; set; }
+
+        
 
         /// <summary>
         /// Indicates whether the task instance is currently active.

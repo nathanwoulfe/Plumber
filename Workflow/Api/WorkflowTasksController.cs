@@ -10,6 +10,7 @@ using System.Web.Http;
 using umbraco;
 using umbraco.cms.businesslogic.utilities;
 using Umbraco.Core;
+using Umbraco.Core.Models;
 using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
@@ -23,6 +24,7 @@ namespace Workflow.Dashboard
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static PocoRepository _pr = new PocoRepository();
+        private List<UserGroupPermissionsPoco> perms = new List<UserGroupPermissionsPoco>();
 
         /// <summary>
         /// Returns all tasks currently in workflow processes
@@ -435,13 +437,7 @@ namespace Workflow.Dashboard
                             taskInstance.UserGroup.Users = users;
                         }
 
-                        var perms = _pr.PermissionsForNode(taskInstance.WorkflowInstance.NodeId, null);
-                        int currentStep = 0;
-
-                        if (perms.Any())
-                        {
-                            currentStep = perms.Where(p => p.GroupId == taskInstance.UserGroup.GroupId).FirstOrDefault().Permission;                          
-                        }
+                        GetPermissionsForNode(taskInstance.WorkflowInstance.Node);
 
                         var item = new WorkflowItem
                         {
@@ -456,8 +452,8 @@ namespace Workflow.Dashboard
                             Comments = taskInstance.WorkflowInstance.AuthorComment,
                             ActiveTask = taskInstance.WorkflowInstance.StatusName,
                             Permissions = perms,
-                            CurrentStep = currentStep
-                    };
+                            CurrentStep = taskInstance.ApprovalStep
+                        };
 
                         if (_userId != -1 && includeActionLinks)
                         {
@@ -487,6 +483,21 @@ namespace Workflow.Dashboard
         }
 
         /// <summary>
+        /// Get the explicit or implied approval flow for a given node
+        /// </summary>
+        private void GetPermissionsForNode(IPublishedContent node)
+        {
+            // check the node for set permissions
+            perms = _pr.PermissionsForNode(node.Id, node.ContentType.Id);
+
+            // return them if they exist, otherwise check the parent
+            if (!perms.Any() && node.Level != 1)
+            {
+                GetPermissionsForNode(node.Parent);
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="type"></param>
@@ -499,7 +510,6 @@ namespace Workflow.Dashboard
             }
             return new DocumentUnpublishProcess();
         }
-
 
         /// <summary>
         /// 

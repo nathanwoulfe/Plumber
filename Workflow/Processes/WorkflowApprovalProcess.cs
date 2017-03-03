@@ -51,18 +51,29 @@ namespace Workflow
                 throw new WorkflowException(errorMessage);
             }
 
-            if (ApprovalRequired(taskInstance) && !doPublish)
+            if (!doPublish)
             {
-                InitiateApprovalTask(taskInstance);
-                taskInstance.WorkflowInstanceGuid = g;
-                GetDb().Insert(taskInstance);
+                if (ApprovalRequired(taskInstance))
+                {
+                    InitiateApprovalTask(taskInstance);
+                    taskInstance.WorkflowInstanceGuid = g;
+                    GetDb().Insert(taskInstance);
+                    GetDb().Insert(instance);
+                }
+                else {
+                    instance.Status = (int)WorkflowStatus.PendingApproval;
+                    taskInstance.WorkflowInstanceGuid = g;
+                    GetDb().Insert(taskInstance);
+                    GetDb().Insert(instance);
+
+                    ActionWorkflow(instance, WorkflowAction.Approve, authorUserId, string.Empty);
+                }
+
             }
-            else if (doPublish)
+            else
             {
                 CompleteWorkflow(authorUserId);                
             }
-
-            GetDb().Insert(instance);            
 
             return instance;
         }
@@ -167,7 +178,7 @@ namespace Workflow
         #region private methods
         private void ProcessApprovalAction(WorkflowAction action, int userId, string comment)
         {
-            var taskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Status == TaskStatus.PendingApproval);
+            var taskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Status == TaskStatus.PendingApproval || ti._Status == TaskStatus.New );
 
             EmailType? emailType = null;
             bool emailRequired = false;
@@ -260,14 +271,15 @@ namespace Workflow
             // creating initial task should use perm = 0
             // subsequent tasks increment this index
             var taskInstance = new WorkflowTaskInstancePoco(TaskType.Approve);
+            taskInstance.ApprovalStep = instance.TaskInstances.Count;
             instance.TaskInstances.Add(taskInstance);
 
             doPublish = SetApprovalGroup(taskInstance, nodeId, authorId, instance.TaskInstances.Count - 1);
 
-            taskInstance.UserGroup = GetDb().Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
-                new UserToGroupRelator().MapIt,
-                SqlHelpers.UserGroupWithUsersById,
-                taskInstance.GroupId).First();          
+            //taskInstance.UserGroup = GetDb().Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
+            //    new UserToGroupRelator().MapIt,
+            //    SqlHelpers.UserGroupWithUsersById,
+            //    taskInstance.GroupId).First();          
 
             return taskInstance;
         }
@@ -280,18 +292,16 @@ namespace Workflow
         {
             // check here will be for the number of groups with permission on the current node - if 1, return false as the workflow is single stage
 
-            //// Approval required if the author is not in the coordinator group.
-            //if (!taskInstance.UserGroup.IsMember(instance.AuthorUserId))
-            //{
-            //    return true;
-            //}
-            //else
-            //{    // Not required
-            //    taskInstance.Status = (int)TaskStatus.NotRequired;
-            //    return false;
-            //}
-
-            return true;
+            // Approval required if the author is not in the current group.
+            if (!taskInstance.UserGroup.IsMember(instance.AuthorUserId))
+            {
+                return true;
+            }
+            else
+            {    // Not required
+                taskInstance.Status = (int)TaskStatus.PendingApproval;
+                return false;
+            }
         }
 
         private void InitiateApprovalTask(WorkflowTaskInstancePoco taskInstance)

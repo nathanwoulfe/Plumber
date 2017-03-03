@@ -14,7 +14,6 @@ angular.module('umbraco').directive('wfComments', function () {
     return {
         restrict: 'AEC',
         scope: {
-            intro: '=',
             labelText: '=',
             comment: '=',
             limit: '=',
@@ -46,7 +45,7 @@ angular.module('umbraco').directive('wfComments', function () {
     };
 })
 
-.directive('wfTasks', function () {
+.directive('wfTasks', function (dialogService, notificationsService) {
     return {
         restrict: 'AEC',
         scope: {
@@ -58,47 +57,106 @@ angular.module('umbraco').directive('wfComments', function () {
         templateUrl: 'wf-tasks-template.html',
         controller: function ($scope) {
 
-            $scope.approveTask = function (task) {
-                $scope.$parent.vm.approveTask(task);
+            function showDialog(url, item, cb) {
+                dialogService.open({
+                    template: url,
+                    show: true,
+                    dialogData: item,
+                    callback: function(resp) {
+                        if (cb) {
+                            if (resp.status === 200) {
+                                notificationsService.success("SUCCESS!", resp.data.Message);
+                            }
+                            else {
+                                notificationsService.error("OH SNAP!", resp.data.Message);
+                            }
+
+                            $scope.$parent.vm.init();
+                        }
+                    }
+                });
             };
 
-            $scope.cancelTask = function (task) {                
-                $scope.$parent.vm.cancelTask(task);
+            var buttons = {
+                approveButton: {
+                    labelKey: "workflow_approveButton",
+                    handler: function (item) {
+                        showDialog('../app_plugins/workflow/backoffice/dialogs/workflow.approve.dialog.html', item, true);
+                    }
+                },
+                editButton: {
+                    labelKey: "workflow_editButton",
+                    href: '/umbraco#/content/content/edit/',
+                    handler: function (item) {
+                        window.location = this.href + item.NodeId;
+                    }
+                },
+                cancelButton: {
+                    labelKey: "workflow_cancelButton",
+                    cssClass: 'danger',
+                    handler: function (item) {
+                        showDialog('../app_plugins/workflow/backoffice/dialogs/workflow.cancel.dialog.html', item, true);
+                    }
+                },                
+                rejectButton: {
+                    labelKey: "workflow_rejectButton",
+                    cssClass: 'warning',
+                    handler: function (item) {
+                        showDialog('../app_plugins/workflow/backoffice/dialogs/workflow.reject.dialog.html', item, true);
+                    }
+                },
+                diffsButton: {
+                    labelKey: "workflow_diffsButton",
+                    handler: function (item) {
+                        showDialog('../app_plugins/workflow/backoffice/dialogs/workflow.differences.dialog.html', item);
+                    }
+                }
             };
 
-            $scope.showDifferences = function (task) {
-                $scope.$parent.vm.showDifferences(task);
-            };
-
-            $scope.checkApprovalForStep = function (p, item) {
-                console.log(p, item);
-
-                return 'classvalue';
-            };
+            $scope.buttonGroup = {
+                defaultButton: buttons.approveButton,
+                subButtons: [
+                    buttons.editButton,
+                    buttons.diffsButton,
+                    buttons.rejectButton,
+                    buttons.cancelButton
+                ]
+            };            
         },
         link: function (scope, element, attrs) {
-
-            scope.buttonCount = function (task) {
-                var i = 1; // always shows cancel option
-
-                if (task.IsPublished === true) {
-                    i++;
-                }
-                if (task.ShowActionLink === true) {
-                    i++;
-                }
-                if (scope.editLink != 'false') {
-                    i++;
-                }
-
-                return i;
-            };
 
             /******** PAGING *******/
             scope.numPerPage = 10;
         }
     };
 });
+
+(function () {
+    'use strict';
+
+    function ButtonGroupDirective() {
+
+        var directive = {
+            restrict: 'E',
+            replace: true,
+            templateUrl: '../app_plugins/workflow/backoffice/partials/workflowButtonGroup.html',
+            scope: {
+                defaultButton: "=",
+                subButtons: "=",
+                state: "=?",
+                item: "=",
+                direction: "@?",
+                float: "@?"
+            }
+        };
+
+        return directive;
+    }
+
+    angular.module('umbraco.directives').directive('workflowButtonGroup', ButtonGroupDirective);
+
+})();
+
 
 (function () {
     'use strict';

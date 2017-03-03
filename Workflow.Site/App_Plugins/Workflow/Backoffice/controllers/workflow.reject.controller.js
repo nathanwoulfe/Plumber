@@ -10,9 +10,9 @@
         $scope.isFinalApproval = $scope.dialogData.ActiveTask === 'Pending Final Approval' ? true : false;
         $scope.disabled = $scope.isFinalApproval === true ? false : true;
 
-        $scope.approve = function () {
+        $scope.reject = function () {
             $scope.showLoader = true;
-            workflowResource.approveWorkflowTask($scope.dialogData.TaskId, $scope.approvalComment)
+            workflowResource.rejectWorkflowTask($scope.dialogData.TaskId, $scope.approvalComment)
                 .then(function (resp) {
                     $scope.showLoader = false;
                     $scope.submit(resp);
@@ -21,6 +21,6 @@
     };
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.Approve.Controller', Controller);
+    angular.module('umbraco').controller('Workflow.Reject.Controller', Controller);
 }());
 

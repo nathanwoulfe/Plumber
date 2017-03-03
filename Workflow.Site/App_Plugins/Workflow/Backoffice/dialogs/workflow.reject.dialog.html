@@ -1,11 +1,11 @@
-﻿<div class="workflow-action-dialog umb-overlay umb-overlay-right" ng-controller="Workflow.Approve.Controller">
+﻿<div class="workflow-action-dialog umb-overlay umb-overlay-right" ng-controller="Workflow.Reject.Controller">
     <div class="umb-overlay__form">
         <div class="umb-overlay-header">
-            <h4 class="umb-overlay__title">Approve workflow task - {{ dialogData.NodeName }}</h4>
+            <h4 class="umb-overlay__title">Reject workflow task - {{ dialogData.NodeName }}</h4>
         </div>
         <div class="umb-overlay-container">
             <p>Edited by {{ dialogData.RequestedBy }} on {{ dialogData.RequestedOn }}</p>
-            <p><i>"{{ dialogData.Comments }}"</i></p>   
+            <p><i>"{{ dialogData.Comments }}"</i></p>
             <wf-comments limit="250"
                          label-text="'Comments'"
                          comment="approvalComment"
@@ -18,8 +18,8 @@
                 <button ng-click="close()" data-hotkey="ctrl+x" class="btn btn-link">
                     Cancel
                 </button>
-                <button ng-click="approve()" data-hotkey="ctrl+s" class="btn btn-primary" ng-disabled="disabled">
-                    Approve
+                <button ng-click="reject()" data-hotkey="ctrl+r" class="btn btn-warning" ng-disabled="disabled">
+                    Reject
                 </button>
                 <div ng-show="showLoader" class="umb-loader"><div></div></div>
             </div>

@@ -77,8 +77,14 @@ namespace Workflow
             {
                 return false;
             }
-        }
+        }       
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
         public static bool IsNotFastTrack(WorkflowInstancePoco instance)
         {
             //var fasttrackDoctypes = GetSettings().FastTrack.Where(x => !string.IsNullOrWhiteSpace(x.ToString())).ToArray();
@@ -87,34 +93,6 @@ namespace Workflow
             return true;
         }
 
-        /// <summary>
-        ///  Build a workflow instance history list markup for the workflow tab.
-        /// </summary>
-        /// <param name="instances">The workflow instances to include in the list.</param>
-        /// <param name="includeAction">true if the Action link should be included for those who have access to it.</param>
-        /// <param name="includeCancel">true if the Cancel link should be included for those who have access to it.</param>
-        /// <param name="includeComments">true if comments should be included in the details</param>
-        /// <returns>HTML table definition</returns>
-        public static string BuildProcessList(List<WorkflowInstancePoco> instances, bool includeAction, bool includeCancel, bool includeComments)
-        {
-            string result = "";
-
-            if (instances != null && instances.Count > 0)
-            {
-                result += "<table style=\"workflowProcessList\">";
-                foreach (WorkflowInstancePoco instance in instances)
-                {
-                    result += "<tr>" + BuildProcessSummary(instance, includeAction, includeCancel, includeComments) + "</tr>";
-                }
-                result += "</table>";
-            }
-            else
-            {
-                result += "&nbsp;None.<br/><br/>";
-            }
-
-            return result;
-        }
 
         /// <summary>
         /// Builds workflow instance details markup.

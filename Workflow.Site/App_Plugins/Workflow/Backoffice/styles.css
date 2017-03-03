@@ -80,6 +80,9 @@
 .workflow .umb-table-cell ul {
   margin: 0; }
 
+.workflow .umb-table-cell.show-overflow, .workflow .umb-table-cell.show-overflow > * {
+  overflow: visible; }
+
 .workflow .controls h5 {
   margin-top: 0; }
 
@@ -96,7 +99,6 @@
 
 .workflow .progress-step {
   text-align: center;
-  z-index: 1050;
   position: relative; }
   .workflow .progress-step::before, .workflow .progress-step::after {
     content: '';
@@ -134,7 +136,6 @@
   margin: 0 auto;
   background: #d9d9d9;
   position: relative;
-  z-index: 1050;
   cursor: pointer; }
   .workflow .marker:hover + .tooltip {
     display: block;
@@ -157,6 +158,12 @@
       left: calc(50% - 1px); }
     .workflow .marker + .tooltip span {
       display: none; }
+
+.workflow .dropdown-menu .warning {
+  color: #df7f48; }
+
+.workflow .dropdown-menu .danger {
+  color: #ee5f5b; }
 
 /*************/
 .workflow-action-dialog .umb-pane {

@@ -3,4 +3,12 @@
   <area alias="sections">
     <key alias="workflow">Workflow</key>
   </area>
+  <area alias="workflow">
+    <key alias="approveButton">Approve</key>
+    <key alias="editButton">Edit</key>
+    <key alias="cancelButton">Cancel</key>    
+    <key alias="rejectButton">Reject</key>  
+    <key alias="diffsButton">Differences</key>
+  </area>
+  
 </language>

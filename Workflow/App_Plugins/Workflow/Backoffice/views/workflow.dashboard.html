@@ -9,7 +9,7 @@
 
                     <script type="text/ng-template" id="wf-tasks-template.html">
                         <h3 ng-bind="heading"></h3>
-                        <div ng-show="items.length">                      
+                        <div ng-show="items.length">
 
                             <div class="umb-table">
                                 <div class="umb-table-head">
@@ -24,7 +24,7 @@
                                                 Type
                                             </a>
                                         </div>
-                                        <div class="umb-table-cell">
+                                        <div class="umb-table-cell umb-table__name">
                                             <a class="umb-table-head__link" href="#" prevent-default>
                                                 Page
                                             </a>
@@ -64,18 +64,27 @@
                                                 <i class="umb-table-body__icon icon-document"></i>
                                             </div>
                                             <div class="umb-table-cell" ng-bind="item.Type"></div>
-                                            <div class="umb-table-cell">
+                                            <div class="umb-table-cell umb-table__name">
                                                 <a href="#" ng-href="/umbraco/dialogs/preview.aspx?id={{item.NodeId}}" ng-bind="item.NodeName" target="_blank"></a>
                                             </div>
                                             <div class="umb-table-cell" ng-bind="item.RequestedBy"></div>
                                             <div class="umb-table-cell" ng-bind="item.RequestedOn"></div>
                                             <div class="umb-table-cell" ng-bind="item.Comments"></div>
                                             <div class="umb-table-cell" ng-bind="item.ApprovalGroup"></div>
-                                            <div class="umb-table-cell">
-                                                <a ng-if="editLink != 'false'" ng-href="/umbraco#/content/content/edit/{{item.NodeId}}" class="icon icon-edit action-Edit" title="Edit"></a>
-                                                <button ng-if="item.IsPublished === true" ng-click="showDifferences(item)" class="icon icon-trafic" title="Show differences"></button>
+                                            <div class="umb-table-cell show-overflow">
+
+                                                <workflow-button-group ng-if="buttonGroup"
+                                                                  default-button="buttonGroup.defaultButton"
+                                                                  sub-buttons="buttonGroup.subButtons"
+                                                                  direction="down"
+                                                                  item="item"
+                                                                  float="right">
+                                                </workflow-button-group>
+
+                                                <!--<a ng-if="editLink != 'false'" ng-href="/umbraco#/content/content/edit/{{item.NodeId}}" class="icon icon-edit action-Edit" title="Edit"></a>
+                                                <button ng-if="!item.IsPublished  || item.IsPublished === true" ng-click="showDifferences(item)" class="icon icon-trafic" title="Show differences"></button>
                                                 <button ng-if="item.ShowActionLink === true" ng-click="approveTask(item)" class="icon icon-check" title="Action workflow"></button>
-                                                <button ng-click="cancelTask(item)" class="icon icon-delete" title="Cancel workflow"></button>
+                                                <button ng-click="cancelTask(item)" class="icon icon-delete" title="Cancel workflow"></button>-->
                                             </div>
                                         </div>
                                         <div class="workflow-progress">
@@ -85,7 +94,7 @@
                                                     <span class="tooltip-done">Approved:</span>
                                                     <span class="tooltip-current">Pending:</span>
                                                     {{ p.UserGroup.Name }}
-                                                </span>                                                
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
