@@ -42,12 +42,17 @@ namespace Workflow.Models
         [ResultColumn]
         public List<User2UserGroupPoco> Users { get; set; }
 
-        [ResultColumn]
-        public string UsersSummary { get; set; }
-
         public UserGroupPoco() {
             Users = new List<User2UserGroupPoco>();
             Permissions = new List<UserGroupPermissionsPoco>();
+        }
+
+        [ResultColumn]
+        public string UsersSummary {
+            get
+            {
+                return string.Concat("|", string.Join("|", Users.Select(u => u.UserId)), "|");
+            }
         }
 
         public bool IsMember(int userId)

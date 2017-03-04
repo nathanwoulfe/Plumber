@@ -1,6 +1,5 @@
 ﻿using log4net;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -20,92 +19,38 @@ namespace Usc.Web.UserGroups
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly Database db = ApplicationContext.Current.DatabaseContext.Database;
         private static readonly PocoRepository _pr = new PocoRepository();
-        private IUserService _us = ApplicationContext.Current.Services.UserService;
 
         /// <summary>
-        /// 
+        /// Get all groups and their associated users and permissions
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [System.Web.Http.HttpGet]
         public HttpResponseMessage GetAllGroups()
         {
-            var userGroups = _pr.UserGroups();
-
-            //foreach (var userGroup in userGroups)
-            //{
-            //    if (!userGroup.Name.Contains("Deleted"))
-            //    {
-            //        var permissions = _pr.PermissionsForGroup(userGroup.GroupId);
-            //        if (permissions.Any())
-            //        {
-            //            userGroup.Permissions = permissions;
-            //        }
-            //    }
-            //}
-
             return Request.CreateResponse(new
             {
                 stats = HttpStatusCode.OK,
-                data = userGroups
+                data = _pr.UserGroups()
             });
         }
 
         /// <summary>
-        /// 
+        /// Get single group and associated users and permissions
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [System.Web.Http.HttpGet]
         public HttpResponseMessage GetGroup(string id)
         {
-            var result = db.Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
-                new UserToGroupRelator().MapIt,
-                @"SELECT * FROM WorkflowUserGroups LEFT JOIN WorkflowUser2UserGroup
-                        on WorkflowUserGroups.GroupId = WorkflowUser2UserGroup.GroupId
-                        LEFT JOIN WorkflowUserGroupPermissions
-                        on WorkflowUserGroups.GroupId = WorkflowUserGroupPermissions.GroupId 
-                        WHERE WorkflowUserGroups.GroupId = @0"
-                , id);
-            var permissions = _pr.PermissionsForGroup(int.Parse(id));
+            var result = _pr.PopulatedUserGroup(id);
 
             if (result.Any())
             {
-                var userGroup = result.First();
-
-                if (permissions.Any())
-                {
-                    userGroup.Permissions = permissions;
-                }
-
-                var usersSummary = new List<int>();
-                if (userGroup.Users.Any())
-                {
-                    var i = 0;
-                    var remove = -1;
-                    foreach (var u in userGroup.Users)
-                    {
-                        if (u.GroupId == 0 && u.UserId == 0 && u.Id == 0)
-                        {
-                            remove = i;
-                        }
-                        else
-                        {
-                            usersSummary.Add(u.UserId);                         
-                        }
-                        i++;
-                    }
-                    if (remove != -1)
-                    {
-                        userGroup.Users.Remove(userGroup.Users[remove]);
-                    }
-                    userGroup.UsersSummary = string.Concat("|", string.Join("|", usersSummary), "|");
-                }
-
                 return Request.CreateResponse(new
                 {
                     status = HttpStatusCode.OK,
-                    data = userGroup
+                    data = result.First()
                 });
             }
             return Request.CreateResponse(new
@@ -116,7 +61,7 @@ namespace Usc.Web.UserGroups
         }
 
         /// <summary>
-        /// 
+        /// Add a new group
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
@@ -128,7 +73,11 @@ namespace Usc.Web.UserGroups
                 // check that it doesn't already exist
                 if (_pr.UserGroupsByName(name).Any())
                 {
-                    return Request.CreateResponse(HttpStatusCode.NoContent, "Cannot create user group; a group with that name already exists.");
+                    return Request.CreateResponse(new
+                    {
+                        status = HttpStatusCode.NoContent,
+                        data = "Cannot create user group; a group with that name already exists."
+                    });
                 }
                 else
                 {
@@ -147,8 +96,12 @@ namespace Usc.Web.UserGroups
             {
                 var error = "Error creating user group '" + name + "'. " + ex.Message;
                 log.Error(error, ex);
-
-                return Request.CreateResponse(HttpStatusCode.NoContent, error);
+                // if we are here, something isn't right...
+                return Request.CreateResponse(new
+                {
+                    status = HttpStatusCode.NoContent,
+                    data = error
+                });
             }
 
             var id = _pr.NewestGroup().GroupId;
@@ -156,6 +109,7 @@ namespace Usc.Web.UserGroups
             var msg = "Successfully created new user group '" + name + "'.";
             log.Debug(msg);
 
+            // return the id of the new group, to update the front-end route to display the edit view
             return Request.CreateResponse(new {
                 status = HttpStatusCode.OK,
                 data = id
@@ -164,7 +118,7 @@ namespace Usc.Web.UserGroups
 
 
         /// <summary>
-        /// 
+        /// Save changes to an existing group
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
@@ -179,14 +133,22 @@ namespace Usc.Web.UserGroups
             {
                 var userGroup = _pr.UserGroupsById(ug.GroupId.ToString()).First();
 
+                // need to check the new name/alias isn't already in use
                 if (userGroup.Name != ug.Name && nameExists)
-                    return Request.CreateResponse(HttpStatusCode.NoContent, "Group name already exists");
+                    return Request.CreateResponse(new
+                    {
+                        status = HttpStatusCode.NoContent,
+                        data = "Group name already exists"
+                    });
 
                 if (userGroup.Alias != ug.Alias && aliasExists)
-                    return Request.CreateResponse(HttpStatusCode.NoContent, "Group alias already exists");
+                    return Request.CreateResponse(new
+                    {
+                        status = HttpStatusCode.NoContent,
+                        data = "Group alias already exists"
+                    });
 
-                // Update the Members
-
+                // Update the Members - TODO - should find a more efficient way to do this...
                 db.Execute("DELETE FROM WorkflowUser2UserGroup WHERE GroupId = @0", userGroup.GroupId);
 
                 if (ug.Users.Count > 0)
@@ -204,9 +166,14 @@ namespace Usc.Web.UserGroups
             {
                 msgText = "Error saving user group '" + ug.Name + "'. " + ex.Message;
                 log.Error(msgText, ex);
-                return Request.CreateResponse(HttpStatusCode.NoContent, msgText);
+                return Request.CreateResponse(new
+                {
+                    status = HttpStatusCode.NoContent,
+                    data = msgText
+                });
             }
 
+            // feedback to the browser
             msgText = "User group '" + ug.Name + "' has been saved.";
             log.Debug(msgText);
 
@@ -217,11 +184,16 @@ namespace Usc.Web.UserGroups
             });
         }
 
+        /// <summary>
+        /// Delete group
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [System.Web.Http.HttpPost]
         public HttpResponseMessage DeleteGroup(string id)
         {
-            var name = db.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE GroupId = @0", id).First().Name;
-            
+            // remove all users, permissions and the group itself
+            // existing workflow processes are left as is, and need to be managed by a human person
             try
             {
                 db.Execute("DELETE FROM WorkflowUserGroups WHERE GroupId = @0", id);
@@ -230,7 +202,7 @@ namespace Usc.Web.UserGroups
             }
             catch (Exception ex)
             {
-                var error = "Error deleting UserGroup '" + name + "'. " + ex.Message;
+                var error = "Error deleting user group. " + ex.Message;
                 log.Error(error, ex);
                 return Request.CreateResponse(new
                 {
@@ -239,10 +211,11 @@ namespace Usc.Web.UserGroups
                 });
             }
 
+            // gone.
             return Request.CreateResponse(new
             {
                 status = HttpStatusCode.OK,
-                data = string.Concat("User group '", name, "' has been deleted")
+                data = string.Concat("User group has been deleted")
             });
         }
     }

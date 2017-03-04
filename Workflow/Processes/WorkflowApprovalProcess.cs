@@ -256,7 +256,7 @@ namespace Workflow
                 else // no coordinator set, default to final approver group
                 {
                     var settings = _pr.GetSettings();
-                    var finalApproverGroup = GetDb().Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupById, settings.DefaultApprover).First();
+                    var finalApproverGroup = GetDb().Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupBasic, settings.DefaultApprover).First();
 
                     taskInstance.GroupId = finalApproverGroup.GroupId;
                     taskInstance.UserGroup = finalApproverGroup.UserGroup;
@@ -320,9 +320,9 @@ namespace Workflow
             string finalApprover = Helpers.GetSettings().DefaultApprover;
             if (!string.IsNullOrEmpty(finalApprover))
             {
-                taskInstance.UserGroup = GetDb().Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
-                    new UserToGroupRelator().MapIt,
-                    SqlHelpers.UserGroupWithUsersById,
+                taskInstance.UserGroup = GetDb().Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(
+                    new GroupsRelator().MapIt,
+                    SqlHelpers.UserGroupDetailed,
                     finalApprover).First();
             }
             if (taskInstance.UserGroup != null)

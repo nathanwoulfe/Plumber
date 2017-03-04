@@ -64,9 +64,9 @@ namespace Workflow
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public List<User2UserGroupPoco> GroupsForUserById(int id)
+        public List<User2UserGroupPoco> UserGroupsByUserId(int id)
         {
-            return GetDb().Fetch<User2UserGroupPoco>(SqlHelpers.GroupsForUserById, id);
+            return GetDb().Fetch<User2UserGroupPoco>(SqlHelpers.UserGroupsByUserId, id);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Workflow
         /// <param name="node"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        public  List<WorkflowInstancePoco> InstancesByNodeAndStatus(int node, List<int> status)
+        public List<WorkflowInstancePoco> InstancesByNodeAndStatus(int node, List<int> status)
         {            
             var statusStr = string.Concat("Status = ", string.Join(" OR Status = ", status));
             return GetDb().Fetch<WorkflowInstancePoco>(string.Concat(SqlHelpers.InstanceByNodeStr, statusStr), node);
@@ -145,19 +145,19 @@ namespace Workflow
         /// 
         /// </summary>
         /// <returns></returns>
-        public  List<UserGroupPoco> UserGroups()
+        public List<UserGroupPoco> UserGroups()
         {
             return GetDb().Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(new GroupsRelator().MapIt, SqlHelpers.UserGroups);            
+        }
+
+        public List<UserGroupPoco> PopulatedUserGroup(string id)
+        {
+            return GetDb().Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(new GroupsRelator().MapIt, SqlHelpers.UserGroupDetailed, id);
         }
 
         public List<UserGroupPoco> AllUserGroups()
         {
             return GetDb().Fetch<UserGroupPoco>(SqlHelpers.UserGroups);
-        }
-
-        public List<UserGroupPoco> UserGroupsByProperty(string property, string value)
-        {
-            return GetDb().Fetch<UserGroupPoco>(SqlHelpers.UserGroupByProperty, property, value);
         }
 
         public List<UserGroupPoco> UserGroupsByName(string value)

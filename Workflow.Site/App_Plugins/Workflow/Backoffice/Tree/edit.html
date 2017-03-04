@@ -43,9 +43,17 @@
                 </div>
             </div>
             <div class="span5 permissions" ng-if="$routeParams.id !== '-1' && group.Permissions.length">
-                <h4>Current approval flows</h4>
+                <h4>Node approval flows</h4>
                 <ul class="permissions-list">
-                    <li ng-repeat="p in group.Permissions" ng-show="p.NodeName.length"><a ng-href="{{p.Url}}">{{p.NodeName}} (stage: {{p.Permission}})</a></li>
+                    <li ng-repeat="p in group.Permissions" ng-show="p.NodeName.length">
+                        <a ng-if="p.NodeName" ng-href="#/content/content/edit/{{ p.NodeId }}" title="Edit node: {{ p.NodeName }}">{{ p.NodeName}} (stage: {{ p.Permission + 1 }})</a>
+                    </li>
+                </ul>
+                <h4>Document-type approval flows</h4>
+                <ul class="permissions-list">
+                    <li ng-repeat="p in group.Permissions" ng-show="p.ContentTypeName.length">
+                        <a ng-if="p.ContentTypeName" ng-href="#/settings/documentTypes/edit/{{ p.ContentTypeId }}" title="Edit content type: {{ p.ContentTypeName }}">{{ p.ContentTypeName }} (stage: {{ p.Permission + 1 }})</a>
+                    </li>
                 </ul>
             </div>
         </div>

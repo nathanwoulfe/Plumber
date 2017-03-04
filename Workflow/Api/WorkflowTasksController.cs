@@ -70,7 +70,7 @@ namespace Workflow.Dashboard
 
             try
             {
-                var userUserGroups = _pr.GroupsForUserById(_userId);
+                var userUserGroups = _pr.UserGroupsByUserId(_userId);
                 var taskInstances = _pr.TasksWithGroup().ApprovalTasksForUserGroups(userUserGroups).ToList();
 
                 workflowItems = BuildWorkflowItemList(taskInstances, _userId);
