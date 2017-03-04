@@ -4,15 +4,19 @@
     {
         // users
         public const string UsersByGroupId = @"SELECT * FROM WorkflowUser2UserGroup WHERE GroupId = @0";
-
+        
         // groups
         public const string GroupsForUserById = @"SELECT * FROM WorkflowUser2UserGroup WHERE UserId = @0";
         public const string UserGroupById = @"SELECT * FROM WorkFlowUserGroups WHERE GroupId = @0";
         public const string UserGroupByProperty = @"SELECT * FROM WorkflowUserGroups WHERE @0 = @1";
         public const string NewestGroup = @"SELECT TOP 1 * FROM WorkflowUserGroups ORDER BY GroupId DESC";
-        public const string UserGroups = @"SELECT * FROM WorkflowUserGroups LEFT JOIN WorkflowUser2UserGroup
+        public const string UserGroups = @"SELECT * FROM WorkflowUserGroups 
+                            LEFT JOIN WorkflowUserGroupPermissions
+                            on WorkflowUserGroups.GroupId = WorkflowUserGroupPermissions.GroupId
+                            LEFT JOIN WorkflowUser2UserGroup
                             on WorkflowUserGroups.GroupId = WorkflowUser2UserGroup.GroupId";
-        public const string UserGroupWithUsersById =@"SELECT * FROM WorkflowUserGroups LEFT OUTER JOIN WorkflowUser2UserGroup
+        public const string UserGroupWithUsersById = @"SELECT * FROM WorkflowUserGroups 
+                            LEFT JOIN WorkflowUser2UserGroup
                             on WorkflowUserGroups.GroupId = WorkflowUser2UserGroup.GroupId
                             WHERE WorkflowUserGroups.GroupId = @0";
 

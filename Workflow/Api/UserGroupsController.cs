@@ -32,17 +32,17 @@ namespace Usc.Web.UserGroups
         {
             var userGroups = _pr.UserGroups();
 
-            foreach (var userGroup in userGroups)
-            {
-                if (!userGroup.Name.Contains("Deleted"))
-                {
-                    var permissions = _pr.PermissionsForGroup(userGroup.GroupId);
-                    if (permissions.Any())
-                    {
-                        userGroup.Permissions = permissions;
-                    }
-                }
-            }
+            //foreach (var userGroup in userGroups)
+            //{
+            //    if (!userGroup.Name.Contains("Deleted"))
+            //    {
+            //        var permissions = _pr.PermissionsForGroup(userGroup.GroupId);
+            //        if (permissions.Any())
+            //        {
+            //            userGroup.Permissions = permissions;
+            //        }
+            //    }
+            //}
 
             return Request.CreateResponse(new
             {

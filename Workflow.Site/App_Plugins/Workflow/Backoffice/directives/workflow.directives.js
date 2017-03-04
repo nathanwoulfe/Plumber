@@ -87,8 +87,7 @@ angular.module('umbraco').directive('wfComments', function () {
                 editButton: {
                     labelKey: "workflow_editButton",
                     href: '/umbraco#/content/content/edit/',
-                    handler: function (item) {
-                        window.location = this.href + item.NodeId;
+                    handler: function () {
                     }
                 },
                 cancelButton: {

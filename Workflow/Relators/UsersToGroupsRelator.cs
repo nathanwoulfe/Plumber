@@ -1,31 +1,41 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Workflow.Models;
 
 namespace Workflow.Relators
 {
-    public class UsersToGroupsRelator
+    public class GroupsRelator
     {
         public UserGroupPoco current;
 
-        public UserGroupPoco MapIt(UserGroupPoco a, User2UserGroupPoco b)
+        public UserGroupPoco MapIt(UserGroupPoco a, UserGroupPermissionsPoco c, User2UserGroupPoco b)
         {
+            if (a == null)
+            {
+                return current;
+            }
+
             if (a != null && current != null && current.GroupId == b.GroupId)
             {
-                current.Users.Add(b);
+                if (!current.Users.Where(u => u.UserId == b.UserId).Any())
+                {
+                    current.Users.Add(b);
+                }
+
+                if (!current.Permissions.Where(p => p.Id == c.Id).Any())
+                {
+                    current.Permissions.Add(c);
+                }
                 return null;
             }
 
-            current = a;
             var prev = current;
-
-            if (a == null)
-            {
-                return b == null ? prev : current;
-            }
+            current = a;
 
             if (current.GroupId == b.GroupId)
             {
-                current.Users.Add(b);
+                current.Users = new List<User2UserGroupPoco>() { b };
+                current.Permissions = new List<UserGroupPermissionsPoco>() { c };
             }
 
             return prev;

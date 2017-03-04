@@ -147,7 +147,7 @@ namespace Workflow
         /// <returns></returns>
         public  List<UserGroupPoco> UserGroups()
         {
-            return GetDb().Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(new UsersToGroupsRelator().MapIt, SqlHelpers.UserGroups);
+            return GetDb().Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(new GroupsRelator().MapIt, SqlHelpers.UserGroups);            
         }
 
         public List<UserGroupPoco> AllUserGroups()
