@@ -17,7 +17,10 @@
         '~/App_Plugins/Workflow/backoffice/resources/paging.service.js',
         '~/App_Plugins/Workflow/backoffice/resources/groups.resource.js',
         '~/App_Plugins/Workflow/backoffice/resources/workflow.resource.js',
-        '~/App_Plugins/Workflow/backoffice/directives/workflow.directives.js',
+        '~/App_Plugins/Workflow/backoffice/directives/workflow.buttongroup.directive.js',
+        '~/App_Plugins/Workflow/backoffice/directives/workflow.comments.directive.js',
+        '~/App_Plugins/Workflow/backoffice/directives/workflow.pagingcontrols.directive.js',
+        '~/App_Plugins/Workflow/backoffice/directives/workflow.tasks.directive.js',
         '~/App_Plugins/Workflow/backoffice/interceptors/workflow.interceptors.js',
 		'~/App_Plugins/Workflow/backoffice/tree/tree.view.controller.js'
     ],

@@ -78,7 +78,12 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.reject.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.reject.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.buttongroup.directive.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.comments.directive.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.pagingcontrols.directive.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.tasks.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowButtonGroup.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowTasksTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\paging.service.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\paginationTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\styles.css">
@@ -108,7 +113,6 @@
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.differences.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.publish.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.unpublish.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.directives.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\tree\settings.html" />
     <Content Include="App_Plugins\Workflow\Lang\en-US.xml" />
     <None Include="app.config" />

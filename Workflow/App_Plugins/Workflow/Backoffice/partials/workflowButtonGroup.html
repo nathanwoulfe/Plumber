@@ -16,7 +16,7 @@
 
     <ul aria-labelledby="dLabel" class="dropdown-menu bottom-up umb-button-group__sub-buttons" ng-if="subButtons.length > 0" role="menu" ng-class="{'-align-right': float === 'right'}">
         <li ng-repeat="subButton in subButtons">
-            <a href="{{ subButton.href ? subButton.href + item.NodeId : '#' }}" ng-click="subButton.handler(item)" hotkey="{{subButton.hotKey}}" hotkey-when-hidden="{{subButton.hotKeyWhenHidden}}" class="{{ subButton.cssClass }}" prevent-default>
+            <a href="{{ subButton.href ? subButton.href + item.NodeId : '#' }}" ng-click="subButton.handler(item)" hotkey="{{subButton.hotKey}}" hotkey-when-hidden="{{subButton.hotKeyWhenHidden}}" class="{{ subButton.cssClass }}">
                 <localize key="{{subButton.labelKey}}">{{subButton.labelKey}}</localize>
             </a>
         </li>
