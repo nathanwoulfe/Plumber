@@ -83,8 +83,8 @@
                                 <div class="umb-table-cell">
                                     <ul>
                                         <li ng-repeat="perm in item.Permissions">
-                                            <a ng-if="perm.NodeName" ng-href="#/content/content/edit/{{ perm.NodeId }}" title="Edit node: {{ perm.NodeName }}">{{ perm.NodeName}} (stage: {{ p.Permission + 1 }})</a>
-                                            <a ng-if="perm.ContentTypeName" ng-href="#/settings/documentTypes/edit/{{ perm.ContentTypeId }}" title="Edit content type: {{ perm.ContentTypeName }}">{{ perm.ContentTypeName }} (stage: {{ p.Permission + 1 }})</a>
+                                            <a ng-if="perm.NodeName" ng-href="#/content/content/edit/{{ perm.NodeId }}" title="Edit node: {{ perm.NodeName }}">{{ perm.NodeName}} (stage: {{ perm.Permission + 1 }})</a>
+                                            <a ng-if="perm.ContentTypeName" ng-href="#/settings/documentTypes/edit/{{ perm.ContentTypeId }}" title="Edit content type: {{ perm.ContentTypeName }}">{{ perm.ContentTypeName }} (stage: {{ perm.Permission + 1 }})</a>
                                         </li>
                                     </ul>
                                 </div>

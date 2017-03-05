@@ -8,7 +8,7 @@
 
         workflowResource.getStatus(nodeId)
             .then(function (resp) {
-                if (resp.status === 0) {
+                if (resp.status !== 200) {
                     vm.active = true;
                     vm.statusMsg = resp.msg;
                 }

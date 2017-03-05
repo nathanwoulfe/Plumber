@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\DeadCode.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -65,12 +66,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Relators\TaskToInstanceRelator.cs" />
     <Compile Include="Relators\GroupsRelator.cs" />
-    <Compile Include="Relators\UserToGroupRelator.cs" />
+    <Compile Include="Relators\UserToGroupForTaskRelator.cs" />
     <Compile Include="Processes\WorkflowApprovalProcess.cs" />
     <Compile Include="Helpers\UrlHelpers.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Helpers\WorkflowException.cs" />
+    <Compile Include="Relators\UserToGroupForInstanceRelator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />

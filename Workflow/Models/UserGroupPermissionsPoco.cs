@@ -9,8 +9,6 @@ namespace Workflow.Models
     [PrimaryKey("Id", autoIncrement = true)]
     public class UserGroupPermissionsPoco
     {
-        private static PocoRepository _pr = new PocoRepository();
-
         [Column("Id")]
         [PrimaryKeyColumn(AutoIncrement = true)]
         public int Id { get; set; }

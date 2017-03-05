@@ -31,7 +31,7 @@
 
             // if the current user is in an admin group, display all active tasks
             if (vm.adminUser) {
-                workflowResource.getActiveTasks()
+                workflowResource.getPendingTasks()
                     .then(function (resp) {
                         vm.activeTasks = resp.data;
                         vm.loaded[2] = 1;

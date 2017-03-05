@@ -21,18 +21,28 @@
             getStatus: function (id) {
                 return this.request('GET', this.urlBase + 'getStatus?nodeId=' + id);
             },
+
+            /* tasks and approval endpoints */
             getApprovalsForUser: function (userId) {
-                return this.request('POST', this.urlTasksBase + 'getapprovalsforuser?userId=' + userId);
+                return this.request('GET', this.urlTasksBase + 'getflowsforuser?type=0&userId=' + userId);
             },
             getSubmissionsForUser: function (userId) {
-                return this.request('POST', this.urlTasksBase + 'getsubmissionsforuser?userId=' + userId);
+                return this.request('GET', this.urlTasksBase + 'getflowsforuser?type=1&userId=' + userId);
             },
-            getActiveTasks: function () {
-                return this.request('GET', this.urlTasksBase + 'getactivetasks');
+            getPendingTasks: function () {
+                return this.request('GET', this.urlTasksBase + 'getpendingtasks');
+            },
+            getAllTasks: function () {
+                return this.request('GET', this.urlTasksBase + 'getalltasks');
+            },
+            getAllInstances: function () {
+                return this.request('GET', this.urlTasksBase + 'getallinstances');
             },
             getNodeTasks: function(id) {
                 return this.request('GET', this.urlTasksBase + 'getnodetasks?id=' + id);
             },
+
+            /* workflow actions */
             initiateWorkflow: function (nodeId, comment, publish) {
                 return this.request('POST', this.urlTasksBase + 'initiateWorkflow', {'nodeId': nodeId, 'comment': comment, 'publish': publish });
             },

@@ -168,7 +168,7 @@ namespace Workflow.Models
         {
             get
             {
-                return WorkflowStatusName(_Status);
+                return Helpers.PascalCaseToTitleCase(_Status.ToString()); ;
             }
         }
 
@@ -257,11 +257,6 @@ namespace Workflow.Models
         public static string EmailTypeName(EmailType type)
         {
             return Helpers.PascalCaseToTitleCase(type.ToString());
-        }
-
-        public static string WorkflowStatusName(WorkflowStatus status)
-        {
-            return Helpers.PascalCaseToTitleCase(status.ToString());
         }
 
         public bool CanCurrentUserActionWorkflow()

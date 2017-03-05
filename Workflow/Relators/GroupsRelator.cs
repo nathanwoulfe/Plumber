@@ -35,6 +35,10 @@ namespace Workflow.Relators
             if (current.GroupId == b.GroupId)
             {
                 current.Users = new List<User2UserGroupPoco>() { b };
+            }
+
+            if (current.GroupId == c.GroupId)
+            {
                 current.Permissions = new List<UserGroupPermissionsPoco>() { c };
             }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Workflow
 {
-    class UrlHelpers
+    public class UrlHelpers
     {
         public const string ContentEditUrlFormat = "/umbraco#/content/content/edit/{0}";
         public const string ContentFrameUrlFormat = "/umbraco/backoffice/UmbracoApi/Content/GetById?id={0}";
@@ -37,17 +37,6 @@ namespace Workflow
         public static string GetFullyQualifiedContentEditorUrl(int docId)
         {
             return GetFullyQualifiedEditUrl(string.Format(ContentEditUrlFormat, docId));
-        }
-
-        public static string GetContentEditorUrl(int docId)
-        {
-            return string.Format(ContentEditUrlFormat, docId);
-        }
-
-        // Gets the local url needed to open the back office content editor pane for the document with the given Id
-        public static string GetContentFrameUrl(int docId)
-        {
-            return string.Format(ContentFrameUrlFormat, docId);
         }
     }
 }

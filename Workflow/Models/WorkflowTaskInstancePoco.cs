@@ -61,7 +61,7 @@ namespace Workflow.Models
         [NullSetting(NullSetting = NullSettings.Null)]
         public int? ActionedByUserId { get; set; }
 
-        [Ignore]
+        [ResultColumn]
         public TaskStatus? _Status
         {
             get
@@ -70,7 +70,7 @@ namespace Workflow.Models
             }
         }
 
-        [Ignore]
+        [ResultColumn]
         public TaskType _Type
         {
             get
@@ -102,11 +102,19 @@ namespace Workflow.Models
         }
 
         [ResultColumn]
+        public string StatusName
+        {
+            get
+            {
+                return Helpers.PascalCaseToTitleCase(_Status.ToString()); ;
+            }
+        }
+
+        [ResultColumn]
         public virtual UserGroupPoco UserGroup { get; set; }
 
         [ResultColumn]
         public virtual WorkflowInstancePoco WorkflowInstance { get; set; }
-
         
 
         /// <summary>

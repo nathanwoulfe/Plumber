@@ -15,10 +15,8 @@ namespace Workflow.Api
 {
     public class WorkflowController : UmbracoAuthorizedApiController
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static Database db = ApplicationContext.Current.DatabaseContext.Database;
         private static PocoRepository _pr = new PocoRepository();
-        private IUserService _us = ApplicationContext.Current.Services.UserService;
 
         /// <summary>
         /// 
@@ -27,11 +25,10 @@ namespace Workflow.Api
         [System.Web.Http.HttpGet]
         public HttpResponseMessage GetSettings()
         {
-            var settings = _pr.GetSettings();
             return Request.CreateResponse(new
             {
                 status = HttpStatusCode.OK,
-                data = settings
+                data = _pr.GetSettings()
             });
         }
 
@@ -62,10 +59,15 @@ namespace Workflow.Api
 
             if (instances.Any())
             {
-                return Request.CreateResponse(HttpStatusCode.OK, new { msg = "This node is currently in a workflow", status = 0 });
+                return Request.CreateResponse(HttpStatusCode.OK, new {
+                    status = 0,
+                    data = "This node is currently in a workflow"
+                });
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, new { msg = string.Empty, status = 1 });
+            return Request.CreateResponse(HttpStatusCode.OK, new {
+                status = 200
+            });
         }        
     }
 }

@@ -31,12 +31,12 @@
                                 </div>
                                 <div class="umb-table-cell">
                                     <a class="umb-table-head__link" href="#" prevent-default>
-                                        Type
+                                        Node
                                     </a>
                                 </div>
                                 <div class="umb-table-cell">
                                     <a class="umb-table-head__link" href="#" prevent-default>
-                                        Node
+                                        Type
                                     </a>
                                 </div>
                                 <div class="umb-table-cell">
@@ -47,6 +47,11 @@
                                 <div class="umb-table-cell">
                                     <a class="umb-table-head__link" href="#" prevent-default>
                                         Requested on
+                                    </a>
+                                </div>
+                                <div class="umb-table-cell">
+                                    <a class="umb-table-head__link" href="#" prevent-default>
+                                        Status
                                     </a>
                                 </div>
                                 <div class="umb-table-cell">
@@ -62,31 +67,34 @@
                             </div>
                         </div>
                         <div class="umb-table-body">
-                            <div class="umb-table-row"
-                                 ng-repeat="item in pagedItems | filter:search">
+                            <div class="table-row-outer" ng-repeat="item in items track by $index | filter:search" ng-class="{'approved' : item.Status === 'Approved'}">
 
-                                <div class="umb-table-cell">
-                                    <i class="umb-table-body__icon icon-document"></i>
+                                <div class="umb-table-row" ng-repeat="task in item.Tasks">
+                                    <div class="umb-table-cell">
+                                        <i class="umb-table-body__icon icon-document" ng-class="{'soft' : !$first}"></i>
+                                    </div>
+                                    <div class="umb-table-cell" >
+                                        <a ng-if="$first" href="#" ng-href="/umbraco/dialogs/preview.aspx?id={{item.NodeId}}" ng-bind="item.NodeName" target="_blank"></a>
+                                    </div>
+                                    <div class="umb-table-cell">
+                                        <span ng-if="$first" ng-bind="item.Type"></span>
+                                    </div>
+                                    <div class="umb-table-cell">
+                                        <span ng-if="$first" ng-bind="item.RequestedBy"></span>
+                                    </div>
+                                    <div class="umb-table-cell">
+                                        {{ task.RequestedOn }}
+                                    </div>
+                                    <div class="umb-table-cell">
+                                        {{ task.Status }}
+                                    </div>
+                                    <div class="umb-table-cell">
+                                        {{ task.Comments }}
+                                    </div>
+                                    <div class="umb-table-cell">
+                                        {{ task.ApprovalGroup }}
+                                    </div>
                                 </div>
-                                <div class="umb-table-cell umb-table__name">
-                                    {{ item.Type }}
-                                </div>
-                                <div class="umb-table-cell umb-table__name">                                    
-                                    <node-name node-id="{{ item.NodeId }}" ng-if="!vm.isNode"></node-name>
-                                    <span ng-if="vm.node" ng-bind="vm.node.name"></span>
-                                </div>   
-                                <div class="umb-table-cell umb-table__name">
-                                    {{ item.RequestedBy }}
-                                </div>   
-                                <div class="umb-table-cell umb-table__name">
-                                    {{ item.RequestedOn }}
-                                </div>   
-                                <div class="umb-table-cell umb-table__name">
-                                    {{ item.Comments }}
-                                </div>   
-                                <div class="umb-table-cell umb-table__name">
-                                    {{ item.ApprovalGroup }}
-                                </div>   
                             </div>
                         </div>
                     </div>

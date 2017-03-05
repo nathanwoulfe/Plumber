@@ -21,7 +21,6 @@ namespace Workflow
         private static UmbracoHelper _helper = new UmbracoHelper(UmbracoContext.Current);
         private static IUserService _us = ApplicationContext.Current.Services.UserService;
         private static IContentTypeService _cs = ApplicationContext.Current.Services.ContentTypeService;
-        private static Database _db = ApplicationContext.Current.DatabaseContext.Database;
         private static PocoRepository _pr = new PocoRepository();
 
         public static IPublishedContent GetNode(int id)
@@ -78,21 +77,6 @@ namespace Workflow
                 return false;
             }
         }       
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="instance"></param>
-        /// <returns></returns>
-        public static bool IsNotFastTrack(WorkflowInstancePoco instance)
-        {
-            //var fasttrackDoctypes = GetSettings().FastTrack.Where(x => !string.IsNullOrWhiteSpace(x.ToString())).ToArray();
-            //string nodeAlias = ApplicationContext.Current.Services.ContentService.GetById(instance.NodeId).ContentType.Alias.ToLower();
-            //return (fasttrackDoctypes.IndexOf(nodeAlias) == -1);
-            return true;
-        }
-
 
         /// <summary>
         /// Builds workflow instance details markup.

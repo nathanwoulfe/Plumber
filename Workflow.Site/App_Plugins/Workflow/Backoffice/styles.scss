@@ -259,6 +259,32 @@ $success: #53a93f;
             color:$danger;
         }
     }
+
+    // history - nested tasks for instance
+    .workflow-nested {
+        margin:10px;
+        padding-top:10px;
+        border-top:1px solid #d9d9d9;
+        display:flex;
+        position:relative;
+    }
+
+    .umb-table__input[type=checkbox] {
+        opacity:0;
+        cursor:default;
+    }
+
+    .umb-table-body__icon.soft {
+        opacity:.25;
+    }
+
+    .table-row-outer {
+        &.approved {
+            .umb-table-body__icon {
+                color:$success;
+            }
+        }
+    }
 }
 
 

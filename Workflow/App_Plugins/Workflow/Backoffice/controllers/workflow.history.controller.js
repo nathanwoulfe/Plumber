@@ -10,7 +10,7 @@
         (function () {
             vm.loading = true;
             vm.isNode = false;
-            workflowResource.getActiveTasks()
+            workflowResource.getAllInstances()
                 .then(function (resp) {
                     $scope.items = resp.data;
                     vm.loading = false;

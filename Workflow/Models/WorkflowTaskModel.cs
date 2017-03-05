@@ -3,12 +3,29 @@ using System.Collections.Generic;
 
 namespace Workflow.Models
 {
+    public class WorkflowInstance
+    {
+        public string Type { get; set; }
+        public string NodeName { get; set; }
+        public string Status { get; set; }
+        public string RequestedOn { get; set; }
+        public string RequestedBy { get; set; }
+        public int NodeId { get; set; }        
+        public List<WorkflowTask> Tasks { get; set; }
+
+        public WorkflowInstance()
+        {
+            Tasks = new List<WorkflowTask>();
+        }
+    }
+
     /// <summary>
     /// 
     /// </summary>
-    public class WorkflowItem
+    public class WorkflowTask
     {
         public string Type { get; set; }
+        public string Status { get; set; }
         public int NodeId { get; set; }
         public int TaskId { get; set; }
         public int ApprovalGroupId { get; set; }

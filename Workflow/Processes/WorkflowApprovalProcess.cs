@@ -41,6 +41,8 @@ namespace Workflow
             instance = new WorkflowInstancePoco(nodeId, authorUserId, authorComment, Type);
             instance.Guid = g;
 
+            GetDb().Insert(instance);
+
             bool doPublish = false;
             WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(nodeId, authorUserId, out doPublish);
 
@@ -53,25 +55,11 @@ namespace Workflow
 
             if (!doPublish)
             {
-                if (ApprovalRequired(taskInstance))
-                {
-                    InitiateApprovalTask(taskInstance);
-                    taskInstance.WorkflowInstanceGuid = g;
-                    GetDb().Insert(taskInstance);
-                    GetDb().Insert(instance);
-                }
-                else {
-                    instance.Status = (int)WorkflowStatus.PendingApproval;
-                    taskInstance.WorkflowInstanceGuid = g;
-                    GetDb().Insert(taskInstance);
-                    GetDb().Insert(instance);
-
-                    ActionWorkflow(instance, WorkflowAction.Approve, authorUserId, string.Empty);
-                }
-
+                ApproveOrContinue(taskInstance, authorUserId, g);
             }
             else
             {
+                CompleteTask(taskInstance, authorUserId);
                 CompleteWorkflow(authorUserId);                
             }
 
@@ -102,14 +90,13 @@ namespace Workflow
                         {
                             var doPublish = false;
                             WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(instance.NodeId, userId, out doPublish);
-                            if (ApprovalRequired(taskInstance))
+                            if (!doPublish)
                             {
-                                InitiateApprovalTask(taskInstance);
-                                taskInstance.WorkflowInstanceGuid = instance.Guid;
-                                GetDb().Insert(taskInstance);
+                                ApproveOrContinue(taskInstance, userId, instance.Guid);
                             }
                             else
                             {
+                                CompleteTask(taskInstance, userId);
                                 CompleteWorkflow(userId);
                             }
                         }
@@ -176,9 +163,37 @@ namespace Workflow
         #endregion
 
         #region private methods
+        /// <summary>
+        /// Process task - approval not required if current user is a member of the approving group
+        /// </summary>
+        /// <param name="taskInstance"></param>
+        /// <param name="userId"></param>
+        /// <param name="g"></param>
+        private void ApproveOrContinue(WorkflowTaskInstancePoco taskInstance, int userId, Guid g)
+        {
+            if (ApprovalRequired(taskInstance))
+            {
+                InitiateApprovalTask(taskInstance);
+                taskInstance.WorkflowInstanceGuid = g;
+                GetDb().Update(taskInstance);
+            }
+            else
+            {
+                instance.Status = (int)WorkflowStatus.PendingApproval;
+                taskInstance.Status = (int)TaskStatus.NotRequired;
+                taskInstance.Comment = "APPROVAL AT STAGE " + (taskInstance.ApprovalStep + 1) + " NOT REQUIRED";
+                taskInstance.WorkflowInstanceGuid = g;
+                GetDb().Update(taskInstance);
+                GetDb().Update(instance);
+
+                ActionWorkflow(instance, WorkflowAction.Approve, userId, string.Empty);
+            }
+        }
+
+
         private void ProcessApprovalAction(WorkflowAction action, int userId, string comment)
         {
-            var taskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Status == TaskStatus.PendingApproval || ti._Status == TaskStatus.New );
+            var taskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Status == TaskStatus.PendingApproval || ti._Status == TaskStatus.New || ti._Status == TaskStatus.NotRequired );
 
             EmailType? emailType = null;
             bool emailRequired = false;
@@ -200,7 +215,7 @@ namespace Workflow
             }
 
             taskInstance.CompletedDate = DateTime.Now;
-            taskInstance.Comment = comment;
+            taskInstance.Comment = string.IsNullOrEmpty(taskInstance.Comment) ? comment : taskInstance.Comment;
             taskInstance.ActionedByUserId = userId;
 
             // Send the email after we've done the updates.
@@ -266,6 +281,13 @@ namespace Workflow
             }
         }
 
+        /// <summary>
+        /// Generate the next approval flow task, returning the new task and a bool indicating whether the publish action should becompleted (ie, this is the end of the flow)
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <param name="authorId"></param>
+        /// <param name="doPublish"></param>
+        /// <returns></returns>
         private WorkflowTaskInstancePoco CreateApprovalTask(int nodeId, int authorId, out bool doPublish)
         {
             // creating initial task should use perm = 0
@@ -276,10 +298,7 @@ namespace Workflow
 
             doPublish = SetApprovalGroup(taskInstance, nodeId, authorId, instance.TaskInstances.Count - 1);
 
-            //taskInstance.UserGroup = GetDb().Fetch<UserGroupPoco, User2UserGroupPoco, UserGroupPoco>(
-            //    new UserToGroupRelator().MapIt,
-            //    SqlHelpers.UserGroupWithUsersById,
-            //    taskInstance.GroupId).First();          
+            GetDb().Insert(taskInstance);
 
             return taskInstance;
         }
@@ -313,55 +332,24 @@ namespace Workflow
             Notifications.Send(instance, EmailType.ApprovalRequest);
         }
 
-        private WorkflowTaskInstancePoco CreateFinalApprovalTask()
-        {
-            var taskInstance = new WorkflowTaskInstancePoco(TaskType.Publish);
-            instance.TaskInstances.Add(taskInstance);
-            string finalApprover = Helpers.GetSettings().DefaultApprover;
-            if (!string.IsNullOrEmpty(finalApprover))
-            {
-                taskInstance.UserGroup = GetDb().Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(
-                    new GroupsRelator().MapIt,
-                    SqlHelpers.UserGroupDetailed,
-                    finalApprover).First();
-            }
-            if (taskInstance.UserGroup != null)
-            {
-                taskInstance.GroupId = taskInstance.UserGroup.GroupId;
-            }
-            else
-            {
-                throw new WorkflowException("Unable to determine final approval user group. Site settings need to be configured.");
-            }
-
-            return taskInstance;
-        }
-
         /// <summary>
-        /// Determines whether final approval is required by checking if the Author is in the if the Author is in the Final approvers group.
+        /// Ensure the final task is closed before publishing, if approval no required
         /// </summary>
-        /// <returns>true if final approval required, false otherwise</returns>
-        private bool IsFinalApprovalRequired(WorkflowTaskInstancePoco taskInstance)
+        /// <param name="taskInstance"></param>
+        /// <param name="userId"></param>
+        private void CompleteTask(WorkflowTaskInstancePoco taskInstance, int userId)
         {
-            // Approval required if the author is not in the final approvers group.
-            if (!taskInstance.UserGroup.IsMember(instance.AuthorUserId) && Helpers.IsNotFastTrack(instance))
-            {
-                return true;
-            }
-            // Not required
-            taskInstance.Status = (int)TaskStatus.NotRequired;
-            return false;
+            //
+            taskInstance.Status = (int)TaskStatus.Approved;
+            taskInstance.CompletedDate = DateTime.Now;
+            taskInstance.Comment = "APPROVAL AT STAGE " + (taskInstance.ApprovalStep + 1) + " NOT REQUIRED";
+            taskInstance.ActionedByUserId = userId;
+            instance.Status = (int)WorkflowStatus.Approved;
+            taskInstance.WorkflowInstanceGuid = instance.Guid;
+            GetDb().Update(taskInstance);
+            GetDb().Update(instance);
         }
 
-        private void InitiateFinalApprovalTask(WorkflowTaskInstancePoco taskInstance)
-        {
-            // Set task and workflow information.
-            taskInstance.Status = (int)TaskStatus.PendingApproval;
-            instance.Status = (int)WorkflowStatus.PendingApproval;
-
-            Notifications.Send(instance, EmailType.ApprovalRequest);
-        }
-
-        # endregion
+        #endregion
     }
 }

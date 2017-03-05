@@ -1,6 +1,6 @@
 ﻿namespace Workflow
 {
-    class SqlHelpers
+    public class SqlHelpers
     {
         // users
         public const string UsersByGroupId = @"SELECT * FROM WorkflowUser2UserGroup WHERE GroupId = @0";
@@ -24,28 +24,71 @@
         // instance
         public const string InstanceByTaskId = @"SELECT * FROM WorkflowInstance WHERE Id = @0";
         public const string InstanceByNodeStr = @"SELECT * FROM WorkflowInstance WHERE NodeId = @0 AND ";
-
-        // tasks
-        public const string TasksWithGroup = @"SELECT * FROM WorkflowTaskInstance LEFT JOIN WorkflowInstance
-                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
-                            LEFT JOIN WorkflowUserGroups
-                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId";
-        public const string TasksByUserAndStatus = @"SELECT * FROM WorkflowTaskInstance LEFT JOIN WorkflowInstance
-                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
-                            LEFT JOIN WorkflowUserGroups
-                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId                            
-                            WHERE WorkflowInstance.AuthorUserId = @0
-                            AND WorkflowTaskInstance.Status = @1";
-        public const string TasksByStatus = @"SELECT * FROM WorkflowTaskInstance LEFT JOIN WorkflowInstance
+        public const string AllInstances = @"SELECT * FROM WorkflowInstance 
+                            LEFT JOIN WorkflowTaskInstance
                             on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
+                            LEFT JOIN WorkflowUser2UserGroup
+                            on WorkflowTaskInstance.GroupId = WorkflowUser2UserGroup.GroupId";
+
+        // tasks
+        public const string TasksWithGroup = @"SELECT * FROM WorkflowTaskInstance 
+                            LEFT JOIN WorkflowInstance
+                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
+                            LEFT JOIN WorkflowUserGroups
+                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
+                            LEFT JOIN WorkflowUser2UserGroup
+                            on WorkflowTaskInstance.GroupId = WorkflowUser2UserGroup.GroupId";
+        public const string TasksByUserAndStatus = @"SELECT * FROM WorkflowTaskInstance 
+                            LEFT JOIN WorkflowInstance
+                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
+                            LEFT JOIN WorkflowUserGroups
+                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
+                            LEFT JOIN WorkflowUser2UserGroup
+                            on WorkflowTaskInstance.GroupId = WorkflowUser2UserGroup.GroupId                         
+                            WHERE WorkflowInstance.AuthorUserId = @0
+                            AND WorkflowTaskInstance.Status = @1";
+        public const string TasksForUser = @"SELECT * FROM WorkflowTaskInstance 
+                            LEFT JOIN WorkflowInstance
+                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
+                            LEFT JOIN WorkflowUserGroups
+                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
+                            LEFT JOIN WorkflowUser2UserGroup
+                            on WorkflowTaskInstance.GroupId = WorkflowUser2UserGroup.GroupId                         
+                            WHERE WorkflowUser2UserGroup.UserId = @0
+                            AND WorkflowTaskInstance.Status = @1";
+        public const string SubmissionsForUser = @"SELECT * FROM WorkflowTaskInstance 
+                            LEFT JOIN WorkflowInstance
+                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
+                            LEFT JOIN WorkflowUserGroups
+                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
+                            LEFT JOIN WorkflowUser2UserGroup
+                            on WorkflowTaskInstance.GroupId = WorkflowUser2UserGroup.GroupId                         
+                            WHERE WorkflowInstance.AuthorUserId = @0
+                            AND WorkflowTaskInstance.Status = @1";
+        public const string GetAllTasks = @"SELECT * FROM WorkflowTaskInstance 
+                            LEFT JOIN WorkflowInstance
+                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
+                            LEFT JOIN WorkflowUserGroups
+                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
+                            LEFT JOIN WorkflowUser2UserGroup
+                            on WorkflowTaskInstance.GroupId = WorkflowUser2UserGroup.GroupId";
+        public const string GetPendingTasks = @"SELECT * FROM WorkflowTaskInstance 
+                            LEFT JOIN WorkflowInstance
+                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
+                            LEFT JOIN WorkflowUserGroups
+                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
+                            LEFT JOIN WorkflowUser2UserGroup
+                            on WorkflowTaskInstance.GroupId = WorkflowUser2UserGroup.GroupId
                             WHERE WorkflowTaskInstance.Status = @0";
         public const string TasksByNode = @"SELECT * FROM WorkflowTaskInstance 
                             LEFT JOIN WorkflowInstance
-                            ON WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
+                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
                             LEFT JOIN WorkflowUserGroups
-                            ON WorkflowUserGroups.GroupId = WorkflowTaskInstance.GroupId
+                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
+                            LEFT JOIN WorkflowUser2UserGroup
+                            on WorkflowTaskInstance.GroupId = WorkflowUser2UserGroup.GroupId
                             WHERE WorkflowInstance.NodeId = @0";                                                                
         public const string TasksByInstanceId = @"SELECT * FROM WorkflowTaskInstance WHERE WorkflowInstanceGuid = @0";
         public const string TasksAndGroupByInstanceId = @"SELECT * FROM WorkflowTaskInstance 
