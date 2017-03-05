@@ -14,8 +14,6 @@
                     $scope.currentPage = paging.currentPage;
                     $scope.numPages = paging.numPages;
                     $scope.pagedItems = paging.items;
-
-                    console.log($scope.numPages);
                 };
 
                 $scope.prev = function () {
