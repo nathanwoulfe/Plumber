@@ -1,4 +1,16 @@
-﻿angular.module('umbraco').directive('wfComments', function () {
+﻿angular.module('umbraco').directive('nodeName', function (contentResource) {
+    return {
+        restrict: 'E',
+        link: function (scope, element, attr) {
+            contentResource.getById(attr.nodeId)
+                .then(function (resp) {
+                    element.html(resp.name);
+                });
+        }
+    }
+});
+
+angular.module('umbraco').directive('wfComments', function () {
     return {
         restrict: 'AEC',
         scope: {
@@ -40,10 +52,9 @@
             heading: '=',
             items: '=',
             editLink: '=',
-            loaded: '=',
-            type: '='
+            loaded: '='
         },
-        templateUrl: '../app_plugins/workflow/backoffice/partials/workflowTasksTemplate.html',
+        templateUrl: 'wf-tasks-template.html',
         controller: function ($scope) {
 
             function showDialog(url, item, cb) {
@@ -66,10 +77,6 @@
                 });
             };
 
-            // type = 0, 1
-            // 0 -> full button set
-            // 1 -> cancel, edit
-
             var buttons = {
                 approveButton: {
                     labelKey: "workflow_approveButton",
@@ -79,7 +86,7 @@
                 },
                 editButton: {
                     labelKey: "workflow_editButton",
-                    href: '/umbraco/#/content/content/edit/',
+                    href: '/umbraco#/content/content/edit/',
                     handler: function () {
                     }
                 },

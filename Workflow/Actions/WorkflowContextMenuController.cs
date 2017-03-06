@@ -15,21 +15,27 @@ namespace UmbracoWorkflow.Actions
             {
                 var i = new Umbraco.Web.Models.Trees.MenuItem("workflowConfig", "Workflow configuration");
                 i.AdditionalData.Add("actionView", "/App_Plugins/Workflow/Backoffice/dialogs/workflow.config.dialog.html");
-                i.Icon = "directions-alt";
+                i.Icon = "path";
 
                 e.Menu.Items.Insert(5, i);
 
-                var ii = new Umbraco.Web.Models.Trees.MenuItem("sendForPublish", "Send for publish");
-                ii.AdditionalData.Add("actionView", "/App_Plugins/Workflow/Backoffice/dialogs/workflow.publish.dialog.html");
-                ii.Icon = "check";
+                i = new Umbraco.Web.Models.Trees.MenuItem("workflowHistory", "Workflow history");
+                i.AdditionalData.Add("actionView", "/App_Plugins/Workflow/Backoffice/dialogs/workflow.history.dialog.html");
+                i.Icon = "directions-alt";
 
-                e.Menu.Items.Insert(6, ii);
+                e.Menu.Items.Insert(6, i);
 
-                var iii = new Umbraco.Web.Models.Trees.MenuItem("sendForUnpublish", "Send for unpublish");
-                iii.AdditionalData.Add("actionView", "/App_Plugins/Workflow/Backoffice/Workflow/dialogs/workflow.unpublish.dialog.html");
-                iii.Icon = "delete";
+                i = new Umbraco.Web.Models.Trees.MenuItem("sendForPublish", "Send for publish");
+                i.AdditionalData.Add("actionView", "/App_Plugins/Workflow/Backoffice/dialogs/workflow.publish.dialog.html");
+                i.Icon = "check";
 
-                e.Menu.Items.Insert(7, iii);
+                e.Menu.Items.Insert(7, i);
+
+                i = new Umbraco.Web.Models.Trees.MenuItem("sendForUnpublish", "Send for unpublish");
+                i.AdditionalData.Add("actionView", "/App_Plugins/Workflow/Backoffice/Workflow/dialogs/workflow.unpublish.dialog.html");
+                i.Icon = "delete";
+
+                e.Menu.Items.Insert(8, i);
             }
         }
     }    

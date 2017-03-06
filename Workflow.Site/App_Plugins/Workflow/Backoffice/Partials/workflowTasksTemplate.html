@@ -62,7 +62,6 @@
                         <div class="umb-table-cell" ng-bind="item.Comments"></div>
                         <div class="umb-table-cell" ng-bind="item.ApprovalGroup"></div>
                         <div class="umb-table-cell show-overflow">
-
                             <workflow-button-group ng-if="buttonGroup"
                                                    default-button="buttonGroup.defaultButton"
                                                    sub-buttons="buttonGroup.subButtons"
@@ -70,11 +69,6 @@
                                                    item="item"
                                                    float="right">
                             </workflow-button-group>
-
-                            <!--<a ng-if="editLink != 'false'" ng-href="/umbraco#/content/content/edit/{{item.NodeId}}" class="icon icon-edit action-Edit" title="Edit"></a>
-                            <button ng-if="!item.IsPublished  || item.IsPublished === true" ng-click="showDifferences(item)" class="icon icon-trafic" title="Show differences"></button>
-                            <button ng-if="item.ShowActionLink === true" ng-click="approveTask(item)" class="icon icon-check" title="Action workflow"></button>
-                            <button ng-click="cancelTask(item)" class="icon icon-delete" title="Cancel workflow"></button>-->
                         </div>
                     </div>
                     <div class="workflow-progress">

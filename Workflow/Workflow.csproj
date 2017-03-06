@@ -77,12 +77,18 @@
   <ItemGroup>
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.reject.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.history.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.reject.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.buttongroup.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.comments.directive.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.history.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.pagingcontrols.directive.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.tablerow.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.tasks.directive.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historyinstance.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historytask.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowButtonGroup.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowHistoryTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowTasksTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\paging.service.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\paginationTemplate.html" />

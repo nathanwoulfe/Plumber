@@ -21,6 +21,8 @@
         '~/App_Plugins/Workflow/backoffice/directives/workflow.comments.directive.js',
         '~/App_Plugins/Workflow/backoffice/directives/workflow.pagingcontrols.directive.js',
         '~/App_Plugins/Workflow/backoffice/directives/workflow.tasks.directive.js',
+        '~/App_Plugins/Workflow/backoffice/directives/workflow.tablerow.directive.js',
+        '~/App_Plugins/Workflow/backoffice/directives/workflow.history.directive.js',
         '~/App_Plugins/Workflow/backoffice/interceptors/workflow.interceptors.js',
 		'~/App_Plugins/Workflow/backoffice/tree/tree.view.controller.js'
     ],

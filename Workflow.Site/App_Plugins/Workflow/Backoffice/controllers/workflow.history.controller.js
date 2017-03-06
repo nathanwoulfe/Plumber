@@ -1,20 +1,27 @@
 ﻿(function () {
     'use strict';
 
-    function historyController($scope, workflowResource, contentResource, dialogService, $timeout) {
+    function historyController($scope, workflowResource, contentResource, dialogService, $timeout, editorState) {
 
         var vm = this;
 
         $scope.numPerPage = 10;
 
         (function () {
-            vm.loading = true;
-            vm.isNode = false;
-            workflowResource.getAllInstances()
-                .then(function (resp) {
-                    $scope.items = resp.data;
-                    vm.loading = false;
-                });
+
+            var state = editorState.getCurrent();
+
+            if (!state) {
+                vm.loading = true;
+                vm.isNode = false;
+                workflowResource.getAllInstances()
+                    .then(function (resp) {
+                        $scope.items = resp.data;
+                        vm.loading = false;
+                    });
+            } else {
+                auditNode(state);
+            }
         }());
 
         function selectNode() {
