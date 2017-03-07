@@ -16,12 +16,12 @@
             <h5>Content type approval flow ({{ vm.contentTypeName }})</h5>
             <p>Approval flow can be set by content type - this flow takes priority over any inherited flow.</p>
             <ul class="current-flow">
-                <li ng-class="{'last': $last}" ng-repeat="u in vm.contentTypeApprovalPath"><a href="/umbraco/#/users/usergroups/edit/{{ u.GroupId }}">{{ u.Name }}</a></li>
+                <li ng-class="{'last': $last}" ng-repeat="u in vm.contentTypeApprovalPath"><a href="/umbraco/#/workflow/tree/edit/{{ u.GroupId }}">{{ u.Name }}</a></li>
             </ul>
             <h5>Inherited approval flow ({{ vm.inherited[0].NodeName}})</h5>
             <p>Workflow configuration is inherited from ancestor nodes unless set by content type or on the current node.</p>
             <ul class="current-flow">
-                <li ng-class="{'last': $last}" ng-repeat="u in vm.inherited"><a href="/umbraco/#/users/usergroups/edit/{{ u.GroupId }}">{{ u.Name }}</a></li>
+                <li ng-class="{'last': $last}" ng-repeat="u in vm.inherited"><a href="/umbraco/#/workflow/tree/edit/{{ u.GroupId }}">{{ u.Name }}</a></li>
             </ul>
         </div>
     </div>    

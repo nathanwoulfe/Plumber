@@ -45,7 +45,7 @@ namespace Workflow
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetPendingTasks(int status)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco, User2UserGroupPoco, WorkflowTaskInstancePoco>(new UserToGroupForTaskRelator().MapIt, SqlHelpers.GetPendingTasks, status);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.GetPendingTasks, status);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Workflow
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetAllTasks()
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco, User2UserGroupPoco, WorkflowTaskInstancePoco>(new UserToGroupForTaskRelator().MapIt, SqlHelpers.GetAllTasks);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.GetAllTasks);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Workflow
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> TasksByNode(string nodeId)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco, User2UserGroupPoco, WorkflowTaskInstancePoco>(new UserToGroupForTaskRelator().MapIt, SqlHelpers.TasksByNode, nodeId);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksByNode, nodeId);
         }
        
         /// <summary>
@@ -86,7 +86,7 @@ namespace Workflow
         /// <returns></returns>
         public  List<WorkflowTaskInstancePoco> TasksForUser(int id, int status)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco, User2UserGroupPoco, WorkflowTaskInstancePoco>(new UserToGroupForTaskRelator().MapIt, SqlHelpers.TasksForUser, id, status);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksForUser, id, status);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Workflow
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> SubmissionsForUser(int id, int status)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco, User2UserGroupPoco, WorkflowTaskInstancePoco>(new UserToGroupForTaskRelator().MapIt, SqlHelpers.SubmissionsForUser, id, status);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.SubmissionsForUser, id, status);
         }
 
         /// <summary>

@@ -277,12 +277,29 @@ $success: #53a93f;
     .umb-table-body__icon.soft {
         opacity:.25;
     }
-
-    .table-row-outer {
-        &.approved {
-            .umb-table-body__icon {
-                color:$success;
-            }
+        
+    .pending {
+        color:$umbraco;        
+        background:rgba($umbraco, .05);
+        .umb-table-body__icon {
+            color:$umbraco;
+            background:0, 0;
+        }
+    }        
+    .approved {
+        color:$success;
+        background:rgba($success, .05);
+        .umb-table-body__icon {
+            color:$success;
+            background:0, 0;
+        }
+    }
+    .cancelled {
+        color:$danger;
+        background:rgba($danger, .05);
+        .umb-table-body__icon {
+            color:$danger;
+            background:0, 0;
         }
     }
 }

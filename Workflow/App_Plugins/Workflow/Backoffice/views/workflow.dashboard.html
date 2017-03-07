@@ -4,7 +4,14 @@
             <umb-editor-container>
                 <wf-tasks heading="'Tasks requiring my approval'" items="vm.tasks" loaded="vm.loaded[0]" type="0"></wf-tasks>
                 <wf-tasks heading="'My submissions'" items="vm.submissions" loaded="vm.loaded[1]" type="1"></wf-tasks>
-                <wf-tasks ng-if="vm.adminUser" heading="'Workflow administration'" items="vm.activeTasks" loaded="vm.loaded[2]" type="1"></wf-tasks>                   
+                <wf-tasks ng-if="vm.adminUser" heading="'Workflow administration'" items="vm.activeTasks" loaded="vm.loaded[2]" type="1"></wf-tasks>
+
+                <umb-overlay ng-if="vm.workflowOverlay.show"
+                             model="vm.workflowOverlay"
+                             view="vm.workflowOverlay.view"
+                             position="right">
+                </umb-overlay>
+
             </umb-editor-container>
         </umb-editor-view>
     </form>

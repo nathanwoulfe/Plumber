@@ -12,28 +12,45 @@
             var state = editorState.getCurrent();
 
             if (!state) {
-                vm.loading = true;
-                vm.isNode = false;
-                workflowResource.getAllInstances()
-                    .then(function (resp) {
-                        $scope.items = resp.data;
-                        vm.loading = false;
-                    });
+                getAllInstances();
             } else {
                 auditNode(state);
             }
         }());
 
         function selectNode() {
-            var dialog = dialogService.contentPicker({
-                multipicker: false,
-                callback: auditNode
-            });
+            vm.overlay = {
+                view: "contentpicker",
+                show: true,
+                submit: function (model) {
+                    vm.overlay.show = false;
+                    vm.overlay = null;
+                    if (model.selection) {
+                        auditNode(model.selection[0]);
+                    } else {
+                        $scope.items = [];
+                    }
+                },
+                close: function (oldModel) {
+                    vm.overlay.show = false;
+                    vm.overlay = null;
+                }
+            }
+        }
+
+        function getAllInstances() {
+            vm.loading = true;
+            vm.instanceView = true;
+            workflowResource.getAllInstances()
+                .then(function (resp) {
+                    $scope.items = resp.data;
+                    vm.loading = false;
+                });
         }
 
         function auditNode(data) {
             vm.loading = true;
-            vm.isNode = true;
+            vm.instanceView = false;
             vm.node = data;
             workflowResource.getNodeTasks(data.id)
                 .then(function (resp) {
@@ -45,6 +62,7 @@
 
         angular.extend(vm, {
             auditNode: auditNode,
+            getAllInstances: getAllInstances,
             selectNode: selectNode,
 
             name: 'Workflow history'

@@ -10,12 +10,12 @@
             .then(function (resp) {
                 if (resp.status !== 200) {
                     vm.active = true;
-                    vm.statusMsg = resp.msg;
+                    vm.statusMsg = resp.data;
                 }
             });
 
         var formScope = angular.element($('form[name="contentForm"]')).scope();
-        vm.dirty = formScope.contentForm.$dirty;
+        vm.dirty = formScope.contentForm.$dirty;        
         
         function ok() {            
             workflowResource.initiateWorkflow(nodeId, vm.comment, true)

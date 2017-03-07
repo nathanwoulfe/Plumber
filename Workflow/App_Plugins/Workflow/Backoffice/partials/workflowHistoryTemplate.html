@@ -42,6 +42,6 @@
         </div>
     </div>
     <div class="umb-table-body">
-        <wf-table-row item="item" has-tasks="!isNode" ng-repeat="item in items"></wf-table-row>
+        <wf-table-row item="item" instance-view="instanceView" ng-repeat="item in items track by $index"></wf-table-row>
     </div>
 </div>

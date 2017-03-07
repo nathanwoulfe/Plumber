@@ -2,32 +2,31 @@
     'use strict';
 
     // create service
-    function WorkflowResource($http, $q) {
+    function WorkflowResource($http, $q, umbRequestHelper) {
         var service = {
 
             urlBase: '/umbraco/backoffice/api/workflow/',
             urlTasksBase: '/umbraco/backoffice/api/workflowtasks/',
 
             request: function (method, url, data) {
-                var deferred = $q.defer();
-                $http({ method: method, url: url, data: data, cache: false })
-                    .then(function (response) {
-                        return deferred.resolve(response.data);
-                    }, function (err) {
-                        return deferred.reject('Something broke');
-                    });
-                return deferred.promise;
+                return umbRequestHelper.resourcePromise(
+                    method === 'GET' ?
+                        $http.get(url, { params: data }) :
+                        $http.post(url, data),
+                    'Something broke'
+                );
             },
+
             getStatus: function (id) {
-                return this.request('GET', this.urlBase + 'getStatus?nodeId=' + id);
+                return this.request('GET', this.urlBase + 'getStatus', { nodeId: id });
             },
 
             /* tasks and approval endpoints */
             getApprovalsForUser: function (userId) {
-                return this.request('GET', this.urlTasksBase + 'getflowsforuser?type=0&userId=' + userId);
+                return this.request('GET', this.urlTasksBase + 'getflowsforuser', { type: 0, userId: userId });
             },
             getSubmissionsForUser: function (userId) {
-                return this.request('GET', this.urlTasksBase + 'getflowsforuser?type=1&userId=' + userId);
+                return this.request('GET', this.urlTasksBase + 'getflowsforuser', { type: 1, userId: userId });
             },
             getPendingTasks: function () {
                 return this.request('GET', this.urlTasksBase + 'getpendingtasks');
@@ -39,12 +38,12 @@
                 return this.request('GET', this.urlTasksBase + 'getallinstances');
             },
             getNodeTasks: function(id) {
-                return this.request('GET', this.urlTasksBase + 'getnodetasks?id=' + id);
+                return this.request('GET', this.urlTasksBase + 'getnodetasks', { id: id });
             },
 
             /* workflow actions */
             initiateWorkflow: function (nodeId, comment, publish) {
-                return this.request('POST', this.urlTasksBase + 'initiateWorkflow', {'nodeId': nodeId, 'comment': comment, 'publish': publish });
+                return this.request('POST', this.urlTasksBase + 'initiateWorkflow', { 'nodeId': nodeId, 'comment': comment, 'publish': publish });
             },
             approveWorkflowTask: function (taskId, comment) {
                 return this.request('POST', this.urlTasksBase + 'approveworkflowtask?taskId=' + taskId + (comment !== null ? '&comment=' + comment : ''));

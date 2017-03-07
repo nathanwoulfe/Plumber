@@ -7,7 +7,7 @@
             restrict: 'E',
             scope: {
                 items: '=',
-                isNode: '='
+                instanceView: '='
             },
             templateUrl: '../app_plugins/workflow/backoffice/partials/workflowhistorytemplate.html',
             link: function (scope, element, attrs) {

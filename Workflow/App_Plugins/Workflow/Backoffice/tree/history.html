@@ -12,23 +12,26 @@
 
                 <umb-editor-sub-header>
                     <umb-editor-sub-header-left>
-                        <a class="btn" href="#" ng-click="vm.selectNode()" prevent-default>
+                        <a class="btn" href="#" ng-show="vm.instanceView" ng-click="vm.selectNode()" prevent-default>
                             Select node
+                        </a>
+                        <a class="btn" href="#" ng-show="!vm.instanceView" ng-click="vm.getAllInstances()" prevent-default>
+                            Show all
                         </a>
                     </umb-editor-sub-header-left>                   
                 </umb-editor-sub-header>
                 <div>
-                    <div ng-show="vm.isNode">
+                    <div ng-show="!vm.instanceView">
                         <h4>Workflow data for: <a ng-href="/umbraco#/content/content/edit/{{ vm.node.id }}">{{ vm.node.name }}</a></h4>
                     </div>
 
-                    <wf-history items="items" is-node="vm.isNode"></wf-history>
+                    <wf-history items="items" instance-view="vm.instanceView"></wf-history>
 
                     <div class="flex justify-center">
                         <wf-paging-controls></wf-paging-controls>
                     </div>
 
-                    <umb-empty-state ng-if="!items" position="center">
+                    <umb-empty-state ng-if="!items.length" position="center">
                         <localize key="content_listViewNoItems">There are no items show in the list.</localize>
                     </umb-empty-state>
 
@@ -36,4 +39,10 @@
             </umb-editor-container>          
         </umb-editor-view>
     </form>
+    <umb-overlay
+        ng-if="vm.overlay.show"
+        model="vm.overlay"
+        view="vm.overlay.view"
+        position="right">
+    </umb-overlay>
 </div>

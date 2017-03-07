@@ -32,7 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actions\RegisterEvents.cs" />
-    <Compile Include="Actions\UserGroupsTreeEvents.cs" />
     <Compile Include="Actions\WorkflowContextMenuController.cs" />
     <Compile Include="Actions\WorkflowApplication.cs" />
     <Compile Include="Actions\WorkflowSection.cs" />
@@ -66,7 +65,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Relators\TaskToInstanceRelator.cs" />
     <Compile Include="Relators\GroupsRelator.cs" />
-    <Compile Include="Relators\UserToGroupForTaskRelator.cs" />
     <Compile Include="Processes\WorkflowApprovalProcess.cs" />
     <Compile Include="Helpers\UrlHelpers.cs">
       <SubType>Code</SubType>
@@ -76,9 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.reject.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.history.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.reject.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.buttongroup.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.comments.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.history.directive.js" />
@@ -103,10 +99,9 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\tree\usergroups.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.config.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\interceptors\workflow.interceptors.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\workflow.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\tree\view.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.approve.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.action.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.cancel.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.differences.controller.js" />
@@ -114,7 +109,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.sendtopublish.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.settings.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.dashboard.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.approve.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.action.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.cancel.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.differences.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.publish.dialog.html" />

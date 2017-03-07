@@ -123,25 +123,25 @@ namespace Usc.Web.UserGroups
         /// <param name="group"></param>
         /// <returns></returns>
         [System.Web.Http.HttpPost]
-        public HttpResponseMessage SaveGroup(UserGroupPoco ug)
+        public HttpResponseMessage SaveGroup(UserGroupPoco group)
         {
             var msgText = "";
-            var nameExists = _pr.UserGroupsByName(ug.Name).Any();
-            var aliasExists = _pr.UserGroupsByAlias(ug.Alias).Any();
+            var nameExists = _pr.UserGroupsByName(group.Name).Any();
+            var aliasExists = _pr.UserGroupsByAlias(group.Alias).Any();
 
             try
             {
-                var userGroup = _pr.UserGroupsById(ug.GroupId.ToString()).First();
+                var userGroup = _pr.UserGroupsById(group.GroupId.ToString()).First();
 
                 // need to check the new name/alias isn't already in use
-                if (userGroup.Name != ug.Name && nameExists)
+                if (userGroup.Name != group.Name && nameExists)
                     return Request.CreateResponse(new
                     {
                         status = HttpStatusCode.NoContent,
                         data = "Group name already exists"
                     });
 
-                if (userGroup.Alias != ug.Alias && aliasExists)
+                if (userGroup.Alias != group.Alias && aliasExists)
                     return Request.CreateResponse(new
                     {
                         status = HttpStatusCode.NoContent,
@@ -151,9 +151,9 @@ namespace Usc.Web.UserGroups
                 // Update the Members - TODO - should find a more efficient way to do this...
                 db.Execute("DELETE FROM WorkflowUser2UserGroup WHERE GroupId = @0", userGroup.GroupId);
 
-                if (ug.Users.Count > 0)
+                if (group.Users.Count > 0)
                 {
-                    foreach (var user in ug.Users)
+                    foreach (var user in group.Users)
                     {
                         db.Insert(user);
                     }
@@ -164,7 +164,7 @@ namespace Usc.Web.UserGroups
             }
             catch (Exception ex)
             {
-                msgText = "Error saving user group '" + ug.Name + "'. " + ex.Message;
+                msgText = "Error saving user group '" + group.Name + "'. " + ex.Message;
                 log.Error(msgText, ex);
                 return Request.CreateResponse(new
                 {
@@ -174,7 +174,7 @@ namespace Usc.Web.UserGroups
             }
 
             // feedback to the browser
-            msgText = "User group '" + ug.Name + "' has been saved.";
+            msgText = "User group '" + group.Name + "' has been saved.";
             log.Debug(msgText);
 
             return Request.CreateResponse(new

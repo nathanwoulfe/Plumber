@@ -15,26 +15,30 @@ namespace Workflow.Relators
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public WorkflowTaskInstancePoco MapIt(WorkflowTaskInstancePoco wtip, WorkflowInstancePoco wip, UserGroupPoco a, User2UserGroupPoco b)
+        public WorkflowTaskInstancePoco MapIt(WorkflowTaskInstancePoco wtip, WorkflowInstancePoco wip, UserGroupPoco ugp)
         {           
             if (wtip == null)
             {
                 return current;
             }
 
+            if (ugp.GroupId == wtip.GroupId)
+            {
+                wtip.UserGroup = ugp;
+            }
+
             if (current != null && current.GroupId == wtip.GroupId) {
-                if (!current.UserGroup.Users.Where(u => u.UserId == b.UserId).Any())
+                if (current.WorkflowInstance == null)
                 {
-                    current.UserGroup.Users.Add(b);
-                }   
+                    current.WorkflowInstance = wip;
+                }
                 return null;
             }
 
             var prev = current;
             current = wtip;
             current.WorkflowInstance = wip;
-            current.UserGroup = a;
-            current.UserGroup.Users.Add(b);
+            current.UserGroup = ugp;
 
             return prev;
         }

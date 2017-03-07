@@ -13,7 +13,7 @@
                 type: '='
             },
             templateUrl: '../app_plugins/workflow/backoffice/partials/workflowTasksTemplate.html',
-            controller: function ($scope) {
+            controller: function ($scope, $rootScope) {
 
                 function showDialog(url, item, cb) {
                     dialogService.open({
@@ -43,33 +43,31 @@
                     approveButton: {
                         labelKey: "workflow_approveButton",
                         handler: function (item) {
-                            showDialog('../app_plugins/workflow/backoffice/dialogs/workflow.approve.dialog.html', item, true);
+                            $rootScope.$broadcast('workflow-action', { item: item, approve: true });
                         }
                     },
                     editButton: {
                         labelKey: "workflow_editButton",
-                        href: '/umbraco/#/content/content/edit/',
-                        handler: function () {
-                        }
+                        href: '/umbraco/#/content/content/edit/'
                     },
                     cancelButton: {
                         labelKey: "workflow_cancelButton",
                         cssClass: 'danger',
                         handler: function (item) {
-                            showDialog('../app_plugins/workflow/backoffice/dialogs/workflow.cancel.dialog.html', item, true);
+                            $rootScope.$broadcast('workflow-cancel', item);
                         }
                     },                
                     rejectButton: {
                         labelKey: "workflow_rejectButton",
                         cssClass: 'warning',
                         handler: function (item) {
-                            showDialog('../app_plugins/workflow/backoffice/dialogs/workflow.reject.dialog.html', item, true);
+                            $rootScope.$broadcast('workflow-action', { item: item, approve: false });
                         }
                     },
                     diffsButton: {
                         labelKey: "workflow_diffsButton",
                         handler: function (item) {
-                            showDialog('../app_plugins/workflow/backoffice/dialogs/workflow.differences.dialog.html', item);
+                            $rootScope.$broadcast('workflow-diffs', item);
                         }
                     }
                 };

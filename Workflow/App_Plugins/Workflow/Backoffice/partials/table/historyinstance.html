@@ -1,5 +1,5 @@
-﻿<div class="table-row-outer" ng-class="{'approved' : item.Status === 'Approved'}">
-    <div class="umb-table-row" ng-repeat="task in item.Tasks">
+﻿<div class="table-row-outer">
+    <div class="umb-table-row" ng-repeat="task in item.Tasks" ng-class="{'approved': task.Status === 'Approved', 'cancelled': item.Status === 'Cancelled', 'pending' : item.Status === 'Pending Approval' }">
         <div class="umb-table-cell">
             <i class="umb-table-body__icon icon-document" ng-class="{'soft' : !$first}"></i>
         </div>

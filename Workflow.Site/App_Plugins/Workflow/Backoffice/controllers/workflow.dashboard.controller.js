@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function Controller($scope, $routeParams, workflowResource, authResource) {
+    function Controller($scope, $routeParams, workflowResource, authResource, notificationsService) {
 
         var vm = this;
         vm.loaded = [0, 0, 0];
@@ -39,6 +39,79 @@
             }
         };
 
+        // listen for clicks on the cancel button
+        $scope.$on('workflow-cancel', function (e, item) {
+            vm.workflowOverlay = {
+                view: '../app_plugins/workflow/backoffice/dialogs/workflow.cancel.dialog.html',
+                show: true,
+                title: 'Cancel workflow process',
+                subtitle: 'Document: ' + item.NodeName,
+                comment: '',
+                isFinalApproval: item.ActiveTask === 'Pending Final Approval',
+                submit: function (model) {
+                    vm.workflowOverlay.show = false;
+                    vm.workflowOverlay = null;
+
+                    workflowResource.cancelWorkflowTask(item.TaskId, model.comment)
+                        .then(function (resp) {
+                            notify(resp);
+                        });
+                },
+                close: function (model) {
+                    vm.workflowOverlay.show = false;
+                    vm.workflowOverlay = null;
+                }
+            };
+        });
+
+        // listen for clicks on the approve or reject button
+        $scope.$on('workflow-action', function (e, args) {
+            vm.workflowOverlay = {
+                view: '../app_plugins/workflow/backoffice/dialogs/workflow.action.dialog.html',
+                show: true,
+                title: (args.approve ? 'Approve' : 'Reject') + ' workflow process',
+                subtitle: 'Document: ' + args.item.NodeName,
+                comment: args.item.Comments,
+                approvalComment: '',
+                requestedBy: args.item.RequestedBy,
+                requestedOn: args.item.RequestedOn,
+                submit: function (model) {
+                    vm.workflowOverlay.show = false;
+                    vm.workflowOverlay = null;
+
+                    if (args.approve) {
+                        workflowResource.approveWorkflowTask(item.TaskId, model.comment)
+                            .then(function (resp) {
+                                notify(resp);
+                            });
+                    }
+                    else {
+                        workflowResource.rejectWorkflowTask(item.TaskId, model.comment)
+                            .then(function (resp) {
+                                notify(resp);
+                            });
+                    }
+                },
+                close: function (model) {
+                    vm.workflowOverlay.show = false;
+                    vm.workflowOverlay = null;
+                }
+            };
+        });
+
+        // display notification after actioning workflow task
+        function notify(d) {
+            if (d.status === 200) {
+                notificationsService.success("SUCCESS!", d.data.Message);
+            }
+            else {
+                notificationsService.error("OH SNAP!", d.data.Message);
+            }
+
+            init();
+        }        
+
+        // expose some bits
         angular.extend(vm, {
             tasks: [],
             submissions: [],

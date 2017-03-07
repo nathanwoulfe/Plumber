@@ -62,13 +62,13 @@
                         <div class="umb-table-cell" ng-bind="item.Comments"></div>
                         <div class="umb-table-cell" ng-bind="item.ApprovalGroup"></div>
                         <div class="umb-table-cell show-overflow">
-                            <workflow-button-group ng-if="buttonGroup"
-                                                   default-button="buttonGroup.defaultButton"
-                                                   sub-buttons="buttonGroup.subButtons"
-                                                   direction="down"
-                                                   item="item"
-                                                   float="right">
-                            </workflow-button-group>
+                        <workflow-button-group ng-if="buttonGroup"
+                                                default-button="buttonGroup.defaultButton"
+                                                sub-buttons="buttonGroup.subButtons"
+                                                direction="down"
+                                                item="item"
+                                                float="right">
+                        </workflow-button-group>
                         </div>
                     </div>
                     <div class="workflow-progress">

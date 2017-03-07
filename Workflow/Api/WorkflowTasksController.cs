@@ -318,7 +318,7 @@ namespace Workflow.Dashboard
         /// <param name="comment"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage ApproveWorkflowTask(string taskId, string comment = "")
+        public HttpResponseMessage ApproveWorkflowTask(int taskId, string comment = "")
         {
             var _instance = GetInstance(taskId);
 
@@ -377,7 +377,7 @@ namespace Workflow.Dashboard
         /// <param name="comment"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage RejectWorkflowTask(string taskId, string comment = "")
+        public HttpResponseMessage RejectWorkflowTask(int taskId, string comment = "")
         {
             var _instance = GetInstance(taskId);
 
@@ -419,7 +419,7 @@ namespace Workflow.Dashboard
         /// <param name="comment"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage CancelWorkflowTask(string taskId, string comment = null)
+        public HttpResponseMessage CancelWorkflowTask(int taskId, string comment = "")
         {
             var _instance = GetInstance(taskId);
 
@@ -571,9 +571,9 @@ namespace Workflow.Dashboard
         /// </summary>
         /// <param name="taskId"></param>
         /// <returns></returns>
-        private WorkflowInstancePoco GetInstance(string taskId)
+        private WorkflowInstancePoco GetInstance(int taskId)
         {
-            var _instance = _pr.InstanceByTaskId(int.Parse(taskId));
+            var _instance = _pr.InstanceByTaskId(taskId);
 
             // TODO -> fix this
             var tasks = _pr.TasksAndGroupByInstanceId(_instance.Guid);

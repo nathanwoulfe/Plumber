@@ -2,20 +2,18 @@
     'use strict';
 
     // create service
-    function userGroupsResource($http, $q) {
+    function userGroupsResource($http, $q, umbRequestHelper) {
         var service = {
 
             urlBase: '/umbraco/backoffice/api/usergroups/',
 
             request: function (method, url, data) {
-                var deferred = $q.defer();
-                $http({ method: method, url: url, data: data, cache: false })
-                    .then(function (response) {
-                        return deferred.resolve(response.data);
-                    }, function (err) {
-                        return deferred.reject('Something broke');
-                    });
-                return deferred.promise;
+                return umbRequestHelper.resourcePromise(
+                    method === 'GET' ?
+                        $http.get(url, { params: data }) :
+                        $http.post(url, data),
+                    'Something broke'
+                );
             },
 
             /*** GET ALL GROUPS ***/
@@ -25,12 +23,12 @@
 
             /*** GET GROUP BY ID ***/
             getGroup: function (id) {
-                return this.request('GET', this.urlBase + 'getGroup?id=' + id);             
+                return this.request('GET', this.urlBase + 'getGroup', { id: id });
             },
 
             /*** ADD NEW GROUP ***/
             addGroup: function (name) {
-                return this.request('POST', this.urlBase + 'addGroup?name=' + name);
+                return this.request('POST', this.urlBase + 'addGroup', { name: name });
             },
 
             /*** SAVE GROUP ***/
@@ -40,7 +38,7 @@
 
             /*** DELETE GROUP ***/
             deleteGroup: function (id) {
-                return this.request('POST', this.urlBase + 'deleteGroup?id=' + id);                
+                return this.request('POST', this.urlBase + 'deleteGroup', { id: id });
             }
         };
 

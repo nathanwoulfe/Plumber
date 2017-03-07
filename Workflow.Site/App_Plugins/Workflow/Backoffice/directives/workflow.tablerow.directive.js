@@ -6,16 +6,13 @@
         var directive = {
             restrict: 'E',
             scope: {
-                item: '='
-            },
-            templateUrl: function(elem, attrs) {
-                return attrs.isNode ? '../app_plugins/workflow/backoffice/partials/table/historytask.html' : '../app_plugins/workflow/backoffice/partials/table/historyinstance.html';
+                item: '=',
+                instanceView: '='
             },
             link: function (scope) {
-                //if (!scope.hasTasks) {
-                //    directive.templateUrl = '../app_plugins/workflow/backoffice/partials/table/historytask.html';
-                //}
-            }
+                scope.templateUrl = '../app_plugins/workflow/backoffice/partials/table/' + (scope.instanceView ? 'historyinstance' : 'historytask') + '.html';
+            },
+            template: '<ng-include src="templateUrl"></ng-include>'
         };
 
         return directive;
