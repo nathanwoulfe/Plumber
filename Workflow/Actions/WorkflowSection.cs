@@ -25,11 +25,11 @@ namespace Workflow.Actions
 
                 treeNodes.Add(new SectionTreeNode() { Id = "settings", Title = "Settings", Icon = "icon-link", Route = string.Format("{0}{1}", route, "settings") });
                 treeNodes.Add(new SectionTreeNode() { Id = "history", Title = "History", Icon = "icon-link", Route = string.Format("{0}{1}", route, "history") });
-                treeNodes.Add(new SectionTreeNode() { Id = "usergroups", Title = "Approval groups", Icon = "icon-link", Route = string.Format("{0}{1}", route, "usergroups") });
+                treeNodes.Add(new SectionTreeNode() { Id = "groups", Title = "Approval groups", Icon = "icon-link", Route = string.Format("{0}{1}", route, "groups") });
 
                 foreach (var n in treeNodes)
                 {
-                    var nodeToAdd = CreateTreeNode(n.Id, id, queryStrings, n.Title, n.Icon, n.Id == "usergroups" ? true : false, n.Route);
+                    var nodeToAdd = CreateTreeNode(n.Id, id, queryStrings, n.Title, n.Icon, n.Id == "groups" ? true : false, n.Route);
                     nodes.Add(nodeToAdd);
                 }
 
@@ -73,16 +73,18 @@ namespace Workflow.Actions
         {
             var menu = new MenuItemCollection();
             int result;
+
             if (id == "usergroups")
             {
                 menu.Items.Add(new MenuItem()
                 {
-                    Alias = "add",
+                    Alias = "addGroup",
                     Name = "Create",
                     Icon = "add"
                 });
                 menu.Items.Add<RefreshNode, umbraco.BusinessLogic.Actions.ActionRefresh>("Reload nodes", true);
-            } else if (int.TryParse(id, out result))
+            }
+            else if (int.TryParse(id, out result))
             {
                 menu.Items.Add<umbraco.BusinessLogic.Actions.ActionDelete>("Delete group");
             }

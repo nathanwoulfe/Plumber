@@ -2,7 +2,7 @@
     'use strict';
 
     // create controller 
-    function Controller($scope, workflowResource) {
+    function differencesController($scope, workflowResource) {
 
         workflowResource.showDifferences($scope.dialogData.NodeId, $scope.dialogData.TaskId)
             .then(function (resp) {
@@ -11,5 +11,5 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.Differences.Controller', Controller);
+    angular.module('umbraco').controller('Workflow.Differences.Controller', differencesController);
 }());

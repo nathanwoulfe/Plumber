@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Web.Http;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Services;
@@ -26,13 +27,17 @@ namespace Usc.Web.UserGroups
         /// <param name="id"></param>
         /// <returns></returns>
         [System.Web.Http.HttpGet]
-        public HttpResponseMessage GetAllGroups()
+        public IHttpActionResult GetAllGroups()
         {
-            return Request.CreateResponse(new
+            try
             {
-                stats = HttpStatusCode.OK,
-                data = _pr.UserGroups()
-            });
+                var groups = _pr.UserGroups();
+                return Json(groups, ViewHelpers.CamelCase);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+            }
         }
 
         /// <summary>
@@ -41,23 +46,22 @@ namespace Usc.Web.UserGroups
         /// <param name="id"></param>
         /// <returns></returns>
         [System.Web.Http.HttpGet]
-        public HttpResponseMessage GetGroup(string id)
+        public IHttpActionResult GetGroup(string id)
         {
-            var result = _pr.PopulatedUserGroup(id);
+            try {
+                var result = _pr.PopulatedUserGroup(id);
 
-            if (result.Any())
-            {
-                return Request.CreateResponse(new
+                if (result.Any())
                 {
-                    status = HttpStatusCode.OK,
-                    data = result.First()
-                });
+                    return Json(result.First(), ViewHelpers.CamelCase);
+                }
+
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            return Request.CreateResponse(new
+            catch (Exception e)
             {
-                status = HttpStatusCode.NotFound,
-                data = "Group not found"
-            });
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+            }
         }
 
         /// <summary>
@@ -66,18 +70,14 @@ namespace Usc.Web.UserGroups
         /// <param name="group"></param>
         /// <returns></returns>
         [System.Web.Http.HttpPost]
-        public HttpResponseMessage AddGroup(string name)
+        public IHttpActionResult AddGroup(string name)
         {
             try
             {
                 // check that it doesn't already exist
                 if (_pr.UserGroupsByName(name).Any())
                 {
-                    return Request.CreateResponse(new
-                    {
-                        status = HttpStatusCode.NoContent,
-                        data = "Cannot create user group; a group with that name already exists."
-                    });
+                    return Ok(new { status = 500, msg = "Group name already exists" });
                 }
                 else
                 {
@@ -97,11 +97,7 @@ namespace Usc.Web.UserGroups
                 var error = "Error creating user group '" + name + "'. " + ex.Message;
                 log.Error(error, ex);
                 // if we are here, something isn't right...
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.NoContent,
-                    data = error
-                });
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
             }
 
             var id = _pr.NewestGroup().GroupId;
@@ -110,10 +106,7 @@ namespace Usc.Web.UserGroups
             log.Debug(msg);
 
             // return the id of the new group, to update the front-end route to display the edit view
-            return Request.CreateResponse(new {
-                status = HttpStatusCode.OK,
-                data = id
-            });
+            return Ok(new { status = 200, msg = msg, id = id });
         }
 
 
@@ -123,7 +116,7 @@ namespace Usc.Web.UserGroups
         /// <param name="group"></param>
         /// <returns></returns>
         [System.Web.Http.HttpPost]
-        public HttpResponseMessage SaveGroup(UserGroupPoco group)
+        public IHttpActionResult SaveGroup(UserGroupPoco group)
         {
             var msgText = "";
             var nameExists = _pr.UserGroupsByName(group.Name).Any();
@@ -135,18 +128,15 @@ namespace Usc.Web.UserGroups
 
                 // need to check the new name/alias isn't already in use
                 if (userGroup.Name != group.Name && nameExists)
-                    return Request.CreateResponse(new
-                    {
-                        status = HttpStatusCode.NoContent,
-                        data = "Group name already exists"
-                    });
+                {
+                    return Content(HttpStatusCode.OK, new { status = 500, msg = "Group name already exists" });
+                }
 
                 if (userGroup.Alias != group.Alias && aliasExists)
-                    return Request.CreateResponse(new
-                    {
-                        status = HttpStatusCode.NoContent,
-                        data = "Group alias already exists"
-                    });
+                {
+                    msgText = "Group alias already exists";
+                    return Content(HttpStatusCode.OK, new { status = 500, msg = "Group alias already exists" });
+                }
 
                 // Update the Members - TODO - should find a more efficient way to do this...
                 db.Execute("DELETE FROM WorkflowUser2UserGroup WHERE GroupId = @0", userGroup.GroupId);
@@ -159,29 +149,20 @@ namespace Usc.Web.UserGroups
                     }
                 }
 
-                db.Update(userGroup);
+                db.Update(group);
 
             }
             catch (Exception ex)
             {
-                msgText = "Error saving user group '" + group.Name + "'. " + ex.Message;
-                log.Error(msgText, ex);
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.NoContent,
-                    data = msgText
-                });
+                log.Error(ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
             }
 
             // feedback to the browser
             msgText = "User group '" + group.Name + "' has been saved.";
             log.Debug(msgText);
 
-            return Request.CreateResponse(new
-            {
-                status = HttpStatusCode.OK,
-                data = msgText
-            });
+            return Ok(new { status = 200, msg = msgText });
         }
 
         /// <summary>
@@ -190,7 +171,7 @@ namespace Usc.Web.UserGroups
         /// <param name="id"></param>
         /// <returns></returns>
         [System.Web.Http.HttpPost]
-        public HttpResponseMessage DeleteGroup(string id)
+        public IHttpActionResult DeleteGroup(string id)
         {
             // remove all users, permissions and the group itself
             // existing workflow processes are left as is, and need to be managed by a human person
@@ -202,21 +183,12 @@ namespace Usc.Web.UserGroups
             }
             catch (Exception ex)
             {
-                var error = "Error deleting user group. " + ex.Message;
-                log.Error(error, ex);
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.NoContent,
-                    data = error
-                });
+                log.Error("Error deleting user group. " + ex.Message, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, "Error deleting user group"));
             }
 
             // gone.
-            return Request.CreateResponse(new
-            {
-                status = HttpStatusCode.OK,
-                data = string.Concat("User group has been deleted")
-            });
+            return Ok("User group has been deleted");
         }
     }
 }

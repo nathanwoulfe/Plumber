@@ -2,26 +2,26 @@
     <div class="umb-dialog-body with-footer">
         <div class="umb-pane">
             <h5>Workflow approval flow</h5>
-            <select ng-model="vm.selectedApprovalGroup" ng-options="g as g.Name for g in vm.groups">
+            <select ng-model="vm.selectedApprovalGroup" ng-options="g as g.name for g in vm.groups">
                 <option selected disabled>--- Add ---</option>
             </select>
             <button class="btn btn-default" ng-click="vm.add()">Add</button>
             <div ng-show="vm.approvalPath.length">
                 <h6>Current flow</h6>
                 <ul class="current-flow">
-                    <li ng-class="{'last': $last}" ng-repeat="u in vm.approvalPath track by $index" ng-click="vm.remove($event, $index)" title="Remove approval role for {{u.Name}}">{{u.Name}}</li>                
+                    <li ng-class="{'last': $last}" ng-repeat="u in vm.approvalPath track by $index" ng-click="vm.remove($event, $index)" title="Remove approval role for {{u.name}}">{{u.name}}</li>                
                 </ul>
             </div>
             <hr />
             <h5>Content type approval flow ({{ vm.contentTypeName }})</h5>
             <p>Approval flow can be set by content type - this flow takes priority over any inherited flow.</p>
             <ul class="current-flow">
-                <li ng-class="{'last': $last}" ng-repeat="u in vm.contentTypeApprovalPath"><a href="/umbraco/#/workflow/tree/edit/{{ u.GroupId }}">{{ u.Name }}</a></li>
+                <li ng-class="{'last': $last}" ng-repeat="u in vm.contentTypeApprovalPath"><a href="/umbraco/#/workflow/tree/edit/{{ u.groupId }}">{{ u.name }}</a></li>
             </ul>
-            <h5>Inherited approval flow ({{ vm.inherited[0].NodeName}})</h5>
+            <h5>Inherited approval flow ({{ vm.inherited[0].nodeName}})</h5>
             <p>Workflow configuration is inherited from ancestor nodes unless set by content type or on the current node.</p>
             <ul class="current-flow">
-                <li ng-class="{'last': $last}" ng-repeat="u in vm.inherited"><a href="/umbraco/#/workflow/tree/edit/{{ u.GroupId }}">{{ u.Name }}</a></li>
+                <li ng-class="{'last': $last}" ng-repeat="u in vm.inherited"><a href="/umbraco/#/workflow/tree/edit/{{ u.groupId }}">{{ u.name }}</a></li>
             </ul>
         </div>
     </div>    

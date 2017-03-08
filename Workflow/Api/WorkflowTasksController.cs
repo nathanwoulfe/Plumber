@@ -28,25 +28,17 @@ namespace Workflow.Dashboard
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
-        public HttpResponseMessage GetPendingTasks()
+        public IHttpActionResult GetPendingTasks()
         {
             try
             {
                 var taskInstances = _pr.GetPendingTasks((int)TaskStatus.PendingApproval);
                 var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.OK,
-                    data = workflowItems
-                });
+                return Json(workflowItems, ViewHelpers.CamelCase);
             }
             catch (Exception e)
             {
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.InternalServerError,
-                    data = e.Message
-                });
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
             }
         }
 
@@ -55,80 +47,56 @@ namespace Workflow.Dashboard
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
-        public HttpResponseMessage GetAllTasks()
+        public IHttpActionResult GetAllTasks()
         {
             try
             {
                 var taskInstances = _pr.GetAllTasks();
                 var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.OK,
-                    data = workflowItems
-                });
+                return Json(workflowItems, ViewHelpers.CamelCase);
             }
             catch (Exception e)
             {
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.InternalServerError,
-                    data = e.Message
-                });
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
             }
         }
 
         /// <summary>
-        /// Returns all tasks
+        /// Returns all workflow instances, with their tasks
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
-        public HttpResponseMessage GetAllInstances()
+        public IHttpActionResult GetAllInstances()
         {
             try
             {
                 var instances = _pr.GetAllInstances();
                 var workflowInstances = BuildWorkflowInstanceList(instances);
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.OK,
-                    data = workflowInstances
-                });
+                return Json(workflowInstances, ViewHelpers.CamelCase);
             }
             catch (Exception e)
             {
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.InternalServerError,
-                    data = e.Message
-                });
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
             }
         }
 
         /// <summary>
-        /// 
+        /// Return workflow tasks for the given node
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage GetNodeTasks(string id)
+        public IHttpActionResult GetNodeTasks(string id)
         {
             try
             {
                 var taskInstances = _pr.TasksByNode(id);
                 var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.OK,
-                    data = workflowItems
-                });
+                return Json(workflowItems, ViewHelpers.CamelCase);
             }
             catch (Exception e)
             {
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.InternalServerError,
-                    data = e.Message
-                });
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
             }
         }
 
@@ -139,30 +107,19 @@ namespace Workflow.Dashboard
         /// <param name="type">0 - tasks, 1 - submissions</param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage GetFlowsForUser(int userId, int type = 0)
+        public IHttpActionResult GetFlowsForUser(int userId, int type = 0)
         {
-
-            var workflowItems = new List<WorkflowTask>();
-
             try
             {
                 var taskInstances = type == 0 ? _pr.TasksForUser(userId, (int)TaskStatus.PendingApproval) : _pr.SubmissionsForUser(userId, (int)TaskStatus.PendingApproval);
-                workflowItems = BuildWorkflowItemList(taskInstances, userId);
-
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.OK,
-                    data = workflowItems
-                });
+                var workflowItems = BuildWorkflowItemList(taskInstances, userId);
+                return Json(workflowItems, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
-                log.Error("Error trying to build user workflow tasks list for user " + Helpers.GetUser(userId).Name, ex);
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.InternalServerError,
-                    data = string.Concat("Error trying to build user workflow tasks list for user ", Helpers.GetUser(userId).Name, ": ", ex)
-                });
+                var s = "Error trying to build user workflow tasks list for user ";
+                log.Error(string.Concat(s + Helpers.GetUser(userId).Name, ex));
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, s));
             }
         }        
 
@@ -173,7 +130,7 @@ namespace Workflow.Dashboard
         /// <param name="taskId">Id of the workflow task</param>
         /// <returns>DifferencesResponseItem</returns>
         [HttpPost]
-        public HttpResponseMessage ShowDifferences(string nodeId, string taskId)
+        public IHttpActionResult ShowDifferences(string nodeId, string taskId)
         {
             int _nodeId = int.Parse(nodeId);
 
@@ -245,7 +202,7 @@ namespace Workflow.Dashboard
 
             differences.CompareData += "<table><tbody>" + differences.CompareData + "</tbody></table>";
 
-            return Request.CreateResponse(HttpStatusCode.OK, differences);
+            return Json(differences, ViewHelpers.CamelCase);
         }
 
         /// <summary>
@@ -256,7 +213,7 @@ namespace Workflow.Dashboard
         /// <param name="comment"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage InitiateWorkflow(InitiateWorkflowModel model)
+        public IHttpActionResult InitiateWorkflow(InitiateWorkflowModel model)
         {
             WorkflowInstancePoco instance = null;
             WorkflowApprovalProcess process = null;
@@ -273,18 +230,7 @@ namespace Workflow.Dashboard
                 }
 
                 instance = process.InitiateWorkflow(int.Parse(model.NodeId), Helpers.GetCurrentUser().Id, model.Comment);
-            }
-            catch (Exception e)
-            {
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.BadRequest,
-                    data = "Something went wrong " + e.Message
-                });
-            }
-
-            if (instance != null)
-            {
+  
                 var msg = string.Empty;
 
                 switch (instance._Status)
@@ -296,18 +242,14 @@ namespace Workflow.Dashboard
                         msg = "Workflow complete";
                         break;
                 }
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.OK,
-                    data = msg
-                });
-            }
 
-            return Request.CreateResponse(new
+                return Json(msg, ViewHelpers.CamelCase);
+                
+            }
+            catch (Exception e)
             {
-                status = HttpStatusCode.BadRequest,
-                data = "Something went wrong"
-            });
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+            }
         }
 
 
@@ -318,7 +260,7 @@ namespace Workflow.Dashboard
         /// <param name="comment"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage ApproveWorkflowTask(int taskId, string comment = "")
+        public IHttpActionResult ApproveWorkflowTask(int taskId, string comment = "")
         {
             var _instance = GetInstance(taskId);
 
@@ -351,21 +293,13 @@ namespace Workflow.Dashboard
                     Type = _instance._Type
                 };
 
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.OK,
-                    data = respMessage
-                });
+                return Json(respMessage, ViewHelpers.CamelCase);           
             }
             catch (Exception ex)
             {
                 string msg = "An error occurred processing the approval: " + ex.Message + ex.StackTrace;
                 log.Error(msg + " for workflow " + _instance.Id, ex);
-
-                return Request.CreateResponse(new {
-                    status = HttpStatusCode.BadRequest,
-                    data = new HttpError(msg)
-                });
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -377,7 +311,7 @@ namespace Workflow.Dashboard
         /// <param name="comment"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage RejectWorkflowTask(int taskId, string comment = "")
+        public IHttpActionResult RejectWorkflowTask(int taskId, string comment = "")
         {
             var _instance = GetInstance(taskId);
 
@@ -392,22 +326,20 @@ namespace Workflow.Dashboard
                     comment
                 );
 
-                return Request.CreateResponse(HttpStatusCode.OK, new WorkflowResponseItem
+                
+
+                return Json(new WorkflowResponseItem
                 {
                     Message = _instance.TypeDescription + " request has been rejected.",
                     Type = _instance._Type
-                });
+                }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
                 string msg = "An error occurred rejecting the workflow: " + ex.Message + ex.StackTrace;
                 log.Error(msg + " for workflow " + _instance.Id, ex);
 
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.BadRequest,
-                    data = new HttpError(msg)
-                });
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));              
             }
         }
 
@@ -419,7 +351,7 @@ namespace Workflow.Dashboard
         /// <param name="comment"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage CancelWorkflowTask(int taskId, string comment = "")
+        public IHttpActionResult CancelWorkflowTask(int taskId, string comment = "")
         {
             var _instance = GetInstance(taskId);
 
@@ -433,18 +365,18 @@ namespace Workflow.Dashboard
                     comment
                 );
 
-                return Request.CreateResponse(HttpStatusCode.OK, new WorkflowResponseItem
+                return Json(new WorkflowResponseItem
                 {
                     Message = _instance.TypeDescription + " workflow cancelled",
                     Type = _instance._Type
-                });
+                }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
                 string msg = "An error occurred cancelling the workflow: " + ex.Message + ex.StackTrace;
                 log.Error(msg + " for workflow " + _instance.Id, ex);
 
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, new HttpError(msg));
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -469,6 +401,7 @@ namespace Workflow.Dashboard
                     var item = new WorkflowTask
                     {
                         Status = taskInstance.StatusName,
+                        CssStatus = taskInstance.StatusName.ToLower().Split(' ')[0],
                         Type = useThisInstance.TypeDescription,
                         NodeId = useThisInstance.NodeId,
                         TaskId = useThisInstance.Id,
@@ -512,6 +445,7 @@ namespace Workflow.Dashboard
                     {
                         Type = instance.TypeDescription,
                         Status = instance.StatusName,
+                        CssStatus = instance.StatusName.ToLower().Split(' ')[0],
                         NodeId = instance.NodeId,
                         NodeName = instance.Node.Name,
                         RequestedBy = instance.AuthorUser.Name,

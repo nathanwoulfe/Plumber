@@ -1,80 +1,77 @@
-﻿<div ng-controller="Workflow.Settings.Controller as vm">
-    <form class="form-horizontal">
-        <umb-editor-view footer="true">
-            <umb-editor-header name="vm.name"
-                               name-locked="true"
-                               tabs=""
-                               hide-icon="true"
-                               hide-description="true"
-                               hide-alias="true">
-            </umb-editor-header>
-            <umb-editor-container>
-                <div class="umb-property">
-                    <div class="control-group umb-control-group">
-                        <label class="control-label" for="Default approval group" ng-attr-title="defaultApprover">
-                            Default approval group                            
-                        </label>
-                        <div class="controls">
-                            <select ng-model="vm.defaultApprover" ng-options="g.Name for g in vm.groups" name="Default approval group">
-                                <option></option>
+﻿<form class="form-horizontal" ng-controller="Workflow.Settings.Controller as vm">
+    <umb-editor-view footer="true">
+        <umb-editor-header name="vm.name"
+                            name-locked="true"
+                            hide-icon="true"
+                            hide-description="true"
+                            hide-alias="true">
+        </umb-editor-header>
+        <umb-editor-container>
+            <div class="umb-property">
+                <div class="control-group umb-control-group">
+                    <label class="control-label" for="Default approval group" ng-attr-title="defaultApprover">
+                        Default approval group                            
+                    </label>
+                    <div class="controls">
+                        <select ng-model="vm.defaultApprover" ng-options="g.name for g in vm.groups" name="Default approval group">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="umb-property">
+                <div class="control-group umb-control-group">
+                    <label class="control-label">Workflow email</label>
+                    <div class="controls">
+                        <input type="email" ng-model="vm.settings.email" />
+                    </div>
+                </div>
+            </div>
+            <div class="umb-property">
+                <div class="control-group umb-control-group">
+                    <label class="control-label">Base site URL</label>
+                    <div class="controls">
+                        <input type="text" ng-model="vm.settings.siteUrl" />
+                    </div>
+                </div>
+                </div>
+            <div class="umb-property">
+                <div class="control-group umb-control-group">
+                    <label class="control-label">Edit site URL</label>
+                    <div class="controls">
+                        <input type="text" ng-model="vm.settings.editUrl" />
+                    </div>
+                </div>
+            </div>
+            <div class="umb-property">
+                <div class="control-group umb-control-group">
+                    <label class="control-label">
+                        Document-based approval flows
+                        <small>Default workflow for all nodes of a given document type</small>
+                    </label>
+                    <div class="controls">
+                        <input type="text" ng-model="search.$" placeholder="Search" prevent-enter-submit no-dirty-check />
+                        <div class="control-panel" ng-repeat="d in vm.docTypes | filter:search | limitTo:5 ">
+                            <h5 ng-bind="d.name"></h5>
+                            <select ng-model="d.selectedApprovalGroup" ng-options="g as g.name for g in vm.groups">
+                                <option selected disabled>--- Add ---</option>
                             </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="umb-property">
-                    <div class="control-group umb-control-group">
-                        <label class="control-label">Workflow email</label>
-                        <div class="controls">
-                            <input type="email" ng-model="vm.settings.Email" />
-                        </div>
-                    </div>
-                </div>
-                <div class="umb-property">
-                    <div class="control-group umb-control-group">
-                        <label class="control-label">Base site URL</label>
-                        <div class="controls">
-                            <input type="text" ng-model="vm.settings.SiteUrl" />
-                        </div>
-                    </div>
-                    </div>
-                <div class="umb-property">
-                    <div class="control-group umb-control-group">
-                        <label class="control-label">Edit site URL</label>
-                        <div class="controls">
-                            <input type="text" ng-model="vm.settings.EditUrl" />
-                        </div>
-                    </div>
-                </div>
-                <div class="umb-property">
-                    <div class="control-group umb-control-group">
-                        <label class="control-label">
-                            Document-based approval flows
-                            <small>Default workflow for all nodes of a given document type</small>
-                        </label>
-                        <div class="controls">
-                            <input type="text" ng-model="search.$" placeholder="Search" prevent-enter-submit no-dirty-check />
-                            <div class="control-panel" ng-repeat="d in vm.docTypes | filter:search | limitTo:5 ">
-                                <h5 ng-bind="d.name"></h5>
-                                <select ng-model="d.selectedApprovalGroup" ng-options="g as g.Name for g in vm.groups">
-                                    <option selected disabled>--- Add ---</option>
-                                </select>
-                                <button class="btn btn-default" ng-click="vm.add(d)">Add</button>
-                                <div ng-show="d.approvalPath">
-                                    <h6>Current flow</h6>
-                                    <ul class="current-flow">
-                                        <li ng-class="{'last': $last}" ng-repeat="u in d.approvalPath track by $index" ng-click="vm.remove(d, $index)" title="Remove approval role for {{u.Name}}">{{u.Name}}</li>
-                                    </ul>
-                                </div>
+                            <button class="btn btn-default" ng-click="vm.add(d)">Add</button>
+                            <div ng-show="d.approvalPath">
+                                <h6>Current flow</h6>
+                                <ul class="current-flow">
+                                    <li ng-class="{'last': $last}" ng-repeat="u in d.approvalPath track by $index" ng-click="vm.remove(d, $index)" title="Remove approval role for {{u.name}}">{{u.name}}</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-            </umb-editor-container>
-            <umb-editor-footer>
-                <umb-editor-footer-content-right>
-                    <button class="btn btn-success" ng-click="vm.save()">Save</button>
-                </umb-editor-footer-content-right>
-            </umb-editor-footer>
-        </umb-editor-view>
-    </form>
-</div>
+            </div>
+        </umb-editor-container>
+        <umb-editor-footer>
+            <umb-editor-footer-content-right>
+                <button class="btn btn-success" ng-click="vm.save()">Save settings</button>
+            </umb-editor-footer-content-right>
+        </umb-editor-footer>
+    </umb-editor-view>
+</form>

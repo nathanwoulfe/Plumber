@@ -1,28 +1,28 @@
 ﻿<div class="table-row-outer">
-    <div class="umb-table-row" ng-repeat="task in item.Tasks" ng-class="{'approved': task.Status === 'Approved', 'cancelled': item.Status === 'Cancelled', 'pending' : item.Status === 'Pending Approval' }">
+    <div class="umb-table-row {{ task.cssStatus }} {{ item.cssStatus }}" ng-repeat="task in item.tasks">
         <div class="umb-table-cell">
             <i class="umb-table-body__icon icon-document" ng-class="{'soft' : !$first}"></i>
         </div>
         <div class="umb-table-cell">
-            <a ng-if="$first" href="#" ng-href="/umbraco/dialogs/preview.aspx?id={{item.NodeId}}" ng-bind="item.NodeName" target="_blank"></a>
+            <a ng-if="$first" href="#" ng-href="/umbraco/dialogs/preview.aspx?id={{ item.nodeId }}" ng-bind="item.nodeName" target="_blank"></a>
         </div>
         <div class="umb-table-cell">
-            <span ng-if="$first" ng-bind="item.Type"></span>
+            <span ng-if="$first" ng-bind="item.type"></span>
         </div>
         <div class="umb-table-cell">
-            <span ng-if="$first" ng-bind="item.RequestedBy"></span>
+            <span ng-if="$first" ng-bind="item.requestedBy"></span>
         </div>
         <div class="umb-table-cell">
-            {{ task.RequestedOn }}
+            {{ task.requestedOn }}
         </div>
         <div class="umb-table-cell">
-            {{ task.Status }}
+            {{ task.status }}
         </div>
         <div class="umb-table-cell">
-            {{ task.Comments }}
+            {{ task.comments }}
         </div>
         <div class="umb-table-cell">
-            {{ task.ApprovalGroup }}
+            {{ task.approvalGroup }}
         </div>
     </div>
 </div>

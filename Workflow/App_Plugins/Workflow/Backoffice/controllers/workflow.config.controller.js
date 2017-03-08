@@ -2,14 +2,14 @@
 	'use strict';
 
 	// create controller 
-	function Controller($scope, $routeParams, userGroupsResource, workflowResource, notificationsService, contentResource) {
+	function configController($scope, $routeParams, userGroupsResource, workflowResource, notificationsService, contentResource) {
 	    var vm = this,
 			nodeId = $routeParams.id;
 
 		function init() {
 			userGroupsResource.getAllGroups()
 				.then(function (resp) {
-					vm.groups = resp.data;
+					vm.groups = resp;
 
 					contentResource.getById(nodeId)
 						.then(function (resp) {
@@ -23,13 +23,13 @@
 
 		function checkNodePermissions() {
 		    angular.forEach(vm.groups, function (v, i) {
-		        angular.forEach(v.Permissions, function (p) {
-		            if (p.NodeId == nodeId) {
-		                vm.approvalPath[p.Permission] = v;
+		        angular.forEach(v.permissions, function (p) {
+		            if (p.nodeId == nodeId) {
+		                vm.approvalPath[p.permission] = v;
 		            }
 
-		            if (p.ContentTypeName === vm.contentTypeName) {
-		                vm.contentTypeApprovalPath[p.Permission] = v;
+		            if (p.contentTypeName === vm.contentTypeName) {
+		                vm.contentTypeApprovalPath[p.permission] = v;
 		            }
 		        });
 		    });
@@ -42,13 +42,13 @@
 			
 			angular.forEach(path, function (id, i) {
 				angular.forEach(vm.groups, function (v, i) {
-					angular.forEach(v.Permissions, function (p) {
-						if (p.NodeId == id) {
+					angular.forEach(v.permissions, function (p) {
+						if (p.nodeId == id) {
 							vm.inherited.push({
-								Name: v.Name,
-								GroupId: p.GroupId,
-								NodeName: p.NodeName,
-								Permission: p.Permission
+								name: v.name,
+								groupId: p.groupId,
+								nodeName: p.nodeName,
+								permission: p.permission
 							});
 						}
 					});
@@ -60,8 +60,8 @@
 
 			var response = [];
 			angular.forEach(vm.groups, function (v, i) {
-			    angular.forEach(v.Permissions, function (p) {
-				    if (p.NodeId == nodeId) {
+			    angular.forEach(v.permissions, function (p) {
+				    if (p.nodeId == nodeId) {
 						response.push(p);
 					}
 				});
@@ -81,10 +81,10 @@
 
 		function add() {
 		    vm.approvalPath.push(vm.selectedApprovalGroup);
-		    vm.selectedApprovalGroup.Permissions.push({
-		    	NodeId: nodeId,
-		    	Permission: vm.approvalPath.indexOf(vm.selectedApprovalGroup),
-		    	GroupId: vm.selectedApprovalGroup.GroupId
+		    vm.selectedApprovalGroup.permissions.push({
+		    	nodeId: nodeId,
+		    	permission: vm.approvalPath.indexOf(vm.selectedApprovalGroup),
+		    	groupId: vm.selectedApprovalGroup.groupId
 		    });		
 		}
 
@@ -106,6 +106,6 @@
 	};
 
 	// register controller 
-	angular.module('umbraco').controller('Workflow.Config.Controller', Controller);
+	angular.module('umbraco').controller('Workflow.Config.Controller', configController);
 }());
 

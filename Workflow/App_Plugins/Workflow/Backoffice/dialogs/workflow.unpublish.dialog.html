@@ -1,8 +1,9 @@
 ﻿<div class="umb-pane" ng-controller="Workflow.SendToUnpublish.Controller as vm">
     <div class="umb-dialog-body with-footer">
         <div class="umb-pane">
-            <h5>Send to unpublish</h5>
-
+            <div ng-show="vm.active">
+                <p>Page is already in a workflow process.</p>
+            </div>
         </div>
     </div>
     <div class="umb-dialog-footer btn-toolbar umb-btn-toolbar">

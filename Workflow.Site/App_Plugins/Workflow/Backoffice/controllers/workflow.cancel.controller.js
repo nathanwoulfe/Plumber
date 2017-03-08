@@ -2,7 +2,7 @@
     'use strict';
 
     // create controller 
-    function Controller($scope, workflowResource) {
+    function cancelController($scope, workflowResource) {
         $scope.model.comment = '';
         $scope.limit = 250;
         $scope.intro = 'This operation will cancel the workflow on this document and notify the workflow participants. Are you sure?';
@@ -10,5 +10,5 @@
     };
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.Cancel.Controller', Controller);
+    angular.module('umbraco').controller('Workflow.Cancel.Controller', cancelController);
 }());

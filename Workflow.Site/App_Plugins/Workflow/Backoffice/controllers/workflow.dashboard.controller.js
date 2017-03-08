@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function Controller($scope, $routeParams, workflowResource, authResource, notificationsService) {
+    function dashboardController($scope, $routeParams, workflowResource, authResource, notificationsService) {
 
         var vm = this;
         vm.loaded = [0, 0, 0];
@@ -18,14 +18,16 @@
             // api call for tasks assigned to the current user
             workflowResource.getApprovalsForUser(vm.currentUser.id)
                 .then(function (resp) {
-                    vm.tasks = resp.data;
+                    vm.tasks = resp;
                     vm.loaded[0] = 1;
+                }, function (err) {
+                    console.log(err);
                 });
 
             // api call for tasks created by the current user
             workflowResource.getSubmissionsForUser(vm.currentUser.id)
                 .then(function (resp) {
-                    vm.submissions = resp.data;
+                    vm.submissions = resp;
                     vm.loaded[1] = 1;
                 });
 
@@ -33,7 +35,7 @@
             if (vm.adminUser) {
                 workflowResource.getPendingTasks()
                     .then(function (resp) {
-                        vm.activeTasks = resp.data;
+                        vm.activeTasks = resp;
                         vm.loaded[2] = 1;
                     });
             }
@@ -120,5 +122,5 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.Dashboard.Controller', Controller);
+    angular.module('umbraco').controller('Workflow.Dashboard.Controller', dashboardController);
 }());

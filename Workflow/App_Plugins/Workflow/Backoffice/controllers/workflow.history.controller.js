@@ -8,10 +8,7 @@
         $scope.numPerPage = 10;
 
         (function () {
-
-            var state = editorState.getCurrent();
-
-            if (!state) {
+            if (!editorState.getCurrent()) {
                 getAllInstances();
             } else {
                 auditNode(state);
@@ -43,7 +40,7 @@
             vm.instanceView = true;
             workflowResource.getAllInstances()
                 .then(function (resp) {
-                    $scope.items = resp.data;
+                    $scope.items = resp;
                     vm.loading = false;
                 });
         }
@@ -55,7 +52,7 @@
             workflowResource.getNodeTasks(data.id)
                 .then(function (resp) {
                     $scope.currentPage = 1;
-                    $scope.items = resp.data.sort(function (a, b) { return new Date(b.RequestedOn) - new Date(a.RequestedOn) });
+                    $scope.items = resp.sort(function (a, b) { return new Date(b.RequestedOn) - new Date(a.RequestedOn) });
                     $scope.loading = false;
                 });
         }

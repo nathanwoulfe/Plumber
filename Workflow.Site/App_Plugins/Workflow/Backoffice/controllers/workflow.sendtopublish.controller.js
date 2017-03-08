@@ -2,16 +2,15 @@
     'use strict';
 
     // create controller 
-    function Controller($scope, $routeParams, notificationsService, workflowResource, navigationService) {
+    function publishController($scope, $routeParams, notificationsService, workflowResource, navigationService) {
         var vm = this,
 			nodeId = $routeParams.id;
 
         workflowResource.getStatus(nodeId)
             .then(function (resp) {
-                if (resp.status !== 200) {
-                    vm.active = true;
-                    vm.statusMsg = resp.data;
-                }
+                vm.active = resp;
+            }, function (err) {
+                notificationsService.error("ERROR", err);
             });
 
         var formScope = angular.element($('form[name="contentForm"]')).scope();
@@ -21,13 +20,10 @@
             workflowResource.initiateWorkflow(nodeId, vm.comment, true)
                 .then(function (resp) {
                     navigationService.hideDialog();
-                    if (resp.status === 200) {
-                        notificationsService.success("SUCCESS", resp.data);
-                    }
-                    else {
-                        notificationsService.error("ERROR", resp.data);
-                    }
-                });            
+                    notificationsService.success("SUCCESS", resp);
+                }, function (err) {
+                    notificationsService.error("ERROR", err);
+                });
         }
 
         angular.extend(vm, {
@@ -38,6 +34,6 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.SendToPublish.Controller', Controller);
+    angular.module('umbraco').controller('Workflow.SendToPublish.Controller', publishController);
 }());
 

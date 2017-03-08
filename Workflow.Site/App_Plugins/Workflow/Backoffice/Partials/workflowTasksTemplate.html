@@ -53,14 +53,14 @@
                         <div class="umb-table-cell">
                             <i class="umb-table-body__icon icon-document"></i>
                         </div>
-                        <div class="umb-table-cell" ng-bind="item.Type"></div>
+                        <div class="umb-table-cell" ng-bind="item.type"></div>
                         <div class="umb-table-cell umb-table__name">
-                            <a href="#" ng-href="/umbraco/dialogs/preview.aspx?id={{item.NodeId}}" ng-bind="item.NodeName" target="_blank"></a>
+                            <a href="#" ng-href="/umbraco/dialogs/preview.aspx?id={{item.nodeId}}" ng-bind="item.nodeName" target="_blank"></a>
                         </div>
-                        <div class="umb-table-cell" ng-bind="item.RequestedBy"></div>
-                        <div class="umb-table-cell" ng-bind="item.RequestedOn"></div>
-                        <div class="umb-table-cell" ng-bind="item.Comments"></div>
-                        <div class="umb-table-cell" ng-bind="item.ApprovalGroup"></div>
+                        <div class="umb-table-cell" ng-bind="item.requestedBy"></div>
+                        <div class="umb-table-cell" ng-bind="item.requestedOn"></div>
+                        <div class="umb-table-cell" ng-bind="item.comments"></div>
+                        <div class="umb-table-cell" ng-bind="item.approvalGroup"></div>
                         <div class="umb-table-cell show-overflow">
                         <workflow-button-group ng-if="buttonGroup"
                                                 default-button="buttonGroup.defaultButton"
@@ -72,12 +72,12 @@
                         </div>
                     </div>
                     <div class="workflow-progress">
-                        <div class="progress-step" ng-class="{ 'done' : item.CurrentStep > p.Permission, 'current' : item.CurrentStep === p.Permission }" style="width: calc(100% / {{ item.Permissions.length }})" ng-repeat="p in item.Permissions track by $index | orderBy: 'Permission'">
+                        <div class="progress-step" ng-class="{ 'done' : item.currentStep > p.permission, 'current' : item.currentStep === p.permission }" style="width: calc(100% / {{ item.permissions.length }})" ng-repeat="p in item.permissions track by $index | orderBy: 'permission'">
                             <span class="marker"></span>
                             <span class="tooltip">
                                 <span class="tooltip-done">Approved:</span>
                                 <span class="tooltip-current">Pending:</span>
-                                {{ p.UserGroup.Name }}
+                                {{ p.userGroup.name }}
                             </span>
                         </div>
                     </div>

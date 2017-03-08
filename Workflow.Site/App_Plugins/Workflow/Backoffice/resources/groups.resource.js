@@ -16,7 +16,10 @@
                 );
             },
 
-            /*** GET ALL GROUPS ***/
+            /**
+             * @returns {array} user groups
+             * @description Get all user groups
+             */
             getAllGroups: function () {
                 return this.request('GET', this.urlBase + 'getAllGroups');
             },
@@ -28,7 +31,7 @@
 
             /*** ADD NEW GROUP ***/
             addGroup: function (name) {
-                return this.request('POST', this.urlBase + 'addGroup', { name: name });
+                return this.request('POST', this.urlBase + 'addGroup?name=' + name);
             },
 
             /*** SAVE GROUP ***/
@@ -38,7 +41,7 @@
 
             /*** DELETE GROUP ***/
             deleteGroup: function (id) {
-                return this.request('POST', this.urlBase + 'deleteGroup', { id: id });
+                return this.request('POST', this.urlBase + 'deleteGroup?id=' + id);
             }
         };
 

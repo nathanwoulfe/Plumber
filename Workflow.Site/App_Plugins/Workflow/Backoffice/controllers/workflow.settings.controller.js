@@ -8,26 +8,26 @@
         $q.all(promises)
             .then(function (resp) {
 
-                vm.settings = resp[0].data;
+                vm.settings = resp[0];
                 vm.docTypes = resp[1];
-                vm.groups = resp[2].data;
+                vm.groups = resp[2];
 
-                if (vm.settings.DefaultApprover) {
+                if (vm.settings.defaultApprover) {
                     vm.defaultApprover = vm.groups.filter(function (v) {
-                        return v.GroupId == vm.settings.DefaultApprover;
+                        return v.groupId == vm.settings.defaultApprover;
                     })[0];
                 }
 
                 vm.groups.forEach(function (g) {
-                    g.Permissions.forEach(function (p) {
-                        if (p.ContentTypeId > 0) {
+                    g.permissions.forEach(function (p) {
+                        if (p.contentTypeId > 0) {
                             vm.docTypes.forEach(function (dt) {
-                                if (dt.id === p.ContentTypeId) {
+                                if (dt.id === p.contentTypeId) {
                                     if (!dt.approvalPath) {
                                         dt.approvalPath = [];
                                     }
 
-                                    dt.approvalPath[p.Permission] = g;
+                                    dt.approvalPath[p.permission] = g;
                                 }
                             })
                         }
@@ -37,16 +37,15 @@
 
 
         function save() {
-
-            vm.settings.DefaultApprover = vm.defaultApprover.GroupId;
             var permissions = [];
+            vm.settings.defaultApprover = vm.defaultApprover.groupId;
             angular.forEach(vm.docTypes, function (dt, i) {
                 if (dt.approvalPath && dt.approvalPath.length) {
                     angular.forEach(dt.approvalPath, function (path, ii) {
                         permissions.push({
-                            ContentTypeId: dt.id,
-                            Permission: ii,
-                            GroupId: path.GroupId,
+                            contentTypeId: dt.id,
+                            permission: ii,
+                            groupId: path.groupId,
                         });
                     });
                 }
@@ -55,12 +54,9 @@
             var p = [workflowResource.saveConfig(permissions), workflowResource.saveSettings(vm.settings)];
             $q.all(p)
                 .then(function (resp) {
-                    if (resp[0].status === 200 && resp[1].status === 200) {
-                        notificationsService.success("SUCCESS!", resp.data);
-                    }
-                    else {
-                        notificationsService.error("OH SNAP!", resp[resp[0].status !== 200 ? 0 : 1].data);
-                    }
+                    notificationsService.success("SUCCESS!", "Settings updated");
+                }, function (err) {
+                    notificationsService.error("OH SNAP!", err);
                 });
         }
 
@@ -75,6 +71,7 @@
 
         function remove(dt, index) {
             console.log(dt, index);
+            dt.approvalPath.splice(index, 1);
         };
 
         angular.extend(vm, {
@@ -84,13 +81,10 @@
             name: 'Workflow settings',
 
             email: '',
-            fastTrack: [],
-            notFastTrack: [],
             defaultApprover: '',
             settings: {
-                Email: '',
-                FastTrack: [],
-                DefaultApprover: ''
+                email: '',
+                defaultApprover: ''
             }
         });
     }

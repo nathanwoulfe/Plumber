@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Web.Http;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Services;
@@ -23,51 +24,51 @@ namespace Workflow.Api
         /// </summary>
         /// <returns></returns>
         [System.Web.Http.HttpGet]
-        public HttpResponseMessage GetSettings()
+        public IHttpActionResult GetSettings()
         {
-            return Request.CreateResponse(new
+            try
             {
-                status = HttpStatusCode.OK,
-                data = _pr.GetSettings()
-            });
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [System.Web.Http.HttpPost]
-        public HttpResponseMessage SaveSettings(WorkflowSettingsPoco model)
-        {
-            db.Update(model);            
-
-            return Request.CreateResponse(new {
-                status = HttpStatusCode.OK, 
-                data = "Settings updated"
-            });
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [System.Web.Http.HttpGet]
-        public HttpResponseMessage GetStatus(int nodeId)
-        {
-            var instances = _pr.InstancesByNodeAndStatus(nodeId, new List<int> { (int)WorkflowStatus.PendingApproval });
-
-            if (instances.Any())
-            {
-                return Request.CreateResponse(HttpStatusCode.OK, new {
-                    status = 0,
-                    data = "This node is currently in a workflow"
-                });
+                return Json(_pr.GetSettings(), ViewHelpers.CamelCase);
             }
+            catch (Exception ex) {
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
+            }
+        }
 
-            return Request.CreateResponse(HttpStatusCode.OK, new {
-                status = 200
-            });
+        /// <summary>
+        /// Save the settings object
+        /// </summary>
+        /// <returns>A confirmation message</returns>
+        [System.Web.Http.HttpPost]
+        public IHttpActionResult SaveSettings(WorkflowSettingsPoco model)
+        {
+            try
+            {
+                db.Update(model);
+                return Ok("Settings updated");
+            } 
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
+            }
+        }
+
+        /// <summary>
+        /// Check if the current node is already in a workflow process
+        /// </summary>
+        /// <param name="id">The node to check</param>
+        /// <returns>A bool indicating the workflow status (true -> workflow active)</returns>
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetStatus(int nodeId)
+        {
+            try {
+                var instances = _pr.InstancesByNodeAndStatus(nodeId, new List<int> { (int)WorkflowStatus.PendingApproval });
+                return Ok(instances.Any() ? true : false);
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
+            }
         }        
     }
 }

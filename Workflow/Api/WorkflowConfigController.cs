@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Web.Http;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
 using Umbraco.Web.WebApi;
@@ -18,40 +19,21 @@ namespace Workflow.Api
         private Database db = ApplicationContext.Current.DatabaseContext.Database;
 
         /// <summary>
-        /// 
+        /// Persist the workflow approval config
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
         [System.Web.Http.HttpPost]
-        public HttpResponseMessage SaveConfig(List<UserGroupPermissionsPoco> model)
+        public IHttpActionResult SaveConfig(List<UserGroupPermissionsPoco> model)
         {
-            var msgText = "";
-
             try
             {
                 if (model.Where(p => p.ContentTypeId > 0).Any())
                 {
                     // set defaults for doctype - delete all previous
                     db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE ContentTypeId != 0");
-
-                    var newConfig = model.Where(x => x.Id == 0);
-                    var existingConfig = model.Where(x => x.Id > 0);
-
-                    if (newConfig.Any())
-                    {
-                        foreach (var c in newConfig)
-                        {
-                            db.Insert(c);
-                        }
-                    }
-                    if (existingConfig.Any())
-                    {
-                        foreach (var c in existingConfig)
-                        {
-                            db.Update(c);
-                        }
-                    }
-                 
+                    model.Where(x => x.Id == 0).ForEach(c => db.Insert(c));
+                    model.Where(x => x.Id > 0).ForEach(c => db.Update(c));    
                 }
                 else
                 {
@@ -70,8 +52,9 @@ namespace Workflow.Api
                                                                     AND Permission = @2", m.GroupId, m.NodeId, 0);
                             if (exists.Any())
                             {
-                                exists.First().Permission = m.Permission;
-                                db.Update(exists.First());
+                                var p = exists.First();
+                                p.Permission = m.Permission;
+                                db.Update(p);
                             }
                             else
                             {
@@ -83,23 +66,12 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                msgText = "Error saving config. " + ex.Message;
-                log.Error(msgText, ex);
-                return Request.CreateResponse(new
-                {
-                    status = HttpStatusCode.NoContent,
-                    data = msgText
-                });
+                var msg = "Error saving config. " + ex.Message;
+                log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
 
-            msgText = "Config updated";
-            log.Debug(msgText);
-
-            return Request.CreateResponse(new
-            {
-                status = HttpStatusCode.OK,
-                data = msgText
-            });
+            return Ok();
         }
     }
 }

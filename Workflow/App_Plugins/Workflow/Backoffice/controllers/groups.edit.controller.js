@@ -1,8 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    // create controller 
-    function EditController($scope, $routeParams, userGroupsResource, entityResource, notificationsService) {
+    function editController($scope, $routeParams, userGroupsResource, entityResource, notificationsService) {
 
         $scope.action = $routeParams.id !== '-1' ? 'Edit' : 'Create';
 
@@ -21,20 +20,19 @@
             if ($routeParams.id !== '-1') {
                 userGroupsResource.getGroup($routeParams.id)
                     .then(function (resp) {
-                        if (resp.status === 200) {
-                            $scope.group = resp.data;
-                            getUsersNotInGroup();
-                        }
+                        $scope.group = resp;
+                        $scope.name = $scope.action + ' ' + resp.name;
+                        getUsersNotInGroup();                        
                     });
             } else {
                 $scope.group = {
-                    GroupId: -1,
-                    Name: '',
-                    Description: '',
-                    Alias: '',
-                    GroupEmail: '',
-                    Users: [],
-                    UsersSummary: ''
+                    groupId: -1,
+                    name: '',
+                    description: '',
+                    alias: '',
+                    groupEmail: '',
+                    users: [],
+                    usersSummary: ''
                 };
                 getUsersNotInGroup();
             }
@@ -44,7 +42,7 @@
         function getUsersNotInGroup() {
             $scope.notInGroup = [];
             angular.forEach($scope.allUsers, function (user) {
-                if (!$scope.group.UsersSummary || $scope.group.UsersSummary.indexOf('|' + user.id + '|') === -1) {
+                if (!$scope.group.usersSummary || $scope.group.usersSummary.indexOf('|' + user.id + '|') === -1) {
                     $scope.notInGroup.push(user);
                 }
             });
@@ -56,28 +54,29 @@
                 user = $.grep($scope.notInGroup, function (u, i) {
                     if (u.id === id) {
                         index = i;
-                        $scope.group.Users.push({ 'UserId': u.id, 'GroupId': $scope.group.GroupId, 'Name': u.name });
+                        $scope.group.users.push({ userId: u.id, groupId: $scope.group.groupId, name: u.name });
                         return true;
                     }
                     return false;
                 })[0];
 
             $scope.notInGroup.splice(index, 1);
+            console.log($scope.group.users);
         };
 
         //
         $scope.remove = function (id) {
             var index,
-                user = $.grep($scope.group.Users, function (u, i) {
-                    if (u.UserId === id) {
+                user = $.grep($scope.group.users, function (u, i) {
+                    if (u.userId === id) {
                         index = i;
-                        $scope.notInGroup.push({ 'id': u.UserId, 'name': u.Name });
+                        $scope.notInGroup.push({ id: u.userId, name: u.name });
                         return true;
                     }
                     return false;
                 });
 
-            $scope.group.Users.splice(index, 1);
+            $scope.group.users.splice(index, 1);
         };
 
         //
@@ -85,16 +84,16 @@
             userGroupsResource.saveGroup($scope.group)
                 .then(function (resp) {
                     if (resp.status === 200) {
-                        notificationsService.success("SUCCESS", resp.data);
+                        notificationsService.success('SUCCESS', resp.msg);
+                    } else {
+                        notificationsService.error('ERROR', resp.msg);
                     }
-                    else {
-                        notificationsService.error("ERROR", resp.data);
-                    }
+                }, function (err) {
+                    notificationsService.error('ERROR', err);
                 });
         };
     };
 
-    // register controller 
-    angular.module('umbraco').controller('Workflow.UserGroups.Edit.Controller', EditController);
+    angular.module('umbraco').controller('Workflow.Groups.Edit.Controller', editController);
 }());
 

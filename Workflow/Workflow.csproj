@@ -39,6 +39,7 @@
     <Compile Include="Api\WorkflowController.cs" />
     <Compile Include="Api\UserGroupsController.cs" />
     <Compile Include="Api\WorkflowTasksController.cs" />
+    <Compile Include="Helpers\ViewHelpers.cs" />
     <Compile Include="Models\InitiateWorkflowModel.cs" />
     <Compile Include="Models\SettingsPoco.cs" />
     <Compile Include="PocoRepository.cs" />
@@ -95,9 +96,9 @@
       <DependentUpon>styles.css</DependentUpon>
     </Content>
     <Content Include="App_Plugins\Workflow\Backoffice\tree\history.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\tree.view.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.dashboard.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\usergroups.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\tree.view.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\tree\groups.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.config.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\workflow.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\tree\view.html" />
@@ -130,11 +131,11 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\usergroups.add.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.add.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.delete.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\usergroups.edit.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\usergroups.delete.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\tree\add.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.add.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.delete.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.edit.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\tree\delete.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\tree\edit.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\groups.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.config.dialog.html" />

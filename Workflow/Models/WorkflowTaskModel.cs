@@ -8,6 +8,7 @@ namespace Workflow.Models
         public string Type { get; set; }
         public string NodeName { get; set; }
         public string Status { get; set; }
+        public string CssStatus { get; set; }
         public string RequestedOn { get; set; }
         public string RequestedBy { get; set; }
         public int NodeId { get; set; }        
@@ -26,6 +27,7 @@ namespace Workflow.Models
     {
         public string Type { get; set; }
         public string Status { get; set; }
+        public string CssStatus { get; set; }
         public int NodeId { get; set; }
         public int TaskId { get; set; }
         public int ApprovalGroupId { get; set; }
