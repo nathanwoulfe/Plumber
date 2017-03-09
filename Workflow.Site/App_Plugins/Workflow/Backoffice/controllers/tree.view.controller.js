@@ -8,19 +8,25 @@
             $scope.loading = args.state;
         });
 
+        function buildPath(node, path) {
+            path.push(node.id);
+
+            if (node.id === '-1') {
+                return path.reverse();
+            }
+
+            var parent = node.parent();
+
+            if (parent === undefined) {
+                return path;
+            }
+
+            return buildPath(parent, path);
+        }
+
         // set the current node state in the menu 
-        eventsService.on('appState.treeState.changed', function (event, args) {
-            
+        eventsService.on('appState.treeState.changed', function (event, args) {            
             if (args.key === 'selectedNode') {
-
-                function buildPath(node, path) {
-                    path.push(node.id);
-                    if (node.id === '-1') return path.reverse();
-                    var parent = node.parent(); 
-                    if (parent === undefined) return path;
-                    return buildPath(parent, path);
-                }
-
                 event.currentScope.nav.syncTree({
                     tree: $routeParams.tree || 'tree',
                     path: buildPath(args.value, []),

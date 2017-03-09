@@ -3,7 +3,7 @@
 
     function settingsController($q, workflowResource, notificationsService, contentTypeResource, userGroupsResource) {
         var vm = this,
-            promises = [workflowResource.getSettings(), contentTypeResource.getAll(), userGroupsResource.getAllGroups()];
+            promises = [workflowResource.getSettings(), contentTypeResource.getAll(), userGroupsResource.get()];
 
         $q.all(promises)
             .then(function (resp) {

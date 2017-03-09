@@ -18,7 +18,7 @@
         // only fetch group if id is valid - otherwise it's a create action
         function getGroup() {
             if ($routeParams.id !== '-1') {
-                userGroupsResource.getGroup($routeParams.id)
+                userGroupsResource.get($routeParams.id)
                     .then(function (resp) {
                         $scope.group = resp;
                         $scope.name = $scope.action + ' ' + resp.name;
@@ -36,7 +36,7 @@
                 };
                 getUsersNotInGroup();
             }
-        };
+        }
 
         // filter all users to remove those in the group
         function getUsersNotInGroup() {
@@ -46,7 +46,7 @@
                     $scope.notInGroup.push(user);
                 }
             });
-        };
+        }
 
         // add a user to the group, and remove from notInGroup
         $scope.add = function (id) {
@@ -61,7 +61,6 @@
                 })[0];
 
             $scope.notInGroup.splice(index, 1);
-            console.log($scope.group.users);
         };
 
         //
@@ -81,7 +80,7 @@
 
         //
         $scope.saveGroup = function () {
-            userGroupsResource.saveGroup($scope.group)
+            userGroupsResource.save($scope.group)
                 .then(function (resp) {
                     if (resp.status === 200) {
                         notificationsService.success('SUCCESS', resp.msg);
@@ -92,7 +91,7 @@
                     notificationsService.error('ERROR', err);
                 });
         };
-    };
+    }
 
     angular.module('umbraco').controller('Workflow.Groups.Edit.Controller', editController);
 }());

@@ -4,7 +4,7 @@
     function addController($scope, userGroupsResource, navigationService, notificationsService, treeService) {
 
         $scope.add = function (name) {
-            userGroupsResource.addGroup(name)
+            userGroupsResource.add(name)
                 .then(function (resp) {
                     if (resp.status === 200) {
                         notificationsService.success('SUCCESS', resp.msg);
@@ -26,7 +26,7 @@
         $scope.cancelAdd = function () {
             navigationService.hideNavigation();
         };
-    };
+    }
 
     angular.module('umbraco').controller('Workflow.Groups.Add.Controller', addController);
 }());

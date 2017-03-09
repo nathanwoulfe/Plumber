@@ -5,7 +5,7 @@
     function userGroupsResource($http, $q, umbRequestHelper) {
         var service = {
 
-            urlBase: '/umbraco/backoffice/api/usergroups/',
+            urlBase: '/umbraco/backoffice/api/workflow/groups/',
 
             request: function (method, url, data) {
                 return umbRequestHelper.resourcePromise(
@@ -18,30 +18,25 @@
 
             /**
              * @returns {array} user groups
-             * @description Get all user groups
+             * @description Get single group by id, or all groups if no id parameter provided
              */
-            getAllGroups: function () {
-                return this.request('GET', this.urlBase + 'getAllGroups');
-            },
-
-            /*** GET GROUP BY ID ***/
-            getGroup: function (id) {
-                return this.request('GET', this.urlBase + 'getGroup', { id: id });
+            get: function (id) {
+                return this.request('GET', this.urlBase + 'get', { id: id });
             },
 
             /*** ADD NEW GROUP ***/
-            addGroup: function (name) {
-                return this.request('POST', this.urlBase + 'addGroup?name=' + name);
+            add: function (name) {
+                return this.request('POST', this.urlBase + 'add?name=' + name);
             },
 
             /*** SAVE GROUP ***/
-            saveGroup: function (group) {
-                return this.request('POST', this.urlBase + 'saveGroup', group);
+            save: function (group) {
+                return this.request('POST', this.urlBase + 'save', group);
             },
 
             /*** DELETE GROUP ***/
-            deleteGroup: function (id) {
-                return this.request('POST', this.urlBase + 'deleteGroup?id=' + id);
+            'delete': function (id) {
+                return this.request('POST', this.urlBase + 'delete?id=' + id);
             }
         };
 

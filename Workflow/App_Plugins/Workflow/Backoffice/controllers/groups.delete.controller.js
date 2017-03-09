@@ -4,7 +4,7 @@
     function deleteController($scope, userGroupsResource, navigationService, treeService, notificationsService) {
 
         $scope.delete = function (id) {
-            userGroupsResource.deleteGroup(id)
+            userGroupsResource.delete(id)
                 .then(function (resp) {
                     notificationsService.success('SUCCESS', resp);
                     refreshTree();

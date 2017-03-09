@@ -23,9 +23,9 @@ namespace Workflow.Actions
                 var route = "/workflow/tree/view/";
                 var treeNodes = new List<SectionTreeNode>();
 
-                treeNodes.Add(new SectionTreeNode() { Id = "settings", Title = "Settings", Icon = "icon-link", Route = string.Format("{0}{1}", route, "settings") });
-                treeNodes.Add(new SectionTreeNode() { Id = "history", Title = "History", Icon = "icon-link", Route = string.Format("{0}{1}", route, "history") });
-                treeNodes.Add(new SectionTreeNode() { Id = "groups", Title = "Approval groups", Icon = "icon-link", Route = string.Format("{0}{1}", route, "groups") });
+                treeNodes.Add(new SectionTreeNode() { Id = "settings", Title = "Settings", Icon = "icon-umb-settings", Route = string.Format("{0}{1}", route, "settings") });
+                treeNodes.Add(new SectionTreeNode() { Id = "history", Title = "History", Icon = "icon-directions-alt", Route = string.Format("{0}{1}", route, "history") });
+                treeNodes.Add(new SectionTreeNode() { Id = "groups", Title = "Approval groups", Icon = "icon-users", Route = string.Format("{0}{1}", route, "groups") });
 
                 foreach (var n in treeNodes)
                 {
@@ -34,7 +34,8 @@ namespace Workflow.Actions
                 }
 
                 return nodes;
-            } else if (id == "usergroups")
+            }
+            else if (id == "groups")
             {
                 var db = ApplicationContext.Current.DatabaseContext.Database;
 
@@ -74,11 +75,11 @@ namespace Workflow.Actions
             var menu = new MenuItemCollection();
             int result;
 
-            if (id == "usergroups")
+            if (id == "groups")
             {
                 menu.Items.Add(new MenuItem()
                 {
-                    Alias = "addGroup",
+                    Alias = "add",
                     Name = "Create",
                     Icon = "add"
                 });

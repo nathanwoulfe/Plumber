@@ -3,15 +3,16 @@
 
     function historyController($scope, workflowResource, contentResource, dialogService, $timeout, editorState) {
 
-        var vm = this;
+        var vm = this,
+            node = $scope.dialogOptions ? $scope.dialogOptions.currentNode : undefined;
 
-        $scope.numPerPage = 10;
+        $scope.numPerPage = 10;        
 
         (function () {
-            if (!editorState.getCurrent()) {
-                getAllInstances();
+            if (node) {
+                auditNode(node);
             } else {
-                auditNode(state);
+                getAllInstances();
             }
         }());
 
@@ -32,7 +33,7 @@
                     vm.overlay.show = false;
                     vm.overlay = null;
                 }
-            }
+            };
         }
 
         function getAllInstances() {
@@ -52,7 +53,7 @@
             workflowResource.getNodeTasks(data.id)
                 .then(function (resp) {
                     $scope.currentPage = 1;
-                    $scope.items = resp.sort(function (a, b) { return new Date(b.RequestedOn) - new Date(a.RequestedOn) });
+                    $scope.items = resp.sort(function (a, b) { return new Date(b.RequestedOn) - new Date(a.RequestedOn); });
                     $scope.loading = false;
                 });
         }

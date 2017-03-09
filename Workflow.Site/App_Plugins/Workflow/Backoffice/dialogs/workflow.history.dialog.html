@@ -2,6 +2,12 @@
     <div class="umb-dialog-body with-footer">
         <div class="umb-pane">
             <wf-history items="items" instance-view="false"></wf-history>
+            <div class="flex justify-center">
+                <wf-paging-controls></wf-paging-controls>
+            </div>
+            <umb-empty-state ng-if="!items.length" position="center">
+                <localize key="content_listViewNoItems">There are no items show in the list.</localize>
+            </umb-empty-state>
         </div>
     </div>
     <div class="umb-dialog-footer btn-toolbar umb-btn-toolbar">

@@ -13,47 +13,35 @@ using Workflow;
 using Workflow.Models;
 using Workflow.Relators;
 
-namespace Usc.Web.UserGroups
+namespace Workflow.Api
 {
-    public class UserGroupsController : UmbracoAuthorizedApiController
+    public class GroupsController : UmbracoAuthorizedApiController
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly Database db = ApplicationContext.Current.DatabaseContext.Database;
         private static readonly PocoRepository _pr = new PocoRepository();
 
         /// <summary>
-        /// Get all groups and their associated users and permissions
+        /// Get group and associated users and permissions by id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [System.Web.Http.HttpGet]
-        public IHttpActionResult GetAllGroups()
-        {
-            try
-            {
-                var groups = _pr.UserGroups();
-                return Json(groups, ViewHelpers.CamelCase);
-            }
-            catch (Exception e)
-            {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
-            }
-        }
-
-        /// <summary>
-        /// Get single group and associated users and permissions
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [System.Web.Http.HttpGet]
-        public IHttpActionResult GetGroup(string id)
+        /// <param name="id">Optional, returns all groups if omitted</param>
+        /// <returns></returns>       
+        public IHttpActionResult Get(string id = "")
         {
             try {
-                var result = _pr.PopulatedUserGroup(id);
-
-                if (result.Any())
+                if (!string.IsNullOrEmpty(id))
                 {
-                    return Json(result.First(), ViewHelpers.CamelCase);
+                    var result = _pr.PopulatedUserGroup(id);
+
+                    if (result.Any())
+                    {
+                        return Json(result.First(), ViewHelpers.CamelCase);
+                    }
+                }
+                else
+                {
+                    var groups = _pr.UserGroups();
+                    return Json(groups, ViewHelpers.CamelCase);
                 }
 
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -70,7 +58,7 @@ namespace Usc.Web.UserGroups
         /// <param name="group"></param>
         /// <returns></returns>
         [System.Web.Http.HttpPost]
-        public IHttpActionResult AddGroup(string name)
+        public IHttpActionResult Add(string name)
         {
             try
             {
@@ -116,7 +104,7 @@ namespace Usc.Web.UserGroups
         /// <param name="group"></param>
         /// <returns></returns>
         [System.Web.Http.HttpPost]
-        public IHttpActionResult SaveGroup(UserGroupPoco group)
+        public IHttpActionResult Save(UserGroupPoco group)
         {
             var msgText = "";
             var nameExists = _pr.UserGroupsByName(group.Name).Any();
@@ -171,7 +159,7 @@ namespace Usc.Web.UserGroups
         /// <param name="id"></param>
         /// <returns></returns>
         [System.Web.Http.HttpPost]
-        public IHttpActionResult DeleteGroup(string id)
+        public IHttpActionResult Delete(string id)
         {
             // remove all users, permissions and the group itself
             // existing workflow processes are left as is, and need to be managed by a human person

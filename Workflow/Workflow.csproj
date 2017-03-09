@@ -31,21 +31,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Actions\RegisterEvents.cs" />
-    <Compile Include="Actions\WorkflowContextMenuController.cs" />
-    <Compile Include="Actions\WorkflowApplication.cs" />
-    <Compile Include="Actions\WorkflowSection.cs" />
-    <Compile Include="Api\WorkflowConfigController.cs" />
-    <Compile Include="Api\WorkflowController.cs" />
-    <Compile Include="Api\UserGroupsController.cs" />
-    <Compile Include="Api\WorkflowTasksController.cs" />
+    <Compile Include="Startup\RegisterEvents.cs" />
+    <Compile Include="Startup\WebApiConfig.cs" />
+    <Compile Include="Startup\WorkflowContextMenuController.cs" />
+    <Compile Include="Tree\WorkflowApplication.cs" />
+    <Compile Include="Tree\WorkflowSection.cs" />
+    <Compile Include="Api\ConfigController.cs" />
+    <Compile Include="Api\SettingsController.cs" />
+    <Compile Include="Api\GroupsController.cs" />
+    <Compile Include="Api\TasksController.cs" />
     <Compile Include="Helpers\ViewHelpers.cs" />
     <Compile Include="Models\InitiateWorkflowModel.cs" />
     <Compile Include="Models\SettingsPoco.cs" />
     <Compile Include="PocoRepository.cs" />
     <Compile Include="Helpers\SqlHelpers.cs" />
     <Compile Include="Helpers\Notifications.cs" />
-    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Processes\DocumentPublishProcess.cs" />
     <Compile Include="Helpers\Helpers.cs" />
@@ -70,7 +70,7 @@
     <Compile Include="Helpers\UrlHelpers.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Helpers\WorkflowException.cs" />
+    <Compile Include="Helpers\Exceptions.cs" />
     <Compile Include="Relators\UserToGroupForInstanceRelator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -106,15 +106,13 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.cancel.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.differences.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.sendtounpublish.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.sendtopublish.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.submit.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.settings.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.dashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.action.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.cancel.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.differences.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.publish.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.unpublish.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.submit.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\tree\settings.html" />
     <Content Include="App_Plugins\Workflow\Lang\en-US.xml" />
     <None Include="app.config" />
@@ -183,6 +181,10 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Http">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.XML" />
     <Reference Include="TidyNet">

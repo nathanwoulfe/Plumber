@@ -7,7 +7,7 @@
         $scope.loading = true;
         $scope.numPerPage = 10;
 
-        userGroupsResource.getAllGroups()
+        userGroupsResource.get()
             .then(function (resp) {
                 $scope.loading = false;
                 $scope.items = resp.filter(function (v) {

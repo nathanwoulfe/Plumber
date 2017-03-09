@@ -5,8 +5,8 @@
     function WorkflowResource($http, $q, umbRequestHelper) {
         var service = {
 
-            urlBase: '/umbraco/backoffice/api/workflow/',
-            urlTasksBase: '/umbraco/backoffice/api/workflowtasks/',
+            urlSettingsBase: '/umbraco/backoffice/api/workflow/settings/',
+            urlTasksBase: '/umbraco/backoffice/api/workflow/tasks/',
 
             request: function (method, url, data) {
                 return umbRequestHelper.resourcePromise(
@@ -18,7 +18,7 @@
             },
 
             getStatus: function (id) {
-                return this.request('GET', this.urlBase + 'getStatus', { nodeId: id });
+                return this.request('GET', this.urlTaskBase + 'getStatus', { nodeId: id });
             },
 
             /* tasks and approval endpoints */
@@ -60,15 +60,15 @@
 
             /* get/set workflow settings*/
             getSettings: function () {
-                return this.request('GET', this.urlBase + 'getSettings');
+                return this.request('GET', this.urlSettingsBase + 'get');
             },
             saveSettings: function (settings) {
-                return this.request('POST', this.urlBase + 'saveSettings', settings);
+                return this.request('POST', this.urlSettingsBase + 'save', settings);
             },
 
             /*** SAVE PERMISSIONS ***/
             saveConfig: function (p) {
-                return this.request('POST', '/umbraco/backoffice/api/workflowconfig/saveconfig', p);              
+                return this.request('POST', '/umbraco/backoffice/api/workflow/config/save', p);              
             }
 
         };

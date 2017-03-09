@@ -12,12 +12,12 @@ using Umbraco.Core.Models;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 
-namespace Workflow.Dashboard
+namespace Workflow.Api
 {
     /// <summary>
     /// WebAPI methods for generating the user workflow dashboard
     /// </summary>
-    public class WorkflowTasksController : UmbracoAuthorizedApiController
+    public class TasksController : UmbracoAuthorizedApiController
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static PocoRepository _pr = new PocoRepository();
@@ -97,6 +97,25 @@ namespace Workflow.Dashboard
             catch (Exception e)
             {
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+            }
+        }
+
+        /// <summary>
+        /// Check if the current node is already in a workflow process
+        /// </summary>
+        /// <param name="id">The node to check</param>
+        /// <returns>A bool indicating the workflow status (true -> workflow active)</returns>
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetStatus(int nodeId)
+        {
+            try
+            {
+                var instances = _pr.InstancesByNodeAndStatus(nodeId, new List<int> { (int)WorkflowStatus.PendingApproval });
+                return Ok(instances.Any());
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
             }
         }
 

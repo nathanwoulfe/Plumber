@@ -1,111 +1,128 @@
 ﻿(function () {
-	'use strict';
+    'use strict';
 
-	// create controller 
-	function configController($scope, $routeParams, userGroupsResource, workflowResource, notificationsService, contentResource) {
-	    var vm = this,
-			nodeId = $routeParams.id;
+    // create controller 
+    function configController($scope, userGroupsResource, workflowResource, notificationsService, contentResource, navigationService) {
+        var vm = this,
+			nodeId = $scope.dialogOptions.currentNode ? $scope.dialogOptions.currentNode.id : undefined;
 
-		function init() {
-			userGroupsResource.getAllGroups()
+        function init() {
+            userGroupsResource.get()
 				.then(function (resp) {
-					vm.groups = resp;
+                    vm.groups = resp;
 
-					contentResource.getById(nodeId)
+                    contentResource.getById(nodeId)
 						.then(function (resp) {
-						    vm.contentTypeName = resp.contentTypeName;
-						    checkNodePermissions();
-						    checkAncestorPermissions(resp.path.split(','));
-						});					
+                            vm.contentTypeName = resp.contentTypeName;
+                            checkNodePermissions();
+                            checkAncestorPermissions(resp.path.split(','));
+						});
 				});
-		};
-		init();
+        }
 
-		function checkNodePermissions() {
-		    angular.forEach(vm.groups, function (v, i) {
-		        angular.forEach(v.permissions, function (p) {
-		            if (p.nodeId == nodeId) {
-		                vm.approvalPath[p.permission] = v;
-		            }
+        if (!nodeId) {
+            navigationService.hideDialog();
+            notificationsService.error('ERROR', 'No active content node');
+        }
+        else {
+            init();
+        }
 
-		            if (p.contentTypeName === vm.contentTypeName) {
-		                vm.contentTypeApprovalPath[p.permission] = v;
-		            }
-		        });
-		    });
-		}
+        function checkNodePermissions() {
+            angular.forEach(vm.groups, function (v, i) {
+                angular.forEach(v.permissions, function (p) {
+                    if (p.nodeId == nodeId) {
+                        vm.approvalPath[p.permission] = v;
+                    }
 
-		function checkAncestorPermissions(path) {
-			// first is -1, last is the current node
-			path.shift();
-			path.pop();
-			
-			angular.forEach(path, function (id, i) {
-				angular.forEach(vm.groups, function (v, i) {
-					angular.forEach(v.permissions, function (p) {
-						if (p.nodeId == id) {
-							vm.inherited.push({
-								name: v.name,
-								groupId: p.groupId,
-								nodeName: p.nodeName,
-								permission: p.permission
-							});
-						}
-					});
-				});
-			});			
-		}
+                    if (p.contentTypeName === vm.contentTypeName) {
+                        vm.contentTypeApprovalPath[p.permission] = v;
+                    }
+                });
+            });
+        }
 
-		function save() {
+        function checkAncestorPermissions(path) {
+            // first is -1, last is the current node
+            path.shift();
+            path.pop();
 
-			var response = [];
-			angular.forEach(vm.groups, function (v, i) {
-			    angular.forEach(v.permissions, function (p) {
-				    if (p.nodeId == nodeId) {
-						response.push(p);
-					}
-				});
-			});
+            angular.forEach(path, function (id, i) {
+                angular.forEach(vm.groups, function (v, i) {
+                    angular.forEach(v.permissions, function (p) {
+                        if (p.nodeId == id) {
+                            vm.inherited.push({
+                                name: v.name,
+                                groupId: p.groupId,
+                                nodeName: p.nodeName,
+                                permission: p.permission
+                            });
+                        }
+                    });
+                });
+            });
+        }
 
-			workflowResource.saveConfig(response)
-				.then(function (resp) {
-					if (resp.status === 200) {
-						notificationsService.success("SUCCESS", resp.data);
-					}
-					else {
-						notificationsService.error("ERROR", resp.data);
-					}
-					init();
-				});
-		}
+        function save() {
+            if (vm.approvalPath.length) {
 
-		function add() {
-		    vm.approvalPath.push(vm.selectedApprovalGroup);
-		    vm.selectedApprovalGroup.permissions.push({
-		    	nodeId: nodeId,
-		    	permission: vm.approvalPath.indexOf(vm.selectedApprovalGroup),
-		    	groupId: vm.selectedApprovalGroup.groupId
-		    });		
-		}
+                var response = [];
+                angular.forEach(vm.approvalPath, function (v, i) {
+                    angular.forEach(v.permissions, function (p) {
+                        if (p.nodeId == nodeId) {
+                            response.push(p);
+                        }
+                    });
+                });
 
-		function remove($event, index) {
-		    $event.stopPropagation();
-			$event.target.classList.add('disabled');
-			vm.approvalPath.splice(index, 1);
-		}
+                if (response.length) {
+                    workflowResource.saveConfig(response)
+                        .then(function (resp) {
+                            notificationsService.success('SUCCESS', 'Workflow configuration updated');
+                            init();
+                        }, function (err) {
+                            notificationsService.error('ERROR', err);
+                        });
+                }
+            }
+        }
 
-		angular.extend(vm, {
-		    inherited: [],
-		    approvalPath: [],
-		    contentTypeApprovalPath: [],
+        function add() {
+            vm.selectedApprovalGroup.permissions.push({
+                nodeId: nodeId,
+                permission: vm.approvalPath.length,
+                groupId: vm.selectedApprovalGroup.groupId
+            });
 
-			save: save,
-			add: add,
-			remove: remove
-		});
-	};
+            vm.approvalPath.push(vm.selectedApprovalGroup);
+        }
 
-	// register controller 
-	angular.module('umbraco').controller('Workflow.Config.Controller', configController);
+        function remove($event, index) {
+            $event.stopPropagation();
+            $event.target.classList.add('disabled');
+            vm.approvalPath.splice(index, 1);
+
+            vm.approvalPath.forEach(function (v, i) {
+                v.permissions.forEach(function (p) {
+                    if (p.nodeId == nodeId) {
+                        p.permission = i;
+                    }
+                });
+            });
+        }
+
+        angular.extend(vm, {
+            inherited: [],
+            approvalPath: [],
+            contentTypeApprovalPath: [],
+
+            save: save,
+            add: add,
+            remove: remove
+        });
+    }
+
+    // register controller 
+    angular.module('umbraco').controller('Workflow.Config.Controller', configController);
 }());
 

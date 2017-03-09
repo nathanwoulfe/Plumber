@@ -4,54 +4,10 @@ $success: #53a93f;
 
 .workflow {
 
-    .span6 {
-        float:left;
-        width:50%;
-    }
-
     hr {
         clear:both;
     }
 
-    button:not([class*="btn-"]), a.action-Edit {
-        display: inline-block;
-        width: 26px;
-        height: 22px;
-        font-size: 14px;
-        line-height: 20px;
-        vertical-align: top;
-        text-align:center;
-        border:none;
-        background:#fff;
-        text-decoration:none;
-
-        &:hover {
-            background:#ddd;
-        }
-    }        
-
-    td {
-        &:last-child {
-            background:#eee;
-            text-align:right;
-
-            &.btn-count-4 {
-                width:116px;
-            }
-
-            &.btn-count-3 {
-                width:86px;
-            }
-
-            &.btn-count-2 {
-                width:56px;
-            }
-
-            &:hover {
-                background:#ccc;
-            }                
-        }
-    }
     label {
         float:left;
         width:160px;
@@ -64,14 +20,22 @@ $success: #53a93f;
         border:1px solid #ccc;
     }
 
+    textarea {
+        width:386px;
+        height:200px;
+    }
+
+    .flow-select {
+        margin-bottom:0;
+    }
+
     .user-lists {
         overflow:hidden;
         margin-bottom:20px;
         padding-bottom:15px;
     }
 
-    .user-list { 
-        
+    .user-list {         
         width:45%;
         float:left;
         margin:0 5% 0 0;
@@ -127,7 +91,7 @@ $success: #53a93f;
             margin:0;
         }
 
-        &.show-overflow, &.show-overflow>* {
+        &.show-overflow, &.show-overflow > * {
             overflow:visible;
         }
     }
@@ -140,7 +104,7 @@ $success: #53a93f;
 
     .control-panel {
         padding:10px 0;
-        margin-bottom:10px;
+        margin:10px 0;
     }
 
     // progress bar
@@ -174,26 +138,21 @@ $success: #53a93f;
         }
 
         &.done {
-
             .tooltip-done {
                 display:block;
             }
-
             &::before, &::after, .marker, .tooltip::after {
                 background:$success;
             }
-
             .tooltip {
                 border-color:$success;
             }
         }
 
         &.current {
-
             .tooltip-current {
                 display:block;
             }
-
             .marker, .tooltip::after {
                 background:$umbraco;
             }
@@ -219,22 +178,20 @@ $success: #53a93f;
         position:relative;
         cursor:pointer;
 
-        &:hover {
-            + .tooltip {
-                display:block;
-                bottom:calc(100% + 5px);
-                left: 50%;
-                transform: translateX(-50%);
-                opacity: 1;
-             
-            }
-        }
+        &:hover + .tooltip {
+            display:block;
+            bottom:calc(100% + 5px);
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 1;             
+        }        
 
         + .tooltip {
             display:none;
             background: #f8f8f8;
             padding: 5px;
             border:1px solid #d9d9d9;   
+
             &::after {
                 content:'';
                 width:1px;
@@ -301,28 +258,6 @@ $success: #53a93f;
             color:$danger;
             background:0, 0;
         }
-    }
-}
-
-
-/*************/
-
-
-.workflow-action-dialog {
-    
-    .umb-pane {
-        overflow:hidden;
-    }
-
-    textarea {
-        width:386px;
-        height:100px;
-    }
-
-    .umb-loader {
-        height:5px;
-        margin-top:15px;
-
     }
 }
 
