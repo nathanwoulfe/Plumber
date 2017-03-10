@@ -13,14 +13,6 @@ namespace Workflow.Startup
         public static void Register(HttpConfiguration config)
         {
             config.MapHttpAttributeRoutes();
-
-            config.Routes.MapHttpRoute(
-                name: "workflow",
-                routeTemplate: "umbraco/backoffice/api/workflow/{controller}/{action}",
-                defaults: new
-                {
-                    controller = "^(config|groups|settings|tasks)$"
-                });
         }
     }
 

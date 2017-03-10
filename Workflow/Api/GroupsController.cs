@@ -15,6 +15,7 @@ using Workflow.Relators;
 
 namespace Workflow.Api
 {
+    [RoutePrefix("umbraco/backoffice/api/workflow/groups")]
     public class GroupsController : UmbracoAuthorizedApiController
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -26,12 +27,13 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="id">Optional, returns all groups if omitted</param>
         /// <returns></returns>       
-        public IHttpActionResult Get(string id = "")
+        [Route("get/{id:int?}")]
+        public IHttpActionResult Get(int? id = null)
         {
             try {
-                if (!string.IsNullOrEmpty(id))
+                if (id.HasValue)
                 {
-                    var result = _pr.PopulatedUserGroup(id);
+                    var result = _pr.PopulatedUserGroup(id.Value);
 
                     if (result.Any())
                     {
@@ -57,11 +59,14 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
-        [System.Web.Http.HttpPost]
-        public IHttpActionResult Add(string name)
+        [System.Web.Http.HttpPost]  
+        [Route("add")]      
+        public IHttpActionResult Post([FromBody]Model model)
         {
+            var name = model.Data;
+
             try
-            {
+            {                
                 // check that it doesn't already exist
                 if (_pr.UserGroupsByName(name).Any())
                 {
@@ -103,8 +108,9 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
-        [System.Web.Http.HttpPost]
-        public IHttpActionResult Save(UserGroupPoco group)
+        [System.Web.Http.HttpPut]
+        [Route("save")]
+        public IHttpActionResult Put(UserGroupPoco group)
         {
             var msgText = "";
             var nameExists = _pr.UserGroupsByName(group.Name).Any();
@@ -112,7 +118,7 @@ namespace Workflow.Api
 
             try
             {
-                var userGroup = _pr.UserGroupsById(group.GroupId.ToString()).First();
+                var userGroup = _pr.UserGroupsById(group.GroupId).First();
 
                 // need to check the new name/alias isn't already in use
                 if (userGroup.Name != group.Name && nameExists)
@@ -158,8 +164,9 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [System.Web.Http.HttpPost]
-        public IHttpActionResult Delete(string id)
+        [System.Web.Http.HttpDelete]
+        [Route("delete/{id:int}")]
+        public IHttpActionResult Delete(int id)
         {
             // remove all users, permissions and the group itself
             // existing workflow processes are left as is, and need to be managed by a human person

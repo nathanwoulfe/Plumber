@@ -83,6 +83,7 @@ namespace Workflow
 
                 switch (instance.Status)
                 {
+                    case (int)WorkflowStatus.New:
                     case (int)WorkflowStatus.PendingApproval:
                         // if pending, find the next approval group
                         ProcessApprovalAction(action, userId, comment);
@@ -257,8 +258,28 @@ namespace Workflow
                 taskInstance.GroupId = group.GroupId;
                 taskInstance.UserGroup = group.UserGroup;
 
-                // check the last permission is equal to the current group, if so, the request should be published
-                return (byContentType.Any() ? byContentType : approvalGroup).OrderBy(g => g.Permission).Last().Permission == groupIndex;
+                bool returnVal = false;
+                var currentUserId = Helpers.GetCurrentUser().Id;
+
+                // check the last permission is equal to the current group, and current user is a member of that group, if so, the request should be published
+                if ((byContentType.Any() ? byContentType : approvalGroup).OrderBy(g => g.Permission).Last().Permission == groupIndex && group.UserGroup.IsMember(currentUserId)) {
+                    returnVal = true;
+                } else
+                {
+                    // if not the last group, check that the current user isn't a member of all the subsequent groups
+                    foreach (var g in approvalGroup.Where(g => g.Permission >= groupIndex))
+                    {
+                        if (g.UserGroup.IsMember(instance.AuthorUserId))
+                        {
+                            returnVal = true;
+                        } else
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                return returnVal;
             }
             else
             {
@@ -290,6 +311,7 @@ namespace Workflow
         /// <returns></returns>
         private WorkflowTaskInstancePoco CreateApprovalTask(int nodeId, int authorId, out bool doPublish)
         {
+            var x = 1;
             // creating initial task should use perm = 0
             // subsequent tasks increment this index
             var taskInstance = new WorkflowTaskInstancePoco(TaskType.Approve);
@@ -297,10 +319,14 @@ namespace Workflow
             instance.TaskInstances.Add(taskInstance);
 
             doPublish = SetApprovalGroup(taskInstance, nodeId, authorId, instance.TaskInstances.Count - 1);
+            if (!doPublish)
+            {
+                GetDb().Insert(taskInstance);
+                return taskInstance;
+            }
+            // if this is the end of the publishing line, return the final task and discard the one created above
+            return instance.TaskInstances.Last();
 
-            GetDb().Insert(taskInstance);
-
-            return taskInstance;
         }
 
         /// <summary>

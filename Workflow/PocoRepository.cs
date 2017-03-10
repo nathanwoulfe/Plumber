@@ -73,7 +73,7 @@ namespace Workflow
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public List<WorkflowTaskInstancePoco> TasksByNode(string nodeId)
+        public List<WorkflowTaskInstancePoco> TasksByNode(int nodeId)
         {
             return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksByNode, nodeId);
         }
@@ -117,7 +117,7 @@ namespace Workflow
         /// <returns></returns>
         public  List<WorkflowTaskInstancePoco> TasksAndGroupByInstanceId(Guid guid)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TasksByInstanceId, guid);
+            return GetDb().Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TasksAndGroupByInstanceId, guid);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace Workflow
             return GetDb().Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(new GroupsRelator().MapIt, SqlHelpers.UserGroups);            
         }
 
-        public List<UserGroupPoco> PopulatedUserGroup(string id)
+        public List<UserGroupPoco> PopulatedUserGroup(int id)
         {
             return GetDb().Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(new GroupsRelator().MapIt, SqlHelpers.UserGroupDetailed, id);
         }
@@ -166,7 +166,7 @@ namespace Workflow
             return GetDb().Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE Alias = @0", value);
         }
 
-        public List<UserGroupPoco> UserGroupsById(string value)
+        public List<UserGroupPoco> UserGroupsById(int value)
         {
             return GetDb().Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE GroupId = @0", value);
         }

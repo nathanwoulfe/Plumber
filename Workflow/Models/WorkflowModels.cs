@@ -61,6 +61,5 @@
         ApprovedAndCompletedForScheduler = 4,
         SchedulerActionCancelled = 5,
         WorkflowCancelled = 6,
-    }
-    
+    }    
 }

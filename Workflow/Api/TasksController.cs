@@ -17,17 +17,21 @@ namespace Workflow.Api
     /// <summary>
     /// WebAPI methods for generating the user workflow dashboard
     /// </summary>
+    [RoutePrefix("umbraco/backoffice/api/workflow/tasks")]
     public class TasksController : UmbracoAuthorizedApiController
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static PocoRepository _pr = new PocoRepository();
         private List<UserGroupPermissionsPoco> perms = new List<UserGroupPermissionsPoco>();
 
+        #region Public methods
+
         /// <summary>
         /// Returns all tasks currently in workflow processes
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
+        [Route("pending")]
         public IHttpActionResult GetPendingTasks()
         {
             try
@@ -47,6 +51,7 @@ namespace Workflow.Api
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
+        [Route("all")]
         public IHttpActionResult GetAllTasks()
         {
             try
@@ -66,6 +71,7 @@ namespace Workflow.Api
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
+        [Route("instances")]
         public IHttpActionResult GetAllInstances()
         {
             try
@@ -86,7 +92,8 @@ namespace Workflow.Api
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult GetNodeTasks(string id)
+        [Route("node/{id:int}")]
+        public IHttpActionResult GetNodeTasks(int id)
         {
             try
             {
@@ -106,11 +113,12 @@ namespace Workflow.Api
         /// <param name="id">The node to check</param>
         /// <returns>A bool indicating the workflow status (true -> workflow active)</returns>
         [System.Web.Http.HttpGet]
-        public IHttpActionResult GetStatus(int nodeId)
+        [Route("status/{id:int}")]
+        public IHttpActionResult GetStatus(int id)
         {
             try
             {
-                var instances = _pr.InstancesByNodeAndStatus(nodeId, new List<int> { (int)WorkflowStatus.PendingApproval });
+                var instances = _pr.InstancesByNodeAndStatus(id, new List<int> { (int)WorkflowStatus.PendingApproval });
                 return Ok(instances.Any());
             }
             catch (Exception ex)
@@ -126,7 +134,8 @@ namespace Workflow.Api
         /// <param name="type">0 - tasks, 1 - submissions</param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult GetFlowsForUser(int userId, int type = 0)
+        [Route("flows/{userId:int}/{type:int=0}")]
+        public IHttpActionResult GetFlowsForUser(int userId, int type)
         {
             try
             {
@@ -143,7 +152,8 @@ namespace Workflow.Api
         }        
 
         /// <summary>
-        /// Finds and highlights differences between the last published version of a document, and the currently workflowed version
+        /// Not sure this is even worth keeping - given use of the grid/archetype etc where data is stored as JSON, the comparator is a big piece of work...
+        /// Maybe to do later, but not for alpha/beta 
         /// </summary>
         /// <param name="nodeId">Id of the published node</param>
         /// <param name="taskId">Id of the workflow task</param>
@@ -151,77 +161,79 @@ namespace Workflow.Api
         [HttpPost]
         public IHttpActionResult ShowDifferences(string nodeId, string taskId)
         {
-            int _nodeId = int.Parse(nodeId);
+            throw new NotImplementedException();
 
-            var publishedVersion = Umbraco.TypedContent(nodeId); // most recent published version
-            var revisedVersion = Services.ContentService.GetById(_nodeId); // current version from database
+            //int _nodeId = int.Parse(nodeId);
 
-            var differences = new DifferencesResponseItem
-            {
-                CurrentVersionPubDate = publishedVersion.UpdateDate.ToString("d MMM yyyy"),
-                RevisedVersionPubDate = revisedVersion.UpdateDate.ToString("d MMM yyyy"),
-            };
+            //var publishedVersion = Umbraco.TypedContent(nodeId); // most recent published version
+            //var revisedVersion = Services.ContentService.GetById(_nodeId); // current version from database
 
-            var bodyTextComparison = string.Empty;
-            var keywordsComparison = string.Empty;
-            var descriptionComparison = string.Empty;
+            //var differences = new DifferencesResponseItem
+            //{
+            //    CurrentVersionPubDate = publishedVersion.UpdateDate.ToString("d MMM yyyy"),
+            //    RevisedVersionPubDate = revisedVersion.UpdateDate.ToString("d MMM yyyy"),
+            //};
 
-            // Do compare and show differences for documents.
-            foreach (Umbraco.Core.Models.Property p in revisedVersion.Properties)
-            {
-                var alias = p.Alias;
-                try
-                {
-                    if (p.Value != null && alias != "workflow")
-                    {
-                        //new property value... 
-                        string thevalue = library.StripHtml(p.Value.ToString());
+            //var bodyTextComparison = string.Empty;
+            //var keywordsComparison = string.Empty;
+            //var descriptionComparison = string.Empty;
 
-                        var cP = publishedVersion.GetProperty(alias);
+            //// Do compare and show differences for documents.
+            //foreach (Umbraco.Core.Models.Property p in revisedVersion.Properties)
+            //{
+            //    var alias = p.Alias;
+            //    try
+            //    {
+            //        if (p.Value != null && alias != "workflow")
+            //        {
+            //            //new property value... 
+            //            string thevalue = library.StripHtml(p.Value.ToString());
 
-                        if (cP != null && cP.Value != null)
-                        {
-                            string cThevalue = library.StripHtml(cP.Value.ToString());
-                            string compared = Diff.Diff2Html(cThevalue, thevalue);
-                            bool hasChanges = !Equals(compared, thevalue);
+            //            var cP = publishedVersion.GetProperty(alias);
 
-                            // only add comparison rows if changes exist or the property is not empty
-                            if (hasChanges)
-                            {
-                                var row = "<tr><th>" + alias + ":</th><td>" + library.ReplaceLineBreaks(compared) + "</td></tr>";
-                                if (alias != "bodyText" && alias != "keywords" && alias != "description")
-                                {
-                                    differences.CompareData += row;
-                                }
-                                else if (alias == "bodyText")
-                                {
-                                    bodyTextComparison = row;
-                                }
-                                else if (alias == "keywords")
-                                {
-                                    keywordsComparison = row;
-                                }
-                                else if (alias == "description")
-                                {
-                                    descriptionComparison = row;
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    differences.CompareData += "<tr><th>" + alias + ":</th><td class=\"alert\">Error processing property: " + ex.Message + "</td></tr>";
-                    log.Error("Error Diffing property " + alias + " for document " + nodeId + ": " + ex.Message);
-                }
-            }
+            //            if (cP != null && cP.Value != null)
+            //            {
+            //                string cThevalue = library.StripHtml(cP.Value.ToString());
+            //                string compared = Diff.Diff2Html(cThevalue, thevalue);
+            //                bool hasChanges = !Equals(compared, thevalue);
 
-            // put bodytext, keywords and description first -> most commonly changed fields
-            differences.CompareData = bodyTextComparison + keywordsComparison + descriptionComparison + differences.CompareData;
+            //                // only add comparison rows if changes exist or the property is not empty
+            //                if (hasChanges)
+            //                {
+            //                    var row = "<tr><th>" + alias + ":</th><td>" + library.ReplaceLineBreaks(compared) + "</td></tr>";
+            //                    if (alias != "bodyText" && alias != "keywords" && alias != "description")
+            //                    {
+            //                        differences.CompareData += row;
+            //                    }
+            //                    else if (alias == "bodyText")
+            //                    {
+            //                        bodyTextComparison = row;
+            //                    }
+            //                    else if (alias == "keywords")
+            //                    {
+            //                        keywordsComparison = row;
+            //                    }
+            //                    else if (alias == "description")
+            //                    {
+            //                        descriptionComparison = row;
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        differences.CompareData += "<tr><th>" + alias + ":</th><td class=\"alert\">Error processing property: " + ex.Message + "</td></tr>";
+            //        log.Error("Error Diffing property " + alias + " for document " + nodeId + ": " + ex.Message);
+            //    }
+            //}
 
-            differences.CompareData += "<table><tbody>" + differences.CompareData + "</tbody></table>";
+            //// put bodytext, keywords and description first -> most commonly changed fields
+            //differences.CompareData = bodyTextComparison + keywordsComparison + descriptionComparison + differences.CompareData;
 
-            return Json(differences, ViewHelpers.CamelCase);
+            //differences.CompareData += "<table><tbody>" + differences.CompareData + "</tbody></table>";
+
+            //return Json(differences, ViewHelpers.CamelCase);
         }
 
         /// <summary>
@@ -232,6 +244,7 @@ namespace Workflow.Api
         /// <param name="comment"></param>
         /// <returns></returns>
         [HttpPost]
+        [Route("initiate")]
         public IHttpActionResult InitiateWorkflow(InitiateWorkflowModel model)
         {
             WorkflowInstancePoco instance = null;
@@ -279,8 +292,11 @@ namespace Workflow.Api
         /// <param name="comment"></param>
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult ApproveWorkflowTask(int taskId, string comment = "")
+        [Route("approve")]
+        public IHttpActionResult ApproveWorkflowTask(TaskData model)
         {
+            var taskId = model.TaskId;
+            var comment = model.Comment;
             var _instance = GetInstance(taskId);
 
             try
@@ -306,19 +322,21 @@ namespace Workflow.Api
                         break;
                 }
 
-                var respMessage = new WorkflowResponseItem
+                return Json(new
                 {
-                    Message = msg,
-                    Type = _instance._Type
-                };
-
-                return Json(respMessage, ViewHelpers.CamelCase);           
+                    message = msg,
+                    status = 200
+                }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
                 string msg = "An error occurred processing the approval: " + ex.Message + ex.StackTrace;
                 log.Error(msg + " for workflow " + _instance.Id, ex);
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
+                return Json(new
+                {
+                    message = msg,
+                    status = 500
+                }, ViewHelpers.CamelCase);
             }
         }
 
@@ -330,8 +348,11 @@ namespace Workflow.Api
         /// <param name="comment"></param>
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult RejectWorkflowTask(int taskId, string comment = "")
+        [Route("reject")]
+        public IHttpActionResult RejectWorkflowTask(TaskData model)
         {
+            var taskId = model.TaskId;
+            var comment = model.Comment;
             var _instance = GetInstance(taskId);
 
             try
@@ -345,12 +366,9 @@ namespace Workflow.Api
                     comment
                 );
 
-                
-
-                return Json(new WorkflowResponseItem
-                {
-                    Message = _instance.TypeDescription + " request has been rejected.",
-                    Type = _instance._Type
+                return Json(new  {
+                    message = _instance.TypeDescription + " request has been rejected.",
+                    status = 200
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
@@ -358,7 +376,11 @@ namespace Workflow.Api
                 string msg = "An error occurred rejecting the workflow: " + ex.Message + ex.StackTrace;
                 log.Error(msg + " for workflow " + _instance.Id, ex);
 
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));              
+                return Json(new
+                {
+                    message = msg,
+                    status = 500
+                }, ViewHelpers.CamelCase);
             }
         }
 
@@ -370,8 +392,11 @@ namespace Workflow.Api
         /// <param name="comment"></param>
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult CancelWorkflowTask(int taskId, string comment = "")
+        [Route("cancel")]
+        public IHttpActionResult CancelWorkflowTask(TaskData model)
         {
+            var taskId = model.TaskId;
+            var comment = model.Comment;
             var _instance = GetInstance(taskId);
 
             try
@@ -384,21 +409,26 @@ namespace Workflow.Api
                     comment
                 );
 
-                return Json(new WorkflowResponseItem
-                {
-                    Message = _instance.TypeDescription + " workflow cancelled",
-                    Type = _instance._Type
+                return Json(new {
+                    status = 200,
+                    msg = _instance.TypeDescription + " workflow cancelled"
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
                 string msg = "An error occurred cancelling the workflow: " + ex.Message + ex.StackTrace;
                 log.Error(msg + " for workflow " + _instance.Id, ex);
-
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
+                return Json(new
+                {
+                    status = 500,
+                    msg = msg
+                }, ViewHelpers.CamelCase);
             }
         }
 
+        #endregion
+
+        #region Private methods
 
         /// <summary>
         /// Helper method for compiling WorkflowItem response object
@@ -538,5 +568,7 @@ namespace Workflow.Api
 
             return _instance;
         }
+
+        #endregion
     }
 }

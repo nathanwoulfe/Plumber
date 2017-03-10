@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Workflow
 {
@@ -18,18 +19,32 @@ namespace Workflow
         /// <returns>The fully qualified web site url</returns>
         public static string GetFullyQualifiedSiteUrl(string partialUrl)
         {
-            Uri baseUrl = new Uri(Helpers.GetSettings().SiteUrl);
+            var editUrl = Helpers.GetSettings().EditUrl;
+            if (string.IsNullOrEmpty(editUrl))
+            {
+                var request = HttpContext.Current.Request;
+                editUrl = request.Url.Scheme + "://" + request.Url.Authority + request.ApplicationPath.TrimEnd('/') + "/";
+            }
+
+            Uri baseUrl = new Uri(editUrl);
             return (new Uri(baseUrl, partialUrl)).ToString();
         }
 
         /// <summary>
-        /// This method gives a fully qualified Back Office Edit url and can be used without an HTTPContext 
+        /// This method gives a fully qualified Back Office Edit url
         /// </summary>
         /// <param name="partialUrl">The partial url to fully qualify</param>
         /// <returns>The fully qualified Back Office edit url</returns>
         public static string GetFullyQualifiedEditUrl(string partialUrl)
         {
-            Uri baseUrl = new Uri(Helpers.GetSettings().EditUrl);
+            var editUrl = Helpers.GetSettings().EditUrl;
+            if (string.IsNullOrEmpty(editUrl))
+            {
+                var request = HttpContext.Current.Request;
+                editUrl = request.Url.Scheme + "://" + request.Url.Authority + request.ApplicationPath.TrimEnd('/') + "/";
+            }
+
+            Uri baseUrl = new Uri(editUrl);
             return (new Uri(baseUrl, partialUrl)).ToString();
         }
 

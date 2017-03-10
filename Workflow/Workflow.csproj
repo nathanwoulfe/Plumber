@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Startup\RegisterEvents.cs" />
+    <Compile Include="Startup\StringContraint.cs" />
     <Compile Include="Startup\WebApiConfig.cs" />
     <Compile Include="Startup\WorkflowContextMenuController.cs" />
     <Compile Include="Tree\WorkflowApplication.cs" />

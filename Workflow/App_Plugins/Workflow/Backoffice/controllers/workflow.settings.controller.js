@@ -29,7 +29,7 @@
 
                                     dt.approvalPath[p.permission] = g;
                                 }
-                            })
+                            });
                         }
                     });
                 });
@@ -45,7 +45,7 @@
                         permissions.push({
                             contentTypeId: dt.id,
                             permission: ii,
-                            groupId: path.groupId,
+                            groupId: path.groupId
                         });
                     });
                 }
@@ -66,13 +66,13 @@
             } else {
                 dt.approvalPath = [dt.selectedApprovalGroup];
             }       
-        };
+        }
 
 
         function remove(dt, index) {
             console.log(dt, index);
             dt.approvalPath.splice(index, 1);
-        };
+        }
 
         angular.extend(vm, {
             save: save,

@@ -109,8 +109,6 @@
                     }
                 });
             });
-
-            console.log(vm.approvalPath);
         }
 
         angular.extend(vm, {

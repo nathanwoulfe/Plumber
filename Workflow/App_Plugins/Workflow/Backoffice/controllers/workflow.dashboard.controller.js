@@ -47,16 +47,14 @@
                 view: '../app_plugins/workflow/backoffice/dialogs/workflow.cancel.dialog.html',
                 show: true,
                 title: 'Cancel workflow process',
-                subtitle: 'Document: ' + item.NodeName,
+                subtitle: 'Document: ' + item.nodeName,
                 comment: '',
-                isFinalApproval: item.ActiveTask === 'Pending Final Approval',
+                isFinalApproval: item.activeTask === 'Pending Final Approval',
                 submit: function (model) {
-                    vm.workflowOverlay.show = false;
-                    vm.workflowOverlay = null;
-
-                    workflowResource.cancelWorkflowTask(item.TaskId, model.comment)
+                    workflowResource.cancelWorkflowTask(item.taskId, model.comment)
                         .then(function (resp) {
                             notify(resp);
+                            vm.workflowOverlay.close();
                         });
                 },
                 close: function (model) {
@@ -72,27 +70,25 @@
                 view: '../app_plugins/workflow/backoffice/dialogs/workflow.action.dialog.html',
                 show: true,
                 title: (args.approve ? 'Approve' : 'Reject') + ' workflow process',
-                subtitle: 'Document: ' + args.item.NodeName,
-                comment: args.item.Comments,
+                subtitle: 'Document: ' + args.item.nodeName,
+                comment: args.item.comments,
                 approvalComment: '',
-                requestedBy: args.item.RequestedBy,
-                requestedOn: args.item.RequestedOn,
+                requestedBy: args.item.requestedBy,
+                requestedOn: args.item.requestedOn,
                 submit: function (model) {
-                    vm.workflowOverlay.show = false;
-                    vm.workflowOverlay = null;
-
                     if (args.approve) {
-                        workflowResource.approveWorkflowTask(item.TaskId, model.comment)
+                        workflowResource.approveWorkflowTask(args.item.taskId, model.comment)
                             .then(function (resp) {
                                 notify(resp);
                             });
                     }
                     else {
-                        workflowResource.rejectWorkflowTask(item.TaskId, model.comment)
+                        workflowResource.rejectWorkflowTask(args.item.taskId, model.comment)
                             .then(function (resp) {
                                 notify(resp);
                             });
                     }
+                    vm.workflowOverlay.close();
                 },
                 close: function (model) {
                     vm.workflowOverlay.show = false;
@@ -104,10 +100,10 @@
         // display notification after actioning workflow task
         function notify(d) {
             if (d.status === 200) {
-                notificationsService.success("SUCCESS!", d.data.Message);
+                notificationsService.success("SUCCESS!", d.msg);
             }
             else {
-                notificationsService.error("OH SNAP!", d.data.Message);
+                notificationsService.error("OH SNAP!", d.msg);
             }
 
             init();

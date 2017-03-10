@@ -19,7 +19,7 @@
         function refreshTree() {
             treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'users' })
                 .then(function (r) {
-                    window.location = '/umbraco/#/workflow/tree/view/usergroups';
+                    window.location = '/umbraco/#/workflow/tree/view/groups';
                 });
         }
 

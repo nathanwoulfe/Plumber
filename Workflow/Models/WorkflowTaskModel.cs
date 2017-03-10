@@ -45,17 +45,6 @@ namespace Workflow.Models
         public List<UserGroupPermissionsPoco> Permissions { get; set; }
     }
 
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class WorkflowResponseItem
-    {
-        public string Message { get; set; }
-        public WorkflowType Type { get; set; }
-    }
-
-
     /// <summary>
     /// 
     /// </summary>

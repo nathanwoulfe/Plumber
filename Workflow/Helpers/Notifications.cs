@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using Umbraco.Core.Models.Membership;
@@ -8,6 +9,8 @@ namespace Workflow
 {
     public class Notifications
     {
+        private static PocoRepository _pr = new PocoRepository();
+
         private static string EmailApprovalRequestString = "Dear {0},<br/><br/>Please review the following page for {5} approval: <a href=\"{1}\">{2}</a> *<br/><br/>Comment: {3}<br/><br/>Thanks,<br/>{4}";
         private static string EmailApprovedString = "Dear {0},<br/>The following document's workflow has been approved and the document {3}: <a href=\"{1}\">{2}</a> *<br/>";
         private static string EmailRejectedString = "Dear {0},<br/>The {5} workflow was rejected by {4}: <a href=\"{1}\">{2}</a> *<br/>Comment: {3}";
@@ -27,6 +30,20 @@ namespace Workflow
                 WorkflowTaskInstancePoco coordTaskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Type == TaskType.Approve);
                 WorkflowTaskInstancePoco finalTaskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Type == TaskType.Publish);
 
+                var flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep);
+
+                var emailsForAllTaskUsers = new MailAddressCollection();
+                foreach (var task in flowTasks)
+                {
+                    var group = task.UserGroup;
+                    if (group == null)
+                    {
+                        group = _pr.PopulatedUserGroup(task.GroupId).First();
+                    }
+
+                    emailsForAllTaskUsers.Union(group.PreferredEmailAddresses());
+                }
+
                 MailAddressCollection to = new MailAddressCollection();
                 string email = Helpers.GetSettings().Email;
                 string subject = "";
@@ -35,13 +52,14 @@ namespace Workflow
                 switch (emailType)
                 {
                     case EmailType.ApprovalRequest:
-                        to = coordTaskInstance.UserGroup.PreferredEmailAddresses();
+                        to = flowTasks.Last().UserGroup.PreferredEmailAddresses();
                         body = string.Format(EmailApprovalRequestString,
-                            coordTaskInstance.UserGroup.Name, docUrl, docTitle, instance.AuthorComment, instance.AuthorUser.Name, instance.TypeDescription);
+                            flowTasks.Last().UserGroup.Name, docUrl, docTitle, instance.AuthorComment, instance.AuthorUser.Name, instance.TypeDescription);
 
                         break;
 
                     case EmailType.ApprovalRejection:
+                        to = emailsForAllTaskUsers;
                         to.Add(instance.AuthorUser.Email);
                         body = string.Format(EmailRejectedString,
                             instance.AuthorUser.Name, docUrl, docTitle, coordTaskInstance.Comment, coordTaskInstance.ActionedByUser.Name, instance.TypeDescription.ToLower());
@@ -49,7 +67,7 @@ namespace Workflow
                         break;
 
                     case EmailType.ApprovedAndCompleted:
-                        to = coordTaskInstance.UserGroup.PreferredEmailAddresses();
+                        to = emailsForAllTaskUsers;
                         to.Add(instance.AuthorUser.Email);
 
                         //Notify web admins
@@ -73,7 +91,7 @@ namespace Workflow
                         break;
 
                     case EmailType.ApprovedAndCompletedForScheduler:
-                        to = coordTaskInstance.UserGroup.PreferredEmailAddresses();
+                        to = emailsForAllTaskUsers;
                         to.Add(instance.AuthorUser.Email);
 
                         docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
@@ -86,25 +104,15 @@ namespace Workflow
                         break;
 
                     case EmailType.WorkflowCancelled:
-                        string reason = "";
-                        IUser cancelledBy;
                         // Get the emails for all usergroups for the tasks that have been raised as part of this workflow.
-                        to = coordTaskInstance.UserGroup.PreferredEmailAddresses();
-                        if (finalTaskInstance != null)
-                        {
-                            cancelledBy = finalTaskInstance.ActionedByUser;
-                            to.Union(finalTaskInstance.UserGroup.PreferredEmailAddresses());
-                            reason = finalTaskInstance.Comment;
-                        }
-                        else
-                        {
-                            cancelledBy = coordTaskInstance.ActionedByUser;
-                            reason = coordTaskInstance.Comment;
-                        }
+                        to = emailsForAllTaskUsers;
+                        var reason = flowTasks.Last().Comment;
+                        var cancelledBy = flowTasks.Last().ActionedByUser;
+
                         // include the initiator email
                         to.Add(new MailAddress(instance.AuthorUser.Email));
                         body = string.Format(EmailCancelledString,
-                            "Web User", instance.TypeDescription, docUrl, docTitle, cancelledBy.Name, reason);
+                            "Umbraco user", instance.TypeDescription, docUrl, docTitle, cancelledBy.Name, reason);
                         break;
                 }
 
@@ -128,8 +136,6 @@ namespace Workflow
                 msg.IsBodyHtml = true;
 
                 client.Send(msg);
-
-                //Log.Debug("Sent email to " + to + " subject " + subject + " body " + body);
             }
             catch (Exception ex)
             {

@@ -1,5 +1,4 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -13,9 +12,9 @@ using Workflow.Models;
 
 namespace Workflow.Api
 {
+    [RoutePrefix("umbraco/backoffice/api/workflow/config")]
     public class ConfigController : UmbracoAuthorizedApiController
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private Database db = ApplicationContext.Current.DatabaseContext.Database;
 
         /// <summary>
@@ -24,6 +23,7 @@ namespace Workflow.Api
         /// <param name="group"></param>
         /// <returns></returns>
         [System.Web.Http.HttpPost]
+        [Route("save")]
         public IHttpActionResult Save(List<UserGroupPermissionsPoco> model)
         {
             try
@@ -43,7 +43,6 @@ namespace Workflow.Api
             catch (Exception ex)
             {
                 var msg = "Error saving config. " + ex.Message;
-                log.Error(msg, ex);
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
 

@@ -14,6 +14,7 @@ using Workflow.Models;
 
 namespace Workflow.Api
 {
+    [RoutePrefix("umbraco/backoffice/api/workflow/settings")]
     public class SettingsController : UmbracoAuthorizedApiController
     {
         private static Database db = ApplicationContext.Current.DatabaseContext.Database;
@@ -23,6 +24,7 @@ namespace Workflow.Api
         /// 
         /// </summary>
         /// <returns></returns>
+        [Route("get")]
         public IHttpActionResult Get()
         {
             try
@@ -39,6 +41,7 @@ namespace Workflow.Api
         /// </summary>
         /// <returns>A confirmation message</returns>
         [System.Web.Http.HttpPost]
+        [Route("save")]
         public IHttpActionResult Save(WorkflowSettingsPoco model)
         {
             try

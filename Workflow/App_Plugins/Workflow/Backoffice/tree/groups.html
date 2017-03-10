@@ -2,12 +2,13 @@
     <umb-load-indicator ng-if="loading"></umb-load-indicator>
     <umb-editor-view footer="false" umb-tabs>
 
-        <umb-editor-header name="name"
-                            name-locked="true"
-                            tabs=""
-                            hide-icon="true"
-                            hide-description="true"
-                            hide-alias="true">
+        <umb-editor-header 
+            name="name"
+            name-locked="true"
+            tabs=""
+            hide-icon="true"
+            hide-description="true"
+            hide-alias="true">
         </umb-editor-header>
 
         <umb-editor-container>
@@ -33,9 +34,7 @@
                     <div class="umb-table-head">
                         <div class="umb-table-row">
                             <div class="umb-table-cell">
-                                <input class="umb-table__input" type="checkbox"
-                                        ng-click="selectAll($event)"
-                                        ng-checked="isSelectedAll()">
+                                <input class="umb-table__input" type="checkbox">
                             </div>
                             <div class="umb-table-cell umb-table__name">
                                 <a class="umb-table-head__link sortable" href="#" ng-click="sort('name', true, true)" prevent-default>
