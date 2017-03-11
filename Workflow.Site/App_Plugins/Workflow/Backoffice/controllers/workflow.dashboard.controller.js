@@ -100,10 +100,10 @@
         // display notification after actioning workflow task
         function notify(d) {
             if (d.status === 200) {
-                notificationsService.success("SUCCESS!", d.msg);
+                notificationsService.success("SUCCESS!", d.message);
             }
             else {
-                notificationsService.error("OH SNAP!", d.msg);
+                notificationsService.error("OH SNAP!", d.message);
             }
 
             init();

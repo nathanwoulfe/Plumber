@@ -12,6 +12,7 @@ using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Services;
 using Umbraco.Web;
+using Workflow.Extensions;
 using Workflow.Models;
 
 namespace Workflow
@@ -20,12 +21,18 @@ namespace Workflow
     {
         private static UmbracoHelper _helper = new UmbracoHelper(UmbracoContext.Current);
         private static IUserService _us = ApplicationContext.Current.Services.UserService;
-        private static IContentTypeService _cs = ApplicationContext.Current.Services.ContentTypeService;
+        private static IContentTypeService _cts = ApplicationContext.Current.Services.ContentTypeService;
+        private static IContentService _cs = ApplicationContext.Current.Services.ContentService;
         private static PocoRepository _pr = new PocoRepository();
 
         public static IPublishedContent GetNode(int id)
         {
-            return _helper.TypedContent(id);
+            var n = _helper.TypedContent(id);
+            if (n == null)
+            {
+                return _cs.GetById(id).ToPublishedContent();
+            }
+            return n;
         }
 
         public static IUser GetUser(int id)
@@ -35,7 +42,7 @@ namespace Workflow
 
         public static IContentType GetContentType(int id)
         {
-            return _cs.GetContentType(id);
+            return _cts.GetContentType(id);
         }
 
         public static IUser GetCurrentUser()

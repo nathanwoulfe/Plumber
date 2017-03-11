@@ -31,7 +31,7 @@ namespace Workflow
             // Handle Publish At (Release At)
             if (instance.ScheduledDate != null && instance.ScheduledDate > DateTime.Now)
             {
-               // HandlePublishAt(userId);
+                HandlePublishAt(userId);
             }
             else // Handle Publish Now
             {
@@ -52,7 +52,6 @@ namespace Workflow
                 // Have to do this prior to the publish due to workaround for "publish at" handling.
                 instance.Status = (int)WorkflowStatus.Approved;
                 instance.CompletedDate = DateTime.Now;
-                ApplicationContext.Current.DatabaseContext.Database.Update(instance);
 
                 // Perform the publish
                 var cs = ApplicationContext.Current.Services.ContentService;
@@ -100,36 +99,30 @@ namespace Workflow
             bool success = false;
             string errorText = "";
 
-            //try
-            //{
-            //    // Just complete the workflow
-            //    instance.Status = WorkflowStatus.Completed;
-            //    instance.CompletedDate = DateTime.Now;
-            //    dbContext.SaveChanges();
-            //    success = true;
+            try
+            {
+                // Just complete the workflow
+                instance.Status = (int)WorkflowStatus.Approved;
+                instance.CompletedDate = DateTime.Now;
+                ApplicationContext.Current.DatabaseContext.Database.Update(instance);
+                success = true;
 
-            //    // Publish will occur via scheduler.
-            //}
-            //catch (Exception ex)
-            //{
-            //    errorText = "Error completing workflow for " + instance.Document.Text + ": " + ex.Message;
-            //    log.Error(errorText);
-            //}
+                // Publish will occur via scheduler.
+            }
+            catch (Exception ex)
+            {
+                errorText = "Error completing workflow for " + instance.Node.Name + ": " + ex.Message;
+                log.Error(errorText);
+            }
 
-            //if (success)
-            //{
-            //    SendNotification(EmailType.ApprovedAndCompletedForScheduler);
-            //    string notificationText = "The document '" + instance.Document.Text + "' has been approved and is " + instance.TypeDescriptionPastTense;
-
-            //    BasePage.Current.ClientTools.ShowSpeechBubble(BasePage.speechBubbleIcon.save, "Release Scheduled", notificationText);
-            //    umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, instance.NodeId, notificationText);
-            //    log.Info(notificationText);
-            //}
-            //else
-            //{
-            //    BasePage.Current.ClientTools.ShowSpeechBubble(BasePage.speechBubbleIcon.warning, "Release Schedule Failed", "The workflow failed with error " + errorText);
-            //    throw new WorkflowException(errorText);
-            //}
+            if (success)
+            {
+                Notifications.Send(instance, EmailType.ApprovedAndCompletedForScheduler);
+            }
+            else
+            {
+                throw new WorkflowException(errorText);
+            }
         }
     }
 }

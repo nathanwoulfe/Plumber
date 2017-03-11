@@ -1,5 +1,6 @@
 ﻿using Umbraco.Core;
 using Umbraco.Web;
+using Workflow;
 
 namespace UmbracoWorkflow.Actions
 {
@@ -15,7 +16,7 @@ namespace UmbracoWorkflow.Actions
             if (sender.TreeAlias == "content" && string.Compare(e.NodeId, "-1") != 0)
             {
                 var menuLength = e.Menu.Items.Count;
-                var nodeName = UmbracoContext.Current.ContentCache.GetById(int.Parse(e.NodeId)).Name;
+                var nodeName = Helpers.GetNode(int.Parse(e.NodeId)).Name;
                 var currentUser = UmbracoContext.Current.Security.CurrentUser.UserType;
                 var items = new Umbraco.Web.Models.Trees.MenuItemList();
 

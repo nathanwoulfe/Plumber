@@ -42,14 +42,15 @@ namespace Workflow
 
             // create and persist the new workflow instance
             instance = new WorkflowInstancePoco(nodeId, authorUserId, authorComment, Type);
+            instance.SetScheduledDate();
             instance.Guid = g;
 
             GetDb().Insert(instance);
 
             // create the first task in the workflow
             // this always happens, even if the workflow is a single stage and will be published immediately
-            bool doPublish = false;
-            WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(nodeId, authorUserId, out doPublish);
+            bool complete = false;
+            WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(nodeId, authorUserId, out complete);
 
             if (taskInstance.UserGroup == null)
             {
@@ -58,15 +59,7 @@ namespace Workflow
                 throw new WorkflowException(errorMessage);
             }
 
-            if (!doPublish)
-            {
-                ApproveOrContinue(taskInstance, authorUserId, g);
-            }
-            else
-            {
-                CompleteTask(taskInstance, authorUserId);
-                CompleteWorkflow(authorUserId);                
-            }
+            ApproveOrContinue(taskInstance, authorUserId);
 
             return instance;
         }
@@ -95,11 +88,11 @@ namespace Workflow
                         if (instance.TotalSteps > instance.TaskInstances.Count)
                         {
                             // create the next task, then check if it should be a
-                            var doPublish = false;
-                            WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(instance.NodeId, userId, out doPublish);
-                            if (!doPublish)
+                            var approvalRequired = false;
+                            WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(instance.NodeId, userId, out approvalRequired);
+                            if (approvalRequired)
                             {
-                                ApproveOrContinue(taskInstance, userId, instance.Guid);
+                                ApproveOrContinue(taskInstance, userId);
                             }
                             else
                             {
@@ -184,9 +177,8 @@ namespace Workflow
         /// <param name="taskInstance"></param>
         /// <param name="userId"></param>
         /// <param name="g"></param>
-        private void ApproveOrContinue(WorkflowTaskInstancePoco taskInstance, int userId, Guid g)
+        private void ApproveOrContinue(WorkflowTaskInstancePoco taskInstance, int userId)
         {
-            taskInstance.WorkflowInstanceGuid = g;
             if (IsStepApprovalRequired(taskInstance))
             {
                 InitiateApprovalTask(taskInstance);
@@ -255,17 +247,17 @@ namespace Workflow
         /// <param name="authorId"></param>
         /// <param name="doPublish"></param>
         /// <returns></returns>
-        private WorkflowTaskInstancePoco CreateApprovalTask(int nodeId, int authorId, out bool doPublish)
+        private WorkflowTaskInstancePoco CreateApprovalTask(int nodeId, int authorId, out bool approvalRequired)
         {
             var taskInstance = new WorkflowTaskInstancePoco(TaskType.Approve);
             taskInstance.ApprovalStep = instance.TaskInstances.Count;
+            taskInstance.WorkflowInstanceGuid = instance.Guid;
             instance.TaskInstances.Add(taskInstance);
 
-            doPublish = SetApprovalGroup(taskInstance, nodeId, authorId);
-            if (!doPublish)
-            {
-                GetDb().Insert(taskInstance);
-            }
+            SetApprovalGroup(taskInstance, nodeId, authorId);
+            approvalRequired = IsStepApprovalRequired(taskInstance);
+
+            GetDb().Insert(taskInstance);            
 
             return taskInstance;
         }
@@ -276,7 +268,7 @@ namespace Workflow
         /// <param name="taskInstance"></param>
         /// <param name="nodeId"></param>
         /// <param name="authorId"></param>
-        private bool SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId, int authorId)
+        private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId, int authorId)
         {
             var approvalGroup = _pr.PermissionsForNode(nodeId, 0);
             var currentUserId = Helpers.GetCurrentUser().Id;            
@@ -288,7 +280,7 @@ namespace Workflow
                 // approval group length will match the number of groups mapped to the node
                 // only interested in the one that corresponds with the index of the most recently added workflow task
                 group = approvalGroup.Where(g => g.Permission == taskInstance.ApprovalStep).First();
-                doPublish = CheckSubsequentSteps(approvalGroup, group, currentUserId, taskInstance.ApprovalStep);
+                //doPublish = CheckSubsequentStep(approvalGroup, group, currentUserId, taskInstance.ApprovalStep);
 
                 SetInstanceTotalSteps(approvalGroup.Count);
             }
@@ -306,7 +298,7 @@ namespace Workflow
                     if (contentTypeApproval.Any())
                     {
                         group = approvalGroup.Where(g => g.Permission == taskInstance.ApprovalStep).First();
-                        doPublish = CheckSubsequentSteps(contentTypeApproval, group, currentUserId, taskInstance.ApprovalStep);
+                       // doPublish = CheckSubsequentStep(contentTypeApproval, group, currentUserId, taskInstance.ApprovalStep);
 
                         SetInstanceTotalSteps(approvalGroup.Count);
                     }
@@ -324,8 +316,6 @@ namespace Workflow
                 taskInstance.GroupId = group.GroupId;
                 taskInstance.UserGroup = group.UserGroup;
             }
-
-            return doPublish;
         }
 
         /// <summary>
@@ -337,7 +327,7 @@ namespace Workflow
         /// <param name="currentUserId"></param>
         /// <param name="groupIndex"></param>
         /// <returns></returns>
-        private bool CheckSubsequentSteps(List<UserGroupPermissionsPoco> approvalGroup, UserGroupPermissionsPoco group, int currentUserId, int groupIndex)
+        private bool CheckSubsequentStep(List<UserGroupPermissionsPoco> approvalGroup, UserGroupPermissionsPoco group, int currentUserId, int groupIndex)
         {
             bool doPublish = false;
             // check the last permission is equal to the current group, and current user or instance author are members of that group, if so, the request should be published
@@ -373,7 +363,7 @@ namespace Workflow
         /// <returns>true if approval required, false otherwise</returns>
         private bool IsStepApprovalRequired(WorkflowTaskInstancePoco taskInstance)
         {
-            return !taskInstance.UserGroup.IsMember(instance.AuthorUserId);
+            return (!taskInstance.UserGroup.IsMember(instance.AuthorUserId) && !taskInstance.UserGroup.IsMember(Helpers.GetCurrentUser().Id));
         }
 
         /// <summary>
@@ -382,7 +372,7 @@ namespace Workflow
         /// <param name="stepCount">The number of approval groups in the current flow (explicit, inherited or content type)</param>
         private void SetInstanceTotalSteps(int stepCount)
         {
-            if (instance.TotalSteps == 0)
+            if (instance.TotalSteps != stepCount)
             {
                 instance.TotalSteps = stepCount;
                 GetDb().Update(instance);
@@ -409,7 +399,6 @@ namespace Workflow
             taskInstance.CompletedDate = DateTime.Now;
             taskInstance.Comment += " (APPROVAL AT STAGE " + (taskInstance.ApprovalStep + 1) + " NOT REQUIRED)";
             taskInstance.ActionedByUserId = userId;
-            taskInstance.WorkflowInstanceGuid = instance.Guid;
 
             GetDb().Update(taskInstance);
         }

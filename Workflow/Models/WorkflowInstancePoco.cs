@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
+using Umbraco.Core.Services;
 using Umbraco.Web;
+using Workflow.Extensions;
 
 namespace Workflow.Models
 {
@@ -17,6 +20,7 @@ namespace Workflow.Models
         private IPublishedContent _node;
         private IUser _authorUser;
         private IUser _currentUser = UmbracoContext.Current.Security.CurrentUser;
+        private IContentService _cs = ApplicationContext.Current.Services.ContentService;
 
         public WorkflowInstancePoco()
         {
@@ -32,7 +36,6 @@ namespace Workflow.Models
             AuthorUserId = authorUserId;
             AuthorComment = authorComment;
             Type = (int)type;
-            SetScheduledDate();
         }
 
         [Column("Id")]
@@ -83,19 +86,19 @@ namespace Workflow.Models
 
         public void SetScheduledDate()
         {
-            //if (Type == WorkflowType.Publish && _node.ReleaseDate.Ticks != 0)
-            //{
-            //    ScheduledDate = Document.ReleaseDate;
-            //}
-            //else if (Type == WorkflowType.Unpublish && Document.ExpireDate.Ticks != 0)
-            //{
-            //    ScheduledDate = Document.ExpireDate;
-            //}
-            //else
-            //{
-            //    ScheduledDate = null;
-            //}
-            ScheduledDate = null;
+            var content = _cs.GetById(NodeId);
+            if (Type ==  (int)WorkflowType.Publish && content.ReleaseDate.HasValue)
+            {
+                ScheduledDate = content.ReleaseDate;
+            }
+            else if (Type == (int)WorkflowType.Unpublish && content.ExpireDate.HasValue)
+            {
+                ScheduledDate = content.ExpireDate;
+            }
+            else
+            {
+                ScheduledDate = null;
+            }
         }
 
         /// <summary>
@@ -144,7 +147,7 @@ namespace Workflow.Models
                     _node = Helpers.GetNode(NodeId);
                 }
                 return _node;
-            }
+            } 
         }
 
         /// <summary>
@@ -187,50 +190,6 @@ namespace Workflow.Models
             }
         }
 
-
-
-         //<summary>
-         
-         //</summary>
-         //<param name="userId">The id of the user to check</param>
-         //<returns></returns>
-        public bool IsUserInWorkflow(int userId)
-        {
-            if (AuthorUserId == userId) 
-                return true;
-
-            foreach (WorkflowTaskInstancePoco taskInstance in TaskInstances)
-            {
-                if (taskInstance.UserGroup != null && taskInstance.UserGroup.IsMember(userId)) 
-                    return true;
-            }
-            // If we get here they mustnt be involved in the workflow.
-            return false;
-        }
-
-         //<summary>
-         //Determine if the specified user can approve or reject the current workflow task instance.
-         //</summary>
-         //<param name="userId"></param>
-         //<returns>true if there is an active task and the user is in the group responsible for approving it - otherwise false</returns>
-        public bool CanUserActionWorkflow(int userId)
-        {
-            WorkflowTaskInstancePoco ti = ActiveTask;
-            return ti != null && ti.UserGroup.IsMember(userId);
-        }
-
-         //<summary>
-         //Get the active task instance pending approval - or null if none.
-         //</summary>
-        [ResultColumn]        
-        public WorkflowTaskInstancePoco ActiveTask
-        {
-            get
-            {
-                return TaskInstances != null ? TaskInstances.FirstOrDefault(ti => ti._Status == Workflow.Models.TaskStatus.PendingApproval) : null;
-            }
-        }
-
         [ResultColumn]
         public Nullable<DateTime> CompletedDate { get; set; }
 
@@ -260,16 +219,6 @@ namespace Workflow.Models
         public static string EmailTypeName(EmailType type)
         {
             return Helpers.PascalCaseToTitleCase(type.ToString());
-        }
-
-        public bool CanCurrentUserActionWorkflow()
-        {
-            return CanUserActionWorkflow(_currentUser.Id);
-        }
-
-        public bool CanCurrentUserCancelWorkflow()
-        {
-            return Active && (IsUserInWorkflow(_currentUser.Id) || Helpers.IUserCanAdminWorkflow(_currentUser));
         }
     }
 }

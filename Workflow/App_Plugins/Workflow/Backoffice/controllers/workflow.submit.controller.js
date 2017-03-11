@@ -22,7 +22,7 @@
             workflowResource.initiateWorkflow(nodeId, vm.comment, vm.isPublish)
                 .then(function (resp) {
                     navigationService.hideDialog();
-                    notificationsService.success("SUCCESS", resp);
+                    notificationsService.success("SUCCESS", resp.message);
                 }, function (err) {
                     notificationsService.error("ERROR", err);
                 });

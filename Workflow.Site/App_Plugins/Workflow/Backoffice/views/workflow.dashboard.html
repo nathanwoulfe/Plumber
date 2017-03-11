@@ -1,5 +1,5 @@
 ﻿<div class="umb-panel workflow" ng-controller="Workflow.Dashboard.Controller as vm">
-    <form class="umb-dashboard" novalidate="">
+    <form class="umb-dashboard" no-dirty-check>
         <umb-editor-view footer="false" umb-tabs>
             <umb-editor-container>
                 <wf-tasks heading="'Tasks requiring my approval'" items="vm.tasks" loaded="vm.loaded[0]" type="0"></wf-tasks>

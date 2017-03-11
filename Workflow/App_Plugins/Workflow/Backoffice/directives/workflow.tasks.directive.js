@@ -15,26 +15,6 @@
             templateUrl: '../app_plugins/workflow/backoffice/partials/workflowTasksTemplate.html',
             controller: function ($scope, $rootScope) {
 
-                function showDialog(url, item, cb) {
-                    dialogService.open({
-                        template: url,
-                        show: true,
-                        dialogData: item,
-                        callback: function(resp) {
-                            if (cb) {
-                                if (resp.status === 200) {
-                                    notificationsService.success("SUCCESS!", resp.message);
-                                }
-                                else {
-                                    notificationsService.error("OH SNAP!", resp.message);
-                                }
-
-                                $scope.$parent.vm.init();
-                            }
-                        }
-                    });
-                };
-
                 // type = 0, 1
                 // 0 -> full button set
                 // 1 -> cancel, edit

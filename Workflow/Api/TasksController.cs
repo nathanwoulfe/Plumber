@@ -8,7 +8,9 @@ using System.Reflection;
 using System.Web.Http;
 using umbraco;
 using umbraco.cms.businesslogic.utilities;
+using Umbraco.Core;
 using Umbraco.Core.Models;
+using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 
@@ -22,6 +24,7 @@ namespace Workflow.Api
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static PocoRepository _pr = new PocoRepository();
+        private static IContentService _cs = ApplicationContext.Current.Services.ContentService;
         private List<UserGroupPermissionsPoco> perms = new List<UserGroupPermissionsPoco>();
 
         #region Public methods
@@ -37,7 +40,7 @@ namespace Workflow.Api
             try
             {
                 var taskInstances = _pr.GetPendingTasks((int)TaskStatus.PendingApproval);
-                var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
+                var workflowItems = BuildWorkflowItemList(taskInstances, -1);
                 return Json(workflowItems, ViewHelpers.CamelCase);
             }
             catch (Exception e)
@@ -57,7 +60,7 @@ namespace Workflow.Api
             try
             {
                 var taskInstances = _pr.GetAllTasks();
-                var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
+                var workflowItems = BuildWorkflowItemList(taskInstances, -1);
                 return Json(workflowItems, ViewHelpers.CamelCase);
             }
             catch (Exception e)
@@ -98,7 +101,7 @@ namespace Workflow.Api
             try
             {
                 var taskInstances = _pr.TasksByNode(id);
-                var workflowItems = BuildWorkflowItemList(taskInstances, -1, false);
+                var workflowItems = BuildWorkflowItemList(taskInstances, -1);
                 return Json(workflowItems, ViewHelpers.CamelCase);
             }
             catch (Exception e)
@@ -272,10 +275,19 @@ namespace Workflow.Api
                         break;
                     case WorkflowStatus.Approved:
                         msg = (model.Publish ? "Publish" : "Unpublish") + " workflow complete.";
+
+                        if (instance.ScheduledDate.HasValue)
+                        {
+                            msg += " Page scheduled for publishing at " + instance.ScheduledDate.ToString();
+                        }
+
                         break;
                 }
 
-                return Json(msg, ViewHelpers.CamelCase);
+                return Json(new
+                {
+                    message = msg
+                }, ViewHelpers.CamelCase);
                 
             }
             catch (Exception e)
@@ -297,14 +309,14 @@ namespace Workflow.Api
         {
             var taskId = model.TaskId;
             var comment = model.Comment;
-            var _instance = GetInstance(taskId);
+            var instance = GetInstance(taskId);
 
             try
             {
-                WorkflowApprovalProcess process = GetProcess(_instance.Type);
+                WorkflowApprovalProcess process = GetProcess(instance.Type);
 
-                _instance = process.ActionWorkflow(
-                    _instance,
+                instance = process.ActionWorkflow(
+                    instance,
                     WorkflowAction.Approve,
                     Helpers.GetCurrentUser().Id,
                     comment
@@ -312,13 +324,22 @@ namespace Workflow.Api
 
                 string msg = string.Empty;
 
-                switch (_instance._Status)
+                switch (instance._Status)
                 {
                     case WorkflowStatus.PendingApproval:
-                        msg = "Approval completed successfully. Page will be " + _instance.TypeDescriptionPastTense.ToLower() + " workflow completion.";
+                        msg = "Approval completed successfully. Page will be " + instance.TypeDescriptionPastTense.ToLower() + " workflow completion.";
                         break;
                     case WorkflowStatus.Approved:
-                        msg = "Workflow approved successfully, page has been " + _instance.TypeDescriptionPastTense.ToLower();
+                        msg = "Workflow approved successfully.";
+
+                        if (instance.ScheduledDate.HasValue)
+                        {
+                            msg += " Page scheduled for " + instance.TypeDescription + " at " + instance.ScheduledDate.ToString();
+                        }
+                        else
+                        {
+                            msg += " Page has been " + instance.TypeDescriptionPastTense.ToLower();
+                        }
                         break;
                 }
 
@@ -331,7 +352,7 @@ namespace Workflow.Api
             catch (Exception ex)
             {
                 string msg = "An error occurred processing the approval: " + ex.Message + ex.StackTrace;
-                log.Error(msg + " for workflow " + _instance.Id, ex);
+                log.Error(msg + " for workflow " + instance.Id, ex);
                 return Json(new
                 {
                     message = msg,
@@ -435,43 +456,45 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="taskInstances"></param>
         /// <returns></returns>
-        private List<WorkflowTask> BuildWorkflowItemList(List<WorkflowTaskInstancePoco> taskInstances, int _userId = -1, bool includeActionLinks = true, WorkflowInstancePoco instance = null)
+        private List<WorkflowTask> BuildWorkflowItemList(List<WorkflowTaskInstancePoco> taskInstances, int _userId = -1, WorkflowInstancePoco instance = null)
         {
+
             List<WorkflowTask> workflowItems = new List<WorkflowTask>();
-
-            if (taskInstances != null && taskInstances.Count > 0)
+            try
             {
-                foreach (var taskInstance in taskInstances)
+                if (taskInstances != null && taskInstances.Count > 0)
                 {
-                    WorkflowInstancePoco useThisInstance = taskInstance.WorkflowInstance != null ? taskInstance.WorkflowInstance : instance;
-
-                    GetPermissionsForNode(useThisInstance.Node);
-
-                    var item = new WorkflowTask
+                    foreach (var taskInstance in taskInstances)
                     {
-                        Status = taskInstance.StatusName,
-                        CssStatus = taskInstance.StatusName.ToLower().Split(' ')[0],
-                        Type = useThisInstance.TypeDescription,
-                        NodeId = useThisInstance.NodeId,
-                        TaskId = useThisInstance.Id,
-                        ApprovalGroupId = taskInstance.UserGroup.GroupId,
-                        NodeName = useThisInstance.Node.Name,
-                        RequestedBy = useThisInstance.AuthorUser.Name,
-                        RequestedOn = taskInstance.CreatedDate.ToString("d MMM yyyy"),
-                        ApprovalGroup = taskInstance.UserGroup.Name,
-                        Comments = taskInstance.Comment != null ? taskInstance.Comment : useThisInstance.AuthorComment != null ? useThisInstance.AuthorComment : string.Empty,
-                        ActiveTask = useThisInstance.StatusName,
-                        Permissions = perms,
-                        CurrentStep = taskInstance.ApprovalStep
-                    };
+                        WorkflowInstancePoco useThisInstance = taskInstance.WorkflowInstance != null ? taskInstance.WorkflowInstance : instance;
 
-                    if (_userId != -1 && includeActionLinks)
-                    {
-                        item.ShowActionLink = ShowActionLink(taskInstance, _userId);
+                        GetPermissionsForNode(useThisInstance.Node);
+
+                        var item = new WorkflowTask
+                        {
+                            Status = taskInstance.StatusName,
+                            CssStatus = taskInstance.StatusName.ToLower().Split(' ')[0],
+                            Type = useThisInstance.TypeDescription,
+                            NodeId = useThisInstance.NodeId,
+                            TaskId = useThisInstance.Id,
+                            ApprovalGroupId = taskInstance.UserGroup.GroupId,
+                            NodeName = useThisInstance.Node.Name,
+                            RequestedBy = useThisInstance.AuthorUser.Name,
+                            RequestedOn = taskInstance.CreatedDate.ToString("d MMM yyyy"),
+                            ApprovalGroup = taskInstance.UserGroup.Name,
+                            Comments = taskInstance.Comment != null ? taskInstance.Comment : useThisInstance.AuthorComment != null ? useThisInstance.AuthorComment : string.Empty,
+                            ActiveTask = useThisInstance.StatusName,
+                            Permissions = perms,
+                            CurrentStep = taskInstance.ApprovalStep
+                        };
+
+                        workflowItems.Add(item);
                     }
-
-                    workflowItems.Add(item);
                 }
+            }
+            catch (Exception e)
+            {
+                var m = e.Message;
             }
 
             return workflowItems;
@@ -490,6 +513,7 @@ namespace Workflow.Api
             {
                 foreach (var instance in instances)
                 {
+                    var n = Helpers.GetNode(instance.NodeId);
                     var model = new WorkflowInstance
                     {
                         Type = instance.TypeDescription,
@@ -499,9 +523,9 @@ namespace Workflow.Api
                         NodeName = instance.Node.Name,
                         RequestedBy = instance.AuthorUser.Name,
                         RequestedOn = instance.CreatedDate.ToString("d MMM yyyy"),
-                        Tasks = BuildWorkflowItemList(instance.TaskInstances.ToList(), -1, false, instance).OrderByDescending(x => x.CurrentStep).ToList()
+                        Tasks = BuildWorkflowItemList(instance.TaskInstances.ToList(), -1, instance).OrderByDescending(x => x.CurrentStep).ToList()
                     };
-
+                    
                     workflowInstances.Add(model);
                 }
             }
@@ -549,22 +573,12 @@ namespace Workflow.Api
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="taskInstance"></param>
-        /// <param name="currentUserId"></param>
-        /// <returns></returns>
-        private bool ShowActionLink(WorkflowTaskInstancePoco taskInstance, int currentUserId)
-        {
-            return taskInstance.UserGroup.IsMember(currentUserId);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="taskId"></param>
         /// <returns></returns>
         private WorkflowInstancePoco GetInstance(int taskId)
         {
             var _instance = _pr.InstanceByTaskId(taskId);
+            _instance.SetScheduledDate();
 
             // TODO -> fix this
             var tasks = _pr.TasksAndGroupByInstanceId(_instance.Guid);
