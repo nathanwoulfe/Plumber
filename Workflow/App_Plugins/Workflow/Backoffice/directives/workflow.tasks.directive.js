@@ -23,10 +23,10 @@
                         callback: function(resp) {
                             if (cb) {
                                 if (resp.status === 200) {
-                                    notificationsService.success("SUCCESS!", resp.data.Message);
+                                    notificationsService.success("SUCCESS!", resp.message);
                                 }
                                 else {
-                                    notificationsService.error("OH SNAP!", resp.data.Message);
+                                    notificationsService.error("OH SNAP!", resp.message);
                                 }
 
                                 $scope.$parent.vm.init();

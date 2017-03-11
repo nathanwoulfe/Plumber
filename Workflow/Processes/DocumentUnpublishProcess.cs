@@ -56,13 +56,10 @@ namespace Workflow
                 instance.CompletedDate = DateTime.Now;
                 ApplicationContext.Current.DatabaseContext.Database.Update(instance);
 
-                // Perform the unpublish by removing the document from the live site.
-                //this.instance.Node.Id;
-
-                // Add audit entry
-                umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.UnPublish, instance.NodeId, "Document unpublished.");
-
-                success = true;
+                // Perform the unpublish
+                var cs = ApplicationContext.Current.Services.ContentService;
+                var node = cs.GetById(instance.NodeId);
+                success = cs.UnPublish(node);
             }
             catch (Exception e)
             {

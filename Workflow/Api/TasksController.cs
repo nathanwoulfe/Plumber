@@ -258,7 +258,7 @@ namespace Workflow.Api
                 }
                 else
                 {
-                    process = null;
+                    process = new DocumentUnpublishProcess();
                 }
 
                 instance = process.InitiateWorkflow(int.Parse(model.NodeId), Helpers.GetCurrentUser().Id, model.Comment);
@@ -268,10 +268,10 @@ namespace Workflow.Api
                 switch (instance._Status)
                 {
                     case WorkflowStatus.PendingApproval:
-                        msg = "Page submitted for approval";
+                        msg = "Page submitted for " + (model.Publish ? "publish" : "unpublish") + " approval.";
                         break;
                     case WorkflowStatus.Approved:
-                        msg = "Workflow complete";
+                        msg = (model.Publish ? "Publish" : "Unpublish") + " workflow complete.";
                         break;
                 }
 
@@ -515,12 +515,20 @@ namespace Workflow.Api
         private void GetPermissionsForNode(IPublishedContent node)
         {
             // check the node for set permissions
-            perms = _pr.PermissionsForNode(node.Id, node.ContentType.Id);
+            perms = _pr.PermissionsForNode(node.Id, 0);
 
             // return them if they exist, otherwise check the parent
-            if (!perms.Any() && node.Level != 1)
+            if (!perms.Any())
             {
-                GetPermissionsForNode(node.Parent);
+                if (node.Level != 1)
+                {
+                    GetPermissionsForNode(node.Parent);
+                }
+                else
+                {
+                    // check for content-type permissions
+                    perms = _pr.PermissionsForNode(0, node.ContentType.Id);
+                }
             }
         }
 

@@ -21,7 +21,7 @@ namespace Workflow.Models
         public WorkflowInstancePoco()
         {
             TaskInstances = new HashSet<WorkflowTaskInstancePoco>();
-            Status = (int)WorkflowStatus.New;
+            Status = (int)WorkflowStatus.PendingApproval;
             CreatedDate = DateTime.Now;
             CompletedDate = null;
         }
@@ -47,6 +47,9 @@ namespace Workflow.Models
 
         [Column("Type")]
         public int Type { get; set; }
+
+        [Column("TotalSteps")]
+        public int TotalSteps { get; set; }
 
         [Column("AuthorUserId")]
         public int AuthorUserId { get; set; }

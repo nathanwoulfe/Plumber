@@ -95,7 +95,7 @@
                             LEFT JOIN WorkflowUserGroups
                             ON WorkflowUserGroups.GroupId = WorkflowUserGroupPermissions.GroupId           
                             WHERE WorkflowUserGroupPermissions.NodeId = @0
-                            OR WorkflowUserGroupPermissions.ContentTypeId = @1";
+                            AND WorkflowUserGroupPermissions.ContentTypeId = @1";
         public const string PermissionsForGroup = @"SELECT * FROM WorkflowUserGroupPermissions WHERE GroupId = @0";
     }
 }

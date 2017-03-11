@@ -16,7 +16,7 @@ namespace Workflow.Models
         {
             CreatedDate = DateTime.Now;
             CompletedDate = null;
-            Status = (int)TaskStatus.New;
+            Status = (int)TaskStatus.PendingApproval;
             ApprovalStep = 0;
         }
 
@@ -123,7 +123,7 @@ namespace Workflow.Models
         [ResultColumn]
         public bool Active
         {
-            get { return _Status == TaskStatus.New || _Status == TaskStatus.PendingApproval; }
+            get { return _Status == TaskStatus.PendingApproval; }
         }
     }
 }

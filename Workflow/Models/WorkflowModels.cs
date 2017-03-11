@@ -1,16 +1,21 @@
 ﻿namespace Workflow.Models
 {
+    /// <summary>
+    /// The status of a workflow task instance
+    /// </summary>
     public enum TaskStatus
     {
-        New = 1,
-        Approved = 2,
-        Rejected = 3,
-        PendingApproval = 4,
-        NotRequired = 5,
-        Cancelled = 6,
-        Errored = 7
+        Approved = 1,
+        Rejected = 2,
+        PendingApproval = 3,
+        NotRequired = 4,
+        Cancelled = 5,
+        Errored = 6
     }
 
+    /// <summary>
+    /// The permitted task action types
+    /// </summary>
     public enum TaskType
     {
         Approve = 1,
@@ -32,13 +37,12 @@
     /// </summary>
     public enum WorkflowStatus
     {
-        New = 1,
-        Approved = 2,
-        Rejected = 3,
-        PendingApproval = 4,
-        NotRequired = 5,
-        Cancelled = 6,
-        Errored = 7
+        Approved = 1,
+        Rejected = 2,
+        PendingApproval = 3,
+        NotRequired = 4,
+        Cancelled = 5,
+        Errored = 6
     }
 
     /// <summary>
