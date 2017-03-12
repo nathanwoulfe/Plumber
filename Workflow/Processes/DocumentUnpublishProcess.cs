@@ -24,12 +24,12 @@ namespace Workflow
         /// Performs workflow completion tasks on completion of the approval processing.
         /// </summary>
         /// <param name="userId">The user Id who performed the action which has triggered the completion of the workflow</param>
-        public override void CompleteWorkflow(int userId)
+        public override void CompleteWorkflow()
         {
             NodeName = instance.Node.Name;
 
             // Handle Unpublish at (Remove At)
-            if (this.instance.ScheduledDate != null && this.instance.ScheduledDate > DateTime.Now)
+            if (instance.ScheduledDate != null && instance.ScheduledDate > DateTime.Now)
             {
                 HandleUnpublishAt();
             }

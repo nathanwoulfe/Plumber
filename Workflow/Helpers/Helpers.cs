@@ -284,28 +284,6 @@ namespace Workflow
             return WorkflowInstancePoco.EmailTypeName(emailType) + " - " + instance.Node.Name + " (" + instance.TypeDescription + ")";
 
         }
-
-        /// <summary>
-        /// This method needed as the Document.VersionDate field is the last save date only for unpublished docs. For published docs its the last publish date!? 
-        /// </summary>
-        /// <param name="docId">The document to get the last update date for</param>
-        /// <returns>The true last update date for a document</returns>
-        public static DateTime GetDocumentLastEditDate(int nodeId)
-        {
-            DateTime result = new DateTime();
-
-            //// The date from the doc above is incorrect! Return the actual date...
-            //using (IRecordsReader dr =
-            //    Application.SqlHelper.ExecuteReader("select updateDate from cmsDocument where nodeId = @nodeId order by updateDate desc",
-            //                            Application.SqlHelper.CreateParameter("@nodeId", nodeId)))
-            //{
-            //    while (dr.Read())
-            //    {
-            //        result = dr.GetDateTime("updateDate");
-            //        break;
-            //    }
-            //}
-            return result;
-        }
+        
     }
 }

@@ -143,10 +143,7 @@ namespace Workflow
                     client.Send(msg);
                 }
             }
-            catch (Exception ex)
-            {
-                //Log.Error("Error sending email type " + emailType + " for process instance " + instance.Id, ex);
-            }
+            catch (Exception ex) { }
         }
     }
 }

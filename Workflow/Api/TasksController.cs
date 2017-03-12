@@ -24,7 +24,6 @@ namespace Workflow.Api
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static PocoRepository _pr = new PocoRepository();
-        private static IContentService _cs = ApplicationContext.Current.Services.ContentService;
         private List<UserGroupPermissionsPoco> perms = new List<UserGroupPermissionsPoco>();
 
         #region Public methods
@@ -40,7 +39,7 @@ namespace Workflow.Api
             try
             {
                 var taskInstances = _pr.GetPendingTasks((int)TaskStatus.PendingApproval);
-                var workflowItems = BuildWorkflowItemList(taskInstances, -1);
+                var workflowItems = BuildWorkflowItemList(taskInstances);
                 return Json(workflowItems, ViewHelpers.CamelCase);
             }
             catch (Exception e)
@@ -60,7 +59,7 @@ namespace Workflow.Api
             try
             {
                 var taskInstances = _pr.GetAllTasks();
-                var workflowItems = BuildWorkflowItemList(taskInstances, -1).OrderByDescending(x => x.RequestedOn);
+                var workflowItems = BuildWorkflowItemList(taskInstances).OrderByDescending(x => x.RequestedOn);
                 return Json(workflowItems, ViewHelpers.CamelCase);
             }
             catch (Exception e)
@@ -101,7 +100,7 @@ namespace Workflow.Api
             try
             {
                 var taskInstances = _pr.TasksByNode(id);
-                var workflowItems = BuildWorkflowItemList(taskInstances, -1);
+                var workflowItems = BuildWorkflowItemList(taskInstances);
                 return Json(workflowItems, ViewHelpers.CamelCase);
             }
             catch (Exception e)
@@ -142,8 +141,15 @@ namespace Workflow.Api
         {
             try
             {
+                var excludeOwn = Helpers.GetSettings().FlowType != (int)FlowType.All;
                 var taskInstances = type == 0 ? _pr.TasksForUser(userId, (int)TaskStatus.PendingApproval) : _pr.SubmissionsForUser(userId, (int)TaskStatus.PendingApproval);
-                var workflowItems = BuildWorkflowItemList(taskInstances, userId);
+
+                if (excludeOwn && type == 0)
+                {
+                    taskInstances = taskInstances.Where(t => t.WorkflowInstance.AuthorUserId != Helpers.GetCurrentUser().Id).ToList();
+                }
+
+                var workflowItems = BuildWorkflowItemList(taskInstances);
                 return Json(workflowItems, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
@@ -164,7 +170,7 @@ namespace Workflow.Api
         [HttpPost]
         public IHttpActionResult ShowDifferences(string nodeId, string taskId)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(nodeId + " " + taskId);
 
             //int _nodeId = int.Parse(nodeId);
 
@@ -456,45 +462,39 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="taskInstances"></param>
         /// <returns></returns>
-        private List<WorkflowTask> BuildWorkflowItemList(List<WorkflowTaskInstancePoco> taskInstances, int _userId = -1, WorkflowInstancePoco instance = null)
+        private List<WorkflowTask> BuildWorkflowItemList(List<WorkflowTaskInstancePoco> taskInstances, WorkflowInstancePoco instance = null)
         {
 
             List<WorkflowTask> workflowItems = new List<WorkflowTask>();
-            try
+
+            if (taskInstances != null && taskInstances.Count > 0)
             {
-                if (taskInstances != null && taskInstances.Count > 0)
+                foreach (var taskInstance in taskInstances)
                 {
-                    foreach (var taskInstance in taskInstances)
+                    WorkflowInstancePoco useThisInstance = taskInstance.WorkflowInstance != null ? taskInstance.WorkflowInstance : instance;
+
+                    GetPermissionsForNode(useThisInstance.Node);
+
+                    var item = new WorkflowTask
                     {
-                        WorkflowInstancePoco useThisInstance = taskInstance.WorkflowInstance != null ? taskInstance.WorkflowInstance : instance;
+                        Status = taskInstance.StatusName,
+                        CssStatus = taskInstance.StatusName.ToLower().Split(' ')[0],
+                        Type = useThisInstance.TypeDescription,
+                        NodeId = useThisInstance.NodeId,
+                        TaskId = useThisInstance.Id,
+                        ApprovalGroupId = taskInstance.UserGroup.GroupId,
+                        NodeName = useThisInstance.Node.Name,
+                        RequestedBy = useThisInstance.AuthorUser.Name,
+                        RequestedOn = taskInstance.CreatedDate.ToString(),
+                        ApprovalGroup = taskInstance.UserGroup.Name,
+                        Comments = taskInstance.Comment != null ? taskInstance.Comment : useThisInstance.AuthorComment != null ? useThisInstance.AuthorComment : string.Empty,
+                        ActiveTask = useThisInstance.StatusName,
+                        Permissions = perms,
+                        CurrentStep = taskInstance.ApprovalStep
+                    };
 
-                        GetPermissionsForNode(useThisInstance.Node);
-
-                        var item = new WorkflowTask
-                        {
-                            Status = taskInstance.StatusName,
-                            CssStatus = taskInstance.StatusName.ToLower().Split(' ')[0],
-                            Type = useThisInstance.TypeDescription,
-                            NodeId = useThisInstance.NodeId,
-                            TaskId = useThisInstance.Id,
-                            ApprovalGroupId = taskInstance.UserGroup.GroupId,
-                            NodeName = useThisInstance.Node.Name,
-                            RequestedBy = useThisInstance.AuthorUser.Name,
-                            RequestedOn = taskInstance.CreatedDate.ToString(),
-                            ApprovalGroup = taskInstance.UserGroup.Name,
-                            Comments = taskInstance.Comment != null ? taskInstance.Comment : useThisInstance.AuthorComment != null ? useThisInstance.AuthorComment : string.Empty,
-                            ActiveTask = useThisInstance.StatusName,
-                            Permissions = perms,
-                            CurrentStep = taskInstance.ApprovalStep
-                        };
-
-                        workflowItems.Add(item);
-                    }
+                    workflowItems.Add(item);
                 }
-            }
-            catch (Exception e)
-            {
-                var m = e.Message;
             }
 
             return workflowItems;
@@ -523,7 +523,7 @@ namespace Workflow.Api
                         NodeName = instance.Node.Name,
                         RequestedBy = instance.AuthorUser.Name,
                         RequestedOn = instance.CreatedDate.ToString(),
-                        Tasks = BuildWorkflowItemList(instance.TaskInstances.ToList(), -1, instance).OrderByDescending(x => x.CurrentStep).ToList()
+                        Tasks = BuildWorkflowItemList(instance.TaskInstances.ToList(), instance).OrderByDescending(x => x.CurrentStep).ToList()
                     };
                     
                     workflowInstances.Add(model);

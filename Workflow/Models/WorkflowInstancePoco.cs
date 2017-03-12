@@ -19,7 +19,6 @@ namespace Workflow.Models
     {
         private IPublishedContent _node;
         private IUser _authorUser;
-        private IUser _currentUser = UmbracoContext.Current.Security.CurrentUser;
         private IContentService _cs = ApplicationContext.Current.Services.ContentService;
 
         public WorkflowInstancePoco()

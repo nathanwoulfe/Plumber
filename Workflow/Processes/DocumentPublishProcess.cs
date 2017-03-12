@@ -26,12 +26,12 @@ namespace Workflow
         /// Performs workflow completion tasks on completion of the approval processing.
         /// </summary>
         /// <param name="userId">The user Id who performed the action which has triggered the completion of the workflow</param>
-        public override void CompleteWorkflow(int userId)
+        public override void CompleteWorkflow()
         {
             // Handle Publish At (Release At)
             if (instance.ScheduledDate != null && instance.ScheduledDate > DateTime.Now)
             {
-                HandlePublishAt(userId);
+                HandlePublishAt();
             }
             else // Handle Publish Now
             {
@@ -93,7 +93,7 @@ namespace Workflow
         /// For a document with a release date set, dont do the publish, just allow it to occur when the scheduler reaches the release date.
         /// </summary>
         /// <param name="userId"></param>
-        private void HandlePublishAt(int userId)
+        private void HandlePublishAt()
         {
             // There is a release date set so just complete the workflow. The internal scheduler will publish this at the required time.
             bool success = false;

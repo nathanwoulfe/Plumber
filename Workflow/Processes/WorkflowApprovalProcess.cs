@@ -96,12 +96,12 @@ namespace Workflow
                             else
                             {
                                 CompleteTask(taskInstance, userId);
-                                CompleteWorkflow(userId);
+                                CompleteWorkflow();
                             }
                         }
                         else
                         {
-                            CompleteWorkflow(userId);
+                            CompleteWorkflow();
                         }
                     }
                 }
@@ -165,7 +165,7 @@ namespace Workflow
             return instance;
         }
 
-        public abstract void CompleteWorkflow(int userId);
+        public abstract void CompleteWorkflow();
 
         #endregion
 
@@ -271,8 +271,6 @@ namespace Workflow
         private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId, int authorId)
         {
             var approvalGroup = _pr.PermissionsForNode(nodeId, 0);
-            var currentUserId = Helpers.GetCurrentUser().Id;            
-            bool doPublish = false;
             UserGroupPermissionsPoco group = null;
 
             if (approvalGroup.Any())
@@ -280,8 +278,6 @@ namespace Workflow
                 // approval group length will match the number of groups mapped to the node
                 // only interested in the one that corresponds with the index of the most recently added workflow task
                 group = approvalGroup.Where(g => g.Permission == taskInstance.ApprovalStep).First();
-                //doPublish = CheckSubsequentStep(approvalGroup, group, currentUserId, taskInstance.ApprovalStep);
-
                 SetInstanceTotalSteps(approvalGroup.Count);
             }
             else
@@ -298,8 +294,6 @@ namespace Workflow
                     if (contentTypeApproval.Any())
                     {
                         group = approvalGroup.Where(g => g.Permission == taskInstance.ApprovalStep).First();
-                       // doPublish = CheckSubsequentStep(contentTypeApproval, group, currentUserId, taskInstance.ApprovalStep);
-
                         SetInstanceTotalSteps(approvalGroup.Count);
                     }
                     else
