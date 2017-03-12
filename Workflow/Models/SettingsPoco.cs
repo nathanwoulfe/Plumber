@@ -28,6 +28,10 @@ namespace Workflow.Models
 
         [Column("SiteUrl")]
         [NullSetting(NullSetting = NullSettings.Null)]
-        public string SiteUrl { get; set; }    
+        public string SiteUrl { get; set; }
+
+        [Column("FlowType")]
+        [NullSetting(NullSetting = NullSettings.Null)]
+        public int FlowType { get; set; }
     }
 }

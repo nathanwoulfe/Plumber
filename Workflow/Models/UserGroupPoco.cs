@@ -66,7 +66,7 @@ namespace Workflow.Models
         /// Otherwise it will return email addresses of all users in the group.
         /// </summary>
         /// <returns>collection of email addresses</returns>
-        public MailAddressCollection PreferredEmailAddresses()
+        public MailAddressCollection PreferredEmailAddresses(int idToExclude)
         {
             MailAddressCollection addresses = new MailAddressCollection();
 
@@ -76,12 +76,9 @@ namespace Workflow.Models
             }
             else
             {
-                foreach (var user in Users)
+                foreach (var user in Users.Where(u => u.User.IsApproved && !u.User.IsLockedOut && u.UserId != idToExclude && Helpers.IsValidEmailAddress(u.User.Email)))
                 {
-                    if (user.User.IsApproved && !user.User.IsLockedOut && Helpers.IsValidEmailAddress(user.User.Email))
-                    {
-                        addresses.Add(new MailAddress(user.User.Email));
-                    }
+                    addresses.Add(new MailAddress(user.User.Email));                    
                 }
             }
             return addresses;

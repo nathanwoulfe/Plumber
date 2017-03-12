@@ -27,10 +27,9 @@ namespace Workflow
                 string docTitle = instance.Node.Name;
                 string docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
 
-                WorkflowTaskInstancePoco coordTaskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Type == TaskType.Approve);
-                WorkflowTaskInstancePoco finalTaskInstance = instance.TaskInstances.FirstOrDefault(ti => ti._Type == TaskType.Publish);
-
                 var flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep);
+
+                var userIdToExclude = Helpers.GetSettings().FlowType != (int)FlowType.All ? instance.AuthorUserId : int.MinValue;
 
                 var emailsForAllTaskUsers = new MailAddressCollection();
                 foreach (var task in flowTasks)
@@ -41,7 +40,7 @@ namespace Workflow
                         group = _pr.PopulatedUserGroup(task.GroupId).First();
                     }
 
-                    emailsForAllTaskUsers.Union(group.PreferredEmailAddresses());
+                    emailsForAllTaskUsers.Union(group.PreferredEmailAddresses(userIdToExclude));
                 }
 
                 MailAddressCollection to = new MailAddressCollection();
@@ -52,7 +51,7 @@ namespace Workflow
                 switch (emailType)
                 {
                     case EmailType.ApprovalRequest:
-                        to = flowTasks.Last().UserGroup.PreferredEmailAddresses();
+                        to = flowTasks.Last().UserGroup.PreferredEmailAddresses(userIdToExclude);
                         body = string.Format(EmailApprovalRequestString,
                             flowTasks.Last().UserGroup.Name, docUrl, docTitle, instance.AuthorComment, instance.AuthorUser.Name, instance.TypeDescription);
 
@@ -62,7 +61,7 @@ namespace Workflow
                         to = emailsForAllTaskUsers;
                         to.Add(instance.AuthorUser.Email);
                         body = string.Format(EmailRejectedString,
-                            instance.AuthorUser.Name, docUrl, docTitle, coordTaskInstance.Comment, coordTaskInstance.ActionedByUser.Name, instance.TypeDescription.ToLower());
+                            instance.AuthorUser.Name, docUrl, docTitle, flowTasks.Last().Comment, flowTasks.Last().ActionedByUser.Name, instance.TypeDescription.ToLower());
 
                         break;
 
@@ -116,26 +115,33 @@ namespace Workflow
                         break;
                 }
 
-                // Add a footer with information about having to login to umbraco first and listing the compatible browsers.
-                string head = "<head><title>" + subject + "</title></head >";
-                string html = "<!DOCTYPE HTML SYSTEM><html>" + head + "<body><font face=\"verdana\" size=\"2\">" + body + "</font></body></html>";
-
-                subject = Helpers.BuildEmailSubject(emailType, instance);
-
-                SmtpClient client = new SmtpClient();
-
-                MailMessage msg = new MailMessage();
-                msg.From = new MailAddress(email);
-                foreach (MailAddress address in to)
+                if (to.Any())
                 {
-                    msg.To.Add(address);
-                }
-                msg.To.Add(new MailAddress("mail@testdomain.com"));
-                msg.Subject = subject;
-                msg.Body = html;
-                msg.IsBodyHtml = true;
 
-                client.Send(msg);
+                    // Add a footer with information about having to login to umbraco first and listing the compatible browsers.
+                    string head = "<head><title>" + subject + "</title></head >";
+                    string html = "<!DOCTYPE HTML SYSTEM><html>" + head + "<body><font face=\"verdana\" size=\"2\">" + body + "</font></body></html>";
+
+                    subject = Helpers.BuildEmailSubject(emailType, instance);
+
+                    SmtpClient client = new SmtpClient();
+                    MailMessage msg = new MailMessage();
+
+                    if (!string.IsNullOrEmpty(email))
+                    {
+                        msg.From = new MailAddress(email);
+                    }
+                    foreach (MailAddress address in to)
+                    {
+                        msg.To.Add(address);
+                    }
+                    msg.To.Add(new MailAddress("mail@testdomain.com"));
+                    msg.Subject = subject;
+                    msg.Body = html;
+                    msg.IsBodyHtml = true;
+
+                    client.Send(msg);
+                }
             }
             catch (Exception ex)
             {

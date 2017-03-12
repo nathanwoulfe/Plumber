@@ -48,7 +48,6 @@ namespace Workflow
             GetDb().Insert(instance);
 
             // create the first task in the workflow
-            // this always happens, even if the workflow is a single stage and will be published immediately
             bool complete = false;
             WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(nodeId, authorUserId, out complete);
 
@@ -188,7 +187,7 @@ namespace Workflow
             {
                 instance.Status = (int)WorkflowStatus.PendingApproval;
                 taskInstance.Status = (int)TaskStatus.NotRequired;
-                taskInstance.Comment += " (APPROVAL AT STAGE " + (taskInstance.ApprovalStep + 1) + " NOT REQUIRED)";
+                taskInstance.Comment = taskInstance.Comment + " (APPROVAL AT STAGE " + (taskInstance.ApprovalStep + 1) + " NOT REQUIRED)";
                 GetDb().Update(taskInstance);
                 GetDb().Update(instance);
 
@@ -228,7 +227,7 @@ namespace Workflow
             }
 
             taskInstance.CompletedDate = DateTime.Now;
-            taskInstance.Comment = string.IsNullOrEmpty(taskInstance.Comment) ? comment : taskInstance.Comment;
+            taskInstance.Comment = !string.IsNullOrEmpty(comment) ? comment : taskInstance.Comment;
             taskInstance.ActionedByUserId = userId;
 
             // Send the email after we've done the updates.
@@ -252,6 +251,7 @@ namespace Workflow
             var taskInstance = new WorkflowTaskInstancePoco(TaskType.Approve);
             taskInstance.ApprovalStep = instance.TaskInstances.Count;
             taskInstance.WorkflowInstanceGuid = instance.Guid;
+            taskInstance.Comment = instance.AuthorComment;
             instance.TaskInstances.Add(taskInstance);
 
             SetApprovalGroup(taskInstance, nodeId, authorId);
@@ -363,7 +363,7 @@ namespace Workflow
         /// <returns>true if approval required, false otherwise</returns>
         private bool IsStepApprovalRequired(WorkflowTaskInstancePoco taskInstance)
         {
-            return (!taskInstance.UserGroup.IsMember(instance.AuthorUserId) && !taskInstance.UserGroup.IsMember(Helpers.GetCurrentUser().Id));
+            return Helpers.GetSettings().FlowType == (int)FlowType.All || (!taskInstance.UserGroup.IsMember(instance.AuthorUserId) && !taskInstance.UserGroup.IsMember(Helpers.GetCurrentUser().Id));
         }
 
         /// <summary>
@@ -397,7 +397,7 @@ namespace Workflow
         {            
             taskInstance.Status = (int)TaskStatus.Approved;
             taskInstance.CompletedDate = DateTime.Now;
-            taskInstance.Comment += " (APPROVAL AT STAGE " + (taskInstance.ApprovalStep + 1) + " NOT REQUIRED)";
+            taskInstance.Comment = taskInstance.Comment + " (APPROVAL AT STAGE " + (taskInstance.ApprovalStep + 1) + " NOT REQUIRED)";
             taskInstance.ActionedByUserId = userId;
 
             GetDb().Update(taskInstance);

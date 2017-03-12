@@ -60,7 +60,7 @@ namespace Workflow.Api
             try
             {
                 var taskInstances = _pr.GetAllTasks();
-                var workflowItems = BuildWorkflowItemList(taskInstances, -1);
+                var workflowItems = BuildWorkflowItemList(taskInstances, -1).OrderByDescending(x => x.RequestedOn);
                 return Json(workflowItems, ViewHelpers.CamelCase);
             }
             catch (Exception e)
@@ -80,7 +80,7 @@ namespace Workflow.Api
             try
             {
                 var instances = _pr.GetAllInstances();
-                var workflowInstances = BuildWorkflowInstanceList(instances);
+                var workflowInstances = BuildWorkflowInstanceList(instances).OrderByDescending(x => x.RequestedOn);
                 return Json(workflowInstances, ViewHelpers.CamelCase);
             }
             catch (Exception e)
@@ -327,7 +327,7 @@ namespace Workflow.Api
                 switch (instance._Status)
                 {
                     case WorkflowStatus.PendingApproval:
-                        msg = "Approval completed successfully. Page will be " + instance.TypeDescriptionPastTense.ToLower() + " workflow completion.";
+                        msg = "Approval completed successfully. Page will be " + instance.TypeDescriptionPastTense.ToLower() + " following workflow completion.";
                         break;
                     case WorkflowStatus.Approved:
                         msg = "Workflow approved successfully.";
@@ -480,7 +480,7 @@ namespace Workflow.Api
                             ApprovalGroupId = taskInstance.UserGroup.GroupId,
                             NodeName = useThisInstance.Node.Name,
                             RequestedBy = useThisInstance.AuthorUser.Name,
-                            RequestedOn = taskInstance.CreatedDate.ToString("d MMM yyyy"),
+                            RequestedOn = taskInstance.CreatedDate.ToString(),
                             ApprovalGroup = taskInstance.UserGroup.Name,
                             Comments = taskInstance.Comment != null ? taskInstance.Comment : useThisInstance.AuthorComment != null ? useThisInstance.AuthorComment : string.Empty,
                             ActiveTask = useThisInstance.StatusName,
@@ -522,7 +522,7 @@ namespace Workflow.Api
                         NodeId = instance.NodeId,
                         NodeName = instance.Node.Name,
                         RequestedBy = instance.AuthorUser.Name,
-                        RequestedOn = instance.CreatedDate.ToString("d MMM yyyy"),
+                        RequestedOn = instance.CreatedDate.ToString(),
                         Tasks = BuildWorkflowItemList(instance.TaskInstances.ToList(), -1, instance).OrderByDescending(x => x.CurrentStep).ToList()
                     };
                     

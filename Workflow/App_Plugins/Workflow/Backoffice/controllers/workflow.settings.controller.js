@@ -12,11 +12,19 @@
                 vm.docTypes = resp[1];
                 vm.groups = resp[2];
 
+                vm.flowTypes = [
+                    { i: 0, v: 'Other groups must approve' },
+                    { i: 1, v: 'All groups must approve' },
+                    { i: 2, v: 'All groups must approve, ignore author' }
+                ];
+
+                vm.flowType = vm.flowTypes[vm.settings.flowType];                
+
                 if (vm.settings.defaultApprover) {
                     vm.defaultApprover = vm.groups.filter(function (v) {
                         return v.groupId == vm.settings.defaultApprover;
                     })[0];
-                }
+                }                
 
                 vm.groups.forEach(function (g) {
                     g.permissions.forEach(function (p) {
@@ -39,6 +47,8 @@
         function save() {
             var permissions = [];
             vm.settings.defaultApprover = vm.defaultApprover.groupId;
+            vm.settings.flowType = vm.flowType.i;
+
             angular.forEach(vm.docTypes, function (dt, i) {
                 if (dt.approvalPath && dt.approvalPath.length) {
                     angular.forEach(dt.approvalPath, function (path, ii) {
@@ -70,7 +80,6 @@
 
 
         function remove(dt, index) {
-            console.log(dt, index);
             dt.approvalPath.splice(index, 1);
         }
 

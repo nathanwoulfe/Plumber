@@ -51,12 +51,12 @@
                 angular.forEach(vm.groups, function (v, i) {
                     angular.forEach(v.permissions, function (p) {
                         if (p.nodeId == id) {
-                            vm.inherited.push({
+                            vm.inherited[p.permission] = {
                                 name: v.name,
                                 groupId: p.groupId,
                                 nodeName: p.nodeName,
                                 permission: p.permission
-                            });
+                            };
                         }
                     });
                 });
@@ -68,11 +68,9 @@
 
                 var response = [];
                 angular.forEach(vm.approvalPath, function (v, i) {
-                    angular.forEach(v.permissions, function (p) {
-                        if (p.nodeId == nodeId) {
-                            response.push(p);
-                        }
-                    });
+                    response.push(v.permissions.filter(function (p) {
+                        return p.nodeId == nodeId && p.permission === i;
+                    })[0]);
                 });
 
                 if (response.length) {

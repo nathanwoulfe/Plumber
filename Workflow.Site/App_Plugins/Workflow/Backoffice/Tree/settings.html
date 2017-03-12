@@ -22,6 +22,18 @@
             </div>
             <div class="umb-property">
                 <div class="control-group umb-control-group">
+                    <label class="control-label" for="Flow type" ng-attr-title="flowType">
+                        Flow type
+                    </label>
+                    <div class="controls">
+                        <select ng-model="vm.flowType" ng-options="f as f.v for f in vm.flowTypes" name="Flow type">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="umb-property">
+                <div class="control-group umb-control-group">
                     <label class="control-label">Workflow email</label>
                     <div class="controls">
                         <input type="email" ng-model="vm.settings.email" />
