@@ -1,7 +1,19 @@
 ﻿<div class="umb-panel workflow">
     <div class="umb-dashboard" ng-controller="Workflow.AdminDashboard.Controller as vm">
         <umb-editor-view footer="false" umb-tabs>
-            <umb-editor-container>               
+            <umb-editor-container>
+                <!--
+                    Chart
+                        - total started in last n days
+                        - total completed in last n days
+                        - total cancelled in last n days
+                        - total rejected in last n days
+
+                    line for the above to show over time period
+                    include total active tasks in line chart
+
+                    -->
+                <wf-line-chart options="vm.lineOptions"></wf-line-chart>
 
             </umb-editor-container>
         </umb-editor-view>

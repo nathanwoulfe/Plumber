@@ -1,208 +1,630 @@
-﻿.workflow hr {
-  clear: both; }
-
-.workflow label {
-  float: left;
-  width: 160px;
-  display: block;
-  margin-bottom: 5px;
-  padding-top: 8px; }
-
-.workflow wf-comments label {
-  width: auto; }
-
-.workflow textarea, .workflow input {
-  border: 1px solid #ccc; }
-
-.workflow textarea {
-  width: 386px;
-  height: 200px; }
-
-.workflow .flow-select {
-  margin-bottom: 0; }
-
-.workflow .user-lists {
-  overflow: hidden;
-  margin-bottom: 20px;
-  padding-bottom: 15px; }
-
-.workflow .user-list {
-  width: 45%;
-  float: left;
-  margin: 0 5% 0 0; }
-  .workflow .user-list input {
-    width: 200px; }
-  .workflow .user-list ul {
-    max-height: 300px;
-    overflow-y: scroll;
+﻿.workflow {
+  /* import highcharts styles, and scope to workflow class, just in case of collisions... */
+  /**
+ * @license Highcharts
+ *
+ * (c) 2009-2016 Torstein Honsi
+ *
+ * License: www.highcharts.com/license
+ */
+  /* Titles */
+  /* Axes */
+  /* Credits */
+  /* Tooltip */
+  /* Legend hover affects points and series */
+  /* Series options */
+  /* Default colors */
+  /* Legend */
+  /* Loading */
+  /* Plot bands and polar pane backgrounds */
+  /* Highcharts More */
+  /* Highstock */
+  /* Highmaps */
+  /* 3d charts */
+  /* Exporting module */
+  /* Drilldown module */
+  /* No-data module */ }
+  .workflow .highcharts-container {
+    position: relative;
+    overflow: hidden;
     width: 100%;
-    margin: 0; }
-    .workflow .user-list ul li {
-      padding: 5px 10px;
-      cursor: pointer; }
-      .workflow .user-list ul li:hover {
-        background: #ddd; }
-      .workflow .user-list ul li:nth-child(even) {
-        background: #f5f5f5; }
-        .workflow .user-list ul li:nth-child(even):hover {
-          background: #ddd; }
-
-.workflow .permissions-list:before {
-  content: attr(data-label);
-  display: block;
-  margin: 0 0 5px -25px; }
-
-.workflow .current-flow .last::after {
-  content: '(Publisher)';
-  display: inline-block;
-  padding-left: 5px; }
-
-.workflow .umb-table-cell ul {
-  margin: 0; }
-
-.workflow .umb-table-cell.show-overflow, .workflow .umb-table-cell.show-overflow > * {
-  overflow: visible; }
-
-.workflow .controls h5 {
-  margin-top: 0; }
-
-.workflow .control-panel {
-  padding: 10px 0;
-  margin: 10px 0; }
-
-.workflow .workflow-progress {
-  margin: 0 10px 10px;
-  padding-top: 10px;
-  border-top: 1px solid #d9d9d9;
-  display: flex;
-  position: relative; }
-
-.workflow .progress-step {
-  text-align: center;
-  position: relative; }
-  .workflow .progress-step::before, .workflow .progress-step::after {
-    content: '';
-    width: 50%;
-    height: 1px;
-    position: absolute;
-    top: 6px;
-    background: #d9d9d9; }
-  .workflow .progress-step::before {
-    left: 0; }
-  .workflow .progress-step::after {
-    right: 0; }
-  .workflow .progress-step.done .tooltip-done {
-    display: block; }
-  .workflow .progress-step.done::before, .workflow .progress-step.done::after, .workflow .progress-step.done .marker, .workflow .progress-step.done .tooltip::after {
-    background: #53a93f; }
-  .workflow .progress-step.done .tooltip {
-    border-color: #53a93f; }
-  .workflow .progress-step.current .tooltip-current {
-    display: block; }
-  .workflow .progress-step.current .marker, .workflow .progress-step.current .tooltip::after {
-    background: #df7f48; }
-  .workflow .progress-step.current::before {
-    background: linear-gradient(90deg, #53a93f, #df7f48); }
-  .workflow .progress-step.current::after {
-    background: linear-gradient(90deg, #df7f48, #d9d9d9); }
-  .workflow .progress-step.current .tooltip {
-    border-color: #df7f48; }
-
-.workflow .marker {
-  display: block;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  margin: 0 auto;
-  background: #d9d9d9;
-  position: relative;
-  cursor: pointer; }
-  .workflow .marker:hover + .tooltip {
-    display: block;
-    bottom: calc(100% + 5px);
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 1; }
-  .workflow .marker + .tooltip {
-    display: none;
-    background: #f8f8f8;
-    padding: 5px;
-    border: 1px solid #d9d9d9; }
-    .workflow .marker + .tooltip::after {
-      content: '';
-      width: 1px;
-      height: 10px;
-      background: #d9d9d9;
-      position: absolute;
-      top: 100%;
-      left: calc(50% - 1px); }
-    .workflow .marker + .tooltip span {
-      display: none; }
-
-.workflow .dropdown-menu .warning {
-  color: #df7f48; }
-
-.workflow .dropdown-menu .danger {
-  color: #ee5f5b; }
-
-.workflow .workflow-nested {
-  margin: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #d9d9d9;
-  display: flex;
-  position: relative; }
-
-.workflow .umb-table__input[type=checkbox] {
-  opacity: 0;
-  cursor: default; }
-
-.workflow .umb-table-body__icon.soft {
-  opacity: .25; }
-
-.workflow .pending {
-  color: #df7f48;
-  background: rgba(223, 127, 72, 0.05); }
-  .workflow .pending .umb-table-body__icon {
-    color: #df7f48;
-    background: 0, 0; }
-
-.workflow .approved {
-  color: #53a93f;
-  background: rgba(83, 169, 63, 0.05); }
-  .workflow .approved .umb-table-body__icon {
-    color: #53a93f;
-    background: 0, 0; }
-
-.workflow .cancelled {
-  color: #ee5f5b;
-  background: rgba(238, 95, 91, 0.05); }
-  .workflow .cancelled .umb-table-body__icon {
-    color: #ee5f5b;
-    background: 0, 0; }
-
-.workflow-differences-dialog {
-  overflow-x: scroll; }
-  .workflow-differences-dialog table {
+    height: 100%;
     text-align: left;
-    -ms-word-break: break-word;
-    word-break: break-word; }
-    .workflow-differences-dialog table th {
-      width: 200px;
-      padding: 5px; }
-    .workflow-differences-dialog table td {
-      padding: 5px; }
-    .workflow-differences-dialog table tr:nth-child(odd) {
-      background: #f5f5f5; }
-  .workflow-differences-dialog button {
-    float: right; }
-  .workflow-differences-dialog del {
-    background: #ffdcdc; }
-  .workflow-differences-dialog ins {
-    background: #dcffdc; }
-  .workflow-differences-dialog .compare-msg br {
-    line-height: 2; }
-
-[id*="workflow-differences"].umb-modal.fade.in {
-  width: 740px !important;
-  margin-left: -740px; }
+    line-height: normal;
+    z-index: 0;
+    -webkit-tap-highlight-color: transparent;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+    font-size: 12px; }
+  .workflow .highcharts-root text {
+    stroke-width: 0; }
+  .workflow .highcharts-strong {
+    font-weight: bold; }
+  .workflow .highcharts-emphasized {
+    font-style: italic; }
+  .workflow .highcharts-background {
+    fill: #ffffff; }
+  .workflow .highcharts-plot-border, .workflow .highcharts-plot-background {
+    fill: none; }
+  .workflow .highcharts-label-box {
+    fill: none; }
+  .workflow .highcharts-button-box {
+    fill: inherit; }
+  .workflow .highcharts-title {
+    fill: #333333;
+    font-size: 1.5em; }
+  .workflow .highcharts-subtitle {
+    fill: #666666; }
+  .workflow .highcharts-axis-line {
+    fill: none;
+    stroke: #ccd6eb; }
+  .workflow .highcharts-yaxis .highcharts-axis-line {
+    stroke-width: 0; }
+  .workflow .highcharts-axis-title {
+    fill: #666666; }
+  .workflow .highcharts-axis-labels {
+    fill: #666666;
+    cursor: default;
+    font-size: 0.9em; }
+  .workflow .highcharts-grid-line {
+    fill: none;
+    stroke: #e6e6e6; }
+  .workflow .highcharts-xaxis-grid .highcharts-grid-line {
+    stroke-width: 0; }
+  .workflow .highcharts-tick {
+    stroke: #ccd6eb; }
+  .workflow .highcharts-yaxis .highcharts-tick {
+    stroke-width: 0; }
+  .workflow .highcharts-minor-grid-line {
+    stroke: #f2f2f2; }
+  .workflow .highcharts-crosshair-thin {
+    stroke-width: 1px;
+    stroke: #cccccc; }
+  .workflow .highcharts-crosshair-category {
+    stroke: #ccd6eb;
+    stroke-opacity: 0.25; }
+  .workflow .highcharts-credits {
+    cursor: pointer;
+    fill: #999999;
+    font-size: 0.7em;
+    transition: fill 250ms, font-size 250ms; }
+  .workflow .highcharts-credits:hover {
+    fill: black;
+    font-size: 1em; }
+  .workflow .highcharts-tooltip {
+    cursor: default;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: stroke 150ms; }
+  .workflow .highcharts-tooltip text {
+    fill: #333333; }
+  .workflow .highcharts-tooltip .highcharts-header {
+    font-size: 0.85em; }
+  .workflow .highcharts-tooltip-box {
+    stroke-width: 1px;
+    fill: #f7f7f7;
+    fill-opacity: 0.85; }
+  .workflow .highcharts-selection-marker {
+    fill: #335cad;
+    fill-opacity: 0.25; }
+  .workflow .highcharts-graph {
+    fill: none;
+    stroke-width: 2px;
+    stroke-linecap: round;
+    stroke-linejoin: round; }
+  .workflow .highcharts-state-hover .highcharts-graph {
+    stroke-width: 3; }
+  .workflow .highcharts-state-hover path {
+    transition: stroke-width 50;
+    /* quick in */ }
+  .workflow .highcharts-state-normal path {
+    transition: stroke-width 250ms;
+    /* slow out */ }
+  .workflow g.highcharts-series,
+  .workflow .highcharts-point,
+  .workflow .highcharts-markers,
+  .workflow .highcharts-data-labels {
+    transition: opacity 250ms; }
+  .workflow .highcharts-legend-series-active g.highcharts-series:not(.highcharts-series-hover),
+  .workflow .highcharts-legend-point-active .highcharts-point:not(.highcharts-point-hover),
+  .workflow .highcharts-legend-series-active .highcharts-markers:not(.highcharts-series-hover),
+  .workflow .highcharts-legend-series-active .highcharts-data-labels:not(.highcharts-series-hover) {
+    opacity: 0.2; }
+  .workflow .highcharts-color-0 {
+    fill: #7cb5ec;
+    stroke: #7cb5ec; }
+  .workflow .highcharts-color-1 {
+    fill: #434348;
+    stroke: #434348; }
+  .workflow .highcharts-color-2 {
+    fill: #90ed7d;
+    stroke: #90ed7d; }
+  .workflow .highcharts-color-3 {
+    fill: #f7a35c;
+    stroke: #f7a35c; }
+  .workflow .highcharts-color-4 {
+    fill: #8085e9;
+    stroke: #8085e9; }
+  .workflow .highcharts-color-5 {
+    fill: #f15c80;
+    stroke: #f15c80; }
+  .workflow .highcharts-color-6 {
+    fill: #e4d354;
+    stroke: #e4d354; }
+  .workflow .highcharts-color-7 {
+    fill: #2b908f;
+    stroke: #2b908f; }
+  .workflow .highcharts-color-8 {
+    fill: #f45b5b;
+    stroke: #f45b5b; }
+  .workflow .highcharts-color-9 {
+    fill: #91e8e1;
+    stroke: #91e8e1; }
+  .workflow .highcharts-area {
+    fill-opacity: 0.75;
+    stroke-width: 0; }
+  .workflow .highcharts-markers {
+    stroke-width: 1px;
+    stroke: #ffffff; }
+  .workflow .highcharts-point {
+    stroke-width: 1px; }
+  .workflow .highcharts-dense-data .highcharts-point {
+    stroke-width: 0; }
+  .workflow .highcharts-data-label {
+    font-size: 0.9em;
+    font-weight: bold; }
+  .workflow .highcharts-data-label-box {
+    fill: none;
+    stroke-width: 0; }
+  .workflow .highcharts-data-label text {
+    fill: #333333; }
+  .workflow .highcharts-data-label-connector {
+    fill: none; }
+  .workflow .highcharts-halo {
+    fill-opacity: 0.25;
+    stroke-width: 0; }
+  .workflow .highcharts-point-select {
+    fill: #cccccc;
+    stroke: #000000; }
+  .workflow .highcharts-column-series rect.highcharts-point {
+    stroke: #ffffff; }
+  .workflow .highcharts-column-series .highcharts-point {
+    transition: fill-opacity 250ms; }
+  .workflow .highcharts-column-series .highcharts-point-hover {
+    fill-opacity: 0.75;
+    transition: fill-opacity 50ms; }
+  .workflow .highcharts-pie-series .highcharts-point {
+    stroke-linejoin: round;
+    stroke: #ffffff; }
+  .workflow .highcharts-pie-series .highcharts-point-hover {
+    fill-opacity: 0.75;
+    transition: fill-opacity 50ms; }
+  .workflow .highcharts-pie-series .highcharts-point-select {
+    fill: inherit;
+    stroke: inherit; }
+  .workflow .highcharts-funnel-series .highcharts-point {
+    stroke-linejoin: round;
+    stroke: #ffffff; }
+  .workflow .highcharts-funnel-series .highcharts-point-hover {
+    fill-opacity: 0.75;
+    transition: fill-opacity 50ms; }
+  .workflow .highcharts-funnel-series .highcharts-point-select {
+    fill: inherit;
+    stroke: inherit; }
+  .workflow .highcharts-pyramid-series .highcharts-point {
+    stroke-linejoin: round;
+    stroke: #ffffff; }
+  .workflow .highcharts-pyramid-series .highcharts-point-hover {
+    fill-opacity: 0.75;
+    transition: fill-opacity 50ms; }
+  .workflow .highcharts-pyramid-series .highcharts-point-select {
+    fill: inherit;
+    stroke: inherit; }
+  .workflow .highcharts-solidgauge-series .highcharts-point {
+    stroke-width: 0; }
+  .workflow .highcharts-treemap-series .highcharts-point {
+    stroke-width: 1px;
+    stroke: #e6e6e6;
+    transition: stroke 250ms, fill 250ms, fill-opacity 250ms; }
+  .workflow .highcharts-treemap-series .highcharts-point-hover {
+    stroke: #999999;
+    transition: stroke 25ms, fill 25ms, fill-opacity 25ms; }
+  .workflow .highcharts-treemap-series .highcharts-above-level {
+    display: none; }
+  .workflow .highcharts-treemap-series .highcharts-internal-node {
+    fill: none; }
+  .workflow .highcharts-treemap-series .highcharts-internal-node-interactive {
+    fill-opacity: 0.15;
+    cursor: pointer; }
+  .workflow .highcharts-treemap-series .highcharts-internal-node-interactive:hover {
+    fill-opacity: 0.75; }
+  .workflow .highcharts-legend-box {
+    fill: none;
+    stroke-width: 0; }
+  .workflow .highcharts-legend-item text {
+    fill: #333333;
+    font-weight: bold;
+    cursor: pointer;
+    stroke-width: 0; }
+  .workflow .highcharts-legend-item:hover text {
+    fill: #000000; }
+  .workflow .highcharts-legend-item-hidden * {
+    fill: #cccccc !important;
+    stroke: #cccccc !important;
+    transition: fill 250ms; }
+  .workflow .highcharts-legend-nav-active {
+    fill: #003399;
+    cursor: pointer; }
+  .workflow .highcharts-legend-nav-inactive {
+    fill: #cccccc; }
+  .workflow .highcharts-legend-title-box {
+    fill: none;
+    stroke-width: 0; }
+  .workflow .highcharts-loading {
+    position: absolute;
+    background-color: #ffffff;
+    opacity: 0.5;
+    text-align: center;
+    z-index: 10;
+    transition: opacity 250ms; }
+  .workflow .highcharts-loading-hidden {
+    height: 0 !important;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 250ms, height 250ms step-end; }
+  .workflow .highcharts-loading-inner {
+    font-weight: bold;
+    position: relative;
+    top: 45%; }
+  .workflow .highcharts-plot-band {
+    fill: #000000;
+    fill-opacity: 0.05; }
+  .workflow .highcharts-plot-line {
+    fill: none;
+    stroke: #999999;
+    stroke-width: 1px; }
+  .workflow .highcharts-boxplot-box {
+    fill: #ffffff; }
+  .workflow .highcharts-boxplot-median {
+    stroke-width: 2px; }
+  .workflow .highcharts-bubble-series .highcharts-point {
+    fill-opacity: 0.5; }
+  .workflow .highcharts-errorbar-series .highcharts-point {
+    stroke: #000000; }
+  .workflow .highcharts-gauge-series .highcharts-data-label-box {
+    stroke: #cccccc;
+    stroke-width: 1px; }
+  .workflow .highcharts-gauge-series .highcharts-dial {
+    fill: #000000;
+    stroke-width: 0; }
+  .workflow .highcharts-polygon-series .highcharts-graph {
+    fill: inherit;
+    stroke-width: 0; }
+  .workflow .highcharts-waterfall-series .highcharts-graph {
+    stroke: #333333;
+    stroke-dasharray: 1, 3; }
+  .workflow .highcharts-navigator-mask-outside {
+    fill-opacity: 0; }
+  .workflow .highcharts-navigator-mask-inside {
+    fill: #6685c2;
+    /* navigator.maskFill option */
+    fill-opacity: 0.25;
+    cursor: ew-resize; }
+  .workflow .highcharts-navigator-outline {
+    stroke: #cccccc;
+    fill: none; }
+  .workflow .highcharts-navigator-handle {
+    stroke: #cccccc;
+    fill: #f2f2f2;
+    cursor: ew-resize; }
+  .workflow .highcharts-navigator-series {
+    fill: #335cad;
+    stroke: #335cad; }
+  .workflow .highcharts-navigator-series .highcharts-graph {
+    stroke-width: 1px; }
+  .workflow .highcharts-navigator-series .highcharts-area {
+    fill-opacity: 0.05; }
+  .workflow .highcharts-navigator-xaxis .highcharts-axis-line {
+    stroke-width: 0; }
+  .workflow .highcharts-navigator-xaxis .highcharts-grid-line {
+    stroke-width: 1px;
+    stroke: #e6e6e6; }
+  .workflow .highcharts-navigator-xaxis.highcharts-axis-labels {
+    fill: #999999; }
+  .workflow .highcharts-navigator-yaxis .highcharts-grid-line {
+    stroke-width: 0; }
+  .workflow .highcharts-scrollbar-thumb {
+    fill: #cccccc;
+    stroke: #cccccc;
+    stroke-width: 1px; }
+  .workflow .highcharts-scrollbar-button {
+    fill: #e6e6e6;
+    stroke: #cccccc;
+    stroke-width: 1px; }
+  .workflow .highcharts-scrollbar-arrow {
+    fill: #666666; }
+  .workflow .highcharts-scrollbar-rifles {
+    stroke: #666666;
+    stroke-width: 1px; }
+  .workflow .highcharts-scrollbar-track {
+    fill: #f2f2f2;
+    stroke: #f2f2f2;
+    stroke-width: 1px; }
+  .workflow .highcharts-button {
+    fill: #f7f7f7;
+    stroke: #cccccc;
+    cursor: default;
+    stroke-width: 1px;
+    transition: fill 250ms; }
+  .workflow .highcharts-button text {
+    fill: #333333; }
+  .workflow .highcharts-button-hover {
+    transition: fill 0ms;
+    fill: #e6e6e6;
+    stroke: #333333; }
+  .workflow .highcharts-button-pressed {
+    font-weight: bold;
+    fill: #e6ebf5;
+    stroke: #335cad; }
+  .workflow .highcharts-button-disabled text {
+    fill: #cccccc; }
+  .workflow .highcharts-range-selector-buttons .highcharts-button {
+    stroke-width: 0; }
+  .workflow .highcharts-range-label rect {
+    fill: none; }
+  .workflow .highcharts-range-label text {
+    fill: #666666; }
+  .workflow .highcharts-range-input rect {
+    fill: none; }
+  .workflow .highcharts-range-input text {
+    fill: #333333; }
+  .workflow input.highcharts-range-selector {
+    position: absolute;
+    border: 0;
+    width: 1px;
+    /* Chrome needs a pixel to see it */
+    height: 1px;
+    padding: 0;
+    text-align: center;
+    left: -9em;
+    /* #4798 */ }
+  .workflow .highcharts-crosshair-label text {
+    fill: #ffffff;
+    font-size: 1.1em; }
+  .workflow .highcharts-crosshair-label .highcharts-label-box {
+    fill: inherit; }
+  .workflow .highcharts-candlestick-series .highcharts-point {
+    stroke: #000000;
+    stroke-width: 1px; }
+  .workflow .highcharts-candlestick-series .highcharts-point-up {
+    fill: #ffffff; }
+  .workflow .highcharts-ohlc-series .highcharts-point-hover {
+    stroke-width: 3px; }
+  .workflow .highcharts-flags-series .highcharts-point {
+    stroke: #999999;
+    fill: #ffffff; }
+  .workflow .highcharts-flags-series .highcharts-point-hover {
+    stroke: #000000;
+    fill: #ccd6eb; }
+  .workflow .highcharts-flags-series .highcharts-point text {
+    fill: #000000;
+    font-size: 0.9em;
+    font-weight: bold; }
+  .workflow .highcharts-map-series .highcharts-point {
+    transition: fill 500ms, fill-opacity 500ms, stroke-width 250ms;
+    stroke: #cccccc; }
+  .workflow .highcharts-map-series .highcharts-point-hover {
+    transition: fill 0ms, fill-opacity 0ms;
+    fill-opacity: 0.5;
+    stroke-width: 2px; }
+  .workflow .highcharts-mapline-series .highcharts-point {
+    fill: none; }
+  .workflow .highcharts-heatmap-series .highcharts-point {
+    stroke-width: 0; }
+  .workflow .highcharts-map-navigation {
+    font-size: 1.3em;
+    font-weight: bold;
+    text-align: center; }
+  .workflow .highcharts-coloraxis {
+    stroke-width: 0; }
+  .workflow .highcharts-coloraxis-marker {
+    fill: #999999; }
+  .workflow .highcharts-null-point {
+    fill: #f7f7f7; }
+  .workflow .highcharts-3d-frame {
+    fill: transparent; }
+  .workflow .highcharts-contextbutton {
+    fill: #ffffff;
+    /* needed to capture hover */
+    stroke: none;
+    stroke-linecap: round; }
+  .workflow .highcharts-contextbutton:hover {
+    fill: #e6e6e6;
+    stroke: #e6e6e6; }
+  .workflow .highcharts-button-symbol {
+    stroke: #666666;
+    stroke-width: 3px; }
+  .workflow .highcharts-menu {
+    border: 1px solid #999999;
+    background: #ffffff;
+    padding: 5px 0;
+    box-shadow: 3px 3px 10px #888; }
+  .workflow .highcharts-menu-item {
+    padding: 0.5em 1em;
+    background: none;
+    color: #333333;
+    cursor: pointer;
+    transition: background 250ms, color 250ms; }
+  .workflow .highcharts-menu-item:hover {
+    background: #335cad;
+    color: #ffffff; }
+  .workflow .highcharts-drilldown-point {
+    cursor: pointer; }
+  .workflow .highcharts-drilldown-data-label text, .workflow .highcharts-drilldown-axis-label {
+    cursor: pointer;
+    fill: #003399;
+    font-weight: bold;
+    text-decoration: underline; }
+  .workflow .highcharts-no-data text {
+    font-weight: bold;
+    font-size: 12px;
+    fill: #666666; }
+  .workflow .highcharts-root {
+    width: 100%; }
+  .workflow hr {
+    clear: both; }
+  .workflow label {
+    float: left;
+    width: 160px;
+    display: block;
+    margin-bottom: 5px;
+    padding-top: 8px; }
+  .workflow wf-comments label {
+    width: auto; }
+  .workflow textarea, .workflow input {
+    border: 1px solid #ccc; }
+  .workflow textarea {
+    width: 386px;
+    height: 200px; }
+  .workflow .flow-select {
+    margin-bottom: 0; }
+  .workflow .user-lists {
+    overflow: hidden;
+    margin-bottom: 20px;
+    padding-bottom: 15px; }
+  .workflow .user-list {
+    width: 45%;
+    float: left;
+    margin: 0 5% 0 0; }
+    .workflow .user-list input {
+      width: 200px; }
+    .workflow .user-list ul {
+      max-height: 300px;
+      overflow-y: scroll;
+      width: 100%;
+      margin: 0; }
+      .workflow .user-list ul li {
+        padding: 5px 10px;
+        cursor: pointer; }
+        .workflow .user-list ul li:hover {
+          background: #ddd; }
+        .workflow .user-list ul li:nth-child(even) {
+          background: #f5f5f5; }
+          .workflow .user-list ul li:nth-child(even):hover {
+            background: #ddd; }
+  .workflow .permissions-list:before {
+    content: attr(data-label);
+    display: block;
+    margin: 0 0 5px -25px; }
+  .workflow .current-flow .last::after {
+    content: '(Publisher)';
+    display: inline-block;
+    padding-left: 5px; }
+  .workflow .umb-table-cell ul {
+    margin: 0; }
+  .workflow .umb-table-cell.show-overflow, .workflow .umb-table-cell.show-overflow > * {
+    overflow: visible; }
+  .workflow .controls h5 {
+    margin-top: 0; }
+  .workflow .control-panel {
+    padding: 10px 0;
+    margin: 10px 0; }
+  .workflow .workflow-progress {
+    margin: 0 10px 10px;
+    padding-top: 10px;
+    border-top: 1px solid #d9d9d9;
+    display: flex;
+    position: relative; }
+  .workflow .progress-step {
+    text-align: center;
+    position: relative; }
+    .workflow .progress-step::before, .workflow .progress-step::after {
+      content: '';
+      width: 50%;
+      height: 1px;
+      position: absolute;
+      top: 6px;
+      background: #d9d9d9; }
+    .workflow .progress-step::before {
+      left: 0; }
+    .workflow .progress-step::after {
+      right: 0; }
+    .workflow .progress-step.done .tooltip-done {
+      display: block; }
+    .workflow .progress-step.done::before, .workflow .progress-step.done::after, .workflow .progress-step.done .marker, .workflow .progress-step.done .tooltip::after {
+      background: #53a93f; }
+    .workflow .progress-step.done .tooltip {
+      border-color: #53a93f; }
+    .workflow .progress-step.current .tooltip-current {
+      display: block; }
+    .workflow .progress-step.current .marker, .workflow .progress-step.current .tooltip::after {
+      background: #df7f48; }
+    .workflow .progress-step.current::before {
+      background: linear-gradient(90deg, #53a93f, #df7f48); }
+    .workflow .progress-step.current::after {
+      background: linear-gradient(90deg, #df7f48, #d9d9d9); }
+    .workflow .progress-step.current .tooltip {
+      border-color: #df7f48; }
+  .workflow .marker {
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background: #d9d9d9;
+    position: relative;
+    cursor: pointer; }
+    .workflow .marker:hover + .tooltip {
+      display: block;
+      bottom: calc(100% + 5px);
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 1; }
+    .workflow .marker + .tooltip {
+      display: none;
+      background: #f8f8f8;
+      padding: 5px;
+      border: 1px solid #d9d9d9; }
+      .workflow .marker + .tooltip::after {
+        content: '';
+        width: 1px;
+        height: 10px;
+        background: #d9d9d9;
+        position: absolute;
+        top: 100%;
+        left: calc(50% - 1px); }
+      .workflow .marker + .tooltip span {
+        display: none; }
+  .workflow .dropdown-menu .warning {
+    color: #df7f48; }
+  .workflow .dropdown-menu .danger {
+    color: #ee5f5b; }
+  .workflow .workflow-nested {
+    margin: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #d9d9d9;
+    display: flex;
+    position: relative; }
+  .workflow .umb-table__input[type=checkbox] {
+    opacity: 0;
+    cursor: default; }
+  .workflow .umb-table-body__icon.soft {
+    opacity: .25; }
+  .workflow .pending {
+    color: #df7f48;
+    background: rgba(223, 127, 72, 0.05); }
+    .workflow .pending .umb-table-body__icon {
+      color: #df7f48;
+      background: 0, 0; }
+  .workflow .approved {
+    color: #53a93f;
+    background: rgba(83, 169, 63, 0.05); }
+    .workflow .approved .umb-table-body__icon {
+      color: #53a93f;
+      background: 0, 0; }
+  .workflow .cancelled {
+    color: #ee5f5b;
+    background: rgba(238, 95, 91, 0.05); }
+    .workflow .cancelled .umb-table-body__icon {
+      color: #ee5f5b;
+      background: 0, 0; }
 

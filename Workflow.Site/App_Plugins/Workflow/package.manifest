@@ -17,10 +17,15 @@
         '~/App_Plugins/Workflow/backoffice/directives/workflow.buttongroup.directive.js',
         '~/App_Plugins/Workflow/backoffice/directives/workflow.comments.directive.js',
         '~/App_Plugins/Workflow/backoffice/directives/workflow.history.directive.js',
+        '~/App_Plugins/Workflow/backoffice/directives/workflow.linechart.directive.js',
         '~/App_Plugins/Workflow/backoffice/directives/workflow.tablerow.directive.js',
         '~/App_Plugins/Workflow/backoffice/directives/workflow.tasks.directive.js',
         '~/App_Plugins/Workflow/backoffice/resources/groups.resource.js',
-        '~/App_Plugins/Workflow/backoffice/resources/workflow.resource.js'
+        '~/App_Plugins/Workflow/backoffice/resources/workflow.resource.js',
+
+		'~/App_Plugins/Workflow/backoffice/lib/highcharts/highcharts.js',
+		'~/App_Plugins/Workflow/backoffice/lib/highcharts/modules/exporting.js'
+
     ],
     css: [
 		'~/App_Plugins/Workflow/backoffice/styles.css'

@@ -82,12 +82,17 @@
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.buttongroup.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.comments.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.history.directive.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.linechart.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.tablerow.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.tasks.directive.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.css" />
+    <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\modules\exporting.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historyinstance.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historytask.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowButtonGroup.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowHistoryTemplate.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowLineChart.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowTasksTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\styles.css">
       <DependentUpon>styles.scss</DependentUpon>
