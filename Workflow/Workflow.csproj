@@ -77,11 +77,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.admin.dashboard.controller .js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.history.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.buttongroup.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.comments.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.history.directive.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.pagingcontrols.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.tablerow.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.tasks.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historyinstance.html" />
@@ -89,8 +89,6 @@
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowButtonGroup.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowHistoryTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowTasksTemplate.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\resources\paging.service.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\paginationTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\styles.css">
       <DependentUpon>styles.scss</DependentUpon>
     </Content>
@@ -106,11 +104,12 @@
     <Content Include="App_Plugins\Workflow\Backoffice\tree\view.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.action.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.cancel.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.user.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.differences.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.submit.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.settings.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.dashboard.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.admindashboard.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.userdashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.action.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.cancel.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.differences.dialog.html" />

@@ -4,42 +4,57 @@
     function dashboardController($scope, $routeParams, workflowResource, authResource, notificationsService) {
 
         var vm = this;
-        vm.loaded = [0, 0, 0];
-        $scope.perPage = 10;
-
-        authResource.getCurrentUser()
-            .then(function (user) {
-                vm.currentUser = user;
-                vm.adminUser = user.userType.indexOf('admin') !== -1;
-                init();
-            });
 
         function init() {
+            getPending();
+            getSubmissions();
+            getAdmin();
+        };
+
+        function getPending() {
             // api call for tasks assigned to the current user
-            workflowResource.getApprovalsForUser(vm.currentUser.id)
+            workflowResource.getApprovalsForUser(vm.currentUser.id, vm.taskPagination.perPage, vm.taskPagination.pageNumber)
                 .then(function (resp) {
-                    vm.tasks = resp;
-                    vm.loaded[0] = 1;
+                    vm.tasks = resp.items;
+                    vm.taskPagination.pageNumber = resp.page;
+                    vm.taskPagination.totalPages = resp.total / resp.count;
+                    vm.loaded[0] = true;
                 }, function (err) {
-                    console.log(err);
+                    notify(err);
                 });
+        }
 
+        function getSubmissions() {
             // api call for tasks created by the current user
-            workflowResource.getSubmissionsForUser(vm.currentUser.id)
+            workflowResource.getSubmissionsForUser(vm.currentUser.id, vm.submissionPagination.perPage, vm.submissionPagination.pageNumber)
                 .then(function (resp) {
-                    vm.submissions = resp;
-                    vm.loaded[1] = 1;
+                    vm.submissions = resp.items;
+                    vm.submissionPagination.pageNumber = resp.page;
+                    vm.submissionPagination.totalPages = resp.total / resp.count;
+                    vm.loaded[1] = true;
+                }, function (err) {
+                    notify(err);
                 });
+        }
 
+        function getAdmin() {
             // if the current user is in an admin group, display all active tasks
             if (vm.adminUser) {
-                workflowResource.getPendingTasks()
+                workflowResource.getPendingTasks(vm.adminPagination.perPage, vm.adminPagination.pageNumber)
                     .then(function (resp) {
-                        vm.activeTasks = resp;
-                        vm.loaded[2] = 1;
+                        vm.activeTasks = resp.items;
+                        vm.adminPagination.pageNumber = resp.page;
+                        vm.adminPagination.totalPages = resp.total / resp.count;
+                        vm.loaded[2] = true;
+                    }, function (err) {
+                        notify(err);
                     });
             }
-        };
+        }
+
+        function goToPage(i) {
+            vm.pagination.pageNumber = i;
+        }
 
         // listen for clicks on the cancel button
         $scope.$on('workflow-cancel', function (e, item) {
@@ -107,16 +122,56 @@
             }
 
             init();
-        }        
+        }
 
         // expose some bits
         angular.extend(vm, {
             tasks: [],
             submissions: [],
-            activeTasks: []
+            activeTasks: [],
+            loaded: [false, false, false],
+            goToPage: goToPage,
+
+            taskPagination: {
+                pageNumber: 1,
+                totalPages: 0,
+                perPage: 5,
+                goToPage: function (i) {
+                    vm.taskPagination.pageNumber = i;
+                    getPending();
+                }
+            },
+
+            submissionPagination: {
+                pageNumber: 1,
+                totalPages: 0,
+                perPage: 5,
+                goToPage: function (i) {
+                    vm.submissionPagination.pageNumber = i;
+                    getSubmissions();
+                }
+            },
+
+            adminPagination: {
+                pageNumber: 1,
+                totalPages: 0,
+                perPage: 10,
+                goToPage: function (i) {
+                    vm.adminPagination.pageNumber = i;
+                    getAdmin();
+                }
+            }
         });
+
+        // kick it all off
+        authResource.getCurrentUser()
+            .then(function (user) {
+                vm.currentUser = user;
+                vm.adminUser = user.allowedSections.indexOf('workflow') !== -1;
+                init();
+            });
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.Dashboard.Controller', dashboardController);
+    angular.module('umbraco').controller('Workflow.UserDashboard.Controller', dashboardController);
 }());

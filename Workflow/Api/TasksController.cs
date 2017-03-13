@@ -33,14 +33,20 @@ namespace Workflow.Api
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
-        [Route("pending")]
-        public IHttpActionResult GetPendingTasks()
+        [Route("pending/{count:int}/{page:int}")]
+        public IHttpActionResult GetPendingTasks(int count, int page)
         {
             try
             {
                 var taskInstances = _pr.GetPendingTasks((int)TaskStatus.PendingApproval);
-                var workflowItems = BuildWorkflowItemList(taskInstances);
-                return Json(workflowItems, ViewHelpers.CamelCase);
+                var workflowItems = BuildWorkflowItemList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
+                return Json(new
+                {
+                    items = workflowItems,
+                    total = taskInstances.Count,
+                    page = page,
+                    count = count
+                }, ViewHelpers.CamelCase);
             }
             catch (Exception e)
             {
@@ -53,14 +59,20 @@ namespace Workflow.Api
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
-        [Route("all")]
-        public IHttpActionResult GetAllTasks()
+        [Route("all/{count:int}/{page:int}")]
+        public IHttpActionResult GetAllTasks(int count, int page)
         {
             try
             {
                 var taskInstances = _pr.GetAllTasks();
-                var workflowItems = BuildWorkflowItemList(taskInstances).OrderByDescending(x => x.RequestedOn);
-                return Json(workflowItems, ViewHelpers.CamelCase);
+                var workflowItems = BuildWorkflowItemList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
+                return Json(new
+                {
+                    items = workflowItems,
+                    total = taskInstances.Count,
+                    page = page,
+                    count = count
+                }, ViewHelpers.CamelCase);
             }
             catch (Exception e)
             {
@@ -73,14 +85,20 @@ namespace Workflow.Api
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
-        [Route("instances")]
-        public IHttpActionResult GetAllInstances()
+        [Route("instances/{count:int}/{page:int}")]
+        public IHttpActionResult GetAllInstances(int count, int page)
         {
             try
             {
                 var instances = _pr.GetAllInstances();
-                var workflowInstances = BuildWorkflowInstanceList(instances).OrderByDescending(x => x.RequestedOn);
-                return Json(workflowInstances, ViewHelpers.CamelCase);
+                var workflowInstances = BuildWorkflowInstanceList(instances.Skip((page - 1) * count).Take(count).ToList());
+                return Json(new
+                {
+                   items = workflowInstances,
+                   total = instances.Count,
+                   page = page,
+                   count = count
+                }, ViewHelpers.CamelCase);
             }
             catch (Exception e)
             {
@@ -94,14 +112,20 @@ namespace Workflow.Api
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("node/{id:int}")]
-        public IHttpActionResult GetNodeTasks(int id)
+        [Route("node/{id:int}/{count:int}/{page:int}")]
+        public IHttpActionResult GetNodeTasks(int id, int count, int page)
         {
             try
             {
                 var taskInstances = _pr.TasksByNode(id);
-                var workflowItems = BuildWorkflowItemList(taskInstances);
-                return Json(workflowItems, ViewHelpers.CamelCase);
+                var workflowItems = BuildWorkflowItemList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
+                return Json(new
+                {
+                    items = workflowItems,
+                    total = taskInstances.Count,
+                    page = page,
+                    count = count
+                }, ViewHelpers.CamelCase);
             }
             catch (Exception e)
             {
@@ -136,8 +160,8 @@ namespace Workflow.Api
         /// <param name="type">0 - tasks, 1 - submissions</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("flows/{userId:int}/{type:int=0}")]
-        public IHttpActionResult GetFlowsForUser(int userId, int type)
+        [Route("flows/{userId:int}/{type:int=0}/{count:int}/{page:int}")]
+        public IHttpActionResult GetFlowsForUser(int userId, int type, int count, int page)
         {
             try
             {
@@ -149,8 +173,14 @@ namespace Workflow.Api
                     taskInstances = taskInstances.Where(t => t.WorkflowInstance.AuthorUserId != Helpers.GetCurrentUser().Id).ToList();
                 }
 
-                var workflowItems = BuildWorkflowItemList(taskInstances);
-                return Json(workflowItems, ViewHelpers.CamelCase);
+                var workflowItems = BuildWorkflowItemList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
+                return Json(new
+                {
+                    items = workflowItems,
+                    total = taskInstances.Count,
+                    page = page,
+                    count = count
+                }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
@@ -497,7 +527,7 @@ namespace Workflow.Api
                 }
             }
 
-            return workflowItems;
+            return workflowItems.OrderByDescending(x => x.CurrentStep).ToList();
         }
 
         /// <summary>
@@ -523,14 +553,14 @@ namespace Workflow.Api
                         NodeName = instance.Node.Name,
                         RequestedBy = instance.AuthorUser.Name,
                         RequestedOn = instance.CreatedDate.ToString(),
-                        Tasks = BuildWorkflowItemList(instance.TaskInstances.ToList(), instance).OrderByDescending(x => x.CurrentStep).ToList()
+                        Tasks = BuildWorkflowItemList(instance.TaskInstances.ToList(), instance)
                     };
                     
                     workflowInstances.Add(model);
                 }
             }
 
-            return workflowInstances;
+            return workflowInstances.OrderByDescending(x => x.RequestedOn).ToList();
         }
 
         /// <summary>

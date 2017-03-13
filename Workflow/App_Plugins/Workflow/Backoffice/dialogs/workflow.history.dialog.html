@@ -1,13 +1,16 @@
 ﻿<div class="umb-pane workflow history-dialog" ng-controller="Workflow.History.Controller as vm">
     <div class="umb-dialog-body with-footer">
         <div class="umb-pane">
-            <wf-history items="items" instance-view="false"></wf-history>
+            <wf-history items="vm.items" instance-view="false"></wf-history>
             <div class="flex justify-center">
-                <wf-paging-controls></wf-paging-controls>
+                <umb-pagination ng-if="vm.pagination.totalPages > 1"
+                                page-number="vm.pagination.pageNumber"
+                                total-pages="vm.pagination.totalPages"
+                                on-next="vm.pagination.goToPage"
+                                on-prev="vm.pagination.goToPage"
+                                on-go-to-page="vm.pagination.goToPage">
+                </umb-pagination>            
             </div>
-            <umb-empty-state ng-if="!items.length" position="center">
-                <localize key="content_listViewNoItems">There are no items show in the list.</localize>
-            </umb-empty-state>
         </div>
     </div>
     <div class="umb-dialog-footer btn-toolbar umb-btn-toolbar">

@@ -28,7 +28,6 @@ namespace Workflow
                 string docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
 
                 var flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep);
-
                 var userIdToExclude = Helpers.GetSettings().FlowType != (int)FlowType.All ? instance.AuthorUserId : int.MinValue;
 
                 var emailsForAllTaskUsers = new MailAddressCollection();

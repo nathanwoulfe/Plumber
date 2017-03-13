@@ -22,23 +22,23 @@
             },
 
             /* tasks and approval endpoints */
-            getApprovalsForUser: function (userId) {
-                return this.request('GET', this.urlTasksBase + 'flows/' + userId);
+            getApprovalsForUser: function (userId, count, page) {
+                return this.request('GET', this.urlTasksBase + 'flows/' + userId + '/0/' + count + '/' + page);
             },
-            getSubmissionsForUser: function (userId) {
-                return this.request('GET', this.urlTasksBase + 'flows/' + userId + '/1');
+            getSubmissionsForUser: function (userId, count, page) {
+                return this.request('GET', this.urlTasksBase + 'flows/' + userId + '/1/' + count + '/' + page);
             },
-            getPendingTasks: function () {
-                return this.request('GET', this.urlTasksBase + 'pending');
+            getPendingTasks: function (count, page) {
+                return this.request('GET', this.urlTasksBase + 'pending/' + count + '/' + page);
             },
-            getAllTasks: function () {
-                return this.request('GET', this.urlTasksBase + 'all');
+            getAllTasks: function (count, page) {
+                return this.request('GET', this.urlTasksBase + 'all/' + count + '/' + page);
             },
-            getAllInstances: function () {
-                return this.request('GET', this.urlTasksBase + 'instances');
+            getAllInstances: function (count, page) {
+                return this.request('GET', this.urlTasksBase + 'instances/' + count + '/' + page);
             },
-            getNodeTasks: function(id) {
-                return this.request('GET', this.urlTasksBase + 'node/' + id);
+            getNodeTasks: function(id, count, page) {
+                return this.request('GET', this.urlTasksBase + 'node/' + id  + '/' + count + '/' + page);
             },
 
             /* workflow actions */

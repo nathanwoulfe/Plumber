@@ -8,9 +8,8 @@
             scope: {
                 heading: '=',
                 items: '=',
-                editLink: '=',
-                loaded: '=',
-                type: '='
+                type: '=',
+                loaded: '='
             },
             templateUrl: '../app_plugins/workflow/backoffice/partials/workflowTasksTemplate.html',
             controller: function ($scope, $rootScope) {
@@ -18,7 +17,6 @@
                 // type = 0, 1
                 // 0 -> full button set
                 // 1 -> cancel, edit
-
                 var buttons = {
                     approveButton: {
                         labelKey: "workflow_approveButton",
@@ -60,12 +58,7 @@
                 $scope.buttonGroup = {
                     defaultButton: $scope.type === 0 ? buttons.approveButton : buttons.cancelButton,
                     subButtons: subButtons[$scope.type]
-                };            
-            },
-            link: function (scope, element, attrs) {
-
-                /******** PAGING *******/
-                scope.numPerPage = 10;
+                };
             }
         };
 

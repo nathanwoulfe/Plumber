@@ -1,25 +1,29 @@
 ﻿(function () {
     'use strict';
 
-    function dashboardController($scope, userGroupsResource, notificationsService, workflowPagingService, userService) {
+    function dashboardController(userGroupsResource) {
 
-        $scope.name = 'User groups';
-        $scope.loading = true;
-        $scope.numPerPage = 10;
+        var vm = this;
 
         userGroupsResource.get()
             .then(function (resp) {
-                $scope.loading = false;
-                $scope.items = resp.filter(function (v) {
-                    return v.name.indexOf('Deleted') === -1;
-                });                
+                vm.loading = false;
+                vm.items = resp;
             });
 
-        $scope.getEmail = function (users) {
+        function getEmail(users) {
             return users.map(function (v) {
                 return v.user.email;
             }).join(';');
         };
+
+        angular.extend(vm, {
+            name: 'User groups',
+            loading: true,
+            items: [],
+
+            getEmail: getEmail
+        });
     };
 
     angular.module('umbraco').controller('Workflow.Groups.Dashboard.Controller', dashboardController);

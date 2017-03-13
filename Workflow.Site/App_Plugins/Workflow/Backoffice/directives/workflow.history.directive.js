@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function HistoryDirective() {
+    function historyDirective() {
 
         var directive = {
             restrict: 'E',
@@ -9,15 +9,12 @@
                 items: '=',
                 instanceView: '='
             },
-            templateUrl: '../app_plugins/workflow/backoffice/partials/workflowhistorytemplate.html',
-            link: function (scope, element, attrs) {
-                scope.numPerPage = 10;
-            }
+            templateUrl: '../app_plugins/workflow/backoffice/partials/workflowhistorytemplate.html'
         };
 
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('wfHistory', HistoryDirective);
+    angular.module('umbraco.directives').directive('wfHistory', historyDirective);
 
 }());

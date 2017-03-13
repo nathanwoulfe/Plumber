@@ -1,7 +1,6 @@
-﻿<div>
+﻿<div ng-show="loaded">
     <h3 ng-bind="heading"></h3>
     <div ng-show="items.length">
-
         <div class="umb-table">
             <div class="umb-table-head">
                 <div class="umb-table-row">
@@ -62,13 +61,14 @@
                         <div class="umb-table-cell" ng-bind="item.comments"></div>
                         <div class="umb-table-cell" ng-bind="item.approvalGroup"></div>
                         <div class="umb-table-cell show-overflow">
-                        <workflow-button-group ng-if="buttonGroup"
-                                                default-button="buttonGroup.defaultButton"
-                                                sub-buttons="buttonGroup.subButtons"
-                                                direction="down"
-                                                item="item"
-                                                float="right">
-                        </workflow-button-group>
+                            <workflow-button-group 
+                                ng-if="buttonGroup"                                                  
+                                default-button="buttonGroup.defaultButton"
+                                sub-buttons="buttonGroup.subButtons"
+                                direction="down"
+                                item="item"
+                                float="right">
+                            </workflow-button-group>
                         </div>
                     </div>
                     <div class="workflow-progress">
@@ -84,11 +84,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex justify-center">
-            <wf-paging-controls></wf-paging-controls>
-        </div>
     </div>
-
     <umb-empty-state ng-if="!items.length">
         <localize key="content_listViewNoItems">There are no items show in the list.</localize>
     </umb-empty-state>
