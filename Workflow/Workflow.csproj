@@ -77,7 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.admin.dashboard.controller .js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.admin.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.history.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.buttongroup.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.comments.directive.js" />

@@ -6,7 +6,7 @@
         '~/App_Plugins/Workflow/backoffice/controllers/groups.edit.controller.js',		
 		'~/App_Plugins/Workflow/backoffice/controllers/tree.view.controller.js',
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.action.controller.js',
-		'~/App_Plugins/Workflow/backoffice/controllers/workflow.admin.dashboard.controller.js?v=2345',
+		'~/App_Plugins/Workflow/backoffice/controllers/workflow.admin.dashboard.controller.js',
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.cancel.controller.js',
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.config.controller.js',
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.differences.controller.js',
