@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Api\ActionsController.cs" />
+    <Compile Include="Api\InstancesController.cs" />
+    <Compile Include="Extensions\WorkflowListExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
     <Compile Include="Startup\RegisterEvents.cs" />
     <Compile Include="Startup\StringContraint.cs" />
@@ -110,22 +113,23 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.action.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.cancel.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.user.dashboard.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.differences.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.submit.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.settings.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.admindashboard.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.docsdashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.userdashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.action.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.cancel.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.differences.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.submit.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\tree\settings.html" />
     <Content Include="App_Plugins\Workflow\Lang\en-US.xml" />
     <None Include="app.config" />
+    <None Include="App_Plugins\Workflow\Backoffice\highcharts.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\styles.css.map">
       <DependentUpon>styles.css</DependentUpon>
     </None>
     <None Include="App_Plugins\Workflow\Backoffice\styles.scss" />
+    <None Include="App_Plugins\Workflow\Backoffice\_variables.scss" />
     <None Include="App_Plugins\Workflow\package.manifest" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
@@ -133,7 +137,9 @@
     </None>
     <None Include="..\packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Workflow\Backoffice\tree\add.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.add.controller.js" />

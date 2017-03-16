@@ -45,7 +45,7 @@ namespace Workflow
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetPendingTasks(int status)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.GetPendingTasks, status);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, status);
         }
 
         /// <summary>
@@ -55,8 +55,19 @@ namespace Workflow
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetAllTasks()
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.GetAllTasks);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.AllTasks);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public List<WorkflowTaskInstancePoco> GetAllTasksForDateRange(DateTime oldest)
+        {
+            return GetDb().Fetch<WorkflowTaskInstancePoco>(SqlHelpers.AllTasksForDateRange, oldest);
+        }
+
 
         /// <summary>
         /// 
@@ -66,6 +77,16 @@ namespace Workflow
         public List<WorkflowInstancePoco> GetAllInstances()
         {
             return GetDb().Fetch<WorkflowInstancePoco, WorkflowTaskInstancePoco, UserGroupPoco, WorkflowInstancePoco>(new UserToGroupForInstanceRelator().MapIt, SqlHelpers.AllInstances);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public List<WorkflowInstancePoco> GetAllInstancesForDateRange(DateTime oldest)
+        {
+            return GetDb().Fetch<WorkflowInstancePoco>(SqlHelpers.AllInstancesForDateRange, oldest);
         }
 
         /// <summary>

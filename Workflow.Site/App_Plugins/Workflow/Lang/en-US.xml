@@ -8,7 +8,6 @@
     <key alias="editButton">Edit</key>
     <key alias="cancelButton">Cancel</key>    
     <key alias="rejectButton">Reject</key>  
-    <key alias="diffsButton">Differences</key>
   </area>
   
 </language>

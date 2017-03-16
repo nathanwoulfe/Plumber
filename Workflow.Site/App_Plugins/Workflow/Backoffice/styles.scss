@@ -1,16 +1,10 @@
-﻿$danger: #ee5f5b;
-$umbraco: #df7f48;
-$success: #53a93f;
+﻿@import "_variables";
 
 .workflow {
 
     /* import highcharts styles, and scope to workflow class, just in case of collisions... */
     @import "lib/highcharts/highcharts";
-
-
-    .highcharts-root {
-        width:100%;
-    }
+    @import "highcharts";
 
     hr {
         clear:both;
@@ -166,16 +160,16 @@ $success: #53a93f;
                 display:block;
             }
             .marker, .tooltip::after {
-                background:$umbraco;
+                background:$pending;
             }
             &::before {
-                background:linear-gradient(90deg, $success, $umbraco);
+                background:linear-gradient(90deg, $success, $pending);
             }
             &::after {
-                background:linear-gradient(90deg, $umbraco, #d9d9d9);
+                background:linear-gradient(90deg, $pending, #d9d9d9);
             }
             .tooltip {
-                border-color:$umbraco;
+                border-color:$pending;
             }
         }
     }
@@ -222,7 +216,7 @@ $success: #53a93f;
 
     .dropdown-menu {
         .warning {
-            color:$umbraco;
+            color:$warning;
         }
         .danger {
             color:$danger;
@@ -248,10 +242,10 @@ $success: #53a93f;
     }
         
     .pending {
-        color:$umbraco;        
-        background:rgba($umbraco, .05);
+        color:$pending;        
+        background:rgba($pending, .05);
         .umb-table-body__icon {
-            color:$umbraco;
+            color:$pending;
             background:0, 0;
         }
     }        

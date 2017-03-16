@@ -29,6 +29,8 @@
                             on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId";
+        public const string AllInstancesForDateRange = @"SELECT * FROM WorkflowInstance
+                            WHERE CreatedDate >= CONVERT(DATETIME, @0)";
 
         // tasks
         public const string TasksWithGroup = @"SELECT * FROM WorkflowTaskInstance 
@@ -63,12 +65,14 @@
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId                     
                             WHERE WorkflowInstance.AuthorUserId = @0
                             AND WorkflowTaskInstance.Status = @1";
-        public const string GetAllTasks = @"SELECT * FROM WorkflowTaskInstance 
+        public const string AllTasks = @"SELECT * FROM WorkflowTaskInstance 
                             LEFT JOIN WorkflowInstance
                             on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId";
-        public const string GetPendingTasks = @"SELECT * FROM WorkflowTaskInstance 
+        public const string AllTasksForDateRange = @"SELECT * FROM WorkflowTaskInstance
+                            WHERE CreatedDate >= CONVERT(DATETIME, @0)";
+        public const string PendingTasks = @"SELECT * FROM WorkflowTaskInstance 
                             LEFT JOIN WorkflowInstance
                             on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
                             LEFT JOIN WorkflowUserGroups

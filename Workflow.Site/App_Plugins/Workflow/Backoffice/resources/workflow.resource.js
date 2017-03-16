@@ -3,10 +3,14 @@
 
     // create service
     function WorkflowResource($http, $q, umbRequestHelper) {
+        var urlBase = '/umbraco/backoffice/api/workflow/';
+
         var service = {
 
-            urlSettingsBase: '/umbraco/backoffice/api/workflow/settings/',
-            urlTasksBase: '/umbraco/backoffice/api/workflow/tasks/',
+            settingsUrl: urlBase + 'settings/',
+            tasksUrl: urlBase + 'tasks/',
+            instancesUrl: urlBase + 'instances/',
+            actionsUrl: urlBase + 'actions/',
 
             request: function (method, url, data) {
                 return umbRequestHelper.resourcePromise(
@@ -18,57 +22,60 @@
             },
 
             getStatus: function (id) {
-                return this.request('GET', this.urlTasksBase + 'status/' + id);
+                return this.request('GET', this.tasksUrl + 'status/' + id);
             },
 
             /* tasks and approval endpoints */
             getApprovalsForUser: function (userId, count, page) {
-                return this.request('GET', this.urlTasksBase + 'flows/' + userId + '/0/' + count + '/' + page);
+                return this.request('GET', this.tasksUrl + 'flows/' + userId + '/0/' + count + '/' + page);
             },
             getSubmissionsForUser: function (userId, count, page) {
-                return this.request('GET', this.urlTasksBase + 'flows/' + userId + '/1/' + count + '/' + page);
+                return this.request('GET', this.tasksUrl + 'flows/' + userId + '/1/' + count + '/' + page);
             },
             getPendingTasks: function (count, page) {
-                return this.request('GET', this.urlTasksBase + 'pending/' + count + '/' + page);
+                return this.request('GET', this.tasksUrl + 'pending/' + count + '/' + page);
             },
             getAllTasks: function (count, page) {
-                return this.request('GET', this.urlTasksBase + 'all/' + count + '/' + page);
+                return this.request('GET', this.tasksUrl + '/' + count + '/' + page);
+            },
+            getAllTasksForRange: function (days) {
+                return this.request('GET', this.tasksUrl + 'range/' + days);
             },
             getAllInstances: function (count, page) {
-                return this.request('GET', this.urlTasksBase + 'instances/' + count + '/' + page);
+                return this.request('GET', this.instancesUrl + '/' + count + '/' + page);
+            },
+            getAllInstancesForRange: function (days) {
+                return this.request('GET', this.instancesUrl + 'range/' + days);
             },
             getNodeTasks: function(id, count, page) {
-                return this.request('GET', this.urlTasksBase + 'node/' + id  + '/' + count + '/' + page);
+                return this.request('GET', this.tasksUrl + 'node/' + id  + '/' + count + '/' + page);
             },
 
             /* workflow actions */
             initiateWorkflow: function (nodeId, comment, publish) {
-                return this.request('POST', this.urlTasksBase + 'initiate', { nodeId: nodeId, comment: comment, publish: publish });
+                return this.request('POST', this.actionsUrl + 'initiate', { nodeId: nodeId, comment: comment, publish: publish });
             },
             approveWorkflowTask: function (taskId, comment) {
-                return this.request('POST', this.urlTasksBase + 'approve', { taskId: taskId, comment: comment });
+                return this.request('POST', this.actionsUrl + 'approve', { taskId: taskId, comment: comment });
             },
             rejectWorkflowTask: function (taskId, comment) {
-                return this.request('POST', this.urlTasksBase + 'reject', { taskId: taskId, comment: comment });
+                return this.request('POST', this.actionsUrl + 'reject', { taskId: taskId, comment: comment });
             },
             cancelWorkflowTask: function (taskId, comment) {
-                return this.request('POST', this.urlTasksBase + 'cancel', { taskId: taskId, comment: comment });
+                return this.request('POST', this.actionsUrl + 'cancel', { taskId: taskId, comment: comment });
             },
-            //showDifferences: function (nodeId, taskId) {
-            //    return this.request('POST', this.urlTasksBase + 'showdifferences?nodeId=' + nodeId + '&taskId=' + taskId);
-            //},
 
             /* get/set workflow settings*/
             getSettings: function () {
-                return this.request('GET', this.urlSettingsBase + 'get');
+                return this.request('GET', this.settingsUrl + 'get');
             },
             saveSettings: function (settings) {
-                return this.request('POST', this.urlSettingsBase + 'save', settings);
+                return this.request('POST', this.settingsUrl + 'save', settings);
             },
 
             /*** SAVE PERMISSIONS ***/
             saveConfig: function (p) {
-                return this.request('POST', '/umbraco/backoffice/api/workflow/config/save', p);              
+                return this.request('POST', urlBase + 'config/save', p);              
             }
 
         };

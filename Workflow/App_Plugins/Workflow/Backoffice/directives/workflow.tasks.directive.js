@@ -41,12 +41,6 @@
                         handler: function (item) {
                             $rootScope.$broadcast('workflow-action', { item: item, approve: false });
                         }
-                    },
-                    diffsButton: {
-                        labelKey: "workflow_diffsButton",
-                        handler: function (item) {
-                            $rootScope.$broadcast('workflow-diffs', item);
-                        }
                     }
                 };
 

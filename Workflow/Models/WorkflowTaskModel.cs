@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 namespace Workflow.Models
@@ -9,7 +10,8 @@ namespace Workflow.Models
         public string NodeName { get; set; }
         public string Status { get; set; }
         public string CssStatus { get; set; }
-        public string RequestedOn { get; set; }
+        public DateTime? CompletedOn { get; set; }
+        public DateTime RequestedOn { get; set; }
         public string RequestedBy { get; set; }
         public int NodeId { get; set; }        
         public List<WorkflowTask> Tasks { get; set; }
@@ -40,20 +42,8 @@ namespace Workflow.Models
         public string ApprovedOn { get; set; }
         public string ApprovalComment { get; set; }
         public string ApprovalGroup { get; set; }
-        public bool ShowActionLink { get; set; }
         public string ActiveTask { get; set; }
         public List<UserGroupPermissionsPoco> Permissions { get; set; }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class DifferencesResponseItem
-    {
-        public string CurrentVersionPubDate { get; set; }
-        public string RevisedVersionPubDate { get; set; }
-        public string CompareData { get; set; }
-        public string CompareMessage { get; set; }
     }
 }
 

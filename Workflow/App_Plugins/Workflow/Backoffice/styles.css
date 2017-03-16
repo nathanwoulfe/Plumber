@@ -470,6 +470,22 @@
     fill: #666666; }
   .workflow .highcharts-root {
     width: 100%; }
+  .workflow .highcharts-container {
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif; }
+  .workflow .highcharts-color-0 {
+    fill: #53a93f;
+    color: #53a93f; }
+  .workflow .highcharts-color-1 {
+    fill: #ee5f5b;
+    color: #ee5f5b; }
+  .workflow .highcharts-color-2 {
+    fill: #2e8aea;
+    color: #2e8aea; }
+  .workflow .highcharts-color-3 {
+    fill: #df7f48;
+    color: #df7f48; }
+  .workflow .highcharts-legend-item text {
+    font-weight: normal; }
   .workflow hr {
     clear: both; }
   .workflow label {
@@ -557,13 +573,13 @@
     .workflow .progress-step.current .tooltip-current {
       display: block; }
     .workflow .progress-step.current .marker, .workflow .progress-step.current .tooltip::after {
-      background: #df7f48; }
+      background: #2e8aea; }
     .workflow .progress-step.current::before {
-      background: linear-gradient(90deg, #53a93f, #df7f48); }
+      background: linear-gradient(90deg, #53a93f, #2e8aea); }
     .workflow .progress-step.current::after {
-      background: linear-gradient(90deg, #df7f48, #d9d9d9); }
+      background: linear-gradient(90deg, #2e8aea, #d9d9d9); }
     .workflow .progress-step.current .tooltip {
-      border-color: #df7f48; }
+      border-color: #2e8aea; }
   .workflow .marker {
     display: block;
     width: 15px;
@@ -610,10 +626,10 @@
   .workflow .umb-table-body__icon.soft {
     opacity: .25; }
   .workflow .pending {
-    color: #df7f48;
-    background: rgba(223, 127, 72, 0.05); }
+    color: #2e8aea;
+    background: rgba(46, 138, 234, 0.05); }
     .workflow .pending .umb-table-body__icon {
-      color: #df7f48;
+      color: #2e8aea;
       background: 0, 0; }
   .workflow .approved {
     color: #53a93f;
