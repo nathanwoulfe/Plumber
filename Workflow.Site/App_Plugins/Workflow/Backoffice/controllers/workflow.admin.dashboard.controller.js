@@ -28,32 +28,59 @@
 
             var series = [],
                 seriesNames = [],
+                active = [],
                 s, o,
+                createdOn,
+                completedOn = defaultData(),
                 isTask = vm.type === 'Task',
                 d = new Date();
 
             d.setDate(d.getDate() - vm.range);
             var then = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
 
+            var spline = {
+                type: 'spline',
+                name: 'Pending ' + vm.type.toLowerCase() + 's',
+                data: defaultData(),
+                pointStart: then,
+                pointInterval: _MS_PER_DAY
+            };
+
             items.forEach(function (v, i) {
                 var statusName = isTask ? v.statusName : v.status;
-                if (seriesNames.indexOf(statusName) === -1) {
-                    o = {
-                        name: statusName,
-                        data: defaultData(),
-                        pointStart: then,
-                        pointInterval: _MS_PER_DAY
-                    };
-                    series.push(o);
-                    seriesNames.push(statusName);
+                if (statusName !== 'Pending Approval') {
+                    if (seriesNames.indexOf(statusName) === -1) {
+                        o = {
+                            name: statusName,
+                            type: 'column',
+                            data: defaultData(),
+                            pointStart: then,
+                            pointInterval: _MS_PER_DAY
+                        };
+                        series.push(o);
+                        seriesNames.push(statusName);
+                    }
+
+                    s = series.filter(function (s) {
+                        return s.name === statusName;
+                    })[0];
+
+                    s.data[vm.range + dateDiffInDays(now, new Date(isTask ? v.createdDate : v.requestedOn))] += 1;
+
+                } else {
+                    spline.data[vm.range + dateDiffInDays(now, new Date(isTask ? v.createdDate : v.requestedOn))] += 1;
                 }
-
-                s = series.filter(function (s) {
-                    return s.name === statusName;
-                })[0];
-
-                s.data[vm.range + dateDiffInDays(now, new Date(isTask ? v.createdDate : v.requestedOn))] += 1;
             });
+
+            console.log(spline.data, completedOn);
+
+            spline.data.forEach(function (d, i) {
+                if (i > 0) {
+                    spline.data[i] += spline.data[i - 1];
+                }
+            });
+
+            series.push(spline);
 
             vm.series = series.sort(function (a, b) { return a.name > b.name; });
             vm.title = 'Workflow ' + vm.type.toLowerCase() + ' activity';

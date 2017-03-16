@@ -15,12 +15,8 @@
                 var el = element[0].querySelector('.chart-container div');
                
                 scope.$watch('ready', function (newVal, oldVal) {
-                    console.log('title');
                     if (newVal === true) {
                         var options = {
-                            chart: {
-                                type: 'column'
-                            },
                             credits: {
                                 enabled:false
                             },

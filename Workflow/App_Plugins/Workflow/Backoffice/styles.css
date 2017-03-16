@@ -480,12 +480,16 @@
     color: #ee5f5b; }
   .workflow .highcharts-color-2 {
     fill: #2e8aea;
-    color: #2e8aea; }
+    color: #2e8aea;
+    stroke: #2e8aea; }
   .workflow .highcharts-color-3 {
     fill: #df7f48;
     color: #df7f48; }
   .workflow .highcharts-legend-item text {
     font-weight: normal; }
+  .workflow .chart-loading {
+    opacity: .5;
+    transition: all ease-in-out .3s; }
   .workflow hr {
     clear: both; }
   .workflow label {
