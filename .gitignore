@@ -10,6 +10,7 @@
 **/App_Data/Logs/*
 **/App_Data/Temp/*
 **/App_Data/cache/*
+**/App_Data/preview/*
 *umbraco.config
 
 # Build results
@@ -197,3 +198,5 @@ $RECYCLE.BIN/
 #####
 # End of core ignore list, below put you custom 'per project' settings (patterns or path)
 #####
+
+BuildPackage/artifacts/*
