@@ -1,29 +1,16 @@
 ﻿<div class="umb-panel workflow">
     <div class="umb-dashboard" ng-controller="Workflow.AdminDashboard.Controller as vm">
-        <umb-editor-view footer="false" umb-tabs>
-            <umb-editor-container>
-                <!--
-                    Chart
-                        - total started in last n days
-                        - total completed in last n days
-                        - total cancelled in last n days
-                        - total rejected in last n days
-
-                    line for the above to show over time period
-                    include total active tasks in line chart
-
-                    -->                
+        <umb-editor-view footer="false">
+            <umb-editor-container>             
                 <wf-line-chart series="vm.series" chart-title="vm.title" ready="vm.loaded" ng-class="{ 'chart-loading' : !vm.loaded }"></wf-line-chart>
-                <div>
-                    <label for="date-range">Date range</label>
-                    <input type="number" name="date-range" ng-model="vm.range" ng-change="vm.getForRange()" ng-model-options="{ debounce: 300 }" />
-                </div>
-                <div>
-                    <label for="view-type">View type</label>
-                    <select name="view-type" ng-model="vm.type" ng-options="o for o in ['Task', 'Instance']" ng-change="vm.getForRange()" />
-                </div>
+                <umb-control-group label="@workflow_dateRange">
+                    <input type="number" name="date-range" ng-model="vm.range" ng-change="vm.getForRange()" ng-model-options="{ debounce: 300 }" no-dirty-check/>
+                </umb-control-group>
+                <umb-control-group label="@workflow_viewType">
+                    <select name="view-type" ng-model="vm.type" ng-options="o for o in ['Task', 'Instance']" ng-change="vm.getForRange()" no-dirty-check/>
+                </umb-control-group>
             </umb-editor-container>
-        </umb-editor-view>
+        </umb-editor-view> 
         <umb-load-indicator ng-if="!vm.loaded"></umb-load-indicator>
     </div>
 </div>

@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function dashboardController(workflowResource) {
+    function dashboardController(workflowResource, localizationService) {
 
         var vm = this,
             _MS_PER_DAY = 1000 * 60 * 60 * 24,
@@ -30,8 +30,6 @@
                 seriesNames = [],
                 active = [],
                 s, o,
-                createdOn,
-                completedOn = defaultData(),
                 isTask = vm.type === 'Task',
                 d = new Date();
 
@@ -71,8 +69,6 @@
                     spline.data[vm.range + dateDiffInDays(now, new Date(isTask ? v.createdDate : v.requestedOn))] += 1;
                 }
             });
-
-            console.log(spline.data, completedOn);
 
             spline.data.forEach(function (d, i) {
                 if (i > 0) {

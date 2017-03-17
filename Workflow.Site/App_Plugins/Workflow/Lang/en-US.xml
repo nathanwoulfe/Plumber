@@ -7,7 +7,16 @@
     <key alias="approveButton">Approve</key>
     <key alias="editButton">Edit</key>
     <key alias="cancelButton">Cancel</key>    
-    <key alias="rejectButton">Reject</key>  
+    <key alias="rejectButton">Reject</key>
+    <key alias="dateRange">Date range</key>
+    <key alias="viewType">View type</key>
+    <key alias="flowType">Flow type</key>
+    <key alias="defaultApprovalGroup">Default approval group</key>
+    <key alias="workflowEmail">Workflow notification email</key>
+    <key alias="editSiteUrl">Edit site URL</key>
+    <key alias="baseSiteUrl">Site URL</key>
+    <key alias="documentFlows">Document-type approval flows</key>
+    <key alias="documentFlowsSmall">Default workflow for all nodes of a given document type</key>
   </area>
   
 </language>

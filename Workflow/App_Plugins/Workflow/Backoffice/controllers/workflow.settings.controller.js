@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function settingsController($q, workflowResource, notificationsService, contentTypeResource, userGroupsResource) {
+    function settingsController($q, workflowResource, notificationsService, contentTypeResource, userGroupsResource, localizationService) {
         var vm = this,
             promises = [workflowResource.getSettings(), contentTypeResource.getAll(), userGroupsResource.get()];
 
