@@ -13,6 +13,7 @@
     <key alias="flowType">Flow type</key>
     <key alias="defaultApprovalGroup">Default approval group</key>
     <key alias="workflowEmail">Workflow notification email</key>
+    <key alias="sendNotifications">Send notifications</key>
     <key alias="editSiteUrl">Edit site URL</key>
     <key alias="baseSiteUrl">Site URL</key>
     <key alias="documentFlows">Document-type approval flows</key>

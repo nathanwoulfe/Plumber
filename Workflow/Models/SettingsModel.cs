@@ -7,6 +7,7 @@
         public string EditUrl { get; set; }
         public string SiteUrl { get; set; }
         public int FlowType { get; set; }
+        public bool SendNotifications { get; set; }
     }
 
     /// <summary>

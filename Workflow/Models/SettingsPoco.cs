@@ -33,5 +33,9 @@ namespace Workflow.Models
         [Column("FlowType")]
         [NullSetting(NullSetting = NullSettings.Null)]
         public int FlowType { get; set; }
+
+        [Column("SendNotifications")]
+        [NullSetting(NullSetting = NullSettings.Null)]
+        public bool SendNotifications { get; set; }
     }
 }
