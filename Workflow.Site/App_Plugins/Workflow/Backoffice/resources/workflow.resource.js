@@ -50,6 +50,9 @@
             getNodeTasks: function(id, count, page) {
                 return this.request('GET', this.tasksUrl + 'node/' + id  + '/' + count + '/' + page);
             },
+            getNodePendingTasks: function(id) {
+                return this.request('GET', this.tasksUrl + 'node/pending/' + id);
+            },
 
             /* workflow actions */
             initiateWorkflow: function (nodeId, comment, publish) {

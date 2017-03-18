@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function TasksDirective(dialogService, notificationsService) {
+    function TasksDirective(dialogService, notificationsService, workflowActionsService) {
 
         var directive = {
             restrict: 'AEC',
@@ -12,7 +12,7 @@
                 loaded: '='
             },
             templateUrl: '../app_plugins/workflow/backoffice/partials/workflowTasksTemplate.html',
-            controller: function ($scope, $rootScope) {
+            controller: function ($scope) {
 
                 // type = 0, 1
                 // 0 -> full button set
@@ -21,7 +21,7 @@
                     approveButton: {
                         labelKey: "workflow_approveButton",
                         handler: function (item) {
-                            $rootScope.$broadcast('workflow-action', { item: item, approve: true });
+                            $scope.$parent.vm.workflowOverlay = workflowActionsService.action(item, true);
                         }
                     },
                     editButton: {
@@ -32,14 +32,14 @@
                         labelKey: "workflow_cancelButton",
                         cssClass: 'danger',
                         handler: function (item) {
-                            $rootScope.$broadcast('workflow-cancel', item);
+                            $scope.$parent.vm.workflowOverlay = workflowActionsService.cancel(item);
                         }
                     },                
                     rejectButton: {
                         labelKey: "workflow_rejectButton",
                         cssClass: 'warning',
                         handler: function (item) {
-                            $rootScope.$broadcast('workflow-action', { item: item, approve: false });
+                            $scope.$parent.vm.workflowOverlay = workflowActionsService.action(item, fasle);
                         }
                     }
                 };

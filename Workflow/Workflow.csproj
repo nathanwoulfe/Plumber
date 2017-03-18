@@ -80,6 +80,7 @@
     <Compile Include="Relators\UserToGroupForInstanceRelator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.drawerbuttons.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.admin.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.history.dialog.html" />
@@ -89,11 +90,14 @@
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.linechart.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.tablerow.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.tasks.directive.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\interceptors\workflow.config.interceptors.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\interceptors\workflow.drawerbuttons.interceptor.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.css" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\modules\exporting.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historyinstance.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historytask.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\partials\umbEditorFooterContentRight.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowButtonGroup.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowHistoryTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowLineChart.html" />
@@ -104,6 +108,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\css\styles.min.css">
       <DependentUpon>styles.css</DependentUpon>
     </Content>
+    <Content Include="App_Plugins\Workflow\Backoffice\resources\actions.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\tree\history.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\tree.view.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.dashboard.controller.js" />
@@ -136,7 +141,7 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
-    <None Include="..\packages.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

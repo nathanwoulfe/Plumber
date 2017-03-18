@@ -131,6 +131,31 @@ namespace Workflow.Api
         }
 
         /// <summary>
+        /// Return workflow tasks for the given node
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("node/pending/{id:int}")]
+        public IHttpActionResult GetNodePendingTasks(int id)
+        {
+            try
+            {
+                var taskInstances = _pr.TasksByNode(id).Where(t => t.Status == (int)TaskStatus.PendingApproval).ToList();
+                var workflowItems = taskInstances.ToWorkflowTaskList();
+                return Json(new
+                {
+                    items = workflowItems,
+                    total = taskInstances.Count
+                }, ViewHelpers.CamelCase);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+            }
+        }
+
+        /// <summary>
         /// Check if the current node is already in a workflow process
         /// </summary>
         /// <param name="id">The node to check</param>
