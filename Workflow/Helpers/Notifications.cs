@@ -11,6 +11,9 @@ namespace Workflow
     {
         private static PocoRepository _pr = new PocoRepository();
 
+        /// <summary>
+        /// TODO: these should come from a config file rather than static strings...
+        /// </summary>
         private static string EmailApprovalRequestString = "Dear {0},<br/><br/>Please review the following page for {5} approval: <a href=\"{1}\">{2}</a> *<br/><br/>Comment: {3}<br/><br/>Thanks,<br/>{4}";
         private static string EmailApprovedString = "Dear {0},<br/>The following document's workflow has been approved and the document {3}: <a href=\"{1}\">{2}</a> *<br/>";
         private static string EmailRejectedString = "Dear {0},<br/>The {5} workflow was rejected by {4}: <a href=\"{1}\">{2}</a> *<br/>Comment: {3}";

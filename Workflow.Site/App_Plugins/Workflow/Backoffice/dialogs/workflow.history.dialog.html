@@ -1,7 +1,7 @@
 ﻿<div class="umb-pane workflow history-dialog" ng-controller="Workflow.History.Controller as vm">
     <div class="umb-dialog-body with-footer">
         <div class="umb-pane">
-            <wf-history items="vm.items" instance-view="true"></wf-history>
+            <wf-history items="vm.items" instance-view="false"></wf-history>
             <div class="flex justify-center">
                 <umb-pagination ng-if="vm.pagination.totalPages > 1"
                                 page-number="vm.pagination.pageNumber"

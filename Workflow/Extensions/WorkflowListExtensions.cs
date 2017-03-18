@@ -63,7 +63,6 @@ namespace Workflow.Extensions
             {
                 foreach (var instance in instances)
                 {
-                    var n = Helpers.GetNode(instance.NodeId);
                     var model = new WorkflowInstance
                     {
                         Type = instance.TypeDescription,

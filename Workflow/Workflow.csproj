@@ -35,6 +35,7 @@
     <Compile Include="Api\InstancesController.cs" />
     <Compile Include="Extensions\WorkflowListExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
+    <Compile Include="Relators\UserToGroupForPermissionsRelator.cs" />
     <Compile Include="Startup\RegisterEvents.cs" />
     <Compile Include="Startup\StringContraint.cs" />
     <Compile Include="Startup\WebApiConfig.cs" />

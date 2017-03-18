@@ -24,7 +24,6 @@ namespace Workflow.Api
     public class InstancesController : UmbracoAuthorizedApiController
     {
         private static PocoRepository _pr = new PocoRepository();
-        private List<UserGroupPermissionsPoco> perms = new List<UserGroupPermissionsPoco>();
 
         /// <summary>
         /// Returns all workflow instances, with their tasks
