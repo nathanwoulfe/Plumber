@@ -23,8 +23,6 @@
                     vm.adminUser = user.allowedSections.indexOf('workflow') !== -1;
                     var currentTaskUsers = task.permissions[task.currentStep].userGroup.usersSummary;
 
-                    console.log(user, vm.adminUser);
-
                     if (currentTaskUsers.indexOf('|' + user.id + '|') !== -1) {
                         vm.canAction = true;
                     }
