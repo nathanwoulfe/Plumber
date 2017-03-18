@@ -11,7 +11,7 @@
                 <div class="umb-el-wrap">
                     <label for="groupName" class="control-label">Name</label>
                     <div class="controls controls-row">
-                        <input type="text" ng-model="group.name" name="groupName" />
+                        <input type="text" ng-model="group.name" name="groupName" disabled />
                     </div>
                 </div>
                 <div class="umb-el-wrap">
@@ -33,50 +33,36 @@
                     </div>
                 </div>
             </div>
-            <div class="umb-control-group user-lists">
-                <div class="umb-el-wrap">
-                    <label class="control-label">Membership</label>
-                    <div class="controls controls-row">
-                        <div class="user-list">
-                            <h5>All users</h5>
-                            <input type="text" ng-model="addUserFilter" placeholder="Search" />
-                            <ul class="user-list">
-                                <li ng-repeat="u in notInGroup | orderBy: 'name' | filter:{name:addUserFilter}" ng-click="add(u.id)" title="Add {{u.name}} to {{group.name}}">{{u.name}}</li>
-                            </ul>
-                        </div>
-                        <div class="user-list">
-                            <h5>Current members</h5>
-                            <input type="text" ng-model="removeUserFilter" placeholder="Search" />
-                            <ul>
-                                <li ng-repeat="u in group.users | orderBy: 'name' | filter:{Name:removeUserFilter}" ng-click="remove(u.userId)" title="Remove {{u.name}} from {{group.name}}">{{u.name}}</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>                
-            </div>
-            <div class="umb-control-group permissions" ng-if="$routeParams.id !== '-1' && group.permissions.length">
-                <div class="umb-el-wrap">
-                    <label class="control-label">Node approval flows</label>
-                    <div class="controls controls-row">
-                        <ul class="permissions-list">
-                            <li ng-repeat="p in group.permissions" ng-show="p.nodeName.length">
-                                <a ng-if="p.nodeName" ng-href="#/content/content/edit/{{ p.nodeId }}" title="Edit node: {{ p.nodeName }}">{{ p.nodeName}} (stage: {{ p.permission + 1 }})</a>
-                            </li>
-                        </ul>
-                    </div>
+            <umb-control-group label="@workflow_membership" class="user-lists">
+                <div class="user-list">
+                    <h5>All users</h5>
+                    <input type="text" ng-model="addUserFilter" placeholder="Search" />
+                    <ul class="user-list">
+                        <li ng-repeat="u in notInGroup | orderBy: 'name' | filter:{name:addUserFilter}" ng-click="add(u.id)" title="Add {{u.name}} to {{group.name}}">{{u.name}}</li>
+                    </ul>
                 </div>
- 
-                <div class="umb-el-wrap">
-                    <label class="control-label">Content-type approval flows</label>
-                    <div class="controls controls-row">
-                        <ul class="permissions-list">
-                            <li ng-repeat="p in group.permissions" ng-show="p.contentTypeName.length">
-                                <a ng-if="p.contentTypeName" ng-href="#/settings/documentTypes/edit/{{ p.contentTypeId }}" title="Edit content type: {{ p.contentTypeName }}">{{ p.contentTypeName }} (stage: {{ p.Permission + 1 }})</a>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="user-list">
+                    <h5>Current members</h5>
+                    <input type="text" ng-model="removeUserFilter" placeholder="Search" />
+                    <ul>
+                        <li ng-repeat="u in group.users | orderBy: 'name' | filter:{Name:removeUserFilter}" ng-click="remove(u.userId)" title="Remove {{u.name}} from {{group.name}}">{{u.name}}</li>
+                    </ul>
                 </div>
-            </div>
+            </umb-control-group>
+            <umb-control-group label="@workflow_nodeApprovalFlows" ng-if="$routeParams.id !== '-1' && group.permissions.length">
+                <ul>
+                    <li ng-repeat="p in group.permissions" ng-show="p.nodeName.length">
+                        <a ng-if="p.nodeName" ng-href="#/content/content/edit/{{ p.nodeId }}" title="Edit node: {{ p.nodeName }}">{{ p.nodeName}} (stage: {{ p.permission + 1 }})</a>
+                    </li>
+                </ul>
+            </umb-control-group>
+            <umb-control-group label="@workflow_documentFlows" ng-if="$routeParams.id !== '-1' && group.permissions.length">
+                <ul>
+                    <li ng-repeat="p in group.permissions" ng-show="p.contentTypeName.length">
+                        <a ng-if="p.contentTypeName" ng-href="#/settings/documentTypes/edit/{{ p.contentTypeId }}" title="Edit content type: {{ p.contentTypeName }}">{{ p.contentTypeName }} (stage: {{ p.Permission + 1 }})</a>
+                    </li>
+                </ul>
+            </umb-control-group>
         </umb-editor-container>
         <umb-editor-footer>
             <umb-editor-footer-content-right>

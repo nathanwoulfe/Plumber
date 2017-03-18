@@ -1,0 +1,200 @@
+﻿@import url(../lib/highcharts/highcharts.css);
+.workflow {
+  /* import highcharts styles, and scope to workflow class, just in case of collisions... */ }
+  .workflow .highcharts-root {
+    width: 100%; }
+  .workflow .highcharts-container {
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif; }
+  .workflow .highcharts-color-0 {
+    fill: #53a93f;
+    color: #53a93f; }
+  .workflow .highcharts-color-1 {
+    fill: #ee5f5b;
+    color: #ee5f5b; }
+  .workflow .highcharts-color-2 {
+    fill: #2e8aea;
+    color: #2e8aea;
+    stroke: #2e8aea; }
+  .workflow .highcharts-color-3 {
+    fill: #df7f48;
+    color: #df7f48; }
+  .workflow .highcharts-legend-item text {
+    font-weight: normal; }
+  .workflow .chart-loading {
+    opacity: .5;
+    transition: all ease-in-out .3s; }
+  .workflow hr {
+    clear: both; }
+  .workflow label {
+    float: left;
+    width: 160px; }
+  .workflow wf-comments label {
+    width: auto; }
+  .workflow textarea, .workflow input {
+    border: 1px solid #ccc; }
+  .workflow textarea {
+    width: 386px;
+    height: 200px; }
+  .workflow .flow-select {
+    margin-bottom: 0; }
+  .workflow .user-lists {
+    overflow: hidden;
+    margin-bottom: 20px;
+    padding-bottom: 15px; }
+  .workflow .user-list {
+    width: 45%;
+    float: left;
+    margin: 0 5% 0 0; }
+    .workflow .user-list input {
+      width: 200px; }
+    .workflow .user-list ul {
+      max-height: 300px;
+      overflow-y: scroll;
+      width: 100%;
+      margin: 0; }
+      .workflow .user-list ul li {
+        padding: 5px 10px;
+        cursor: pointer; }
+        .workflow .user-list ul li:hover {
+          background: #ddd; }
+        .workflow .user-list ul li:nth-child(even) {
+          background: #f5f5f5; }
+          .workflow .user-list ul li:nth-child(even):hover {
+            background: #ddd; }
+  .workflow .permissions-list:before {
+    content: attr(data-label);
+    display: block;
+    margin: 0 0 5px -25px; }
+  .workflow .current-flow .last::after {
+    content: '(Publisher)';
+    display: inline-block;
+    padding-left: 5px; }
+  .workflow .umb-table-cell ul {
+    margin: 0; }
+  .workflow .umb-table-cell.show-overflow, .workflow .umb-table-cell.show-overflow > * {
+    overflow: visible; }
+  .workflow .controls h5 {
+    margin-top: 0; }
+  .workflow .control-panel {
+    padding: 10px 0;
+    margin: 10px 0; }
+  .workflow .workflow-progress {
+    margin: 0 10px 10px;
+    padding-top: 10px;
+    border-top: 1px solid #d9d9d9;
+    display: flex;
+    position: relative; }
+  .workflow .progress-step {
+    text-align: center;
+    position: relative; }
+    .workflow .progress-step::before, .workflow .progress-step::after {
+      content: '';
+      width: 50%;
+      height: 1px;
+      position: absolute;
+      top: 6px;
+      background: #d9d9d9; }
+    .workflow .progress-step::before {
+      left: 0; }
+    .workflow .progress-step::after {
+      right: 0; }
+    .workflow .progress-step.done .tooltip-done {
+      display: block; }
+    .workflow .progress-step.done::before, .workflow .progress-step.done::after, .workflow .progress-step.done .marker, .workflow .progress-step.done .tooltip::after {
+      background: #53a93f; }
+    .workflow .progress-step.done .tooltip {
+      border-color: #53a93f; }
+    .workflow .progress-step.current .tooltip-current {
+      display: block; }
+    .workflow .progress-step.current .marker, .workflow .progress-step.current .tooltip::after {
+      background: #2e8aea; }
+    .workflow .progress-step.current::before {
+      background: linear-gradient(90deg, #53a93f, #2e8aea); }
+    .workflow .progress-step.current::after {
+      background: linear-gradient(90deg, #2e8aea, #d9d9d9); }
+    .workflow .progress-step.current .tooltip {
+      border-color: #2e8aea; }
+  .workflow .marker {
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background: #d9d9d9;
+    position: relative;
+    cursor: pointer; }
+    .workflow .marker:hover + .tooltip {
+      display: block;
+      bottom: calc(100% + 5px);
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 1; }
+    .workflow .marker + .tooltip {
+      display: none;
+      background: #f8f8f8;
+      padding: 5px;
+      border: 1px solid #d9d9d9; }
+      .workflow .marker + .tooltip::after {
+        content: '';
+        width: 1px;
+        height: 10px;
+        background: #d9d9d9;
+        position: absolute;
+        top: 100%;
+        left: calc(50% - 1px); }
+      .workflow .marker + .tooltip span {
+        display: none; }
+  .workflow .dropdown-menu .warning {
+    color: #df7f48; }
+  .workflow .dropdown-menu .danger {
+    color: #ee5f5b; }
+  .workflow .workflow-nested {
+    margin: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #d9d9d9;
+    display: flex;
+    position: relative; }
+  .workflow .umb-table__input[type=checkbox] {
+    opacity: 0;
+    cursor: default; }
+  .workflow .umb-table-body__icon.soft {
+    opacity: .25; }
+  .workflow .pending {
+    color: #2e8aea;
+    background: rgba(46, 138, 234, 0.05); }
+    .workflow .pending .umb-table-body__icon {
+      color: #2e8aea;
+      background: 0, 0; }
+  .workflow .approved {
+    color: #53a93f;
+    background: rgba(83, 169, 63, 0.05); }
+    .workflow .approved .umb-table-body__icon {
+      color: #53a93f;
+      background: 0, 0; }
+  .workflow .cancelled {
+    color: #ee5f5b;
+    background: rgba(238, 95, 91, 0.05); }
+    .workflow .cancelled .umb-table-body__icon {
+      color: #ee5f5b;
+      background: 0, 0; }
+  .workflow .chart-header {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex; }
+    .workflow .chart-header li {
+      flex: 1;
+      text-align: center;
+      text-transform: uppercase; }
+    .workflow .chart-header span {
+      font-weight: bold;
+      display: block; }
+  .workflow .chart-controls {
+    display: flex; }
+    .workflow .chart-controls label {
+      width: 100px; }
+    .workflow .chart-controls .controls-row {
+      margin-left: 130px; }
+    .workflow .chart-controls .umb-property {
+      flex: 1; }
+

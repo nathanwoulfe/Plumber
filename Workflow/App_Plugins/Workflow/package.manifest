@@ -27,6 +27,6 @@
 
     ],
     css: [
-		'~/App_Plugins/Workflow/backoffice/styles.css'
+		'~/App_Plugins/Workflow/backoffice/css/styles.min.css'
     ]
 }

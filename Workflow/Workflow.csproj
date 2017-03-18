@@ -97,10 +97,10 @@
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowHistoryTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowLineChart.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowTasksTemplate.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\styles.css">
+    <Content Include="App_Plugins\Workflow\Backoffice\css\styles.css">
       <DependentUpon>styles.scss</DependentUpon>
     </Content>
-    <Content Include="App_Plugins\Workflow\Backoffice\styles.min.css">
+    <Content Include="App_Plugins\Workflow\Backoffice\css\styles.min.css">
       <DependentUpon>styles.css</DependentUpon>
     </Content>
     <Content Include="App_Plugins\Workflow\Backoffice\tree\history.html" />
@@ -124,12 +124,12 @@
     <Content Include="App_Plugins\Workflow\Backoffice\tree\settings.html" />
     <Content Include="App_Plugins\Workflow\Lang\en-US.xml" />
     <None Include="app.config" />
-    <None Include="App_Plugins\Workflow\Backoffice\highcharts.scss" />
-    <None Include="App_Plugins\Workflow\Backoffice\styles.css.map">
+    <None Include="App_Plugins\Workflow\Backoffice\css\highcharts.scss" />
+    <None Include="App_Plugins\Workflow\Backoffice\css\styles.css.map">
       <DependentUpon>styles.css</DependentUpon>
     </None>
-    <None Include="App_Plugins\Workflow\Backoffice\styles.scss" />
-    <None Include="App_Plugins\Workflow\Backoffice\_variables.scss" />
+    <None Include="App_Plugins\Workflow\Backoffice\css\styles.scss" />
+    <None Include="App_Plugins\Workflow\Backoffice\css\_variables.scss" />
     <None Include="App_Plugins\Workflow\package.manifest" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">

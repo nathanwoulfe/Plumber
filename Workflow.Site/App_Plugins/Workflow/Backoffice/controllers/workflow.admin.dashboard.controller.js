@@ -10,6 +10,8 @@
         function getForRange() {
             if (vm.range > 0) {
                 vm.loaded = false;
+                vm.totalApproved = vm.totalCancelled = vm.totalPending = vm.totalRejected = 0;
+
                 if (vm.type === 'Task') {
                     workflowResource.getAllTasksForRange(vm.range)
                         .then(function (resp) {
@@ -40,12 +42,14 @@
                 type: 'spline',
                 name: 'Pending ' + vm.type.toLowerCase() + 's',
                 data: defaultData(),
+                colorIndex: 2,
                 pointStart: then,
                 pointInterval: _MS_PER_DAY
             };
 
             items.forEach(function (v, i) {
                 var statusName = isTask ? v.statusName : v.status;
+
                 if (statusName !== 'Pending Approval') {
                     if (seriesNames.indexOf(statusName) === -1) {
                         o = {
@@ -65,8 +69,22 @@
 
                     s.data[vm.range + dateDiffInDays(now, new Date(isTask ? v.createdDate : v.requestedOn))] += 1;
 
+                    if (statusName === 'Approved') {
+                        vm.totalApproved += 1;
+                        s.colorIndex = 0;
+                    }
+                    else if (statusName === 'Rejected') {
+                        vm.totalRejected += 1;
+                        s.colorIndex = 2;
+                    }
+                    else {
+                        vm.totalCancelled += 1;
+                        s.colorIndex = 1;
+                    }
+
                 } else {
                     spline.data[vm.range + dateDiffInDays(now, new Date(isTask ? v.createdDate : v.requestedOn))] += 1;
+                    vm.totalPending += 1;
                 }
             });
 
@@ -75,10 +93,10 @@
                     spline.data[i] += spline.data[i - 1];
                 }
             });
-
             series.push(spline);
 
             vm.series = series.sort(function (a, b) { return a.name > b.name; });
+
             vm.title = 'Workflow ' + vm.type.toLowerCase() + ' activity';
             vm.loaded = true;
         }
@@ -104,7 +122,11 @@
         angular.extend(vm, {
             range: 28,
             type: 'Task',
-            loaded: false,            
+            loaded: false,
+            totalApproved: 0,
+            totalCancelled: 0,
+            totalPending: 0,
+            totalRejected: 0,
 
             getForRange: getForRange
         });

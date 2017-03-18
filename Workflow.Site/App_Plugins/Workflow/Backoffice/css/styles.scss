@@ -3,7 +3,7 @@
 .workflow {
 
     /* import highcharts styles, and scope to workflow class, just in case of collisions... */
-    @import "lib/highcharts/highcharts";
+    @import "../lib/highcharts/highcharts.css";
     @import "highcharts";
 
     hr {
@@ -13,9 +13,6 @@
     label {
         float:left;
         width:160px;
-        display:block;
-        margin-bottom:5px;
-        padding-top:8px;
     }
 
     wf-comments label {
@@ -263,6 +260,40 @@
         .umb-table-body__icon {
             color:$danger;
             background:0, 0;
+        }
+    }
+
+    .chart-header {
+        list-style-type:none;
+        margin:0;
+        padding:0;
+        display:flex;
+
+        li {
+            flex:1;
+            text-align:center;
+            text-transform:uppercase;
+        }
+
+        span {
+            font-weight:bold;
+            display:block;
+        }
+    }
+
+    .chart-controls {
+        display:flex;
+
+        label {
+            width:100px;
+        }
+
+        .controls-row {
+            margin-left:130px;
+        }
+
+        .umb-property {
+            flex:1;
         }
     }
 }

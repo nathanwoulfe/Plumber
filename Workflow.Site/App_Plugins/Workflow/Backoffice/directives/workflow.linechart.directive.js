@@ -8,7 +8,6 @@
             template: '<div class="chart-container"><div></div></div>',
             scope: {
                 series: '=',
-                chartTitle: '=',
                 ready: '='
             },
             link: function (scope, element) {
@@ -21,7 +20,7 @@
                                 enabled:false
                             },
                             title: {
-                                text: scope.chartTitle
+                                text: null
                             },
                             tooltip: {
                                 shared: true,

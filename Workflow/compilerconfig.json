@@ -2,5 +2,9 @@
   {
     "outputFile": "App_Plugins/Workflow/Backoffice/styles.css",
     "inputFile": "App_Plugins/Workflow/Backoffice/styles.scss"
+  },
+  {
+    "outputFile": "App_Plugins/Workflow/Backoffice/css/styles.css",
+    "inputFile": "App_Plugins/Workflow/Backoffice/css/styles.scss"
   }
 ]

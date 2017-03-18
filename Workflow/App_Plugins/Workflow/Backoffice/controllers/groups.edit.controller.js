@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function editController($scope, $routeParams, userGroupsResource, entityResource, notificationsService) {
+    function editController($scope, $routeParams, userGroupsResource, entityResource, notificationsService, localizationService) {
 
         $scope.action = $routeParams.id !== '-1' ? 'Edit' : 'Create';
 

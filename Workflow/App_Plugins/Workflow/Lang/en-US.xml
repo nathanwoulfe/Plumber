@@ -16,8 +16,10 @@
     <key alias="sendNotifications">Send notifications</key>
     <key alias="editSiteUrl">Edit site URL</key>
     <key alias="baseSiteUrl">Site URL</key>
+    <key alias="nodeApprovalFlows">Node approval flows</key>
     <key alias="documentFlows">Document-type approval flows</key>
     <key alias="documentFlowsSmall">Default workflow for all nodes of a given document type</key>
+    <key alias="membership">Membership</key>
   </area>
   
 </language>
