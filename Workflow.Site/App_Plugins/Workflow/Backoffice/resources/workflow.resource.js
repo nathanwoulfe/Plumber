@@ -35,9 +35,6 @@
             getPendingTasks: function (count, page) {
                 return this.request('GET', this.tasksUrl + 'pending/' + count + '/' + page);
             },
-            getAllTasks: function (count, page) {
-                return this.request('GET', this.tasksUrl + '/' + count + '/' + page);
-            },
             getAllTasksForRange: function (days) {
                 return this.request('GET', this.tasksUrl + 'range/' + days);
             },
@@ -46,6 +43,9 @@
             },
             getAllInstancesForRange: function (days) {
                 return this.request('GET', this.instancesUrl + 'range/' + days);
+            },
+            getAllTasksForGroup: function (groupId, count, page) {
+                return this.request('GET', this.tasksUrl + 'group/' + groupId + '/' + count + '/' + page);
             },
             getNodeTasks: function(id, count, page) {
                 return this.request('GET', this.tasksUrl + 'node/' + id  + '/' + count + '/' + page);

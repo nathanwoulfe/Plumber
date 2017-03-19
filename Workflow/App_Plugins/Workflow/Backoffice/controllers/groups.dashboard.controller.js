@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function dashboardController(userGroupsResource) {
+    function dashboardController(userGroupsResource, dialogService) {
 
         var vm = this;
 

@@ -430,25 +430,6 @@ namespace Workflow.Extensions
             url = url ?? new DefaultUrlSegmentProvider().GetUrlSegment(content); // be safe
             return url;
         }
-
-        /// <summary>
-        /// Gets the url segment for a specified content and culture.
-        /// </summary>
-        /// <param name="content">
-        /// The content.
-        /// </param>
-        /// <param name="culture">
-        /// The culture.
-        /// </param>
-        /// <returns>
-        /// The url segment.
-        /// </returns>
-        public static string GetUrlSegment(this IContentBase content, CultureInfo culture)
-        {
-            var url = UrlSegmentProviders.Select(p => p.GetUrlSegment(content, culture)).First(u => u != null);
-            url = url ?? new DefaultUrlSegmentProvider().GetUrlSegment(content, culture); // be safe
-            return url;
-        }
     }
 
     [Serializable]

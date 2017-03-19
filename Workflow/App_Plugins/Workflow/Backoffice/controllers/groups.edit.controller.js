@@ -1,31 +1,46 @@
 ﻿(function () {
     'use strict';
 
-    function editController($scope, $routeParams, userGroupsResource, entityResource, notificationsService, localizationService) {
+    function editController($scope, $routeParams, userGroupsResource, workflowResource, entityResource, notificationsService, localizationService) {
 
-        $scope.action = $routeParams.id !== '-1' ? 'Edit' : 'Create';
+        var vm = this;
 
         // fetch all active users, then get the group
         // this kicks it all off...
-        (function getAllUsers() {
+        function getAllUsers() {
             entityResource.getAll('User', 'IsApproved')
                 .then(function (resp) {
-                    $scope.allUsers = resp;
+                    vm.allUsers = resp;
                     getGroup();
                 });
-        })();
+        }
+
+        // history tab
+        function getHistory() {            
+            workflowResource.getAllTasksForGroup($routeParams.id, vm.pagination.perPage, vm.pagination.pageNumber)
+                .then(function (resp) {
+                    vm.tasks = resp.items;
+                    vm.pagination.pageNumber = resp.page;
+                    vm.pagination.totalPages = resp.total / resp.count;
+                });
+        }
+
+        function goToPage(i) {
+            vm.pagination.pageNumber = i;
+            getHistory();
+        }
 
         // only fetch group if id is valid - otherwise it's a create action
         function getGroup() {
             if ($routeParams.id !== '-1') {
                 userGroupsResource.get($routeParams.id)
                     .then(function (resp) {
-                        $scope.group = resp;
-                        $scope.name = $scope.action + ' ' + resp.name;
+                        vm.group = resp;
+                        vm.name = $routeParams.id !== '-1' ? 'Edit ' : 'Create ' + resp.name;
                         getUsersNotInGroup();                        
                     });
             } else {
-                $scope.group = {
+                vm.group = {
                     groupId: -1,
                     name: '',
                     description: '',
@@ -40,21 +55,21 @@
 
         // filter all users to remove those in the group
         function getUsersNotInGroup() {
-            $scope.notInGroup = [];
-            angular.forEach($scope.allUsers, function (user) {
-                if (!$scope.group.usersSummary || $scope.group.usersSummary.indexOf('|' + user.id + '|') === -1) {
-                    $scope.notInGroup.push(user);
+            vm.notInGroup = [];
+            angular.forEach(vm.allUsers, function (user) {
+                if (!vm.group.usersSummary || vm.group.usersSummary.indexOf('|' + user.id + '|') === -1) {
+                    vm.notInGroup.push(user);
                 }
             });
         }
 
         // add a user to the group, and remove from notInGroup
-        $scope.add = function (id) {
+        function add(id) {
             var index,
-                user = $.grep($scope.notInGroup, function (u, i) {
+                user = $.grep(vm.notInGroup, function (u, i) {
                     if (u.id === id) {
                         index = i;
-                        $scope.group.users.push({ userId: u.id, groupId: $scope.group.groupId, name: u.name });
+                        vm.group.users.push({ userId: u.id, groupId: vm.group.groupId, name: u.name });
                         return true;
                     }
                     return false;
@@ -64,23 +79,23 @@
         };
 
         //
-        $scope.remove = function (id) {
+        function remove(id) {
             var index,
-                user = $.grep($scope.group.users, function (u, i) {
+                user = $.grep(vm.group.users, function (u, i) {
                     if (u.userId === id) {
                         index = i;
-                        $scope.notInGroup.push({ id: u.userId, name: u.name });
+                        vm.notInGroup.push({ id: u.userId, name: u.name });
                         return true;
                     }
                     return false;
                 });
 
-            $scope.group.users.splice(index, 1);
+            vm.group.users.splice(index, 1);
         };
 
         //
-        $scope.saveGroup = function () {
-            userGroupsResource.save($scope.group)
+        function save() {
+            userGroupsResource.save(vm.group)
                 .then(function (resp) {
                     if (resp.status === 200) {
                         notificationsService.success('SUCCESS', resp.msg);
@@ -91,6 +106,38 @@
                     notificationsService.error('ERROR', err);
                 });
         };
+
+        angular.extend(vm, {
+            save: save,
+            add: add,
+            remove: remove,
+            perPage: function() {
+                return [2, 5, 10, 20, 50];
+            },
+
+            tabs: [{
+                id: 0,
+                label: "Group detail",
+                alias: "tab0",
+                active: true
+            },
+            {
+                id: 1,
+                label: "Activity history",
+                alias: "tab1",
+                active: false
+            }],
+            pagination: {
+                pageNumber: 1,
+                totalPages: 0,
+                perPage: 10,
+                goToPage: goToPage
+            } 
+        });
+
+        getAllUsers();
+        getHistory();
+
     }
 
     angular.module('umbraco').controller('Workflow.Groups.Edit.Controller', editController);

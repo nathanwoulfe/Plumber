@@ -43,9 +43,9 @@ namespace Workflow
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public List<WorkflowTaskInstancePoco> GetPendingTasks(int status)
+        public List<WorkflowTaskInstancePoco> GetPendingTasks(int status, int count, int page)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, status);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, status, (page - 1) * count, count);
         }
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace Workflow
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public List<WorkflowTaskInstancePoco> GetAllTasks()
+        public List<WorkflowTaskInstancePoco> GetAllGroupTasks(int groupId, int count, int page)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.AllTasks);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.AllGroupTasks, groupId, (page - 1) * count, count);
         }
 
         /// <summary>
@@ -144,16 +144,6 @@ namespace Workflow
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public  List<User2UserGroupPoco> UsersByGroupId(int id)
-        {
-            return GetDb().Fetch<User2UserGroupPoco>(SqlHelpers.UsersByGroupId, id);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="node"></param>
         /// <param name="status"></param>
         /// <returns></returns>
@@ -206,6 +196,16 @@ namespace Workflow
         public List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int? contentTypeId)
         {
             return GetDb().Fetch<UserGroupPermissionsPoco, UserGroupPoco, User2UserGroupPoco, UserGroupPermissionsPoco>(new UserToGroupForPermissionsRelator().MapIt, SqlHelpers.PermissionsByNode, nodeId, contentTypeId);
+        }
+
+        public int CountPendingTasks()
+        {
+            return GetDb().Fetch<int>(SqlHelpers.CountPendingTasks).First();
+        }
+
+        public int CountGroupTasks(int groupId)
+        {
+            return GetDb().Fetch<int>(SqlHelpers.CountGroupTasks, groupId).First();
         }
     }
 }

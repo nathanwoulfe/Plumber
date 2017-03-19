@@ -73,6 +73,5 @@ namespace Workflow.Api
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
             }
         }
-
     }
 }

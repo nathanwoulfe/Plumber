@@ -38,38 +38,12 @@ namespace Workflow.Api
         {
             try
             {
-                var taskInstances = _pr.GetPendingTasks((int)TaskStatus.PendingApproval);
-                var workflowItems = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
+                var taskInstances = _pr.GetPendingTasks((int)TaskStatus.PendingApproval, count, page);
+                var workflowItems = taskInstances.ToWorkflowTaskList();
                 return Json(new
                 {
                     items = workflowItems,
-                    total = taskInstances.Count,
-                    page = page,
-                    count = count
-                }, ViewHelpers.CamelCase);
-            }
-            catch (Exception e)
-            {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
-            }
-        }
-
-        /// <summary>
-        /// Returns all tasks
-        /// </summary>
-        /// <returns></returns>        
-        [HttpGet]
-        [Route("{count:int}/{page:int}")]
-        public IHttpActionResult GetAllTasks(int count, int page)
-        {
-            try
-            {
-                var taskInstances = _pr.GetAllTasks();
-                var workflowItems = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
-                return Json(new
-                {
-                    items = workflowItems,
-                    total = taskInstances.Count,
+                    total = _pr.CountPendingTasks(),
                     page = page,
                     count = count
                 }, ViewHelpers.CamelCase);
@@ -210,8 +184,34 @@ namespace Workflow.Api
                 log.Error(string.Concat(s + Helpers.GetUser(userId).Name, ex));
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, s));
             }
-        }    
+        }
 
-        #endregion      
+        /// <summary>
+        /// Returns all tasks
+        /// </summary>
+        /// <returns></returns>        
+        [HttpGet]
+        [Route("group/{groupId:int}/{count:int}/{page:int}")]
+        public IHttpActionResult GetAllTasksForGroup(int groupId, int count = 10, int page = 1)
+        {
+            try
+            {
+                var taskInstances = _pr.GetAllGroupTasks(groupId, count, page);
+                var workflowItems = taskInstances.ToWorkflowTaskList();
+                return Json(new
+                {
+                    items = workflowItems,
+                    total = _pr.CountGroupTasks(groupId),
+                    page = page,
+                    count = count
+                }, ViewHelpers.CamelCase);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+            }
+        }
+
+        #endregion
     }
 }

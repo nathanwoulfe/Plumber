@@ -9,6 +9,7 @@
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.admin.dashboard.controller.js',
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.cancel.controller.js',
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.config.controller.js',
+		'~/App_Plugins/Workflow/backoffice/controllers/workflow.docs.dashboard.controller.js',
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.drawerbuttons.controller.js',
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.history.controller.js',
 		'~/App_Plugins/Workflow/backoffice/controllers/workflow.settings.controller.js',

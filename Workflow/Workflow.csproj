@@ -80,6 +80,7 @@
     <Compile Include="Relators\UserToGroupForInstanceRelator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.docs.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.drawerbuttons.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.admin.dashboard.controller.js" />
@@ -130,6 +131,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\tree\settings.html" />
     <Content Include="App_Plugins\Workflow\Lang\en-US.xml" />
     <None Include="app.config" />
+    <None Include="App_Plugins\Workflow\Backoffice\css\dashboard.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\highcharts.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\styles.css.map">
       <DependentUpon>styles.css</DependentUpon>

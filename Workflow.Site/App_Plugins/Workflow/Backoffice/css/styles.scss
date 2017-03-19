@@ -5,6 +5,7 @@
     /* import highcharts styles, and scope to workflow class, just in case of collisions... */
     @import "../lib/highcharts/highcharts.css";
     @import "highcharts";
+    @import "dashboard";
 
     hr {
         clear:both;

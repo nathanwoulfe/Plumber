@@ -141,7 +141,6 @@ namespace Workflow
                         {
                             msg.To.Add(address);
                         }
-                        msg.To.Add(new MailAddress("mail@testdomain.com"));
                         msg.Subject = subject;
                         msg.Body = html;
                         msg.IsBodyHtml = true;
@@ -149,7 +148,7 @@ namespace Workflow
                         client.Send(msg);
                     }
                 }
-                catch (Exception ex) { }
+                catch (Exception) { }
             }
         }
     }

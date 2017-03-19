@@ -77,7 +77,7 @@ namespace Workflow
             try
             {
                 MailAddress m = new MailAddress(email);
-                return true;
+                return m.Address == email;
             }
             catch (Exception)
             {
