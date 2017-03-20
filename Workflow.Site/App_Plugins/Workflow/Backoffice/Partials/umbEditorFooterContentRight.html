@@ -1,6 +1,10 @@
 ﻿<div ng-controller="Workflow.DrawerButtons.Controller as vm">
     <!-- replaces the drawer buttons on the right hand side - removes save from preview -->
 
+    <div class="active-banner" ng-if="vm.active">
+        <p>Node is currently in a workflow</p>
+    </div>
+
     <umb-button ng-if="page.listViewPath"
                 type="link"
                 href="#{{page.listViewPath}}"
