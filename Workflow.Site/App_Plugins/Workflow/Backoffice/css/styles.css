@@ -37,6 +37,10 @@
     padding: 10px; }
   .workflow .dash-inner-area a {
     text-decoration: underline; }
+  .workflow .dash-inner-area .nav-tabs {
+    position: relative; }
+    .workflow .dash-inner-area .nav-tabs a {
+      text-decoration: none; }
   .workflow .umb-dashboard-grid {
     line-height: 1.6em;
     color: #666666;
@@ -354,4 +358,8 @@
       margin-left: 130px; }
     .workflow .chart-controls .umb-property {
       flex: 1; }
+  .workflow .active-banner {
+    display: inline-block;
+    margin-right: 10px;
+    color: #df7f48; }
 

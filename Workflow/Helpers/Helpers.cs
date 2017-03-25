@@ -35,6 +35,11 @@ namespace Workflow
             return n;
         }
 
+        public static bool GetNodeStatus(int id)
+        {
+            return _pr.InstancesByNodeAndStatus(id, new List<int> { (int)WorkflowStatus.PendingApproval }).Any();
+        }
+
         public static IUser GetUser(int id)
         {
             return _us.GetUserById(id);
@@ -167,27 +172,8 @@ namespace Workflow
             string docUrl = "";
             string pageViewLink = "";
             string pageEditLink = "";
-            string differencesLink = "";
             umbraco.NodeFactory.Node n = new umbraco.NodeFactory.Node(docId);
-            if (n.Id != 0)  // Published
-            {
-                docTitle = n.Name;
-                if (taskInstance.WorkflowInstance.Type == (int)WorkflowType.Publish)
-                {
-                    differencesLink = "<a href=\"javascript:UmbClientMgr.openModalWindow('plugins/Usc/Dialogs/ShowDifferences.aspx?id=" +
-                        taskInstance.WorkflowInstance.Id + "', 'Differences', true, 550, 520, 150, 150);\">Differences</a>";
-                }
-                else // Unpublish workflow doesnt need a differences link
-                {
-                    differencesLink = "";
-                }
-            }
-            else // Unpublished
-            {
-                var document = ApplicationContext.Current.Services.ContentService.GetById(docId);
-                docTitle = document.Name;
-                differencesLink = "<a href=\"javascript:window.alert('This document has not previously been published.')\">Differences</a>";
-            }
+           
             docUrl = GetDocPreviewUrl(docId);
 
             if (includeEdit)
@@ -198,9 +184,7 @@ namespace Workflow
             pageViewLink = "<a  target=\"_blank\" href=\"" + docUrl + "\">" + docTitle + "</a>";
 
             string createdDate = taskInstance.CreatedDate.ToString("dd/MM/yy");
-
             string authorText = taskInstance.WorkflowInstance.AuthorUser.Name;
-
             string approverText = "<a title='" + taskInstance.UserGroup.UsersSummary + "'>" + taskInstance.UserGroup.Name + "</a>";
 
             string cancelLink = "";
@@ -218,7 +202,7 @@ namespace Workflow
             }
 
             result += "<td>" + taskInstance.WorkflowInstance.TypeDescription + "</td><td><div>" + pageViewLink + "&nbsp" + pageEditLink + "</div></td><td>" + authorText + "</td><td>" + createdDate + "</td><td>" + approverText +
-                "</td><td><small>" + taskInstance.WorkflowInstance.AuthorComment + "</small></td><td>" + actionLink + " " + differencesLink + " " + cancelLink + "</td>";
+                "</td><td><small>" + taskInstance.WorkflowInstance.AuthorComment + "</small></td><td>" + actionLink + " " + cancelLink + "</td>";
 
             return result;
         }

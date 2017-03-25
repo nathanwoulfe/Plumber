@@ -297,4 +297,10 @@
             flex:1;
         }
     }
+
+    .active-banner {
+        display:inline-block;
+        margin-right:10px;
+        color:$warning;
+    }
 }

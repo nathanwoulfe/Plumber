@@ -36,13 +36,13 @@
 
         var buttons = {
             approveButton: {
-                labelKey: "workflow_approveButton",
+                labelKey: "workflow_approveButtonLong",
                 handler: function (item) {
                     vm.workflowOverlay = workflowActionsService.action(item, true);
                 }
             },
             cancelButton: {
-                labelKey: "workflow_cancelButton",
+                labelKey: "workflow_cancelButtonLong",
                 cssClass: 'danger',
                 handler: function (item) {
                     vm.workflowOverlay = workflowActionsService.cancel(item);

@@ -11,10 +11,19 @@
                 if (resp.items.length) {
                     vm.active = true;
                     checkUserAccess(resp.items[0]);
+                    addHeader();
                 }
             }, function (err) {
 
             });
+
+        function addHeader() {
+            var elm = document.querySelector('.umb-editor-header'),
+                banner = document.createElement('div').innerHTML = '<p>Something</p>';
+
+            banner.setAttribute('class', 'active-banner');
+            elm.parentNode.insertBefore(banner, elm.nextSibling);
+        }
 
         function checkUserAccess(task) {
             userService.getCurrentUser()
@@ -36,13 +45,13 @@
 
         var buttons = {
             approveButton: {
-                labelKey: "workflow_approveButton",
+                labelKey: "workflow_approveButtonLong",
                 handler: function (item) {
                     vm.workflowOverlay = workflowActionsService.action(item, true);
                 }
             },
             cancelButton: {
-                labelKey: "workflow_cancelButton",
+                labelKey: "workflow_cancelButtonLong",
                 cssClass: 'danger',
                 handler: function (item) {
                     vm.workflowOverlay = workflowActionsService.cancel(item);

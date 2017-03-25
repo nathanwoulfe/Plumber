@@ -5,9 +5,11 @@
   </area>
   <area alias="workflow">
     <key alias="approveButton">Approve</key>
+    <key alias="approveButtonLong">Approve changes</key>
     <key alias="editButton">Edit</key>
-    <key alias="cancelButton">Cancel</key>    
-    <key alias="rejectButton">Reject</key>
+    <key alias="cancelButton">Cancel</key>
+    <key alias="cancelButtonLong">Cancel workflow</key>
+    <key alias="rejectButton">Reject changes</key>
     <key alias="dateRange">Date range</key>
     <key alias="viewType">View type</key>
     <key alias="flowType">Flow type</key>
