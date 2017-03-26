@@ -48,7 +48,7 @@ namespace Workflow
             if (firstTab != null)
             {
                 var xmlToAdd = "<tab caption='Workflow'>" +
-                                    "<control addPanel='true' panelCaption=''>//app_plugins/workflow/backoffice/views/workflow.userdashboard.html</control>" +
+                                    "<control addPanel='true' panelCaption=''>/app_plugins/workflow/backoffice/views/workflow.userdashboard.html</control>" +
                                 "</tab>";
 
                 //Load in the XML string above

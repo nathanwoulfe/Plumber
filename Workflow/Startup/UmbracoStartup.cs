@@ -51,7 +51,7 @@ namespace Workflow
         void InstalledPackage_BeforeDelete(InstalledPackage sender, System.EventArgs e)
         {
             //Check which package is being uninstalled
-            if (sender.Data.Name == "Workflow")
+            if (sender.Data.Name == "Plumber")
             {
                 var uninstall = new Uninstaller();
 

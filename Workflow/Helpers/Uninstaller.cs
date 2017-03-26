@@ -44,7 +44,7 @@ namespace Workflow
 
             // Dashboard Root Node
             // <dashboard>
-            XmlNode dashboardNode = dashboardXml.SelectSingleNode("//dashboard");
+            XmlNode dashboardNode = dashboardXml.SelectSingleNode("//dashBoard");
 
             if (dashboardNode != null)
             {
