@@ -35,9 +35,12 @@
     <Compile Include="Api\InstancesController.cs" />
     <Compile Include="Extensions\WorkflowListExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
+    <Compile Include="Helpers\Installer.cs" />
+    <Compile Include="Helpers\Uninstaller.cs" />
     <Compile Include="Relators\UserToGroupForPermissionsRelator.cs" />
     <Compile Include="Startup\RegisterEvents.cs" />
     <Compile Include="Startup\StringContraint.cs" />
+    <Compile Include="Startup\UmbracoStartup.cs" />
     <Compile Include="Startup\WebApiConfig.cs" />
     <Compile Include="Startup\WorkflowContextMenuController.cs" />
     <Compile Include="Tree\WorkflowApplication.cs" />
@@ -184,6 +187,7 @@
       <HintPath>..\packages\UmbracoCms.Core.7.5.9\lib\SQLCE4Umbraco.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.5.9\lib\System.Data.SqlServerCe.dll</HintPath>
