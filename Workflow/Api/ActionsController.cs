@@ -74,13 +74,18 @@ namespace Workflow.Api
 
                 return Json(new
                 {
-                    message = msg
+                    message = msg,
+                    status = 200
                 }, ViewHelpers.CamelCase);
 
             }
             catch (Exception e)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+                return Json(new
+                {
+                    message = ViewHelpers.ApiException(e),
+                    status = 500
+                }, ViewHelpers.CamelCase);
             }
         }
 

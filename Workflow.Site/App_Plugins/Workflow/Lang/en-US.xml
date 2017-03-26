@@ -10,6 +10,9 @@
     <key alias="cancelButton">Cancel</key>
     <key alias="cancelButtonLong">Cancel workflow</key>
     <key alias="rejectButton">Reject changes</key>
+    <key alias="saveButton">Save</key>
+    <key alias="publishButton">Request publish</key>
+    <key alias="unpublishButton">Request unpublish</key>
     <key alias="dateRange">Date range</key>
     <key alias="viewType">View type</key>
     <key alias="flowType">Flow type</key>

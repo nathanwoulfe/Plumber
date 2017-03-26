@@ -1,20 +1,12 @@
-﻿<div ng-controller="Workflow.Submit.Controller as vm">
+﻿<div ng-controller="Workflow.Submit.Controller">
     <div class="umb-dialog-body with-footer workflow">
         <umb-pane>
-            <div ng-show="vm.dirty" class="alert alert-warning">
+            <div ng-show="dirty" class="alert alert-warning">
                 <strong>WARNING!</strong> Page has unsaved changes.
             </div>
-                <p ng-show="vm.isPublish">Please add a comment describing the changes.</p>
-                <p ng-show="!vm.isPublish">Please add a comment.</p>
-                <textarea ng-model="vm.comment"></textarea>
+                <p ng-show="model.isPublish">Please add a comment describing the changes.</p>
+                <p ng-show="!model.isPublish">Please add a comment.</p>
+                <textarea ng-model="model.comment"></textarea>
         </umb-pane>
-    </div>
-    <div class="umb-dialog-footer btn-toolbar umb-btn-toolbar">
-        <button class="btn btn-link" ng-click="nav.hideDialog()">
-            <localize key="general_cancel">Cancel</localize>
-        </button>
-        <button href="" class="btn btn-primary" ng-click="vm.ok()" ng-disabled="!vm.comment.length">
-            <localize key="general_ok">OK</localize>
-        </button>
     </div>
 </div>

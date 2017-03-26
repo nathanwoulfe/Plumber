@@ -17,15 +17,13 @@
                 label="Preview">
     </umb-button>
 
-    <umb-button-group ng-if="defaultButton && !vm.active"
-                      default-button="defaultButton"
-                      sub-buttons="subButtons"
-                      state="page.buttonGroupState"
-                      direction="up"
-                      float="right">
-    </umb-button-group>
+    <umb-button ng-if="page.isNew"
+                type="button"
+                action="save(content)"
+                label="Save">
+    </umb-button>
 
-    <workflow-button-group ng-if="vm.active && (vm.canAction || vm.adminUser)"
+    <workflow-button-group ng-if="!page.isNew"
                            default-button="vm.buttonGroup.defaultButton"
                            sub-buttons="vm.buttonGroup.subButtons"
                            direction="up"

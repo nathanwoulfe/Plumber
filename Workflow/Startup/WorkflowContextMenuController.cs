@@ -28,22 +28,22 @@ namespace UmbracoWorkflow.Actions
 
                 items.Add(i);
 
-                if (!inProcess)
-                {
-                    i = new Umbraco.Web.Models.Trees.MenuItem("sendForPublish", "Send for publish");
-                    i.LaunchDialogView("/App_Plugins/Workflow/Backoffice/dialogs/workflow.submit.dialog.html", "Send for publish approval: " + nodeName);
-                    i.AdditionalData.Add("isPublish", true);
-                    i.Icon = "check";
+                //if (!inProcess)
+                //{
+                //    i = new Umbraco.Web.Models.Trees.MenuItem("sendForPublish", "Send for publish");
+                //    i.LaunchDialogView("/App_Plugins/Workflow/Backoffice/dialogs/workflow.submit.dialog.html", "Send for publish approval: " + nodeName);
+                //    i.AdditionalData.Add("isPublish", true);
+                //    i.Icon = "check";
 
-                    items.Add(i);
+                //    items.Add(i);
 
-                    i = new Umbraco.Web.Models.Trees.MenuItem("sendForUnpublish", "Send for unpublish");
-                    i.LaunchDialogView("/App_Plugins/Workflow/Backoffice/dialogs/workflow.submit.dialog.html", "Send for unpublish approval: " + nodeName);
-                    i.AdditionalData.Add("isPublish", false);
-                    i.Icon = "delete";
+                //    i = new Umbraco.Web.Models.Trees.MenuItem("sendForUnpublish", "Send for unpublish");
+                //    i.LaunchDialogView("/App_Plugins/Workflow/Backoffice/dialogs/workflow.submit.dialog.html", "Send for unpublish approval: " + nodeName);
+                //    i.AdditionalData.Add("isPublish", false);
+                //    i.Icon = "delete";
 
-                    items.Add(i);
-                }
+                //    items.Add(i);
+                //}
 
                 if (currentUser.Alias == "admin")
                 {

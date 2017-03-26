@@ -38,6 +38,31 @@
                 return workflowOverlay;
             },
 
+            initiate: function (name, id, publish) {
+                var workflowOverlay = {
+                    view: '../app_plugins/workflow/backoffice/dialogs/workflow.submit.dialog.html',
+                    show: true,
+                    title: 'Send for ' + (publish ? 'publish' : 'unpublish') + ' approval',
+                    subtitle: 'Document: ' + name,
+                    isPublish: publish,
+                    nodeId: id,
+                    submit: function (model) {
+                        workflowResource.initiateWorkflow(id, model.comment, publish)
+                            .then(function (resp) {
+                                notify(resp);
+                            });
+
+                        workflowOverlay.close();
+                    },
+                    close: function (model) {
+                        workflowOverlay.show = false;
+                        workflowOverlay = null;
+                    }
+                };
+
+                return workflowOverlay;
+            },
+
             cancel: function (item) {
                 var workflowOverlay = {
                     view: '../app_plugins/workflow/backoffice/dialogs/workflow.cancel.dialog.html',

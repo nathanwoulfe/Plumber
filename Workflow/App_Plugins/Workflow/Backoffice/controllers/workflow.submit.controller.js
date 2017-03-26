@@ -1,37 +1,13 @@
 ﻿(function () {
     'use strict';
 
-    function submitController($scope, notificationsService, workflowResource, navigationService) {
-        var vm = this,
-			nodeId = $scope.dialogOptions.currentNode.id;
-
-        workflowResource.getStatus(nodeId)
-            .then(function (resp) {
-                if (resp === 'true') {
-                    navigationService.hideDialog();
-                    notificationsService.error('ERROR', 'Page is already in a workflow process.');
-                }
-            }, function (err) {
-                notificationsService.error("ERROR", err);
-            });
+    function submitController($scope) {
 
         var formScope = angular.element($('form[name="contentForm"]')).scope();
-        vm.dirty = formScope ? formScope.contentForm.$dirty : false;  
+        $scope.dirty = formScope ? formScope.contentForm.$dirty : false;  
 
-        function ok() {
-            workflowResource.initiateWorkflow(nodeId, vm.comment, vm.isPublish)
-                .then(function (resp) {
-                    navigationService.hideDialog();
-                    notificationsService.success("SUCCESS", resp.message);
-                }, function (err) {
-                    notificationsService.error("ERROR", err);
-                });
-        }
-
-        angular.extend(vm, {
-            ok: ok,
-            comment: '',
-            isPublish: $scope.dialogOptions.currentAction.metaData.isPublish
+        $scope.$watch('model.comment', function (newVal) {
+            $scope.model.hideSubmitButton = !newVal || newVal.length === 0;
         });
     }
 

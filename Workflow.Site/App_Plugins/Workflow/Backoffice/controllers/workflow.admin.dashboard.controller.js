@@ -88,6 +88,7 @@
                 }
             });
 
+            console.log(spline.data);
             spline.data.forEach(function (d, i) {
                 if (i > 0) {
                     spline.data[i] += spline.data[i - 1];
@@ -107,12 +108,12 @@
             var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
             var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
-            return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+            return Math.floor((utc2 - utc1) / _MS_PER_DAY - 1);
         }
 
         function defaultData() {
             var arr = [];
-            for (var i = 0; i < vm.range; i += 1) {
+            for (var i = 0; i <= vm.range; i += 1) {
                 arr.push(0);
             }
             return arr;
