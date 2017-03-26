@@ -52,11 +52,11 @@ namespace Workflow
                                 "</tab>";
 
                 //Load in the XML string above
-                XmlDocument xmlNodeToAdd = new XmlDocument();
-                xmlNodeToAdd.LoadXml(xmlToAdd);
+                XmlDocumentFragment frag = dashboardXml.CreateDocumentFragment();
+                frag.InnerXml = xmlToAdd;
 
                 //Append the xml above to the dashboard node
-                dashboardXml.DocumentElement.InsertAfter(xmlNodeToAdd, firstTab);
+                dashboardXml.SelectSingleNode("//section [@alias='StartupDashboardSection']").InsertAfter(frag, firstTab);
 
                 //Save the file flag to true
                 saveFile = true;
