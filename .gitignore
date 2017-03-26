@@ -12,6 +12,7 @@
 **/App_Data/cache/*
 **/App_Data/preview/*
 *umbraco.config
+Workflow.Site/App_Plugins/Workflow/**
 
 # Build results
 
