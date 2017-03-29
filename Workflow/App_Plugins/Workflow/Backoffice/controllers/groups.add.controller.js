@@ -7,10 +7,11 @@
             userGroupsResource.add(name)
                 .then(function (resp) {
                     if (resp.status === 200) {
+                        treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'users' })
+                            .then(function (r) {
+                                window.location = '/umbraco/#/workflow/tree/edit/' + resp.id;
+                            });
                         notificationsService.success('SUCCESS', resp.msg);
-                        window.location = '/umbraco/#/workflow/tree/edit/' + resp.id;
-                        navigationService.hideNavigation();
-                        refreshTree();
                     } else {
                         notificationsService.error('ERROR', resp.msg);
                     }
@@ -18,10 +19,6 @@
                     notificationsService.error('ERROR', err);
                 });
         };
-
-        function refreshTree() {
-            treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'users' });
-        }
 
         $scope.cancelAdd = function () {
             navigationService.hideNavigation();

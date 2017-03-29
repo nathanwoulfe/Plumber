@@ -86,7 +86,7 @@
 
                 return workflowOverlay;
             }
-        }
+        };
 
         // display notification after actioning workflow task
         function notify(d) {

@@ -6,24 +6,19 @@
         $scope.delete = function (id) {
             userGroupsResource.delete(id)
                 .then(function (resp) {
-                    notificationsService.success('SUCCESS', resp);
-                    refreshTree();
+                    treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'users' })
+                        .then(function (r) {
+                            window.location = '/umbraco/#/workflow/tree/view/groups';
+                        });
                     navigationService.hideNavigation();
+                    notificationsService.success('SUCCESS', resp);
                 });
         };
 
         $scope.cancelDelete = function () {
             navigationService.hideNavigation();
         };
-
-        function refreshTree() {
-            treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'users' })
-                .then(function (r) {
-                    window.location = '/umbraco/#/workflow/tree/view/groups';
-                });
-        }
-
-    };
+    }
 
     angular.module('umbraco').controller('Workflow.Groups.Delete.Controller', deleteController);
 }());

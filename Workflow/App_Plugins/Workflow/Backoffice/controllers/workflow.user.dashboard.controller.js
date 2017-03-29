@@ -9,7 +9,7 @@
             getPending();
             getSubmissions();
             getAdmin();
-        };
+        }
 
         function getPending() {
             // api call for tasks assigned to the current user

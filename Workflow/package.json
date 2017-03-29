@@ -1,0 +1,34 @@
+{
+  "name": "Workflow",
+  "version": "1.0.0",
+  "url": "http://our.umbraco.org/projects/developer-tools/my-awesome-package",
+  "description": "Workflow for Umbraco",
+  "license": "MIT",
+  "licenseUrl": "https://opensource.org/licenses/MIT",
+  "author": {
+    "name": "Nathan Woulfe",
+    "email": "nathan@nathanw.com.au",
+    "url": "http://www.nathanw.com.au"
+  },
+  "devDependencies": {
+    "grunt": "*",
+    "load-grunt-tasks": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-sass": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-template": "*",
+    "grunt-nuget": "*",
+    "grunt-mkdir": "*",
+    "grunt-banner": "*",
+    "grunt-umbraco-package": "*",
+    "time-grunt": "*",
+    "grunt-karma": "*",
+    "karma": "*",
+    "karma-jasmine": "*",
+    "karma-phantomjs-launcher": "*"
+  }
+}

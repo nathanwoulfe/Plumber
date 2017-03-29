@@ -1,0 +1,24 @@
+﻿<div class="umb-panel workflow">
+    <div class="umb-dashboard" ng-controller="Workflow.AdminDashboard.Controller as vm">
+        <umb-editor-view footer="false">
+            <umb-editor-container>           
+                <ul class="chart-header">
+                    <li><span ng-bind="vm.totalApproved" class="highcharts-color-0"></span>approved</li>
+                    <li><span ng-bind="vm.totalCancelled" class="highcharts-color-1"></span>cancelled</li>
+                    <li><span ng-bind="vm.totalRejected" class="highcharts-color-3"></span>rejected</li>
+                    <li><span ng-bind="vm.totalPending" class="highcharts-color-2"></span>active</li>
+                </ul>
+                <wf-line-chart series="vm.series" ready="vm.loaded" ng-class="{ 'chart-loading' : !vm.loaded }"></wf-line-chart>
+                <div class="chart-controls">
+                    <umb-control-group label="@workflow_dateRange">
+                        <input type="number" name="date-range" ng-model="vm.range" ng-change="vm.getForRange()" ng-model-options="{ debounce: 300 }" no-dirty-check/>
+                    </umb-control-group>
+                    <umb-control-group label="@workflow_viewType">
+                        <select name="view-type" ng-model="vm.type" ng-options="o for o in ['Task', 'Instance']" ng-change="vm.getForRange()" no-dirty-check/>
+                    </umb-control-group>
+                </div>
+            </umb-editor-container>
+        </umb-editor-view> 
+        <umb-load-indicator ng-if="!vm.loaded"></umb-load-indicator>
+    </div>
+</div>

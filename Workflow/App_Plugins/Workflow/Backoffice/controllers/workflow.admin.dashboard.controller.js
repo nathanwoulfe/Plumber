@@ -7,25 +7,6 @@
             _MS_PER_DAY = 1000 * 60 * 60 * 24,
             now = new Date();
 
-        function getForRange() {
-            if (vm.range > 0) {
-                vm.loaded = false;
-                vm.totalApproved = vm.totalCancelled = vm.totalPending = vm.totalRejected = 0;
-
-                if (vm.type === 'Task') {
-                    workflowResource.getAllTasksForRange(vm.range)
-                        .then(function (resp) {
-                            lineChart(resp.items);
-                        });
-                } else {
-                    workflowResource.getAllInstancesForRange(vm.range)
-                        .then(function (resp) {
-                            lineChart(resp.items);
-                        });
-                }
-            }
-        }
-
         function lineChart(items) {
 
             var series = [],
@@ -116,6 +97,25 @@
                 arr.push(0);
             }
             return arr;
+        }
+
+        function getForRange() {
+            if (vm.range > 0) {
+                vm.loaded = false;
+                vm.totalApproved = vm.totalCancelled = vm.totalPending = vm.totalRejected = 0;
+
+                if (vm.type === 'Task') {
+                    workflowResource.getAllTasksForRange(vm.range)
+                        .then(function (resp) {
+                            lineChart(resp.items);
+                        });
+                } else {
+                    workflowResource.getAllInstancesForRange(vm.range)
+                        .then(function (resp) {
+                            lineChart(resp.items);
+                        });
+                }
+            }
         }
 
         // kick it off with a four-week span

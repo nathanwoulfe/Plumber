@@ -5,6 +5,39 @@
 
         var vm = this;
 
+        // filter all users to remove those in the group
+        function getUsersNotInGroup() {
+            vm.notInGroup = [];
+            angular.forEach(vm.allUsers, function (user) {
+                if (!vm.group.usersSummary || vm.group.usersSummary.indexOf('|' + user.id + '|') === -1) {
+                    vm.notInGroup.push(user);
+                }
+            });
+        }
+
+        // only fetch group if id is valid - otherwise it's a create action
+        function getGroup() {
+            if ($routeParams.id !== '-1') {
+                userGroupsResource.get($routeParams.id)
+                    .then(function (resp) {
+                        vm.group = resp;
+                        vm.name = $routeParams.id !== '-1' ? 'Edit ' : 'Create ' + resp.name;
+                        getUsersNotInGroup();
+                    });
+            } else {
+                vm.group = {
+                    groupId: -1,
+                    name: '',
+                    description: '',
+                    alias: '',
+                    groupEmail: '',
+                    users: [],
+                    usersSummary: ''
+                };
+                getUsersNotInGroup();
+            }
+        }
+
         // fetch all active users, then get the group
         // this kicks it all off...
         function getAllUsers() {
@@ -30,39 +63,6 @@
             getHistory();
         }
 
-        // only fetch group if id is valid - otherwise it's a create action
-        function getGroup() {
-            if ($routeParams.id !== '-1') {
-                userGroupsResource.get($routeParams.id)
-                    .then(function (resp) {
-                        vm.group = resp;
-                        vm.name = $routeParams.id !== '-1' ? 'Edit ' : 'Create ' + resp.name;
-                        getUsersNotInGroup();                        
-                    });
-            } else {
-                vm.group = {
-                    groupId: -1,
-                    name: '',
-                    description: '',
-                    alias: '',
-                    groupEmail: '',
-                    users: [],
-                    usersSummary: ''
-                };
-                getUsersNotInGroup();
-            }
-        }
-
-        // filter all users to remove those in the group
-        function getUsersNotInGroup() {
-            vm.notInGroup = [];
-            angular.forEach(vm.allUsers, function (user) {
-                if (!vm.group.usersSummary || vm.group.usersSummary.indexOf('|' + user.id + '|') === -1) {
-                    vm.notInGroup.push(user);
-                }
-            });
-        }
-
         // add a user to the group, and remove from notInGroup
         function add(id) {
             var index,
@@ -76,7 +76,7 @@
                 })[0];
 
             $scope.notInGroup.splice(index, 1);
-        };
+        }
 
         //
         function remove(id) {
@@ -91,7 +91,7 @@
                 });
 
             vm.group.users.splice(index, 1);
-        };
+        }
 
         //
         function save() {
@@ -105,7 +105,7 @@
                 }, function (err) {
                     notificationsService.error('ERROR', err);
                 });
-        };
+        }
 
         angular.extend(vm, {
             save: save,
@@ -137,7 +137,6 @@
 
         getAllUsers();
         getHistory();
-
     }
 
     angular.module('umbraco').controller('Workflow.Groups.Edit.Controller', editController);

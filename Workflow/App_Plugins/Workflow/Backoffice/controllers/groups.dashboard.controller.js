@@ -15,7 +15,7 @@
             return users.map(function (v) {
                 return v.user.email;
             }).join(';');
-        };
+        }
 
         angular.extend(vm, {
             name: 'User groups',
@@ -24,7 +24,7 @@
 
             getEmail: getEmail
         });
-    };
+    }
 
     angular.module('umbraco').controller('Workflow.Groups.Dashboard.Controller', dashboardController);
 
