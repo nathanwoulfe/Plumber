@@ -5,7 +5,7 @@ ECHO APPVEYOR_BUILD_VERSION : %APPVEYOR_BUILD_VERSION%
 ECHO PACKAGE_SUFFIX : %UMBRACO_PACKAGE_PRERELEASE_SUFFIX%
 cd ..\Workflow\App_Plugins\Plumber
 Call npm install
-Call grunt --buildversion %APPVEYOR_BUILD_VERSION% --buildbranch %APPVEYOR_REPO_BRANCH% --packagesuffix %UMBRACO_PACKAGE_PRERELEASE_SUFFIX%
+Call grunt default --buildversion %APPVEYOR_BUILD_VERSION% --buildbranch %APPVEYOR_REPO_BRANCH% --packagesuffix %UMBRACO_PACKAGE_PRERELEASE_SUFFIX%
 cd ..\..\..\BuildPackage\
 Call Tools\nuget.exe restore ..\Workflow.sln
 Call "%programfiles(x86)%\MSBuild\12.0\Bin\MsBuild.exe" package.proj
