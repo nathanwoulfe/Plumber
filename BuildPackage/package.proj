@@ -121,7 +121,7 @@
       <SrcFiles Include="$(CoreProjectDir)\**\*.cs" Exclude="$(CoreProjectDir)\obj\**"/>
       <PackageFile Include="$(MSBuildProjectDirectory)\package.xml" />
       <NuSpecFile Include="$(MSBuildProjectDirectory)\package.nuspec" />
-      <AppPluginFiles Include="$(PropertyEditorProjectDir)\dist\App_Plugins\**\*" />
+      <AppPluginFiles Include="$(PropertyEditorProjectDir)\dist\App_Plugins\**" />
     </ItemGroup>
     <Copy SourceFiles="@(CoreBinFile)" DestinationFolder="$(BuildUmbDir)\bin" />
     <Copy SourceFiles="@(SkyBrudSocialBinFile)" DestinationFolder="$(BuildUmbDir)\bin" />
