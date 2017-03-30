@@ -121,16 +121,14 @@
       <SrcFiles Include="$(CoreProjectDir)\**\*.cs" Exclude="$(CoreProjectDir)\obj\**"/>
       <PackageFile Include="$(MSBuildProjectDirectory)\package.xml" />
       <NuSpecFile Include="$(MSBuildProjectDirectory)\package.nuspec" />
-      <AppPluginFiles Include="$(PropertyEditorProjectDir)\dist\App_Plugins\**" />
+      <AppPluginFiles Include="$(PropertyEditorProjectDir)\dist\App_Plugins\Workflow\**\*" />
     </ItemGroup>
     <Copy SourceFiles="@(CoreBinFile)" DestinationFolder="$(BuildUmbDir)\bin" />
-    <Copy SourceFiles="@(SkyBrudSocialBinFile)" DestinationFolder="$(BuildUmbDir)\bin" />
     <Copy SourceFiles="@(PackageFile)" DestinationFolder="$(BuildUmbDir)" />
     <Copy SourceFiles="@(AppPluginFiles)" DestinationFiles="@(AppPluginFiles->'$(BuildUmbDir)\App_Plugins\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(CoreBinFile)" DestinationFolder="$(BuildNuGetDir)\lib\net45" />
     <Copy SourceFiles="@(CorePdbFile)" DestinationFolder="$(BuildNuGetDir)\lib\net45" />
-    <Copy SourceFiles="@(SrcFiles)"
-   DestinationFiles="@(SrcFiles->'$(BuildNuGetDir)\src\%(RecursiveDir)%(Filename)%(Extension)')" />    
+    <Copy SourceFiles="@(SrcFiles)" DestinationFiles="@(SrcFiles->'$(BuildNuGetDir)\src\%(RecursiveDir)%(Filename)%(Extension)')" />    
     <Copy SourceFiles="@(NuSpecFile)" DestinationFolder="$(BuildNuGetDir)" />
     <Copy SourceFiles="@(AppPluginFiles)" DestinationFiles="@(AppPluginFiles->'$(BuildNuGetDir)\Content\App_Plugins\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
