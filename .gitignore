@@ -14,6 +14,7 @@
 *umbraco.config
 Workflow.Site/App_Plugins/Workflow/**
 Workflow/pkg
+Workflow/dist
 Workflow/tmp
 
 # Build results

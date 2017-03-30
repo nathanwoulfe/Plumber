@@ -1,0 +1,34 @@
+<!--
+ *! Workflow - v1.0.0-build1 - 2017-03-30
+ * Copyright (c) 2017 Nathan Woulfe;
+ * Licensed MIT
+ * -->
+
+<div class="table-row-outer">
+    <div class="umb-table-row {{ task.cssStatus }} {{ item.cssStatus }}" ng-repeat="task in item.tasks">
+        <div class="umb-table-cell">
+            <i class="umb-table-body__icon icon-document" ng-class="{'soft' : !$first}"></i>
+        </div>
+        <div class="umb-table-cell">
+            <a ng-if="$first" href="#" ng-href="/umbraco/dialogs/preview.aspx?id={{ item.nodeId }}" ng-bind="item.nodeName" target="_blank"></a>
+        </div>
+        <div class="umb-table-cell">
+            <span ng-if="$first" ng-bind="item.type"></span>
+        </div>
+        <div class="umb-table-cell">
+            <span ng-if="$first" ng-bind="item.requestedBy"></span>
+        </div>
+        <div class="umb-table-cell">
+            {{ task.requestedOn }}
+        </div>
+        <div class="umb-table-cell">
+            {{ task.status }}
+        </div>
+        <div class="umb-table-cell">
+            {{ task.comments }}
+        </div>
+        <div class="umb-table-cell">
+            {{ task.approvalGroup }}
+        </div>
+    </div>
+</div>

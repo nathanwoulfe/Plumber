@@ -1,0 +1,43 @@
+<!--
+ *! Workflow - v1.0.0-build1 - 2017-03-30
+ * Copyright (c) 2017 Nathan Woulfe;
+ * Licensed MIT
+ * -->
+
+<div class="umb-pane workflow" ng-controller="Workflow.Config.Controller as vm">
+    <div class="umb-dialog-body with-footer">
+        <div class="umb-pane">
+            <h5>Workflow approval flow</h5>
+            <select class="flow-select" ng-model="vm.selectedApprovalGroup" ng-options="g as g.name for g in vm.groups">
+                <option selected disabled>--- Add ---</option>
+            </select>
+            <button class="btn btn-default" ng-click="vm.add()">Add</button>
+            <div ng-show="vm.approvalPath.length">
+                <h6>Current flow</h6>
+                <ul class="current-flow">
+                    <li ng-class="{'last': $last}" ng-repeat="u in vm.approvalPath track by $index" ng-click="vm.remove($event, $index)" title="Remove approval role for {{u.name}}">{{u.name}}</li>
+                </ul>
+            </div>
+            <hr />
+            <h5>Content type approval flow ({{ vm.contentTypeName }})</h5>
+            <p>Approval flow can be set by content type - this flow takes priority over any inherited flow.</p>
+            <ul class="current-flow" ng-if="vm.contentTypeApprovalPath.length">
+                <li ng-class="{'last': $last}" ng-repeat="u in vm.contentTypeApprovalPath"><a href="/umbraco/#/workflow/tree/edit/{{ u.groupId }}">{{ u.name }}</a></li>
+            </ul>
+            <p ng-if="!vm.contentTypeApprovalPath.length"><i>No content type flow set for {{ vm.contentTypeName }}</i></p>
+            <hr />
+            <h5>Inherited approval flow <span ng-if="vm.inherited.length">({{ vm.inherited[0].nodeName}})</span></h5>
+            <p>Workflow configuration is inherited from ancestor nodes unless set by content type or on the current node.</p>
+            <ul class="current-flow" ng-if="vm.inherited.length">
+                <li ng-class="{'last': $last}" ng-repeat="u in vm.inherited"><a href="/umbraco/#/workflow/tree/edit/{{ u.groupId }}">{{ u.name }}</a></li>
+            </ul>
+            <p ng-if="!vm.inherited.length">
+                <i>No inherited approval flow available for this document</i>
+            </p>
+        </div>
+    </div>
+    <div class="umb-dialog-footer btn-toolbar umb-btn-toolbar">
+        <a href="" class="btn btn-link" ng-click="nav.hideDialog()"><localize key="general_cancel">Cancel</localize></a>
+        <a href="" class="btn btn-primary" ng-click="vm.save()"><localize key="general_ok">OK</localize></a>
+    </div>
+</div>

@@ -43,7 +43,7 @@
     <FileVersion>$(APPVEYOR_BUILD_VERSION)</FileVersion>
   </PropertyGroup>
   <Choose>
-    <When Condition="$(APPVEYOR_BUILD_NUMBER) != '' And $(APPVEYOR_REPO_BRANCH) != 'master' ">
+    <When Condition="$(APPVEYOR_BUILD_NUMBER) != '' And $(APPVEYOR_REPO_TAG) != 'true' ">
       <PropertyGroup>
         <Release>false</Release>
       </PropertyGroup>
@@ -68,20 +68,22 @@
     </Otherwise>
   </Choose>
 
+ 
+
   <!-- PATHS -->
   <PropertyGroup>
     <BuildConfig>Release</BuildConfig>
     <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
     <CoreProjectDir>$(RootDir)\Workflow</CoreProjectDir>
     <BuildUmbDir>$(MSBuildProjectDirectory)\_umbraco</BuildUmbDir>
-    <BuildNuGetDir>$(MSBuildProjectDirectory)\_nuget</BuildNuGetDir>
+    <!-- <BuildNuGetDir>$(MSBuildProjectDirectory)\_nuget</BuildNuGetDir> -->
     <ArtifactsDir>$(MSBuildProjectDirectory)\artifacts</ArtifactsDir>
-    <PropertyEditorProjectDir>$(CoreProjectDir)</PropertyEditorProjectDir>
+    <GruntProjectDir>$(RootDir)\dist</GruntProjectDir>
   </PropertyGroup>
 
   <!-- TARGETS -->
   <Target Name="GetProductVersion">
-    <Error Condition="$(AbortBuild) == 'true'" Text="Aborting the build as the UMBRACO_PACKAGE_PRERELEASE_SUFFIX suffix is set 'rtm' but APPVEYOR_REPO_BRANCH is not 'master'" />
+    <Error Condition="$(AbortBuild) == 'true'" Text="Aborting the build as the UMBRACO_PACKAGE_PRERELEASE_SUFFIX suffix is set 'rtm' but APPVEYOR_REPO_TAG is not 'true'" />
     <GetProductVersion BuildVersion="$(APPVEYOR_BUILD_VERSION)" BuildSuffix="$(UMBRACO_PACKAGE_PRERELEASE_SUFFIX)" Release="$(Release)">
       <Output TaskParameter="ProductVersion" PropertyName="ProductVersion"/>
     </GetProductVersion>
@@ -89,19 +91,15 @@
 
   <!-- CLEAN -->
   <Target Name="Clean" DependsOnTargets="GetProductVersion">
-
-    <!-- Remove the directories from previous build -->
     <RemoveDir Directories="$(BuildUmbDir)" Condition="Exists('$(BuildUmbDir)')" />
-    <RemoveDir Directories="$(BuildNuGetDir)" Condition="Exists('$(BuildNuGetDir)')" />
+    <!-- <RemoveDir Directories="$(BuildNuGetDir)" Condition="Exists('$(BuildNuGetDir)')" /> -->
     <RemoveDir Directories="$(ArtifactsDir)" Condition="Exists('$(ArtifactsDir)')" />
-
-    <!-- Create new folders to output our builds -->
     <MakeDir Directories="$(BuildUmbDir)" />
-    <MakeDir Directories="$(BuildNuGetDir)" />
+    <!-- <MakeDir Directories="$(BuildNuGetDir)" /> -->
     <MakeDir Directories="$(ArtifactsDir)" />
   </Target>
 
-  <!-- UPDATE PROJECT ASSEMBLEY VERSION -->
+    <!-- UPDATE PROJECT ASSEMBLEY VERSION -->
   <Target Name="UpdateAssemblyInfo" DependsOnTargets="Clean">
     <FileUpdate Encoding="ASCII" Files="$(CoreProjectDir)\Properties\AssemblyInfo.cs" Regex="AssemblyVersion\(&quot;.*&quot;\)\]" ReplacementText="AssemblyVersion(&quot;$(FileVersion)&quot;)]" />
     <FileUpdate Encoding="ASCII" Files="$(CoreProjectDir)\Properties\AssemblyInfo.cs" Regex="AssemblyFileVersion\(&quot;.*&quot;\)\]" ReplacementText="AssemblyFileVersion(&quot;$(FileVersion)&quot;)]" />
@@ -116,21 +114,21 @@
 	<!-- PREPARE FILES -->
 	<Target Name="PrepareFiles" DependsOnTargets="Compile">
 		<ItemGroup>
-      <CoreBinFile Include="$(CoreProjectDir)\Bin\$(BuildConfig)\Workflow.dll" />
-      <CorePdbFile Include="$(CoreProjectDir)\Bin\$(BuildConfig)\Workflow.pdb" />
-      <SrcFiles Include="$(CoreProjectDir)\**\*.cs" Exclude="$(CoreProjectDir)\obj\**"/>
-      <PackageFile Include="$(MSBuildProjectDirectory)\package.xml" />
-      <NuSpecFile Include="$(MSBuildProjectDirectory)\package.nuspec" />
-      <AppPluginFiles Include="$(PropertyEditorProjectDir)\dist\App_Plugins\Workflow\**\*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(CoreBinFile)" DestinationFolder="$(BuildUmbDir)\bin" />
+			<BinFiles Include="$(CoreProjectDir)\Bin\$(BuildConfig)\Workflow.dll" />
+			<PdbFiles Include="$(CoreProjectDir)\Bin\$(BuildConfig)\Workflow.pdb" />
+			<SrcFiles Include="$(CoreProjectDir)\**\*.cs" Exclude="$(CoreProjectDir)\obj\**"/>
+			<PackageFile Include="$(MSBuildProjectDirectory)\package.xml" />
+			<!-- <NuSpecFile Include="$(MSBuildProjectDirectory)\package.nuspec" /> -->
+			<GruntProjectFiles Include="$(GruntProjectDir)\**\*" />
+		</ItemGroup>
+    <Copy SourceFiles="@(BinFiles)" DestinationFolder="$(BuildUmbDir)\bin" />
     <Copy SourceFiles="@(PackageFile)" DestinationFolder="$(BuildUmbDir)" />
-    <Copy SourceFiles="@(AppPluginFiles)" DestinationFiles="@(AppPluginFiles->'$(BuildUmbDir)\App_Plugins\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(CoreBinFile)" DestinationFolder="$(BuildNuGetDir)\lib\net45" />
-    <Copy SourceFiles="@(CorePdbFile)" DestinationFolder="$(BuildNuGetDir)\lib\net45" />
-    <Copy SourceFiles="@(SrcFiles)" DestinationFiles="@(SrcFiles->'$(BuildNuGetDir)\src\%(RecursiveDir)%(Filename)%(Extension)')" />    
-    <Copy SourceFiles="@(NuSpecFile)" DestinationFolder="$(BuildNuGetDir)" />
-    <Copy SourceFiles="@(AppPluginFiles)" DestinationFiles="@(AppPluginFiles->'$(BuildNuGetDir)\Content\App_Plugins\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <!-- <Copy SourceFiles="@(BinFiles)" DestinationFolder="$(BuildNuGetDir)\lib\net45" /> -->
+    <!-- <Copy SourceFiles="@(PdbFiles)" DestinationFolder="$(BuildNuGetDir)\lib\net45" /> -->
+    <!-- <Copy SourceFiles="@(SrcFiles)" DestinationFiles="@(SrcFiles->'$(BuildNuGetDir)\src\%(RecursiveDir)%(Filename)%(Extension)')" /> -->
+    <!-- <Copy SourceFiles="@(NuSpecFile)" DestinationFolder="$(BuildNuGetDir)" /> -->
+    <Copy SourceFiles="@(GruntProjectFiles)" DestinationFiles="@(GruntProjectFiles->'$(BuildUmbDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <!-- <Copy SourceFiles="@(GruntProjectFiles)" DestinationFiles="@(GruntProjectFiles->'$(BuildNuGetDir)\Content\%(RecursiveDir)%(Filename)%(Extension)')" />     -->
   </Target>
 
   <!-- MANIFEST UMBRACO -->
@@ -154,33 +152,33 @@
   </Target>
 
   <!-- MANIFEST FOR NUGET PACKAGE -->
-  <Target Name="ManifestNuGet" DependsOnTargets="PrepareFiles">
-    <ItemGroup>
-      <ManifestFiles Include="$(BuildNuGetDir)\**\*" Exclude="$(BuildNuGetDir)\package.nuspec" />
-    </ItemGroup>
-    <MSBuild.NuGet.Tasks.ManifestUpdate
-			ManifestFile="$(BuildNuGetDir)\package.nuspec"
-			WorkingDirectory="$(BuildNuGetDir)"
-			Title="$(NuGetPackageName)"
-			Description="$(Readme)"
-			Summary="$(Readme)"
-			Version="$(ProductVersion)"
-			MinimumRequiredUmbracoVersion ="$(MinUmbracoVersion)"
-			Authors="$(AuthorName)"
-			Owners="$(Owners)"
-			Copyright="$(Copyright)"
-			LicenseUrl="$(PackageLicenseUrl)"
-			ProjectUrl="$(ProjectUrl)"
-			Id="$(PackageId)"
-			IconUrl="$(IconUrl)"
-			Language="$(Language)"
-			RequireLicenseAcceptance="$(RequireLicenseAcceptance)"
-			Tags="$(Tags)"
-			Files="@(ManifestFiles)" />
-  </Target>
+  <!-- <Target Name="ManifestNuGet" DependsOnTargets="PrepareFiles"> -->
+    <!-- <ItemGroup> -->
+      <!-- <ManifestFiles Include="$(BuildNuGetDir)\**\*" Exclude="$(BuildNuGetDir)\package.nuspec" /> -->
+    <!-- </ItemGroup> -->
+    <!-- <MSBuild.NuGet.Tasks.ManifestUpdate -->
+			<!-- ManifestFile="$(BuildNuGetDir)\package.nuspec" -->
+			<!-- WorkingDirectory="$(BuildNuGetDir)" -->
+			<!-- Title="$(PackageName)" -->
+			<!-- Description="$(Readme)" -->
+			<!-- Summary="$(Readme)" -->
+			<!-- Version="$(ProductVersion)" -->
+			<!-- MinimumRequiredUmbracoVersion ="$(MinUmbracoVersion)" -->
+			<!-- Authors="$(AuthorName)" -->
+			<!-- Owners="$(Owners)" -->
+			<!-- Copyright="$(Copyright)" -->
+			<!-- LicenseUrl="$(PackageLicenseUrl)" -->
+			<!-- ProjectUrl="$(ProjectUrl)" -->
+			<!-- Id="$(PackageId)" -->
+			<!-- IconUrl="$(IconUrl)" -->
+			<!-- Language="$(Language)" -->
+			<!-- RequireLicenseAcceptance="$(RequireLicenseAcceptance)" -->
+			<!-- Tags="$(Tags)" -->
+			<!-- Files="@(ManifestFiles)" /> -->
+  <!-- </Target> -->
 
   <!-- PACKAGE -->
-  <Target Name="Package" DependsOnTargets="ManifestUmbraco; ManifestNuGet">
+  <Target Name="Package" DependsOnTargets="ManifestUmbraco">
     <ItemGroup>
       <PackageFiles Include="$(BuildUmbDir)\**\*.*" />
     </ItemGroup>
@@ -190,18 +188,16 @@
 			OutputDirectory="$(ArtifactsDir)"
 			Files="@(PackageFiles)" />
 
+    <!-- <MSBuild.NuGet.Tasks.Pack NuGetExePath="$(RootDir)\BuildPackage\Tools\NuGet.exe" -->
+          <!-- ManifestFile="$(BuildNuGetDir)\package.nuspec" -->
+          <!-- BasePath="$(BuildNuGetDir)" -->
+          <!-- Version="$(ProductVersion)" -->
+          <!-- OutputDirectory="$(ArtifactsDir)" -->
+          <!-- Symbols="true" /> -->
 
-    <MSBuild.NuGet.Tasks.Pack NuGetExePath="$(RootDir)\BuildPackage\Tools\NuGet.exe"
-          ManifestFile="$(BuildNuGetDir)\package.nuspec"
-          BasePath="$(BuildNuGetDir)"
-          Version="$(ProductVersion)"
-          Symbols="True"
-          OutputDirectory="$(ArtifactsDir)" />
-
-          
     <RemoveDir Directories="$(BuildUmbDir)" Condition="Exists('$(BuildUmbDir)')" />
     <RemoveDir Directories="$(BuildNuGetDir)" Condition="Exists('$(BuildNuGetDir)')" />
-  
+
   </Target>
-  
+
 </Project>

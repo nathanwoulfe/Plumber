@@ -1,0 +1,54 @@
+<!--
+ *! Workflow - v1.0.0-build1 - 2017-03-30
+ * Copyright (c) 2017 Nathan Woulfe;
+ * Licensed MIT
+ * -->
+
+<div class="umb-panel workflow">
+    <div class="umb-dashboard" ng-controller="Workflow.UserDashboard.Controller as vm">
+        <umb-editor-view footer="false" umb-tabs>
+            <umb-editor-container>
+
+                <wf-tasks heading="'Tasks requiring my approval'" items="vm.tasks" loaded="vm.loaded[0]" type="0"></wf-tasks>
+                <div class="flex justify-center">
+                    <umb-pagination ng-if="vm.taskPagination.totalPages > 1"
+                                    page-number="vm.taskPagination.pageNumber"
+                                    total-pages="vm.taskPagination.totalPages"
+                                    on-next="vm.taskPagination.goToPage"
+                                    on-prev="vm.taskPagination.goToPage"
+                                    on-go-to-page="vm.taskPagination.goToPage">
+                    </umb-pagination>
+                </div>
+
+                <wf-tasks heading="'My submissions'" items="vm.submissions" loaded="vm.loaded[1]" type="1"></wf-tasks>
+                <div class="flex justify-center">
+                    <umb-pagination ng-if="vm.submissionPagination.totalPages > 1"
+                                    page-number="vm.submissionPagination.pageNumber"
+                                    total-pages="vm.submissionPagination.totalPages"
+                                    on-next="vm.submissionPagination.goToPage"
+                                    on-prev="vm.submissionPagination.goToPage"
+                                    on-go-to-page="vm.submissionPagination.goToPage">
+                    </umb-pagination>
+                </div>
+
+                <wf-tasks ng-if="vm.adminUser" heading="'Workflow administration'" items="vm.activeTasks" loaded="vm.loaded[2]" type="1"></wf-tasks>
+                <div class="flex justify-center">
+                    <umb-pagination ng-if="vm.adminPagination.totalPages > 1"
+                                    page-number="vm.adminPagination.pageNumber"
+                                    total-pages="vm.adminPagination.totalPages"
+                                    on-next="vm.adminPagination.goToPage"
+                                    on-prev="vm.adminPagination.goToPage"
+                                    on-go-to-page="vm.adminPagination.goToPage">
+                    </umb-pagination>
+                </div>
+
+                <umb-overlay ng-if="vm.workflowOverlay.show"
+                             model="vm.workflowOverlay"
+                             view="vm.workflowOverlay.view"
+                             position="right">
+                </umb-overlay>
+
+            </umb-editor-container>
+        </umb-editor-view>
+    </div>
+</div>

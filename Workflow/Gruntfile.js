@@ -31,7 +31,7 @@
             }
         },
         pkg: grunt.file.readJSON('package.json'),
-        dest: grunt.option('target') || 'dist',
+        dest: grunt.option('target') || '../dist',
         basePath: 'App_Plugins/<%= pkg.name %>',
         banner:
             '*! <%= pkg.title || pkg.name %> - v<%= packageVersion() %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
@@ -91,7 +91,7 @@
                     banner: '<!--\n <%= banner %> -->\n',
                 },
                 files: {
-                    src: ['<%= dest %>/<%= basePath %>/views/**/*.html']
+                    src: ['<%= dest %>/<%= basePath %>/**/*.html']
                 }
             }
         },
@@ -150,7 +150,9 @@
             },
 
             lang: {
-                src: '<%= basePath %>/lang',
+                expand: true,
+                cwd: '<%= basePath %>/lang/',
+                src: '**',
                 dest: '<%= dest %>/<%= basePath %>/lang',
             },
 
@@ -306,7 +308,7 @@
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:views', 'copy:tree', 'copy:partials', 'copy:dialogs', 'copy:lib', 'usebanner']);
+    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:views', 'copy:tree', 'copy:partials', 'copy:dialogs', 'copy:lib', 'copy:lang', 'usebanner']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 

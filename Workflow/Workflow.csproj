@@ -64,21 +64,15 @@
     <Compile Include="Models\User2UserGroupPoco.cs" />
     <Compile Include="Models\UserGroupPermissionsPoco.cs" />
     <Compile Include="Models\UserGroupPoco.cs" />
-    <Compile Include="Models\WorkflowInstancePoco.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Models\WorkflowInstancePoco.cs" />
     <Compile Include="Models\WorkflowModels.cs" />
-    <Compile Include="Models\WorkflowTaskInstancePoco.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Models\WorkflowTaskInstancePoco.cs" />
     <Compile Include="Models\WorkflowTaskModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Relators\TaskToInstanceRelator.cs" />
     <Compile Include="Relators\GroupsRelator.cs" />
     <Compile Include="Processes\WorkflowApprovalProcess.cs" />
-    <Compile Include="Helpers\UrlHelpers.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Helpers\UrlHelpers.cs" />
     <Compile Include="Helpers\Exceptions.cs" />
     <Compile Include="Relators\UserToGroupForInstanceRelator.cs" />
   </ItemGroup>
@@ -141,11 +135,8 @@
     </None>
     <None Include="App_Plugins\Workflow\Backoffice\css\styles.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\_variables.scss" />
+    <None Include="App_Plugins\Workflow\dist.manifest" />
     <None Include="App_Plugins\Workflow\package.manifest" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

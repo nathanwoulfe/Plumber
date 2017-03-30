@@ -1,0 +1,45 @@
+<!--
+ *! Workflow - v1.0.0-build1 - 2017-03-30
+ * Copyright (c) 2017 Nathan Woulfe;
+ * Licensed MIT
+ * -->
+
+<div ng-controller="Workflow.DrawerButtons.Controller as vm" class="workflow">
+
+    <div class="active-banner" ng-if="vm.active">
+        <p>Document is currently in a workflow</p>
+    </div>
+
+    <umb-button ng-if="page.listViewPath"
+                type="link"
+                href="#{{page.listViewPath}}"
+                label="Return to list"
+                label-key="buttons_returnToList">
+    </umb-button>
+
+    <umb-button ng-if="!page.isNew"
+                type="button"
+                action="preview(content)"
+                label="Preview">
+    </umb-button>
+
+    <umb-button ng-if="page.isNew"
+                type="button"
+                action="save(content)"
+                label="Save">
+    </umb-button>
+
+    <workflow-button-group ng-if="!page.isNew"
+                           default-button="vm.buttonGroup.defaultButton"
+                           sub-buttons="vm.buttonGroup.subButtons"
+                           direction="up"
+                           item="vm.task"
+                           float="right">
+    </workflow-button-group>
+
+    <umb-overlay ng-if="vm.workflowOverlay.show"
+                 model="vm.workflowOverlay"
+                 view="vm.workflowOverlay.view"
+                 position="right">
+    </umb-overlay>
+</div>
