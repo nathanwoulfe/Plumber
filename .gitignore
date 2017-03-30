@@ -16,6 +16,7 @@ Workflow.Site/App_Plugins/Workflow/**
 Workflow/pkg
 Workflow/dist
 Workflow/tmp
+dist
 
 # Build results
 

@@ -42,10 +42,10 @@
         concat: {
             dist: {
                 src: [
-                  'app_plugins/workflow/backoffice/controllers/*.js',
-                  'app_plugins/workflow/backoffice/directives/*.js',
-                  'app_plugins/workflow/backoffice/interceptors/*.js',
-                  'app_plugins/workflow/backoffice/resources/*.js',
+                  '<%= basePath %>/backoffice/controllers/*.js',
+                  '<%= basePath %>/backoffice/directives/*.js',
+                  '<%= basePath %>/backoffice/interceptors/*.js',
+                  '<%= basePath %>/backoffice/resources/*.js',
                 ],
                 dest: '<%= dest %>/<%= basePath %>/backoffice/js/workflow.js',
                 nonull: true,

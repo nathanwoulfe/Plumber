@@ -1,6 +1,6 @@
 {
-  "name": "Workflow",
-  "version": "1.0.0",
+  "name": "Plumber",
+  "version": "0.1.0",
   "url": "http://our.umbraco.org/projects/developer-tools/my-awesome-package",
   "description": "Workflow for Umbraco",
   "license": "MIT",
