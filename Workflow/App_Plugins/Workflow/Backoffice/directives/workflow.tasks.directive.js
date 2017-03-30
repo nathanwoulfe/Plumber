@@ -47,7 +47,7 @@
                 var subButtons = [
                     [buttons.editButton, buttons.rejectButton, buttons.cancelButton],
                     [buttons.editButton]
-                ]
+                ];
 
                 $scope.buttonGroup = {
                     defaultButton: $scope.type === 0 ? buttons.approveButton : buttons.cancelButton,

@@ -4,6 +4,7 @@
     require('grunt-karma')(grunt);
 
     //cant load this with require
+    grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-banner');
@@ -41,9 +42,12 @@
         concat: {
             dist: {
                 src: [
-                  'app_plugins/workflow/backoffice/**/*.js'
+                  'app_plugins/workflow/backoffice/controllers/*.js',
+                  'app_plugins/workflow/backoffice/directives/*.js',
+                  'app_plugins/workflow/backoffice/interceptors/*.js',
+                  'app_plugins/workflow/backoffice/resources/*.js',
                 ],
-                dest: '<%= dest %>/<%= basePath %>/backoffice/js/Plumber.js',
+                dest: '<%= dest %>/<%= basePath %>/backoffice/js/workflow.js',
                 nonull: true,
                 options: {
                     banner: "/<%= banner %>/\n\n"
@@ -52,16 +56,13 @@
         },
 
         //Compile the less file into a CSS file
-        //less: {
-        //    dist: {
-        //        options: {
-        //            paths: ['app_plugins/workflow/backoffice/css'],
-        //        },
-        //        files: {
-        //            '<%= dest %>/<%= basePath %>/css/YouTube.css': 'app/styles/plumb.less',
-        //        },
-        //    }
-        //},
+        sass: {
+            dist: {
+                files: {
+                    '<%= basePath %>/backoffice/css/styles.css': ['<%= basePath %>/backoffice/css/styles.scss']
+                },
+            }
+        },
 
         cssmin: {
             target: {
@@ -78,7 +79,7 @@
                     banner: "/<%= banner %>/\n"
                 },
                 files: {
-                    '<%= dest %>/<%= basePath %>/backoffice/css/styles.css': ['<%= dest %>/<%= basePath %>/backoffice/css/styles.css']
+                    '<%= dest %>/<%= basePath %>/backoffice/css/styles.min.css': ['<%= dest %>/<%= basePath %>/backoffice/css/styles.min.css']
                 }
             }
         },
@@ -100,31 +101,64 @@
                 atBegin: true
             },
 
-            //less: {
-            //    files: ['app/styles/**/*.less'],
-            //    tasks: ['less:dist']
-            //},
+            css: {
+                files: ['<%= basePath %>/**/*.scss'],
+                tasks: ['sass:dist']
+            },
 
             js: {
                 files: ['<%= basePath %>/**/*.js'],
                 tasks: ['concat:dist']
             },
 
-            html: {
-                files: ['app/views/**/*.html'],
+            views: {
+                files: ['<%= basePath %>/backoffice/views/**/*.html'],
                 tasks: ['copy:views']
+            },
+            
+            tree: {
+                files: ['<%= basePath %>/backoffice/tree/**/*.html'],
+                tasks: ['copy:tree']
+            },
+            
+            partials: {
+                files: ['<%= basePath %>/backoffice/partials/**/*.html'],
+                tasks: ['copy:partials']
+            },
+            
+            dialogs: {
+                files: ['<%= basePath %>/backoffice/dialogs/**/*.html'],
+                tasks: ['copy:dialogs']
             },
 
             config: {
-                files: ['config/package.manifest'],
+                files: ['<%= basePath %>/package.manifest'],
                 tasks: ['copy:config']
+            },
+            
+            lang: {
+                files: ['<%= basePath %>/lang/**'],
+                tasks: ['copy:lang']
             }
+
         },
 
         copy: {
             config: {
-                src: '<%= basePath %>/package.manifest',
+                src: '<%= basePath %>/dist.manifest', // dist.manifest only references the compiled, prod-ready css/js
                 dest: '<%= dest %>/<%= basePath %>/package.manifest',
+            },
+
+            lang: {
+                src: '<%= basePath %>/lang',
+                dest: '<%= dest %>/<%= basePath %>/lang',
+            },
+
+            lib: {
+                expand: true,
+                cwd: '<%= basePath %>/backoffice/lib/',
+                src: '**',
+                dest: '<%= dest %>/<%= basePath %>/backoffice/lib/'
             },
 
             views: {
@@ -146,6 +180,13 @@
                 cwd: '<%= basePath %>/backoffice/partials/',
                 src: '**',
                 dest: '<%= dest %>/<%= basePath %>/backoffice/partials/'
+            },
+
+            dialogs: {
+                expand: true,
+                cwd: '<%= basePath %>/backoffice/dialogs/',
+                src: '**',
+                dest: '<%= dest %>/<%= basePath %>/backoffice/dialogs/'
             },
 
             nuget: {
@@ -250,6 +291,7 @@
                     sub: true,
                     boss: true,
                     eqnull: true,
+                    validthis: true,
                     //NOTE: we need to use eval sometimes so ignore it
                     evil: true,
                     //NOTE: we need to check for strings such as "javascript:" so don't throw errors regarding those
@@ -258,13 +300,13 @@
                     smarttabs: true,
                     globals: {},
                     force: true,
-                    ignores:['app_plugins/**/lib/*']
+                    ignores:['**/highcharts.js', '**/exporting.js']
                 }
             }
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'cssmin', 'copy:config', 'copy:views', 'copy:tree', 'copy:partials', 'usebanner']);
+    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:views', 'copy:tree', 'copy:partials', 'copy:dialogs', 'copy:lib', 'usebanner']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 

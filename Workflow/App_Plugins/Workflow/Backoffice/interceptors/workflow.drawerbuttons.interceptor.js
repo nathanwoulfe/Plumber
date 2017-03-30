@@ -10,7 +10,7 @@
                 }
                 return request || $q.when(request);
             }
-        }
+        };
     }
 
     angular.module('umbraco').factory('drawerButtonsInterceptor', ['$q', interceptor]);

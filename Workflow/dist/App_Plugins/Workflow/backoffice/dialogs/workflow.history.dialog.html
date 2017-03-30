@@ -1,0 +1,19 @@
+﻿<div class="umb-pane workflow history-dialog" ng-controller="Workflow.History.Controller as vm">
+    <div class="umb-dialog-body with-footer">
+        <div class="umb-pane">
+            <wf-history items="vm.items" instance-view="false"></wf-history>
+            <div class="flex justify-center">
+                <umb-pagination ng-if="vm.pagination.totalPages > 1"
+                                page-number="vm.pagination.pageNumber"
+                                total-pages="vm.pagination.totalPages"
+                                on-next="vm.pagination.goToPage"
+                                on-prev="vm.pagination.goToPage"
+                                on-go-to-page="vm.pagination.goToPage">
+                </umb-pagination>            
+            </div>
+        </div>
+    </div>
+    <div class="umb-dialog-footer btn-toolbar umb-btn-toolbar">
+        <a href="#" class="btn btn-primary" ng-click="close()"><localize key="general_ok">OK</localize></a>
+    </div>
+</div>

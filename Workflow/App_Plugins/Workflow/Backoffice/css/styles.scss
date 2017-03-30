@@ -1,11 +1,9 @@
 ﻿@import "_variables";
+@import "highcharts";
+@import "dashboard";
 
 .workflow {
 
-    /* import highcharts styles, and scope to workflow class, just in case of collisions... */
-    @import "../lib/highcharts/highcharts.css";
-    @import "highcharts";
-    @import "dashboard";
 
     hr {
         clear:both;
@@ -297,6 +295,7 @@
             flex:1;
         }
     }
+
 
     .active-banner {
         display:inline-block;

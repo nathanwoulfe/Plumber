@@ -65,7 +65,11 @@
 
         function goToPage(i) {
             vm.pagination.pageNumber = i;
-            vm.node ? auditNode() : getAllInstances();
+            if (vm.node !== undefined) {
+                auditNode();
+            } else {
+                getAllInstances();
+            }
         }
 
         function setPaging(resp) {
