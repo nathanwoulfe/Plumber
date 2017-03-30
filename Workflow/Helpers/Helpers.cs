@@ -139,7 +139,7 @@ namespace Workflow
             if (taskInstances != null && taskInstances.Count > 0)
             {
                 result += "<table style=\"workflowTaskList\">";
-                result += "<tr><th>Type</th><th>Page</th><th>Requested by</th><th>On</th><th>Approver</th><th>Comments</th><th>Activities</th></tr>";
+                result += "<tr><th>Type</th><th>Page</th><th>Requested by</th><th>On</th><th>Approver</th><th>Comments</th></tr>";
                 foreach (WorkflowTaskInstancePoco taskInstance in taskInstances)
                 {
                     result += "<tr>" + BuildActiveTaskSummary(taskInstance, includeAction, includeCancel, includeEdit) + "</tr>";
@@ -172,7 +172,6 @@ namespace Workflow
             string docUrl = "";
             string pageViewLink = "";
             string pageEditLink = "";
-            umbraco.NodeFactory.Node n = new umbraco.NodeFactory.Node(docId);
 
             docUrl = GetDocPreviewUrl(docId);
 
@@ -187,22 +186,8 @@ namespace Workflow
             string authorText = taskInstance.WorkflowInstance.AuthorUser.Name;
             string approverText = "<a title='" + taskInstance.UserGroup.UsersSummary + "'>" + taskInstance.UserGroup.Name + "</a>";
 
-            string cancelLink = "";
-            if (includeCancel)
-            {
-                cancelLink = "<a href=\"javascript:UmbClientMgr.openModalWindow('plugins/Usc/Dialogs/CancelWorkflow.aspx?id=" +
-                    taskInstance.WorkflowInstance.Id + "', 'Cancel workflow - " + taskInstance.WorkflowInstance.TypeDescription + "', true, 450, 240, 200, 100, '', backoffice.util.handleDialogClose);\">Cancel</a>";
-            }
-
-            string actionLink = "";
-            if (includeAction && taskInstance.UserGroup.IsMember(Helpers.GetCurrentUser().Id)) // show the action link only if the current user is able to actually action the workflow.
-            {
-                actionLink = "<a href=\"javascript:UmbClientMgr.openModalWindow('plugins/Usc/Dialogs/ActionWorkflow.aspx?id=" +
-                    taskInstance.WorkflowInstance.Id + "', 'Action workflow - " + taskInstance.WorkflowInstance.TypeDescription + "', true, 450, 350, 200, 100, '', backoffice.util.handleDialogClose);\">Action</a>";
-            }
-
             result += "<td>" + taskInstance.WorkflowInstance.TypeDescription + "</td><td><div>" + pageViewLink + "&nbsp" + pageEditLink + "</div></td><td>" + authorText + "</td><td>" + createdDate + "</td><td>" + approverText +
-                "</td><td><small>" + taskInstance.WorkflowInstance.AuthorComment + "</small></td><td>" + actionLink + " " + cancelLink + "</td>";
+                "</td><td><small>" + taskInstance.WorkflowInstance.AuthorComment + "</small></td>";
 
             return result;
         }
