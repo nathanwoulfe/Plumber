@@ -6,5 +6,9 @@
   {
     "outputFile": "App_Plugins/Workflow/Backoffice/css/styles.css",
     "inputFile": "App_Plugins/Workflow/Backoffice/css/styles.scss"
+  },
+  {
+    "outputFile": "App_Plugins/Plumber/Backoffice/css/styles.css",
+    "inputFile": "App_Plugins/Plumber/Backoffice/css/styles.scss"
   }
 ]

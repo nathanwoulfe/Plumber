@@ -48,7 +48,7 @@ namespace Workflow
             if (firstTab != null)
             {
                 var xmlToAdd = "<tab caption='Workflow'>" +
-                                    "<control addPanel='true' panelCaption=''>/app_plugins/workflow/backoffice/views/workflow.userdashboard.html</control>" +
+                                    "<control addPanel='true' panelCaption=''>/app_plugins/plumber/backoffice/views/workflow.userdashboard.html</control>" +
                                 "</tab>";
 
                 //Load in the XML string above
@@ -97,10 +97,10 @@ namespace Workflow
                                       "<area>workflow</area>" +
                                     "</areas>" +
                                     "<tab caption=\"Overview\">" +
-                                      "<control>/app_plugins/workflow/backoffice/views/workflow.admindashboard.html</control>" +
+                                      "<control>/app_plugins/plumber/backoffice/views/workflow.admindashboard.html</control>" +
                                     "</tab>" +
                                     "<tab caption=\"Documentation\">" +
-                                      "<control>/app_plugins/workflow/backoffice/views/workflow.docsdashboard.html</control>" +
+                                      "<control>/app_plugins/plumber/backoffice/views/workflow.docsdashboard.html</control>" +
                                     "</tab>" +
                                   "</section>";
 

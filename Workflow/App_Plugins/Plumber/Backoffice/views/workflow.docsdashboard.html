@@ -14,7 +14,7 @@
                 </div>
                 <umb-tabs-nav model="vm.tabs"></umb-tabs-nav>
                 <umb-tabs-content view="true">
-                    <umb-tab id="tab{{tab.id}}" ng-repeat="tab in vm.tabs" rel="{{tab.id}}" name=>
+                    <umb-tab id="tab{{tab.id}}" ng-repeat="tab in vm.tabs" rel="{{tab.id}}">
                         <div class="dash-inner-area" ng-if="tab.alias === 'tab101'">
                             <p>Contains the global options for the Plumber install.</p>
                             <p><strong>Default approval group:</strong> the fallback group for nodes sent for workflow approval, used when no group is defined either on the node, on the content type, or in content tree ancestors. Ideally, this would never be used, instead a default workflow approval flow would be set on the root node.</p>
@@ -48,7 +48,8 @@
                             </ul>
                         </div>
                         <div class="dash-inner-area" ng-if="tab.alias === 'tab105'">
-                            <p>The user dashboard displays in the content section, and provides an overview of tasks requiring approval by the current user, as well as a list of any workflow processes initiated by the current user. Users with access to the workflow section are also presented a third table, displaying all active workflow processes.</p>
+                            <p>The user dashboard displays in the content section, and provides an overview of tasks requiring approval by the current user, as well as a list of any workflow processes initiated by the current user.</p>
+                            <p>Users with access to the workflow section are also presented a third table, displaying all active workflow processes.</p>
                             <p>The view provides a button set to either approve, cancel, reject or edit the node (exact options vary based on the user and list type). Each process is visualised with a simple progress bar, displaying completed and pending tasks for the current approval flow. </p>
                         </div>
                         <div class="dash-inner-area" ng-if="tab.alias === 'tab106'">

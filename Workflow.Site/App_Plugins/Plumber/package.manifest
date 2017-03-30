@@ -1,5 +1,5 @@
 ﻿{   
-    javascript: [
+    javascript: [ 
         '~/App_Plugins/Plumber/backoffice/controllers/groups.add.controller.js',		
         '~/App_Plugins/Plumber/backoffice/controllers/groups.dashboard.controller.js',						
         '~/App_Plugins/Plumber/backoffice/controllers/groups.delete.controller.js',

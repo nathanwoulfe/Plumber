@@ -1,10 +1,8 @@
 ﻿@import "_variables";
 @import "highcharts";
-@import "dashboard";
 
 .workflow {
-
-
+    
     hr {
         clear:both;
     }
@@ -25,6 +23,11 @@
     textarea {
         width:386px;
         height:200px;
+    }
+
+    .umb-nav-tabs {
+        margin:15px auto;
+        position:relative;
     }
 
     .flow-select {
@@ -301,5 +304,33 @@
         display:inline-block;
         margin-right:10px;
         color:$warning;
+    }
+
+    // docs dashboard - mimic Umbraco get started content
+    h1.title {
+        font-size: 30px;
+        color: #363636;
+        line-height: 1.3em;
+        text-align: center;
+        max-width: 750px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .dash-inner-area {
+        margin: 10px 0px;
+        padding: 10px;
+    }
+
+    .intro-text {
+        font-size: 18px;
+        color: #666666;
+        text-align: center;
+        max-width: 750px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6em;
     }
 }

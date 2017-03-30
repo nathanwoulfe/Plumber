@@ -77,78 +77,83 @@
     <Compile Include="Relators\UserToGroupForInstanceRelator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.docs.dashboard.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.drawerbuttons.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.admin.dashboard.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.history.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.buttongroup.directive.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.comments.directive.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.history.directive.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.linechart.directive.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.tablerow.directive.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.tasks.directive.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\interceptors\workflow.config.interceptors.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\interceptors\workflow.drawerbuttons.interceptor.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.css" />
-    <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\modules\exporting.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historyinstance.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historytask.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\umbEditorFooterContentRight.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowButtonGroup.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowHistoryTemplate.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowLineChart.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowTasksTemplate.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\css\styles.css">
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\workflow.docs.dashboard.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\workflow.drawerbuttons.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\workflow.history.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\workflow.admin.dashboard.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\dialogs\workflow.history.dialog.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\directives\workflow.buttongroup.directive.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\directives\workflow.comments.directive.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\directives\workflow.history.directive.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\directives\workflow.linechart.directive.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\directives\workflow.tablerow.directive.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\directives\workflow.tasks.directive.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\interceptors\workflow.config.interceptors.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\interceptors\workflow.drawerbuttons.interceptor.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\lib\highcharts\highcharts.css" />
+    <Content Include="App_Plugins\Plumber\Backoffice\lib\highcharts\highcharts.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\lib\highcharts\modules\exporting.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\partials\table\historyinstance.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\partials\table\historytask.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\partials\umbEditorFooterContentRight.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\partials\workflowButtonGroup.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\partials\workflowHistoryTemplate.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\partials\workflowLineChart.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\partials\workflowTasksTemplate.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\css\styles.css">
       <DependentUpon>styles.scss</DependentUpon>
     </Content>
-    <Content Include="App_Plugins\Workflow\Backoffice\css\styles.min.css">
+    <Content Include="App_Plugins\Plumber\Backoffice\css\styles.min.css">
       <DependentUpon>styles.css</DependentUpon>
     </Content>
-    <Content Include="App_Plugins\Workflow\Backoffice\resources\actions.resource.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\history.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\tree.view.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.dashboard.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\groups.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.config.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\resources\workflow.resource.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\view.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.action.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.cancel.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.user.dashboard.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.submit.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.settings.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.admindashboard.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.docsdashboard.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.userdashboard.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.action.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.cancel.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.submit.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\settings.html" />
-    <Content Include="App_Plugins\Workflow\Lang\en-US.xml" />
+    <Content Include="App_Plugins\Plumber\Backoffice\resources\actions.resource.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\tree\history.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\tree.view.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\groups.dashboard.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\tree\groups.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\workflow.config.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\resources\workflow.resource.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\tree\view.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\workflow.action.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\workflow.cancel.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\workflow.user.dashboard.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\workflow.submit.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\workflow.settings.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\views\workflow.admindashboard.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\views\workflow.docsdashboard.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\views\workflow.userdashboard.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\dialogs\workflow.action.dialog.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\dialogs\workflow.cancel.dialog.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\dialogs\workflow.submit.dialog.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\tree\settings.html" />
+    <Content Include="App_Plugins\Plumber\Lang\en-US.xml" />
+    <Content Include="Gruntfile.js" />
     <None Include="app.config" />
-    <None Include="App_Plugins\Workflow\Backoffice\css\dashboard.scss" />
-    <None Include="App_Plugins\Workflow\Backoffice\css\highcharts.scss" />
-    <None Include="App_Plugins\Workflow\Backoffice\css\styles.css.map">
+    <None Include="App_Plugins\Plumber\Backoffice\css\highcharts.scss" />
+    <None Include="App_Plugins\Plumber\Backoffice\css\styles.css.map">
       <DependentUpon>styles.css</DependentUpon>
     </None>
-    <None Include="App_Plugins\Workflow\Backoffice\css\styles.scss" />
-    <None Include="App_Plugins\Workflow\Backoffice\css\_variables.scss" />
-    <None Include="App_Plugins\Workflow\dist.manifest" />
-    <None Include="App_Plugins\Workflow\package.manifest" />
+    <None Include="App_Plugins\Plumber\Backoffice\css\styles.scss" />
+    <None Include="App_Plugins\Plumber\Backoffice\css\_variables.scss" />
+    <None Include="App_Plugins\Plumber\dist.manifest" />
+    <None Include="App_Plugins\Plumber\package.manifest" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
+    <None Include="package.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\add.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.add.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.delete.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.edit.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\delete.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\edit.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\resources\groups.resource.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.config.dialog.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\tree\add.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\groups.add.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\groups.delete.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\controllers\groups.edit.controller.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\tree\delete.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\tree\edit.html" />
+    <Content Include="App_Plugins\Plumber\Backoffice\resources\groups.resource.js" />
+    <Content Include="App_Plugins\Plumber\Backoffice\dialogs\workflow.config.dialog.html" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="businesslogic">

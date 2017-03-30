@@ -11,7 +11,7 @@
                 type: '=',
                 loaded: '='
             },
-            templateUrl: '../app_plugins/workflow/backoffice/partials/workflowTasksTemplate.html',
+            templateUrl: '../app_plugins/plumber/backoffice/partials/workflowTasksTemplate.html',
             controller: function ($scope) {
 
                 // type = 0, 1
