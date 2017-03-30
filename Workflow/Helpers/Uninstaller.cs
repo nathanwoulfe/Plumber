@@ -60,11 +60,11 @@ namespace Workflow
                 }
             }
 
-            XmlNode contentTab = dashboardXml.SelectSingleNode("//section [@alias='StartupDashboardSection']/areas/tab [@caption='Workflow']");
+            XmlNode contentTab = dashboardNode.SelectSingleNode("//tab[@caption='Workflow']");
 
             if (contentTab != null)
             {
-                dashboardNode.RemoveChild(contentTab);
+                contentTab.ParentNode.RemoveChild(contentTab);
                 saveFile = true;
             }
 

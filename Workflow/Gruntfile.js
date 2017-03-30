@@ -75,23 +75,8 @@
                 }]
             },
             add_banner: {
-                options: {
-                    banner: "/<%= banner %>/\n"
-                },
                 files: {
                     '<%= dest %>/<%= basePath %>/backoffice/css/styles.min.css': ['<%= dest %>/<%= basePath %>/backoffice/css/styles.min.css']
-                }
-            }
-        },
-
-        usebanner: {
-            taskName: {
-                options: {
-                    position: 'top',
-                    banner: '<!--\n <%= banner %> -->\n',
-                },
-                files: {
-                    src: ['<%= dest %>/<%= basePath %>/**/*.html']
                 }
             }
         },
@@ -308,7 +293,7 @@
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:views', 'copy:tree', 'copy:partials', 'copy:dialogs', 'copy:lib', 'copy:lang', 'usebanner']);
+    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:views', 'copy:tree', 'copy:partials', 'copy:dialogs', 'copy:lib', 'copy:lang']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 

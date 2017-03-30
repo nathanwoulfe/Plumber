@@ -88,7 +88,7 @@ namespace Workflow
             {
                 return false;
             }
-        }       
+        }
 
         /// <summary>
         /// Builds workflow instance details markup.
@@ -173,7 +173,7 @@ namespace Workflow
             string pageViewLink = "";
             string pageEditLink = "";
             umbraco.NodeFactory.Node n = new umbraco.NodeFactory.Node(docId);
-           
+
             docUrl = GetDocPreviewUrl(docId);
 
             if (includeEdit)
@@ -217,8 +217,8 @@ namespace Workflow
         {
             string result = taskInstance.TypeName;
 
-            if (taskInstance.Status == (int)TaskStatus.Approved 
-                || taskInstance.Status == (int)TaskStatus.Rejected 
+            if (taskInstance.Status == (int)TaskStatus.Approved
+                || taskInstance.Status == (int)TaskStatus.Rejected
                 || taskInstance.Status == (int)TaskStatus.Cancelled)
             {
                 result += ": " + taskInstance.Status + " by " + taskInstance.ActionedByUser.Name + " on " + taskInstance.CompletedDate.Value.ToString("dd/MM/yy");
@@ -268,6 +268,6 @@ namespace Workflow
             return WorkflowInstancePoco.EmailTypeName(emailType) + " - " + instance.Node.Name + " (" + instance.TypeDescription + ")";
 
         }
-        
+
     }
 }
