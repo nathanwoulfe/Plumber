@@ -11,6 +11,8 @@ To get started, clone the repo, build the Workflow project (build action should 
 
 In the backoffice, the new Workflow section has a documentation tab, which should offer a bit more explanation of features and processes.
 
+The workflow model is derived from the workflow solution developed by myself and the web team at [USC](http://www.usc.edu.au), but re-visions that basic three-step workflow into something much more flexible and targeted to v7. So a hat-tip to the USC guys for the inspiration!
+
 Grab the latest release from AppVeyor:
 =========
 https://ci.appveyor.com/project/nathanwoulfe/umbracoworkflow/build/artifacts
