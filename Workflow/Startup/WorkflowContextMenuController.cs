@@ -21,7 +21,7 @@ namespace UmbracoWorkflow.Actions
                 var items = new Umbraco.Web.Models.Trees.MenuItemList();
 
                 var i = new Umbraco.Web.Models.Trees.MenuItem("workflowHistory", "Workflow history");
-                i.LaunchDialogView("/App_Plugins/plumber/Backoffice/dialogs/workflow.history.dialog.html", "Workflow history: " + nodeName);
+                i.LaunchDialogView("/App_Plugins/workflow/Backoffice/dialogs/workflow.history.dialog.html", "Workflow history: " + nodeName);
                 i.SeperatorBefore = true;
                 i.Icon = "directions-alt";
 
@@ -30,7 +30,7 @@ namespace UmbracoWorkflow.Actions
                 if (currentUser.Alias == "admin")
                 {
                     i = new Umbraco.Web.Models.Trees.MenuItem("workflowConfig", "Workflow configuration");
-                    i.LaunchDialogView("/App_Plugins/plumber/Backoffice/dialogs/workflow.config.dialog.html", "Workflow configuration: " + nodeName);
+                    i.LaunchDialogView("/App_Plugins/workflow/Backoffice/dialogs/workflow.config.dialog.html", "Workflow configuration: " + nodeName);
                     i.Icon = "path";
 
                     items.Add(i);
