@@ -32,7 +32,7 @@
         },
         pkg: grunt.file.readJSON('package.json'),
         dest: grunt.option('target') || '../dist',
-        basePath: 'App_Plugins/<%= pkg.name %>',
+        basePath: 'App_Plugins/workflow',
         banner:
             '*! <%= pkg.title || pkg.name %> - v<%= packageVersion() %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
             '<%= pkg.homepage ? " * " + pkg.homepage + "\\n" : "" %>' +
