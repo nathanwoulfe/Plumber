@@ -6,7 +6,7 @@
 
             action: function (item, approve) {
                 var workflowOverlay = {
-                    view: '../app_plugins/plumber/backoffice/dialogs/workflow.action.dialog.html',
+                    view: '../app_plugins/workflow/backoffice/dialogs/workflow.action.dialog.html',
                     show: true,
                     title: (approve ? 'Approve' : 'Reject') + ' workflow process',
                     subtitle: 'Document: ' + item.nodeName,
@@ -40,7 +40,7 @@
 
             initiate: function (name, id, publish) {
                 var workflowOverlay = {
-                    view: '../app_plugins/plumber/backoffice/dialogs/workflow.submit.dialog.html',
+                    view: '../app_plugins/workflow/backoffice/dialogs/workflow.submit.dialog.html',
                     show: true,
                     title: 'Send for ' + (publish ? 'publish' : 'unpublish') + ' approval',
                     subtitle: 'Document: ' + name,
@@ -65,7 +65,7 @@
 
             cancel: function (item) {
                 var workflowOverlay = {
-                    view: '../app_plugins/plumber/backoffice/dialogs/workflow.cancel.dialog.html',
+                    view: '../app_plugins/workflow/backoffice/dialogs/workflow.cancel.dialog.html',
                     show: true,
                     title: 'Cancel workflow process',
                     subtitle: 'Document: ' + item.nodeName,

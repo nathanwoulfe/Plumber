@@ -6,7 +6,7 @@
         var directive = {
             restrict: 'E',
             replace: true,
-            templateUrl: '../app_plugins/plumber/backoffice/partials/workflowButtonGroup.html',
+            templateUrl: '../app_plugins/workflow/backoffice/partials/workflowButtonGroup.html',
             scope: {
                 defaultButton: "=",
                 subButtons: "=",

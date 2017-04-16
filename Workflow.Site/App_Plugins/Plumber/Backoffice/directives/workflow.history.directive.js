@@ -9,7 +9,7 @@
                 items: '=',
                 instanceView: '='
             },
-            templateUrl: '../app_plugins/plumber/backoffice/partials/workflowhistorytemplate.html'
+            templateUrl: '../app_plugins/workflow/backoffice/partials/workflowhistorytemplate.html'
         };
 
         return directive;

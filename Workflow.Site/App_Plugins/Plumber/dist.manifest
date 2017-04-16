@@ -1,11 +1,11 @@
 ﻿{   
     javascript: [
-        '~/App_Plugins/Plumber/backoffice/lib/highcharts/highcharts.js',
-        '~/App_Plugins/Plumber/backoffice/lib/highcharts/modules/exporting.js',
-        '~/App_Plugins/Plumber/backoffice/js/workflow.js'
+        '~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.js',
+        '~/App_Plugins/workflow/backoffice/lib/highcharts/modules/exporting.js',
+        '~/App_Plugins/workflow/backoffice/js/workflow.js'
     ],
     css: [
-		'~/App_Plugins/Plumber/backoffice/lib/highcharts/highcharts.css',
-		'~/App_Plugins/Plumber/backoffice/css/styles.min.css'
+		'~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.css',
+		'~/App_Plugins/workflow/backoffice/css/styles.min.css'
     ]
 }
