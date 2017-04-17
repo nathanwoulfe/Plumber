@@ -24,3 +24,12 @@ Login for the test site:
 **Username**: test@mail.com<br/>
 **Password**: password
 
+Live demo
+=========
+There's a live demo site at http://plumber-demo.azurewebsites.net
+
+**Username**: TestUser<br />
+**Password**: NewPassword
+
+This site will be overwritten semi-regularly.
+
