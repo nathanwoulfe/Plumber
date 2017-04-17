@@ -26,10 +26,10 @@ Login for the test site:
 
 Live demo
 =========
-There's a live demo site at http://plumber-demo.azurewebsites.net
+There's a live demo site at http://plumber-demo.azurewebsites.net, with a set of test users:
 
-**Username**: TestUser<br />
-**Password**: NewPassword
+**Username**: TestUserA - TestUserF<br />
+**Password**: UserAPassword - UserFPassword
 
-This site will be overwritten semi-regularly.
+This site will be overwritten semi-regularly, but should serve as a decent sandbox to fiddle with the workflow features. 
 
