@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Formatting;
 using Umbraco.Core;
+using Umbraco.Web;
 using Umbraco.Web.Models.Trees;
 using Umbraco.Web.Mvc;
 using Umbraco.Web.Trees;
@@ -23,9 +24,14 @@ namespace Workflow.Actions
                 var route = "/workflow/tree/view/";
                 var treeNodes = new List<SectionTreeNode>();
 
-                treeNodes.Add(new SectionTreeNode() { Id = "settings", Title = "Settings", Icon = "icon-umb-settings", Route = string.Format("{0}{1}", route, "settings") });
+                var user = UmbracoContext.Current.Security.CurrentUser;
+
+                if (user.AllowedSections.Contains("settings") || user.UserType.Alias =="admin")
+                {
+                    treeNodes.Add(new SectionTreeNode() { Id = "settings", Title = "Settings", Icon = "icon-umb-settings", Route = string.Format("{0}{1}", route, "settings") });
+                    treeNodes.Add(new SectionTreeNode() { Id = "groups", Title = "Approval groups", Icon = "icon-users", Route = string.Format("{0}{1}", route, "groups") });
+                }
                 treeNodes.Add(new SectionTreeNode() { Id = "history", Title = "History", Icon = "icon-directions-alt", Route = string.Format("{0}{1}", route, "history") });
-                treeNodes.Add(new SectionTreeNode() { Id = "groups", Title = "Approval groups", Icon = "icon-users", Route = string.Format("{0}{1}", route, "groups") });
 
                 foreach (var n in treeNodes)
                 {

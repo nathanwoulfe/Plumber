@@ -75,7 +75,7 @@
                     return false;
                 })[0];
 
-            $scope.notInGroup.splice(index, 1);
+            vm.notInGroup.splice(index, 1);
         }
 
         //
