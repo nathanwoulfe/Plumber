@@ -24,3 +24,12 @@ Login for the test site:
 **Username**: test@mail.com<br/>
 **Password**: password
 
+Live demo
+=========
+There's a live demo site at http://plumber-demo.azurewebsites.net, with a set of test users:
+
+**Username**: TestUserA - TestUserF<br />
+**Password**: UserAPassword - UserFPassword
+
+This site will be overwritten semi-regularly, but should serve as a decent sandbox to fiddle with the workflow features. 
+
