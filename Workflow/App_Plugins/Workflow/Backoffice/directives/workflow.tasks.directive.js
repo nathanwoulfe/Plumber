@@ -39,7 +39,7 @@
                         labelKey: "workflow_rejectButton",
                         cssClass: 'warning',
                         handler: function (item) {
-                            $scope.$parent.vm.workflowOverlay = workflowActionsService.action(item, fasle);
+                            $scope.$parent.vm.workflowOverlay = workflowActionsService.action(item, false);
                         }
                     }
                 };
