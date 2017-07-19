@@ -4,6 +4,7 @@ version: 0.1.0.{build}
 # UMBRACO_PACKAGE_PRERELEASE_SUFFIX will only be used for Release builds
 # example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
 install:
+  - set PATH=C:\Ruby22\bin;%PATH%
   - cmd: gem install sass
   - cmd: npm install -g grunt-cli
   - cmd: set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
