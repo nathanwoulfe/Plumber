@@ -99,6 +99,7 @@
                 .then(function (resp) {
                     if (resp.status === 200) {
                         notificationsService.success('SUCCESS', resp.msg);
+                        $scope.approvalGroupForm.$setPristine();                        
                     } else {
                         notificationsService.error('ERROR', resp.msg);
                     }
