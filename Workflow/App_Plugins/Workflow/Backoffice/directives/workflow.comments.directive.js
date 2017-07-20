@@ -13,7 +13,7 @@
                 isFinalApproval: '=',
                 disabled: '='
             },
-            template: '<p ng-bind="intro"></p><label for="comments">{{labelText}} <span ng-bind="info"></span><textarea name="comments" ng-model="comment" ng-change="limitChars()"></textarea>',
+            template: '<p ng-bind="intro"></p><label for="comments">{{labelText}} <span ng-bind="info"></span><textarea name="comments" ng-model="comment" ng-change="limitChars()" no-dirty-check></textarea>',
             link: function (scope) {
 
                 scope.limitChars = function () {
