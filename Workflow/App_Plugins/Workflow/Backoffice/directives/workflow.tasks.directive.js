@@ -21,7 +21,7 @@
                     approveButton: {
                         labelKey: "workflow_approveButton",
                         handler: function (item) {
-                            $scope.$parent.vm.workflowOverlay = workflowActionsService.action(item, true);
+                            $scope.$parent.vm.workflowOverlay = workflowActionsService.action(item, true, true);
                         }
                     },
                     editButton: {
@@ -32,14 +32,14 @@
                         labelKey: "workflow_cancelButton",
                         cssClass: 'danger',
                         handler: function (item) {
-                            $scope.$parent.vm.workflowOverlay = workflowActionsService.cancel(item);
+                            $scope.$parent.vm.workflowOverlay = workflowActionsService.cancel(item, true);
                         }
                     },                
                     rejectButton: {
                         labelKey: "workflow_rejectButton",
                         cssClass: 'warning',
                         handler: function (item) {
-                            $scope.$parent.vm.workflowOverlay = workflowActionsService.action(item, false);
+                            $scope.$parent.vm.workflowOverlay = workflowActionsService.action(item, false, true);
                         }
                     }
                 };

@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function dashboardController($scope, $routeParams, workflowResource, authResource, notificationsService) {
+    function dashboardController($scope, $rootScope, $routeParams, workflowResource, authResource, notificationsService) {
 
         var vm = this;
 
@@ -10,6 +10,16 @@
             getSubmissions();
             getAdmin();
         }
+
+        // dash needs notification of when to refresh, as the action is in a deeper scope
+        $rootScope.$on('refreshWorkflowDash', function () {
+            authResource.getCurrentUser()
+                .then(function (user) {
+                    vm.currentUser = user;
+                    vm.adminUser = user.allowedSections.indexOf('workflow') !== -1;
+                    init();
+                });
+        });
 
         function getPending() {
             // api call for tasks assigned to the current user
@@ -60,12 +70,11 @@
         function notify(d) {
             if (d.status === 200) {
                 notificationsService.success("SUCCESS!", d.message);
+                init();
             }
             else {
                 notificationsService.error("OH SNAP!", d.message);
-            }
-
-            init();
+            }            
         }
 
         // expose some bits
