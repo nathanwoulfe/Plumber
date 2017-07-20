@@ -118,8 +118,8 @@
 
         var user;
         userService.getCurrentUser()
-            .then(function (user) {
-                user = user;
+            .then(function (userResp) {
+                user = userResp;
                 getNodeTasks();
             });
 
