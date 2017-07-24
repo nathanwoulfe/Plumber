@@ -35,7 +35,7 @@ namespace Workflow.Api
                 {
                     var result = _pr.PopulatedUserGroup(id.Value);
 
-                    if (result.Any())
+                    if (result.Any(r => !r.Deleted))
                     {
                         return Json(result.First(), ViewHelpers.CamelCase);
                     }
@@ -43,7 +43,7 @@ namespace Workflow.Api
                 else
                 {
                     var groups = _pr.UserGroups();
-                    return Json(groups, ViewHelpers.CamelCase);
+                    return Json(groups.Where(g => !g.Deleted), ViewHelpers.CamelCase);
                 }
 
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -172,9 +172,10 @@ namespace Workflow.Api
             // existing workflow processes are left as is, and need to be managed by a human person
             try
             {
-                db.Execute("DELETE FROM WorkflowUserGroups WHERE GroupId = @0", id);
-                db.Execute("DELETE FROM WorkflowUser2UserGroup WHERE GroupId = @0", id);
-                db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE GroupId = @0", id);
+                db.Execute("UPDATE WorkflowUserGroups SET Deleted = 1 WHERE GroupId = @0", id);
+
+                //db.Execute("DELETE FROM WorkflowUser2UserGroup WHERE GroupId = @0", id);
+                //db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE GroupId = @0", id);
             }
             catch (Exception ex)
             {
