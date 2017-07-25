@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Umbraco.Core;
+using Umbraco.Core.Configuration;
 using Umbraco.Core.Persistence;
 using Workflow.Models;
 using Workflow.Relators;
@@ -33,6 +34,11 @@ namespace Workflow
             else
             {
                 db.Insert(wsp);
+            }
+
+            if (string.IsNullOrEmpty(wsp.Email))
+            {
+                wsp.Email = UmbracoConfig.For.UmbracoSettings().Content.NotificationEmailAddress;
             }
 
             return wsp;
