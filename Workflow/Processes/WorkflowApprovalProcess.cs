@@ -293,7 +293,7 @@ namespace Workflow
                     var contentTypeApproval = _pr.PermissionsForNode(nodeId, instance.Node.ContentType.Id).Where(g => g.ContentTypeId != 0).ToList();
                     if (contentTypeApproval.Any())
                     {
-                        group = approvalGroup.Where(g => g.Permission == taskInstance.ApprovalStep).First();
+                        group = contentTypeApproval.Where(g => g.Permission == taskInstance.ApprovalStep).First();
                         SetInstanceTotalSteps(approvalGroup.Count);
                     }
                     else
