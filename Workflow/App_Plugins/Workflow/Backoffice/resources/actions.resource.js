@@ -100,6 +100,8 @@
 
                 if (fromDash) {
                     $rootScope.$emit('refreshWorkflowDash');
+                } else {
+                    $rootScope.$emit('workflowActioned')
                 }
             }
             else {

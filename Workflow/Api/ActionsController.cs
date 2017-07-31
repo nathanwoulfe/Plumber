@@ -227,7 +227,7 @@ namespace Workflow.Api
                 return Json(new
                 {
                     status = 200,
-                    msg = _instance.TypeDescription + " workflow cancelled"
+                    message = _instance.TypeDescription + " workflow cancelled"
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
@@ -237,7 +237,7 @@ namespace Workflow.Api
                 return Json(new
                 {
                     status = 500,
-                    msg = msg
+                    message = msg
                 }, ViewHelpers.CamelCase);
             }
         }

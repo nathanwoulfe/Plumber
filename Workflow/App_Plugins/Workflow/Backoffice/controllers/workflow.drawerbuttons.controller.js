@@ -2,7 +2,7 @@
     'use strict';
 
     // create controller 
-    function controller($scope, userService, workflowResource, workflowActionsService, contentEditingHelper, contentResource, editorState, $routeParams) {
+    function controller($scope, $rootScope, userService, workflowResource, workflowActionsService, contentEditingHelper, contentResource, editorState, $routeParams) {
         var vm = this;
 
         var defaultButtons = contentEditingHelper.configureContentEditorButtons({
@@ -26,6 +26,7 @@
                         checkUserAccess(resp.items[0]);
                     }
                     else {
+                        vm.active = false;
                         setButtons();
                     }
                 }, function (err) {
@@ -37,6 +38,10 @@
         $scope.$watch('$parent.$parent.$parent.contentForm.$dirty', function (newVal, oldVal) {
             $scope.dirty = newVal === true;
             setButtons();
+        });
+
+        $rootScope.$on('workflowActioned', function () {
+            getNodeTasks();
         });
 
         function setButtons() {
