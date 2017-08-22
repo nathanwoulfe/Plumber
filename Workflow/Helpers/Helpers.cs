@@ -35,6 +35,21 @@ namespace Workflow
             return n;
         }
 
+        public static string GetNodeName(int id)
+        {
+            var n = _helper.TypedContent(id);
+            if (n == null)
+            {
+                var c = _cs.GetById(id);
+                if (c != null)
+                {
+                    return c.Name;
+                }
+                return "Node does not exist";
+            }
+            return n.Name;
+        }
+
         public static bool GetNodeStatus(int id)
         {
             return _pr.InstancesByNodeAndStatus(id, new List<int> { (int)WorkflowStatus.PendingApproval }).Any();

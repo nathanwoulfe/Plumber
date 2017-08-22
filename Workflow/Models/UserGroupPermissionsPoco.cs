@@ -34,7 +34,7 @@ namespace Workflow.Models
         {
             get
             {
-                return NodeId > 0 ? Helpers.GetNode(NodeId).Name : string.Empty;
+                return NodeId > 0 ? Helpers.GetNodeName(NodeId) : string.Empty;
             }
         }
 
