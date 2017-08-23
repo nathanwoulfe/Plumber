@@ -7,7 +7,8 @@
             restrict: 'E',
             scope: {
                 item: '=',
-                instanceView: '='
+                instanceView: '=',
+                groupHistoryView: '='
             },
             link: function (scope) {
                 scope.templateUrl = '../app_plugins/workflow/backoffice/partials/table/' + (scope.instanceView ? 'historyinstance' : 'historytask') + '.html';

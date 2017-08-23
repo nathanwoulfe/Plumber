@@ -4,7 +4,7 @@
             <i class="umb-table-body__icon icon-document" ng-class="{'soft' : !$first}"></i>
         </div>
         <div class="umb-table-cell">
-            <a ng-if="$first" href="#" ng-href="/umbraco/dialogs/preview.aspx?id={{ item.nodeId }}" ng-bind="item.nodeName" target="_blank"></a>
+            <a ng-if="$first" href="#" ng-href="/umbraco/dialogs/preview.aspx?id={{ item.nodeId }}" title="{{ item.nodeName }}" ng-bind="item.nodeName" target="_blank"></a>
         </div>
         <div class="umb-table-cell">
             <span ng-if="$first" ng-bind="item.type"></span>

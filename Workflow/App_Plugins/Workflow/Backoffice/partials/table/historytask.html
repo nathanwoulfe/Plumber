@@ -2,6 +2,9 @@
     <div class="umb-table-cell">
         <i class="umb-table-body__icon icon-document"></i>
     </div>
+    <div class="umb-table-cell" ng-if="groupHistoryView">
+        <a href="#" ng-href="/umbraco/dialogs/preview.aspx?id={{ item.nodeId }}" title="{{ item.nodeName }}" ng-bind="item.nodeName" target="_blank"></a>
+    </div>
     <div class="umb-table-cell">
         <span ng-bind="item.type"></span>
     </div>

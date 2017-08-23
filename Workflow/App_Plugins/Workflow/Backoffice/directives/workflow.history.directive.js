@@ -7,7 +7,8 @@
             restrict: 'E',
             scope: {
                 items: '=',
-                instanceView: '='
+                instanceView: '=',
+                groupHistoryView: '='
             },
             templateUrl: '../app_plugins/workflow/backoffice/partials/workflowhistorytemplate.html'
         };
