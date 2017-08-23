@@ -39,7 +39,7 @@
                 return this.request('GET', this.tasksUrl + 'range/' + days);
             },
             getAllInstances: function (count, page) {
-                return this.request('GET', this.instancesUrl + '/' + count + '/' + page);
+                return this.request('GET', this.instancesUrl + count + '/' + page);
             },
             getAllInstancesForRange: function (days) {
                 return this.request('GET', this.instancesUrl + 'range/' + days);

@@ -4,7 +4,12 @@
     function historyController($scope, workflowResource, contentResource, dialogService, $timeout, editorState) {
 
         var vm = this,
+            width = $scope.dialogOptions ? $scope.dialogOptions.currentAction.metaData.width : undefined,
             node = $scope.dialogOptions ? $scope.dialogOptions.currentNode : undefined;
+
+        if (width) {
+            angular.element('#dialog').css('width', width);
+        }
 
         function perPage() {
             return [2, 5, 10, 20, 50];
@@ -44,7 +49,7 @@
                 .then(function (resp) {
                     setPaging(resp);
                 });
-        }        
+        }
 
         function auditNode(data) {
             vm.loading = true;
@@ -56,7 +61,7 @@
             }
 
             vm.node = data || vm.node;
-            
+
             workflowResource.getNodeTasks(vm.node.id, vm.pagination.perPage, vm.pagination.pageNumber)
                 .then(function (resp) {
                     setPaging(resp);
@@ -77,7 +82,7 @@
             vm.pagination.pageNumber = resp.page;
             vm.pagination.totalPages = resp.total / resp.count;
             vm.loading = false;
-        }        
+        }
 
         angular.extend(vm, {
             auditNode: auditNode,

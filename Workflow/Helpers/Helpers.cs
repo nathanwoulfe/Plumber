@@ -30,7 +30,12 @@ namespace Workflow
             var n = _helper.TypedContent(id);
             if (n == null)
             {
-                return _cs.GetById(id).ToPublishedContent();
+                var c = _cs.GetById(id);
+                if (c != null)
+                {
+                    return c.ToPublishedContent();
+                }
+                return null;
             }
             return n;
         }

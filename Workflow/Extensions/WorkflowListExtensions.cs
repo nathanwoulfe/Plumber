@@ -23,17 +23,24 @@ namespace Workflow.Extensions
                 {
                     WorkflowInstancePoco useThisInstance = taskInstance.WorkflowInstance != null ? taskInstance.WorkflowInstance : instance;
 
-                    GetPermissionsForNode(useThisInstance.Node);
+                    var instanceNodeName = "NODE NO LONGER EXISTS";
+                    var typeDescription = "";
+                    if (useThisInstance.Node != null)
+                    {
+                        GetPermissionsForNode(useThisInstance.Node);
+                        instanceNodeName = useThisInstance.Node.Name;
+                        typeDescription = useThisInstance.TypeDescription;
+                    }
 
                     var item = new WorkflowTask
                     {
                         Status = taskInstance.StatusName,
                         CssStatus = taskInstance.StatusName.ToLower().Split(' ')[0],
-                        Type = useThisInstance.TypeDescription,
+                        Type = typeDescription,
                         NodeId = useThisInstance.NodeId,
                         TaskId = useThisInstance.Id,
                         ApprovalGroupId = taskInstance.UserGroup.GroupId,
-                        NodeName = useThisInstance.Node.Name,
+                        NodeName = instanceNodeName,
                         RequestedBy = useThisInstance.AuthorUser.Name,
                         RequestedOn = taskInstance.CreatedDate.ToString(),
                         ApprovalGroup = taskInstance.UserGroup.Name,
@@ -107,109 +114,3 @@ namespace Workflow.Extensions
         }
     }
 }
-
-//    public class WorkflowLists
-//    {
-//        private List<UserGroupPermissionsPoco> perms = new List<UserGroupPermissionsPoco>();
-//        private static PocoRepository _pr = new PocoRepository();
-
-//        /// <summary>
-//        /// Helper method for compiling WorkflowItem response object
-//        /// </summary>
-//        /// <param name="taskInstances"></param>
-//        /// <returns></returns>
-//        public List<WorkflowTask> BuildWorkflowItemList(List<WorkflowTaskInstancePoco> taskInstances, WorkflowInstancePoco instance = null)
-//        {
-
-//            List<WorkflowTask> workflowItems = new List<WorkflowTask>();
-
-//            if (taskInstances != null && taskInstances.Count > 0)
-//            {
-//                foreach (var taskInstance in taskInstances)
-//                {
-//                    WorkflowInstancePoco useThisInstance = taskInstance.WorkflowInstance != null ? taskInstance.WorkflowInstance : instance;
-
-//                    GetPermissionsForNode(useThisInstance.Node);
-
-//                    var item = new WorkflowTask
-//                    {
-//                        Status = taskInstance.StatusName,
-//                        CssStatus = taskInstance.StatusName.ToLower().Split(' ')[0],
-//                        Type = useThisInstance.TypeDescription,
-//                        NodeId = useThisInstance.NodeId,
-//                        TaskId = useThisInstance.Id,
-//                        ApprovalGroupId = taskInstance.UserGroup.GroupId,
-//                        NodeName = useThisInstance.Node.Name,
-//                        RequestedBy = useThisInstance.AuthorUser.Name,
-//                        RequestedOn = taskInstance.CreatedDate.ToString(),
-//                        ApprovalGroup = taskInstance.UserGroup.Name,
-//                        Comments = taskInstance.Comment != null ? taskInstance.Comment : useThisInstance.AuthorComment != null ? useThisInstance.AuthorComment : string.Empty,
-//                        ActiveTask = useThisInstance.StatusName,
-//                        Permissions = perms,
-//                        CurrentStep = taskInstance.ApprovalStep
-//                    };
-
-//                    workflowItems.Add(item);
-//                }
-//            }
-
-//            return workflowItems.OrderByDescending(x => x.CurrentStep).ToList();
-//        }
-
-//        /// <summary>
-//        /// Helper method for compiling WorkflowItem response object
-//        /// </summary>
-//        /// <param name="taskInstances"></param>
-//        /// <returns></returns>
-//        public List<WorkflowInstance> BuildWorkflowInstanceList(List<WorkflowInstancePoco> instances)
-//        {
-//            List<WorkflowInstance> workflowInstances = new List<WorkflowInstance>();
-
-//            if (instances != null && instances.Count > 0)
-//            {
-//                foreach (var instance in instances)
-//                {
-//                    var n = Helpers.GetNode(instance.NodeId);
-//                    var model = new WorkflowInstance
-//                    {
-//                        Type = instance.TypeDescription,
-//                        Status = instance.StatusName,
-//                        CssStatus = instance.StatusName.ToLower().Split(' ')[0],
-//                        NodeId = instance.NodeId,
-//                        NodeName = instance.Node.Name,
-//                        RequestedBy = instance.AuthorUser.Name,
-//                        RequestedOn = instance.CreatedDate.ToString(),
-//                        Tasks = BuildWorkflowItemList(instance.TaskInstances.ToList(), instance)
-//                    };
-
-//                    workflowInstances.Add(model);
-//                }
-//            }
-
-//            return workflowInstances.OrderByDescending(x => x.RequestedOn).ToList();
-//        }
-
-//        /// <summary>
-//        /// Get the explicit or implied approval flow for a given node
-//        /// </summary>
-//        private void GetPermissionsForNode(IPublishedContent node)
-//        {
-//            // check the node for set permissions
-//            perms = _pr.PermissionsForNode(node.Id, 0);
-
-//            // return them if they exist, otherwise check the parent
-//            if (!perms.Any())
-//            {
-//                if (node.Level != 1)
-//                {
-//                    GetPermissionsForNode(node.Parent);
-//                }
-//                else
-//                {
-//                    // check for content-type permissions
-//                    perms = _pr.PermissionsForNode(0, node.ContentType.Id);
-//                }
-//            }
-//        }
-//    }
-//}

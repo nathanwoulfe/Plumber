@@ -35,7 +35,7 @@ namespace Workflow.Api
         {
             try
             {
-                var instances = _pr.GetAllInstances();
+                var instances = _pr.GetAllInstances().OrderByDescending(x => x.CreatedDate).ToList();
                 var workflowInstances = instances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowInstanceList();
                 return Json(new
                 {

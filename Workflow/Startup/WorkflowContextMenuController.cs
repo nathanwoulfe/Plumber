@@ -22,6 +22,7 @@ namespace UmbracoWorkflow.Actions
 
                 var i = new Umbraco.Web.Models.Trees.MenuItem("workflowHistory", "Workflow history");
                 i.LaunchDialogView("/App_Plugins/workflow/Backoffice/dialogs/workflow.history.dialog.html", "Workflow history: " + nodeName);
+                i.AdditionalData.Add("width", "700px");
                 i.SeperatorBefore = true;
                 i.Icon = "directions-alt";
 
