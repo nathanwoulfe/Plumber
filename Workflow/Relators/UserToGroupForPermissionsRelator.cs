@@ -1,53 +1,46 @@
-﻿using System.Linq;
-using Workflow.Models;
+﻿using Workflow.Models;
 
-namespace Workflow
+namespace Workflow.Relators
 {
     internal class UserToGroupForPermissionsRelator
     {
-        public UserGroupPermissionsPoco current;
+        public UserGroupPermissionsPoco Current;
 
         /// <summary>
         /// Maps Users to the UserGroup property of a UserGroupPermissionsPoco
         /// </summary>
-        /// <param name="wtip"></param>
-        /// <param name="wip"></param>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
+        /// <param name="ugpp"></param>
+        /// <param name="ugp"></param>
+        /// <param name="u2Ugp"></param>
         /// <returns></returns>
-        public UserGroupPermissionsPoco MapIt(UserGroupPermissionsPoco ugpp, UserGroupPoco ugp, User2UserGroupPoco u2ugp)
+        public UserGroupPermissionsPoco MapIt(UserGroupPermissionsPoco ugpp, UserGroupPoco ugp, User2UserGroupPoco u2Ugp)
         {
             if (ugpp == null)
             {
-                return current;
+                return Current;
             }
 
-            //if (u2ugp.GroupId == ugp.GroupId)
-            //{
-            //    ugp.Users.Add(u2ugp);
-            //}
-
-            if (current != null && current.GroupId == ugpp.GroupId)
+            if (Current != null && Current.GroupId == ugpp.GroupId)
             {
-                if (current.UserGroup == null)
+                if (Current.UserGroup == null)
                 {
-                    current.UserGroup = ugp;
+                    Current.UserGroup = ugp;
                 } 
                 
-                if (current.GroupId == u2ugp.GroupId)
+                if (Current.GroupId == u2Ugp.GroupId)
                 {
-                    current.UserGroup.Users.Add(u2ugp);
+                    Current.UserGroup.Users.Add(u2Ugp);
                 }      
                 return null;
             }
 
-            var prev = current;
-            current = ugpp;
-            current.UserGroup = ugp;
+            var prev = Current;
+            Current = ugpp;
+            Current.UserGroup = ugp;
 
-            if (current.GroupId == u2ugp.GroupId)
+            if (Current.GroupId == u2Ugp.GroupId)
             {
-                current.UserGroup.Users.Add(u2ugp);
+                Current.UserGroup.Users.Add(u2Ugp);
             }
 
             return prev;

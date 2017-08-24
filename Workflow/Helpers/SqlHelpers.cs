@@ -9,7 +9,8 @@
                             LEFT JOIN WorkflowUserGroupPermissions
                             on WorkflowUserGroups.GroupId = WorkflowUserGroupPermissions.GroupId
                             LEFT JOIN WorkflowUser2UserGroup
-                            on WorkflowUserGroups.GroupId = WorkflowUser2UserGroup.GroupId";
+                            on WorkflowUserGroups.GroupId = WorkflowUser2UserGroup.GroupId
+                            WHERE WorkflowUserGroups.Deleted = 0";
         public const string UserGroupDetailed = @"SELECT * FROM WorkflowUserGroups 
                             LEFT JOIN WorkflowUserGroupPermissions
                             on WorkflowUserGroups.GroupId = WorkflowUserGroupPermissions.GroupId

@@ -9,7 +9,7 @@ using Umbraco.Web.Mvc;
 using Umbraco.Web.Trees;
 using Workflow.Models;
 
-namespace Workflow.Actions
+namespace Workflow.Tree
 {
     [Tree("workflow", "tree", "Workflow")]
     [PluginController("Workflow")]
@@ -21,49 +21,39 @@ namespace Workflow.Actions
             {
 
                 var nodes = new TreeNodeCollection();
-                var route = "/workflow/tree/view/";
+                const string route = "/workflow/tree/view/";
                 var treeNodes = new List<SectionTreeNode>();
 
                 var user = UmbracoContext.Current.Security.CurrentUser;
 
                 if (user.AllowedSections.Contains("settings") || user.UserType.Alias =="admin")
                 {
-                    treeNodes.Add(new SectionTreeNode() { Id = "settings", Title = "Settings", Icon = "icon-umb-settings", Route = string.Format("{0}{1}", route, "settings") });
-                    treeNodes.Add(new SectionTreeNode() { Id = "groups", Title = "Approval groups", Icon = "icon-users", Route = string.Format("{0}{1}", route, "groups") });
+                    treeNodes.Add(new SectionTreeNode() { Id = "settings", Title = "Settings", Icon = "icon-umb-settings", Route = $"{route}settings"});
+                    treeNodes.Add(new SectionTreeNode() { Id = "groups", Title = "Approval groups", Icon = "icon-users", Route =$"{route}groups"});
                 }
-                treeNodes.Add(new SectionTreeNode() { Id = "history", Title = "History", Icon = "icon-directions-alt", Route = string.Format("{0}{1}", route, "history") });
+                treeNodes.Add(new SectionTreeNode() { Id = "history", Title = "History", Icon = "icon-directions-alt", Route = $"{route}history"});
 
-                foreach (var n in treeNodes)
-                {
-                    var nodeToAdd = CreateTreeNode(n.Id, id, queryStrings, n.Title, n.Icon, n.Id == "groups" ? true : false, n.Route);
-                    nodes.Add(nodeToAdd);
-                }
+                nodes.AddRange(treeNodes.Select(n => CreateTreeNode(n.Id, id, queryStrings, n.Title, n.Icon, n.Id == "groups", n.Route)));
 
                 return nodes;
             }
-            else if (id == "groups")
+
+            if (id == "groups")
             {
                 var db = ApplicationContext.Current.DatabaseContext.Database;
 
                 var nodes = new TreeNodeCollection();
                 var treeNodes = new List<SectionTreeNode>();
-                var route = "/workflow/tree/edit/";
+                const string route = "/workflow/tree/edit/";
 
-                var userGroups = db.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups ORDER BY name DESC");
+                var userGroups = db.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE deleted = false ORDER BY name DESC");
 
                 if (userGroups != null && userGroups.Any())
                 {
-                    foreach (var userGroup in userGroups)
-                    {
-                        treeNodes.Add(new SectionTreeNode() { Id = userGroup.GroupId.ToString(), Title = userGroup.Name, Icon = "icon-users", Route = string.Format("{0}{1}", route, userGroup.GroupId) });
-                    }
+                    treeNodes.AddRange(userGroups.Select(userGroup => new SectionTreeNode() {Id = userGroup.GroupId.ToString(), Title = userGroup.Name, Icon = "icon-users", Route = $"{route}{userGroup.GroupId}"}));
                 }
 
-                foreach (var n in treeNodes)
-                {
-                    var nodeToAdd = CreateTreeNode(n.Id, id, queryStrings, n.Title, n.Icon, false, n.Route);
-                    nodes.Add(nodeToAdd);
-                }
+                nodes.AddRange(treeNodes.Select(n => CreateTreeNode(n.Id, id, queryStrings, n.Title, n.Icon, false, n.Route)));
 
                 return nodes;
             }
@@ -98,13 +88,5 @@ namespace Workflow.Actions
 
             return menu;
         }
-    }
-
-    public class SectionTreeNode
-    {
-        public string Id { get; set; }
-        public string Title { get; set; }
-        public string Icon { get; set; }
-        public string Route { get; set; }
     }
 }

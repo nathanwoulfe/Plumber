@@ -1,8 +1,7 @@
 ﻿using Umbraco.Core;
 using Umbraco.Web;
-using Workflow;
 
-namespace UmbracoWorkflow.Actions
+namespace Workflow.Startup
 {
     public class WorkflowContextMenuController : ApplicationEventHandler
     {
@@ -11,9 +10,9 @@ namespace UmbracoWorkflow.Actions
             Umbraco.Web.Trees.TreeControllerBase.MenuRendering += ContentTreeController_MenuRendering;
         }
 
-        void ContentTreeController_MenuRendering(Umbraco.Web.Trees.TreeControllerBase sender, Umbraco.Web.Trees.MenuRenderingEventArgs e)
+        private static void ContentTreeController_MenuRendering(Umbraco.Web.Trees.TreeControllerBase sender, Umbraco.Web.Trees.MenuRenderingEventArgs e)
         {
-            if (sender.TreeAlias == "content" && string.Compare(e.NodeId, "-1") != 0)
+            if (sender.TreeAlias == "content" && string.CompareOrdinal(e.NodeId, "-1") != 0)
             {
                 var menuLength = e.Menu.Items.Count;
                 var nodeName = Helpers.GetNode(int.Parse(e.NodeId)).Name;

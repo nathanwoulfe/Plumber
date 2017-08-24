@@ -3,7 +3,7 @@ using Umbraco.Core.Logging;
 using Umbraco.Core.Persistence;
 using Workflow.Models;
 
-namespace Workflow.Actions
+namespace Workflow.Startup
 {
     public class RegisterEvents : ApplicationEventHandler
     {

@@ -5,24 +5,30 @@ namespace Workflow.Relators
 {
     public class TaskToInstanceRelator
     {
-        public WorkflowInstancePoco current;
+        public WorkflowInstancePoco Current;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public WorkflowInstancePoco MapIt(WorkflowInstancePoco a, WorkflowTaskInstancePoco b)
         {
             if (a == null)
             {
-                return current;
+                return Current;
             }
 
-            if (a != null && current != null && a.Guid == b.WorkflowInstanceGuid)
+            if (Current != null && a.Guid == b.WorkflowInstanceGuid)
             {
-                current.TaskInstances.Add(b);
+                Current.TaskInstances.Add(b);
                 return null;
             }
 
-            var prev = current;
-            current = a;
-            current.TaskInstances = new List<WorkflowTaskInstancePoco>() { b };
+            var prev = Current;
+            Current = a;
+            Current.TaskInstances = new List<WorkflowTaskInstancePoco>() { b };
 
             return prev;
         }

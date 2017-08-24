@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Configuration;
+﻿using System.Web.Configuration;
 using umbraco.cms.businesslogic.packager;
 using Umbraco.Core;
 
-namespace Workflow
+namespace Workflow.Startup
 {
     public class UmbracoStartup : ApplicationEventHandler
     {
@@ -48,22 +43,21 @@ namespace Workflow
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void InstalledPackage_BeforeDelete(InstalledPackage sender, System.EventArgs e)
+        private static void InstalledPackage_BeforeDelete(InstalledPackage sender, System.EventArgs e)
         {
             //Check which package is being uninstalled
-            if (sender.Data.Name == "Plumber")
-            {
-                var uninstall = new Uninstaller();
+            if (sender.Data.Name != "Plumber") return;
 
-                //Start Uninstall - clean up process...
-                uninstall.RemoveSection();
-                uninstall.RemoveSectionDashboard();
+            var uninstall = new Uninstaller();
 
-                //Remove AppSetting key when all done
-                var webConfig = WebConfigurationManager.OpenWebConfiguration("/");
-                webConfig.AppSettings.Settings.Remove(AppSettingKey);
-                webConfig.Save();
-            }
+            //Start Uninstall - clean up process...
+            uninstall.RemoveSection();
+            uninstall.RemoveSectionDashboard();
+
+            //Remove AppSetting key when all done
+            var webConfig = WebConfigurationManager.OpenWebConfiguration("/");
+            webConfig.AppSettings.Settings.Remove(AppSettingKey);
+            webConfig.Save();
         }
     }
 }
