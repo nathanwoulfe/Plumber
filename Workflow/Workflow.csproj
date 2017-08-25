@@ -36,6 +36,7 @@
     <Compile Include="Extensions\WorkflowListExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
     <Compile Include="Helpers\Installer.cs" />
+    <Compile Include="Helpers\MagicStrings.cs" />
     <Compile Include="Helpers\Uninstaller.cs" />
     <Compile Include="Models\SectionTreeNodeModel.cs" />
     <Compile Include="Relators\UserToGroupForPermissionsRelator.cs" />
@@ -58,7 +59,7 @@
     <Compile Include="Helpers\Notifications.cs" />
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Processes\DocumentPublishProcess.cs" />
-    <Compile Include="Helpers\Helpers.cs" />
+    <Compile Include="Helpers\Utility.cs" />
     <Compile Include="Processes\IWorkflowProcess.cs" />
     <Compile Include="Processes\DocumentUnpublishProcess.cs" />
     <Compile Include="Models\UserGroupsModel.cs" />

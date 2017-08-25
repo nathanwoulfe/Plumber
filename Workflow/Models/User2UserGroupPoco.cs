@@ -1,7 +1,7 @@
-﻿using Umbraco.Core;
-using Umbraco.Core.Models.Membership;
+﻿using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
+using Workflow.Helpers;
 
 namespace Workflow.Models
 {
@@ -21,21 +21,9 @@ namespace Workflow.Models
         public int GroupId { get; set; }
 
         [ResultColumn]
-        public string Name
-        {
-            get
-            {
-                return Utility.GetUser(UserId).Name;
-            }
-        }
+        public string Name => Utility.GetUser(UserId).Name;
 
         [ResultColumn]
-        public IUser User
-        {
-            get
-            {
-                return Utility.GetUser(UserId);
-            }
-        }
+        public IUser User => Utility.GetUser(UserId);
     }
 }

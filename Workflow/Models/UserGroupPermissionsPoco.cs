@@ -1,6 +1,6 @@
 ﻿using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
-using Umbraco.Core.Models;
+using Workflow.Helpers;
 
 namespace Workflow.Models
 {
@@ -30,22 +30,10 @@ namespace Workflow.Models
         public int Permission { get; set; }
 
         [ResultColumn]
-        public string NodeName
-        {
-            get
-            {
-                return NodeId > 0 ? Utility.GetNodeName(NodeId) : string.Empty;
-            }
-        }
+        public string NodeName => NodeId > 0 ? Utility.GetNodeName(NodeId) : string.Empty;
 
         [ResultColumn]
-        public string ContentTypeName
-        {
-            get
-            {
-                return ContentTypeId > 0 ? Utility.GetContentType(ContentTypeId).Name : string.Empty;
-            }
-        }
+        public string ContentTypeName => ContentTypeId > 0 ? Utility.GetContentType(ContentTypeId).Name : string.Empty;
 
 
         [ResultColumn]

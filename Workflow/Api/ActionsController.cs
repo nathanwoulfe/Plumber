@@ -6,6 +6,7 @@ using System.Web.Http;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 using Workflow.Helpers;
+using Workflow.Processes;
 
 namespace Workflow.Api
 {
@@ -15,26 +16,22 @@ namespace Workflow.Api
     [RoutePrefix("umbraco/backoffice/api/workflow/actions")]
     public class ActionsController : UmbracoAuthorizedApiController
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static PocoRepository _pr = new PocoRepository();
-
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly PocoRepository Pr = new PocoRepository();
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="nodeId"></param>
-        /// <param name="authorId"></param>
-        /// <param name="comment"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
         [Route("initiate")]
         public IHttpActionResult InitiateWorkflow(InitiateWorkflowModel model)
         {
-            WorkflowInstancePoco instance = null;
-            WorkflowApprovalProcess process = null;
-
             try
             {
+                WorkflowApprovalProcess process;
+
                 if (model.Publish)
                 {
                     process = new DocumentPublishProcess();
@@ -44,7 +41,7 @@ namespace Workflow.Api
                     process = new DocumentUnpublishProcess();
                 }
 
-                instance = process.InitiateWorkflow(int.Parse(model.NodeId), Utility.GetCurrentUser().Id, model.Comment);
+                var instance = process.InitiateWorkflow(int.Parse(model.NodeId), Utility.GetCurrentUser().Id, model.Comment);
 
                 var msg = string.Empty;
 
@@ -85,8 +82,7 @@ namespace Workflow.Api
         /// <summary>
         /// Processes the workflow task for the given task id
         /// </summary>
-        /// <param name="taskId"></param>
-        /// <param name="comment"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
         [Route("approve")]
@@ -107,7 +103,7 @@ namespace Workflow.Api
                     comment
                 );
 
-                string msg = string.Empty;
+                var msg = string.Empty;
 
                 switch (instance._Status)
                 {
@@ -136,8 +132,8 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                string msg = "An error occurred processing the approval: " + ex.Message + ex.StackTrace;
-                log.Error(msg + " for workflow " + instance.Id, ex);
+                var msg = "An error occurred processing the approval: " + ex.Message + ex.StackTrace;
+                Log.Error(msg + " for workflow " + instance.Id, ex);
                 return Json(new
                 {
                     message = msg,
@@ -150,8 +146,7 @@ namespace Workflow.Api
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="taskId"></param>
-        /// <param name="comment"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
         [Route("reject")]
@@ -159,14 +154,14 @@ namespace Workflow.Api
         {
             var taskId = model.TaskId;
             var comment = model.Comment;
-            var _instance = GetInstance(taskId);
+            var instance = GetInstance(taskId);
 
             try
             {
-                WorkflowApprovalProcess process = GetProcess(_instance.Type);
+                WorkflowApprovalProcess process = GetProcess(instance.Type);
 
-                _instance = process.ActionWorkflow(
-                    _instance,
+                instance = process.ActionWorkflow(
+                    instance,
                     WorkflowAction.Reject,
                     Utility.GetCurrentUser().Id,
                     comment
@@ -174,14 +169,14 @@ namespace Workflow.Api
 
                 return Json(new
                 {
-                    message = _instance.TypeDescription + " request has been rejected.",
+                    message = instance.TypeDescription + " request has been rejected.",
                     status = 200
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
-                string msg = "An error occurred rejecting the workflow: " + ex.Message + ex.StackTrace;
-                log.Error(msg + " for workflow " + _instance.Id, ex);
+                var msg = "An error occurred rejecting the workflow: " + ex.Message + ex.StackTrace;
+                Log.Error(msg + " for workflow " + instance.Id, ex);
 
                 return Json(new
                 {
@@ -195,8 +190,7 @@ namespace Workflow.Api
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="taskId">The workflow task id</param>
-        /// <param name="comment"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
         [Route("cancel")]
@@ -204,14 +198,14 @@ namespace Workflow.Api
         {
             var taskId = model.TaskId;
             var comment = model.Comment;
-            var _instance = GetInstance(taskId);
+            var instance = GetInstance(taskId);
 
             try
             {
-                WorkflowApprovalProcess process = GetProcess(_instance.Type);
+                WorkflowApprovalProcess process = GetProcess(instance.Type);
 
-                _instance = process.CancelWorkflow(
-                    _instance,
+                instance = process.CancelWorkflow(
+                    instance,
                     Utility.GetCurrentUser().Id,
                     comment
                 );
@@ -219,13 +213,13 @@ namespace Workflow.Api
                 return Json(new
                 {
                     status = 200,
-                    message = _instance.TypeDescription + " workflow cancelled"
+                    message = instance.TypeDescription + " workflow cancelled"
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
-                string msg = "An error occurred cancelling the workflow: " + ex.Message + ex.StackTrace;
-                log.Error(msg + " for workflow " + _instance.Id, ex);
+                var msg = "An error occurred cancelling the workflow: " + ex.Message + ex.StackTrace;
+                Log.Error(msg + " for workflow " + instance.Id, ex);
                 return Json(new
                 {
                     status = 500,
@@ -241,7 +235,7 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        private dynamic GetProcess(int type)
+        private static dynamic GetProcess(int type)
         {
             if ((WorkflowType)type == WorkflowType.Publish)
             {
@@ -255,20 +249,20 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="taskId"></param>
         /// <returns></returns>
-        private WorkflowInstancePoco GetInstance(int taskId)
+        private static WorkflowInstancePoco GetInstance(int taskId)
         {
-            var _instance = _pr.InstanceByTaskId(taskId);
-            _instance.SetScheduledDate();
+            var instance = Pr.InstanceByTaskId(taskId);
+            instance.SetScheduledDate();
 
             // TODO -> fix this
-            var tasks = _pr.TasksAndGroupByInstanceId(_instance.Guid);
+            var tasks = Pr.TasksAndGroupByInstanceId(instance.Guid);
 
             if (tasks.Any())
             {
-                _instance.TaskInstances = tasks;
+                instance.TaskInstances = tasks;
             }
 
-            return _instance;
+            return instance;
         }
 
         #endregion

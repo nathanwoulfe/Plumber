@@ -1,6 +1,7 @@
 ﻿using System.Web.Configuration;
 using umbraco.cms.businesslogic.packager;
 using Umbraco.Core;
+using Workflow.Helpers;
 
 namespace Workflow.Startup
 {
@@ -15,7 +16,7 @@ namespace Workflow.Startup
 
             if (string.IsNullOrEmpty(installAppSetting) || installAppSetting != true.ToString())
             {
-                var install = new Installer();
+                var install = new Helpers.Installer();
 
                 //Check to see if section needs to be added
                 install.AddSection(context);

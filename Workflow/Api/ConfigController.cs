@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Reflection;
 using System.Web.Http;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
 using Umbraco.Web.WebApi;
+using Workflow.Helpers;
 using Workflow.Models;
 
 namespace Workflow.Api
@@ -15,29 +14,29 @@ namespace Workflow.Api
     [RoutePrefix("umbraco/backoffice/api/workflow/config")]
     public class ConfigController : UmbracoAuthorizedApiController
     {
-        private Database db = ApplicationContext.Current.DatabaseContext.Database;
+        private readonly Database _db = ApplicationContext.Current.DatabaseContext.Database;
 
         /// <summary>
         /// Persist the workflow approval config
         /// </summary>
-        /// <param name="group"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         [Route("save")]
         public IHttpActionResult Save(List<UserGroupPermissionsPoco> model)
         {
             try
             {
-                if (model.Where(p => p.ContentTypeId > 0).Any())
+                if (model.Any(p => p.ContentTypeId > 0))
                 {
                     // set defaults for doctype - delete all previous
-                    db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE ContentTypeId != 0");
-                    db.BulkInsertRecords<UserGroupPermissionsPoco>(model);
+                    _db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE ContentTypeId != 0");
+                    _db.BulkInsertRecords(model);
                 }
                 else
                 {
-                    db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE NodeId = @0", model.First().NodeId);
-                    db.BulkInsertRecords<UserGroupPermissionsPoco>(model);            
+                    _db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE NodeId = @0", model.First().NodeId);
+                    _db.BulkInsertRecords(model);            
                 }
             }
             catch (Exception ex)

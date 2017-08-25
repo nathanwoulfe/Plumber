@@ -1,23 +1,19 @@
 ﻿using log4net;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Umbraco.Core;
-using Umbraco.Core.Persistence;
+using Workflow.Helpers;
 using Workflow.Models;
 
-namespace Workflow
+namespace Workflow.Processes
 {
     /// <summary>
     /// Process definition for the Document Publish workflow process.
     /// </summary>
     public class DocumentPublishProcess : WorkflowApprovalProcess
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public DocumentPublishProcess() : base()
+        public DocumentPublishProcess()
         {
             Type = WorkflowType.Publish;
         }
@@ -25,11 +21,10 @@ namespace Workflow
         /// <summary>
         /// Performs workflow completion tasks on completion of the approval processing.
         /// </summary>
-        /// <param name="userId">The user Id who performed the action which has triggered the completion of the workflow</param>
         public override void CompleteWorkflow()
         {
             // Handle Publish At (Release At)
-            if (instance.ScheduledDate != null && instance.ScheduledDate > DateTime.Now)
+            if (Instance.ScheduledDate != null && Instance.ScheduledDate > DateTime.Now)
             {
                 HandlePublishAt();
             }
@@ -45,17 +40,17 @@ namespace Workflow
         private void HandlePublishNow()
         {
             bool success;
-            string errorText = "";
+            var errorText = "";
 
             try
             {
                 // Have to do this prior to the publish due to workaround for "publish at" handling.
-                instance.Status = (int)WorkflowStatus.Approved;
-                instance.CompletedDate = DateTime.Now;
+                Instance.Status = (int)WorkflowStatus.Approved;
+                Instance.CompletedDate = DateTime.Now;
 
                 // Perform the publish
                 var cs = ApplicationContext.Current.Services.ContentService;
-                var node = cs.GetById(instance.NodeId);
+                var node = cs.GetById(Instance.NodeId);
                 success = cs.PublishWithStatus(node).Success;
             }
             catch (Exception e)
@@ -63,25 +58,25 @@ namespace Workflow
                 try
                 {
                     // rollback the process completion.
-                    instance.Status = (int)WorkflowStatus.Errored;
-                    instance.AuthorComment += " * This workflow has errored with message " + e.Message + " *";
+                    Instance.Status = (int)WorkflowStatus.Errored;
+                    Instance.AuthorComment += " * This workflow has errored with message " + e.Message + " *";
                 }
                 catch (Exception ex)
                 {
-                    errorText = "Unable to publish document " + instance.Node.Name + ": " + ex.Message;
-                    log.Error(errorText, ex);
+                    errorText = "Unable to publish document " + Instance.Node.Name + ": " + ex.Message;
+                    Log.Error(errorText, ex);
                 }
 
                 success = false;
-                errorText = "Unable to publish document " + instance.Node.Name  + ": " + e.Message;
-                log.Error(errorText, e);
+                errorText = "Unable to publish document " + Instance.Node.Name  + ": " + e.Message;
+                Log.Error(errorText, e);
             }
 
-            ApplicationContext.Current.DatabaseContext.Database.Update(instance);
+            ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
 
             if (success)
             {
-                Notifications.Send(instance, EmailType.ApprovedAndCompleted);
+                Notifications.Send(Instance, EmailType.ApprovedAndCompleted);
             }
             else
             {
@@ -92,32 +87,31 @@ namespace Workflow
         /// <summary>
         /// For a document with a release date set, dont do the publish, just allow it to occur when the scheduler reaches the release date.
         /// </summary>
-        /// <param name="userId"></param>
         private void HandlePublishAt()
         {
             // There is a release date set so just complete the workflow. The internal scheduler will publish this at the required time.
-            bool success = false;
-            string errorText = "";
+            var success = false;
+            var errorText = "";
 
             try
             {
                 // Just complete the workflow
-                instance.Status = (int)WorkflowStatus.Approved;
-                instance.CompletedDate = DateTime.Now;
-                ApplicationContext.Current.DatabaseContext.Database.Update(instance);
+                Instance.Status = (int)WorkflowStatus.Approved;
+                Instance.CompletedDate = DateTime.Now;
+                ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
                 success = true;
 
                 // Publish will occur via scheduler.
             }
             catch (Exception ex)
             {
-                errorText = "Error completing workflow for " + instance.Node.Name + ": " + ex.Message;
-                log.Error(errorText);
+                errorText = "Error completing workflow for " + Instance.Node.Name + ": " + ex.Message;
+                Log.Error(errorText);
             }
 
             if (success)
             {
-                Notifications.Send(instance, EmailType.ApprovedAndCompletedForScheduler);
+                Notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
             }
             else
             {

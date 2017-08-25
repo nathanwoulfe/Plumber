@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Workflow.Models;
+using Workflow.Helpers;
 
 namespace Workflow.Relators
 {
@@ -37,7 +38,7 @@ namespace Workflow.Relators
                 Current.Users = new List<User2UserGroupPoco>() { b };
             }
 
-            if (Current.GroupId == c.GroupId)
+            if (Current.GroupId == c.GroupId && c.NodeName != MagicStrings.NoNode)
             {
                 Current.Permissions = new List<UserGroupPermissionsPoco>() { c };
             }

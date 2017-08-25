@@ -2,6 +2,7 @@
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
+using Workflow.Helpers;
 
 namespace Workflow.Models
 {
@@ -62,22 +63,10 @@ namespace Workflow.Models
         public int? ActionedByUserId { get; set; }
 
         [ResultColumn]
-        public TaskStatus? _Status
-        {
-            get
-            {
-                return (TaskStatus?)Status;
-            }
-        }
+        public TaskStatus? _Status => (TaskStatus?)Status;
 
         [ResultColumn]
-        public TaskType _Type
-        {
-            get
-            {
-                return (TaskType)Type;
-            }
-        }
+        public TaskType _Type => (TaskType)Type;
 
         [ResultColumn]
         public IUser ActionedByUser
@@ -93,22 +82,10 @@ namespace Workflow.Models
         }
 
         [ResultColumn]
-        public string TypeName
-        {
-            get
-            {
-                return Utility.PascalCaseToTitleCase(Type.ToString());
-            }
-        }
+        public string TypeName => Utility.PascalCaseToTitleCase(Type.ToString());
 
         [ResultColumn]
-        public string StatusName
-        {
-            get
-            {
-                return Utility.PascalCaseToTitleCase(_Status.ToString()); ;
-            }
-        }
+        public string StatusName => Utility.PascalCaseToTitleCase(_Status.ToString());
 
         [ResultColumn]
         public virtual UserGroupPoco UserGroup { get; set; }
@@ -121,9 +98,6 @@ namespace Workflow.Models
         /// Indicates whether the task instance is currently active.
         /// </summary>        
         [ResultColumn]
-        public bool Active
-        {
-            get { return _Status == TaskStatus.PendingApproval; }
-        }
+        public bool Active => _Status == TaskStatus.PendingApproval;
     }
 }

@@ -1,35 +1,33 @@
 ﻿using log4net;
 using System;
-using umbraco.BasePages;
 using Umbraco.Core;
-using Umbraco.Core.Persistence;
+using Workflow.Helpers;
 using Workflow.Models;
 
-namespace Workflow
+namespace Workflow.Processes
 {
     /// <summary>
     /// Process definition for the Document Publish workflow process.
     /// </summary>
     public class DocumentUnpublishProcess : WorkflowApprovalProcess
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private static string NodeName;
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static string _nodeName;
 
-        public DocumentUnpublishProcess(): base()
+        public DocumentUnpublishProcess()
         {            
-            this.Type = WorkflowType.Unpublish;
+            Type = WorkflowType.Unpublish;
         }
 
         /// <summary>
         /// Performs workflow completion tasks on completion of the approval processing.
         /// </summary>
-        /// <param name="userId">The user Id who performed the action which has triggered the completion of the workflow</param>
         public override void CompleteWorkflow()
         {
-            NodeName = instance.Node.Name;
+            _nodeName = Instance.Node.Name;
 
             // Handle Unpublish at (Remove At)
-            if (instance.ScheduledDate != null && instance.ScheduledDate > DateTime.Now)
+            if (Instance.ScheduledDate != null && Instance.ScheduledDate > DateTime.Now)
             {
                 HandleUnpublishAt();
             }
@@ -45,20 +43,20 @@ namespace Workflow
         /// </summary>
         public void HandleUnpublishNow()
         {
-            bool success = false;
-            string errorText = "";
-            WorkflowStatus originalWFStatus = instance._Status;
+            bool success;
+            var errorText = "";
+            var originalWfStatus = Instance._Status;
 
             try
             {
                 // Have to do this prior to the publish due to workaround for "unpublish at" handling.
-                instance.Status = (int)WorkflowStatus.Approved;
-                instance.CompletedDate = DateTime.Now;
-                ApplicationContext.Current.DatabaseContext.Database.Update(instance);
+                Instance.Status = (int)WorkflowStatus.Approved;
+                Instance.CompletedDate = DateTime.Now;
+                ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
 
                 // Perform the unpublish
                 var cs = ApplicationContext.Current.Services.ContentService;
-                var node = cs.GetById(instance.NodeId);
+                var node = cs.GetById(Instance.NodeId);
                 success = cs.UnPublish(node);
             }
             catch (Exception e)
@@ -66,25 +64,25 @@ namespace Workflow
                 try
                 {
                     // rollback the process completion.
-                    instance.Status = (int)originalWFStatus;
-                    instance.CompletedDate = null;
-                    ApplicationContext.Current.DatabaseContext.Database.Update(instance);
+                    Instance.Status = (int)originalWfStatus;
+                    Instance.CompletedDate = null;
+                    ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
                 }
                 catch (Exception ex)
                 {
-                    errorText = "Unable to unpublish document " + NodeName + ": " + ex.Message;
-                    log.Error(errorText);
+                    errorText = "Unable to unpublish document " + _nodeName + ": " + ex.Message;
+                    Log.Error(errorText);
                 }
 
                 success = false;
-                errorText = "Unable to unpublish document " + NodeName + ": " + e.Message;
-                log.Error(errorText);
+                errorText = "Unable to unpublish document " + _nodeName + ": " + e.Message;
+                Log.Error(errorText);
             }
 
             if (success)
             {
-                Notifications.Send(instance, EmailType.ApprovedAndCompleted);
-                log.Info("Successfully unpublished page " + this.instance.Node.Name);
+                Notifications.Send(Instance, EmailType.ApprovedAndCompleted);
+                Log.Info("Successfully unpublished page " + Instance.Node.Name);
             }
             else
             {
@@ -98,31 +96,31 @@ namespace Workflow
         private void HandleUnpublishAt()
         {
             // There is a remove date set so just complete the workflow. The internal scheduler will unpublish this at the required time.
-            bool success = false;
-            string errorText = "";
+            var success = false;
+            var errorText = "";
 
             try
             {
                 // Just complete the workflow
-                instance.Status = (int)WorkflowStatus.Approved;
-                instance.CompletedDate = DateTime.Now;
-                ApplicationContext.Current.DatabaseContext.Database.Update(instance);
+                Instance.Status = (int)WorkflowStatus.Approved;
+                Instance.CompletedDate = DateTime.Now;
+                ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
                 success = true;
 
                 // Unpublish will occur via scheduler.
             }
             catch (Exception ex)
             {
-                errorText = "Error completing workflow for " + NodeName + ": " + ex.Message;
-                log.Error(errorText);
+                errorText = "Error completing workflow for " + _nodeName + ": " + ex.Message;
+                Log.Error(errorText);
             }
 
             if (success)
             {
-                Notifications.Send(instance, EmailType.ApprovedAndCompletedForScheduler);
-                string notificationText = "The document '" + NodeName + "' has been approved for removal and is " + this.instance.TypeDescriptionPastTense;
+                Notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
+                var notificationText = "The document '" + _nodeName + "' has been approved for removal and is " + Instance.TypeDescriptionPastTense;
 
-                log.Info(notificationText);
+                Log.Info(notificationText);
             }
             else
             {

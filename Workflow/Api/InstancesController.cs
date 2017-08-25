@@ -1,18 +1,9 @@
-﻿using log4net;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Reflection;
 using System.Web.Http;
-using umbraco;
-using umbraco.cms.businesslogic.utilities;
-using Umbraco.Core;
-using Umbraco.Core.Models;
-using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
-using Workflow.Models;
+using Workflow.Helpers;
 using Workflow.Extensions;
 
 namespace Workflow.Api
@@ -23,7 +14,7 @@ namespace Workflow.Api
     [RoutePrefix("umbraco/backoffice/api/workflow/instances")]
     public class InstancesController : UmbracoAuthorizedApiController
     {
-        private static PocoRepository _pr = new PocoRepository();
+        private static readonly PocoRepository Pr = new PocoRepository();
 
         /// <summary>
         /// Returns all workflow instances, with their tasks
@@ -35,14 +26,14 @@ namespace Workflow.Api
         {
             try
             {
-                var instances = _pr.GetAllInstances().OrderByDescending(x => x.CreatedDate).ToList();
+                var instances = Pr.GetAllInstances().OrderByDescending(x => x.CreatedDate).ToList();
                 var workflowInstances = instances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowInstanceList();
                 return Json(new
                 {
                     items = workflowInstances,
                     total = instances.Count,
-                    page = page,
-                    count = count
+                    page,
+                    count
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception e)
@@ -61,7 +52,7 @@ namespace Workflow.Api
         {
             try
             {
-                var instances = _pr.GetAllInstancesForDateRange(DateTime.Now.AddDays(days * -1)).ToWorkflowInstanceList();
+                var instances = Pr.GetAllInstancesForDateRange(DateTime.Now.AddDays(days * -1)).ToWorkflowInstanceList();
                 return Json(new
                 {
                     items = instances,

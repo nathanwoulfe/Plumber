@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
-using Umbraco.Core;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
+using Workflow.Helpers;
 
 namespace Workflow.Models
 {
@@ -83,31 +83,5 @@ namespace Workflow.Models
             }
             return addresses;
         }
-   
-        /// <summary>
-        /// Delete this user group by setting its deleted flag in the database and renaming / realiasing it.
-        /// </summary>
-        //public void Delete()
-        //{
-        //    Deleted = true;
-        //    Name += "_Deleted_" + DateTime.Now.ToString("ddMMyy");
-        //    Alias += "_Deleted_" + DateTime.Now.ToString("ddMMyy");
-        //    Users.Clear();
-        //    //Permissions.Clear();
-        //}
-
-        /// <summary>
-        /// Sets the users for the user group, based on the supplied id string
-        /// </summary>
-        /// <param name="userIds">comma separated string of user ids defining the group's users.</param>
-        //public void SetUsers(string userIds)
-        //{
-        //    Users.Clear();
-        //    foreach (var id in userIds.Split(','))
-        //    {
-        //        Users.Add(new User2UserGroupPoco { GroupId = Id, UserId = int.Parse(id) });
-        //    }
-        //}
-
     }    
 }

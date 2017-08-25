@@ -16,50 +16,44 @@ namespace Workflow.Helpers
 {
     public class Utility
     {
-        private static UmbracoHelper _helper = new UmbracoHelper(UmbracoContext.Current);
-        private static IUserService _us = ApplicationContext.Current.Services.UserService;
-        private static IContentTypeService _cts = ApplicationContext.Current.Services.ContentTypeService;
-        private static IContentService _cs = ApplicationContext.Current.Services.ContentService;
-        private static PocoRepository _pr = new PocoRepository();
+        private static readonly UmbracoHelper Helper = new UmbracoHelper(UmbracoContext.Current);
+        private static readonly IUserService Us = ApplicationContext.Current.Services.UserService;
+        private static readonly IContentTypeService Cts = ApplicationContext.Current.Services.ContentTypeService;
+        private static readonly IContentService Cs = ApplicationContext.Current.Services.ContentService;
+        private static readonly PocoRepository Pr = new PocoRepository();
 
         public static IPublishedContent GetNode(int id)
         {
-            var n = _helper.TypedContent(id);
+            var n = Helper.TypedContent(id);
             if (n != null) return n;
 
-            var c = _cs.GetById(id);
+            var c = Cs.GetById(id);
 
             return c?.ToPublishedContent();
         }
 
         public static string GetNodeName(int id)
         {
-            var n = _helper.TypedContent(id);
-            if (n == null)
-            {
-                var c = _cs.GetById(id);
-                if (c != null)
-                {
-                    return c.Name;
-                }
-                return MagicStrings.NoNode;
-            }
-            return n.Name;
+            var n = Helper.TypedContent(id);
+            if (n != null) return n.Name;
+
+            var c = Cs.GetById(id);
+            return c != null ? c.Name : MagicStrings.NoNode;
         }
 
         public static bool GetNodeStatus(int id)
         {
-            return _pr.InstancesByNodeAndStatus(id, new List<int> { (int)WorkflowStatus.PendingApproval }).Any();
+            return Pr.InstancesByNodeAndStatus(id, new List<int> { (int)WorkflowStatus.PendingApproval }).Any();
         }
 
         public static IUser GetUser(int id)
         {
-            return _us.GetUserById(id);
+            return Us.GetUserById(id);
         }
 
         public static IContentType GetContentType(int id)
         {
-            return _cts.GetContentType(id);
+            return Cts.GetContentType(id);
         }
 
         public static IUser GetCurrentUser()
@@ -74,16 +68,12 @@ namespace Workflow.Helpers
 
         public static string PascalCaseToTitleCase(string str)
         {
-            if (str != null)
-            {
-                return Regex.Replace(str, "([A-Z]+?(?=(([A-Z]?[a-z])|$))|[0-9]+)", " $1").Trim();
-            }
-            return null;
+            return str != null ? Regex.Replace(str, "([A-Z]+?(?=(([A-Z]?[a-z])|$))|[0-9]+)", " $1").Trim() : null;
         }
 
         public static WorkflowSettingsPoco GetSettings()
         {
-            return _pr.GetSettings();
+            return Pr.GetSettings();
         }
 
         /// <summary>Checks whether the email address is valid.</summary>
@@ -138,31 +128,27 @@ namespace Workflow.Helpers
         /// <summary>
         /// Creates a list of workflow task instances to be reviewed / actioned.
         /// </summary>
-        /// <param name="taskInstances">Active task instances.</param>
-        /// <param name="includeAction">true if the Action link should be included for those who have access to it.</param>
-        /// <param name="includeCancel">true if the Cancel link should be included for those who have access to it.</param>
-        /// <param name="includeEdit">true if the Edit icon should be included.</param>
         /// <returns>html markup describing a table of instance details</returns>
-        public static string BuildActiveTasksList(List<WorkflowTaskInstancePoco> taskInstances, bool includeAction, bool includeCancel, bool includeEdit)
-        {
-            var result = "";
+        //public static string BuildActiveTasksList(List<WorkflowTaskInstancePoco> taskInstances, bool includeAction, bool includeCancel, bool includeEdit)
+        //{
+        //    var result = "";
 
-            if (taskInstances != null && taskInstances.Count > 0)
-            {
-                result += "<table style=\"workflowTaskList\">";
-                result += "<tr><th>Type</th><th>Page</th><th>Requested by</th><th>On</th><th>Approver</th><th>Comments</th></tr>";
+        //    if (taskInstances != null && taskInstances.Count > 0)
+        //    {
+        //        result += "<table style=\"workflowTaskList\">";
+        //        result += "<tr><th>Type</th><th>Page</th><th>Requested by</th><th>On</th><th>Approver</th><th>Comments</th></tr>";
 
-                result = taskInstances.Aggregate(result, (current, taskInstance) => current + ("<tr>" + BuildActiveTaskSummary(taskInstance, includeAction, includeCancel, includeEdit) + "</tr>"));
+        //        result = taskInstances.Aggregate(result, (current, taskInstance) => current + ("<tr>" + BuildActiveTaskSummary(taskInstance, includeAction, includeCancel, includeEdit) + "</tr>"));
 
-                result += "</table>";
-            }
-            else
-            {
-                result += "&nbsp;None.<br/><br/>";
-            }
+        //        result += "</table>";
+        //    }
+        //    else
+        //    {
+        //        result += "&nbsp;None.<br/><br/>";
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         /// <summary>
         /// Create html markup for an active workflow task including links to action, cancel, view, difference it.
@@ -178,7 +164,8 @@ namespace Workflow.Helpers
 
             // Get the node from the cache if it's already published, otherwise look up the document from the DB
             var docId = taskInstance.WorkflowInstance.NodeId;
-            var docTitle = "";
+            var docTitle = taskInstance.WorkflowInstance.Node.Name;
+
             var pageEditLink = "";
 
             var docUrl = GetDocPreviewUrl(docId);
@@ -246,15 +233,15 @@ namespace Workflow.Helpers
             return GetUrlPrefix() + "/umbraco/dialogs/preview.aspx?id=" + docId;
         }
 
-        public static string GetDocPublishedUrl(int docId)
-        {
-            return GetUrlPrefix() + umbraco.library.NiceUrl(docId);
-        }
+        //public static string GetDocPublishedUrl(int docId)
+        //{
+        //    return GetUrlPrefix() + umbraco.library.NiceUrl(docId);
+        //}
 
-        public static bool IUserCanAdminWorkflow(IUser user)
-        {
-            return IsTypeOfAdmin(user.UserType.Alias);
-        }
+        //public static bool UserCanAdminWorkflow(IUser user)
+        //{
+        //    return IsTypeOfAdmin(user.UserType.Alias);
+        //}
 
         public static string BuildEmailSubject(EmailType emailType, WorkflowInstancePoco instance)
         {

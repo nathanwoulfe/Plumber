@@ -4,15 +4,16 @@ using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Persistence;
+using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Relators;
 
 namespace Workflow
 {
-    class PocoRepository
+    internal class PocoRepository
     {
         /// ensure GetDb() connection exists
-        private Database GetDb()
+        private static Database GetDb()
         {
             return ApplicationContext.Current.DatabaseContext.Database;
         }
@@ -48,6 +49,8 @@ namespace Workflow
         /// 
         /// </summary>
         /// <param name="status"></param>
+        /// <param name="count"></param>
+        /// <param name="page"></param>
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetPendingTasks(int status, int count, int page)
         {
@@ -57,7 +60,9 @@ namespace Workflow
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="status"></param>
+        /// <param name="groupId"></param>
+        /// <param name="count"></param>
+        /// <param name="page"></param>
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetAllGroupTasks(int groupId, int count, int page)
         {
@@ -67,7 +72,7 @@ namespace Workflow
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="status"></param>
+        /// <param name="oldest"></param>
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetAllTasksForDateRange(DateTime oldest)
         {
@@ -78,7 +83,6 @@ namespace Workflow
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="status"></param>
         /// <returns></returns>
         public List<WorkflowInstancePoco> GetAllInstances()
         {
@@ -88,7 +92,7 @@ namespace Workflow
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="status"></param>
+        /// <param name="oldest"></param>
         /// <returns></returns>
         public List<WorkflowInstancePoco> GetAllInstancesForDateRange(DateTime oldest)
         {
@@ -98,7 +102,7 @@ namespace Workflow
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="status"></param>
+        /// <param name="nodeId"></param>
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> TasksByNode(int nodeId)
         {

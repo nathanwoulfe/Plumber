@@ -1,7 +1,6 @@
 ﻿/* https://gist.githubusercontent.com/jbreuer/dde3605035179c34b7287850c45cb8c9/raw/570cbaa30365653dbcf4142e988eba4fc692ecad/ContentExtensions.cs */
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Xml.Serialization;
 using Umbraco.Core;

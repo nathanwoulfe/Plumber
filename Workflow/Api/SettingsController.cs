@@ -1,15 +1,10 @@
-﻿using log4net;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Net;
-using System.Net.Http;
-using System.Reflection;
 using System.Web.Http;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
-using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
+using Workflow.Helpers;
 using Workflow.Models;
 
 namespace Workflow.Api
@@ -17,8 +12,8 @@ namespace Workflow.Api
     [RoutePrefix("umbraco/backoffice/api/workflow/settings")]
     public class SettingsController : UmbracoAuthorizedApiController
     {
-        private static Database db = ApplicationContext.Current.DatabaseContext.Database;
-        private static PocoRepository _pr = new PocoRepository();
+        private static readonly Database Db = ApplicationContext.Current.DatabaseContext.Database;
+        private static readonly PocoRepository Pr = new PocoRepository();
 
         /// <summary>
         /// 
@@ -29,7 +24,7 @@ namespace Workflow.Api
         {
             try
             {
-                return Json(_pr.GetSettings(), ViewHelpers.CamelCase);
+                return Json(Pr.GetSettings(), ViewHelpers.CamelCase);
             }
             catch (Exception ex) {
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
@@ -40,13 +35,13 @@ namespace Workflow.Api
         /// Save the settings object
         /// </summary>
         /// <returns>A confirmation message</returns>
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         [Route("save")]
         public IHttpActionResult Save(WorkflowSettingsPoco model)
         {
             try
             {
-                db.Update(model);
+                Db.Update(model);
                 return Ok("Settings updated");
             } 
             catch (Exception ex)
