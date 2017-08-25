@@ -1,5 +1,5 @@
 # version format
-version: 0.1.0.{build}
+version: 0.2.0.{build}
 
 # UMBRACO_PACKAGE_PRERELEASE_SUFFIX will only be used for Release builds
 # example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
@@ -8,7 +8,7 @@ install:
   - cmd: gem install sass
   - cmd: npm install -g grunt-cli
   - cmd: set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
-  - cmd: set UMBRACO_PACKAGE_MIN_VERSION=7.5.0
+  - cmd: set UMBRACO_PACKAGE_MIN_VERSION=7.7.0
   - cmd: cd BuildPackage
   - cmd: Build.bat
 
