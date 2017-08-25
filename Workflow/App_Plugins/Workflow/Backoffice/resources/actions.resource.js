@@ -97,7 +97,6 @@
                 //    var scope = angular.element(contentForm).scope();
                 //    scope.contentForm.$setPristine();
                 //}
-                debugger;
                 notificationsService.success('SUCCESS!', d.message);
 
                 if (fromDash) {
