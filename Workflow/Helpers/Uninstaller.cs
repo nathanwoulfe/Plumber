@@ -1,8 +1,8 @@
 ﻿using System.Web.Hosting;
 using System.Xml;
-using Umbraco.Web;
+using Umbraco.Core;
 
-namespace Workflow
+namespace Workflow.Helpers
 {
     public class Uninstaller
     {
@@ -12,7 +12,7 @@ namespace Workflow
         public void RemoveSection()
         {
             //Get the Umbraco Service's Apis
-            var services = UmbracoContext.Current.Application.Services;
+            var services = ApplicationContext.Current.Services;
 
             //Check to see if the section is still here (should be)
             var workflowSection = services.SectionService.GetByAlias("workflow");
@@ -29,52 +29,49 @@ namespace Workflow
         /// </summary>
         public void RemoveSectionDashboard()
         {
-            bool saveFile = false;
+            var saveFile = false;
 
             //Open up language file
             //umbraco/config/lang/en.xml
-            var dashboardPath = "~/config/dashboard.config";
+            const string dashboardPath = "~/config/dashboard.config";
 
             //Path to the file resolved
             var dashboardFilePath = HostingEnvironment.MapPath(dashboardPath);
 
             //Load settings.config XML file
-            XmlDocument dashboardXml = new XmlDocument();
+            var dashboardXml = new XmlDocument();
+            if (dashboardFilePath == null) return;
+
             dashboardXml.Load(dashboardFilePath);
 
             // Dashboard Root Node
             // <dashboard>
-            XmlNode dashboardNode = dashboardXml.SelectSingleNode("//dashBoard");
+            var dashboardNode = dashboardXml.SelectSingleNode("//dashBoard");
 
-            if (dashboardNode != null)
+            var findSectionKey = dashboardNode?.SelectSingleNode("./section [@alias='WorkflowDashboardSection']");
+
+            if (findSectionKey != null)
             {
-                XmlNode findSectionKey = dashboardNode.SelectSingleNode("./section [@alias='WorkflowDashboardSection']");
+                //Let's remove the key from XML...
+                dashboardNode.RemoveChild(findSectionKey);
 
-                if (findSectionKey != null)
-                {
-                    //Let's remove the key from XML...
-                    dashboardNode.RemoveChild(findSectionKey);
-
-                    //Save the file flag to true
-                    saveFile = true;
-                }
+                //Save the file flag to true
+                saveFile = true;
             }
 
-            XmlNode contentTab = dashboardNode.SelectSingleNode("//tab[@caption='Workflow']");
+            var contentTab = dashboardNode?.SelectSingleNode("//tab[@caption='Workflow']");
 
             if (contentTab != null)
             {
-                contentTab.ParentNode.RemoveChild(contentTab);
+                contentTab.ParentNode?.RemoveChild(contentTab);
                 saveFile = true;
             }
 
             //If saveFile flag is true then save the file
-            if (saveFile)
-            {
-                //Save the XML file
-                dashboardXml.Save(dashboardFilePath);
-                saveFile = false;
-            }
+            if (!saveFile) return;
+
+            //Save the XML file
+            dashboardXml.Save(dashboardFilePath);
         }
     }
 }

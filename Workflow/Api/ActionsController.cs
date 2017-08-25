@@ -1,19 +1,11 @@
 ﻿using log4net;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
-using umbraco;
-using umbraco.cms.businesslogic.utilities;
-using Umbraco.Core;
-using Umbraco.Core.Models;
-using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
-using Workflow.Extensions;
+using Workflow.Helpers;
 
 namespace Workflow.Api
 {
@@ -52,7 +44,7 @@ namespace Workflow.Api
                     process = new DocumentUnpublishProcess();
                 }
 
-                instance = process.InitiateWorkflow(int.Parse(model.NodeId), Helpers.GetCurrentUser().Id, model.Comment);
+                instance = process.InitiateWorkflow(int.Parse(model.NodeId), Utility.GetCurrentUser().Id, model.Comment);
 
                 var msg = string.Empty;
 
@@ -111,7 +103,7 @@ namespace Workflow.Api
                 instance = process.ActionWorkflow(
                     instance,
                     WorkflowAction.Approve,
-                    Helpers.GetCurrentUser().Id,
+                    Utility.GetCurrentUser().Id,
                     comment
                 );
 
@@ -176,7 +168,7 @@ namespace Workflow.Api
                 _instance = process.ActionWorkflow(
                     _instance,
                     WorkflowAction.Reject,
-                    Helpers.GetCurrentUser().Id,
+                    Utility.GetCurrentUser().Id,
                     comment
                 );
 
@@ -220,7 +212,7 @@ namespace Workflow.Api
 
                 _instance = process.CancelWorkflow(
                     _instance,
-                    Helpers.GetCurrentUser().Id,
+                    Utility.GetCurrentUser().Id,
                     comment
                 );
 

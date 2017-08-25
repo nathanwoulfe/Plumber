@@ -283,7 +283,7 @@ namespace Workflow
             else
             {
                 // Recurse up the tree until we find something
-                var node = Helpers.GetNode(nodeId);
+                var node = Utility.GetNode(nodeId);
                 if (node.Level != 1)
                 {
                     SetApprovalGroup(taskInstance, node.Parent.Id, authorId);
@@ -357,7 +357,7 @@ namespace Workflow
         /// <returns>true if approval required, false otherwise</returns>
         private bool IsStepApprovalRequired(WorkflowTaskInstancePoco taskInstance)
         {
-            return Helpers.GetSettings().FlowType == (int)FlowType.All || (!taskInstance.UserGroup.IsMember(instance.AuthorUserId) && !taskInstance.UserGroup.IsMember(Helpers.GetCurrentUser().Id));
+            return Utility.GetSettings().FlowType == (int)FlowType.All || (!taskInstance.UserGroup.IsMember(instance.AuthorUserId) && !taskInstance.UserGroup.IsMember(Utility.GetCurrentUser().Id));
         }
 
         /// <summary>

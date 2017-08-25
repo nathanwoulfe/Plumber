@@ -15,7 +15,7 @@ namespace Workflow.Startup
             if (sender.TreeAlias == "content" && string.CompareOrdinal(e.NodeId, "-1") != 0)
             {
                 var menuLength = e.Menu.Items.Count;
-                var nodeName = Helpers.GetNode(int.Parse(e.NodeId)).Name;
+                var nodeName = Utility.GetNode(int.Parse(e.NodeId)).Name;
                 var currentUser = UmbracoContext.Current.Security.CurrentUser.UserType;
                 var items = new Umbraco.Web.Models.Trees.MenuItemList();
 

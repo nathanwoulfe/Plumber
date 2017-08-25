@@ -46,7 +46,7 @@ namespace Workflow.Tree
                 var treeNodes = new List<SectionTreeNode>();
                 const string route = "/workflow/tree/edit/";
 
-                var userGroups = db.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE deleted = false ORDER BY name DESC");
+                var userGroups = db.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE deleted = 0 ORDER BY name DESC");
 
                 if (userGroups != null && userGroups.Any())
                 {

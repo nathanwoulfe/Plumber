@@ -2,25 +2,22 @@
 using System;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
-using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
-using Workflow;
 using Workflow.Models;
-using Workflow.Relators;
+using Workflow.Helpers;
 
 namespace Workflow.Api
 {
     [RoutePrefix("umbraco/backoffice/api/workflow/groups")]
     public class GroupsController : UmbracoAuthorizedApiController
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static readonly Database db = ApplicationContext.Current.DatabaseContext.Database;
-        private static readonly PocoRepository _pr = new PocoRepository();
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly Database Db = ApplicationContext.Current.DatabaseContext.Database;
+        private static readonly PocoRepository Pr = new PocoRepository();
 
         /// <summary>
         /// Get group and associated users and permissions by id
@@ -33,7 +30,7 @@ namespace Workflow.Api
             try {
                 if (id.HasValue)
                 {
-                    var result = _pr.PopulatedUserGroup(id.Value);
+                    var result = Pr.PopulatedUserGroup(id.Value);
 
                     if (result.Any(r => !r.Deleted))
                     {
@@ -42,7 +39,7 @@ namespace Workflow.Api
                 }
                 else
                 {
-                    var groups = _pr.UserGroups();
+                    var groups = Pr.UserGroups();
                     return Json(groups.Where(g => !g.Deleted), ViewHelpers.CamelCase);
                 }
 
@@ -57,9 +54,9 @@ namespace Workflow.Api
         /// <summary>
         /// Add a new group
         /// </summary>
-        /// <param name="group"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
-        [System.Web.Http.HttpPost]  
+        [HttpPost]  
         [Route("add")]      
         public IHttpActionResult Post([FromBody]Model model)
         {
@@ -68,38 +65,34 @@ namespace Workflow.Api
             try
             {                
                 // check that it doesn't already exist
-                if (_pr.UserGroupsByName(name).Any())
+                if (Pr.UserGroupsByName(name).Any())
                 {
                     return Ok(new { status = 500, msg = "Group name already exists" });
                 }
-                else
-                {
-                    // doesnt exist so create it with the given name. The alias will be generated from the name.
-                    var newGroup = new UserGroupPoco
+                
+                // doesnt exist so create it with the given name. The alias will be generated from the name.
+                Db.Insert(new UserGroupPoco
                     {
                         Name = name,
                         Alias = name.ToLower().Replace(" ", "-"),
                         Deleted = false
-                    };
-
-                    db.Insert(newGroup);
-                }
+                    });
             }
             catch (Exception ex)
             {
                 var error = "Error creating user group '" + name + "'. " + ex.Message;
-                log.Error(error, ex);
+                Log.Error(error, ex);
                 // if we are here, something isn't right...
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
             }
 
-            var id = _pr.NewestGroup().GroupId;
+            var id = Pr.NewestGroup().GroupId;
 
             var msg = "Successfully created new user group '" + name + "'.";
-            log.Debug(msg);
+            Log.Debug(msg);
 
             // return the id of the new group, to update the front-end route to display the edit view
-            return Ok(new { status = 200, msg = msg, id = id });
+            return Ok(new { status = 200, msg, id });
         }
 
 
@@ -108,17 +101,16 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
-        [System.Web.Http.HttpPut]
+        [HttpPut]
         [Route("save")]
         public IHttpActionResult Put(UserGroupPoco group)
         {
-            var msgText = "";
-            var nameExists = _pr.UserGroupsByName(group.Name).Any();
-            var aliasExists = _pr.UserGroupsByAlias(group.Alias).Any();
+            var nameExists = Pr.UserGroupsByName(group.Name).Any();
+            var aliasExists = Pr.UserGroupsByAlias(group.Alias).Any();
 
             try
             {
-                var userGroup = _pr.UserGroupsById(group.GroupId).First();
+                var userGroup = Pr.UserGroupsById(group.GroupId).First();
 
                 // need to check the new name/alias isn't already in use
                 if (userGroup.Name != group.Name && nameExists)
@@ -128,33 +120,32 @@ namespace Workflow.Api
 
                 if (userGroup.Alias != group.Alias && aliasExists)
                 {
-                    msgText = "Group alias already exists";
                     return Content(HttpStatusCode.OK, new { status = 500, msg = "Group alias already exists" });
                 }
 
                 // Update the Members - TODO - should find a more efficient way to do this...
-                db.Execute("DELETE FROM WorkflowUser2UserGroup WHERE GroupId = @0", userGroup.GroupId);
+                Db.Execute("DELETE FROM WorkflowUser2UserGroup WHERE GroupId = @0", userGroup.GroupId);
 
                 if (group.Users.Count > 0)
                 {
                     foreach (var user in group.Users)
                     {
-                        db.Insert(user);
+                        Db.Insert(user);
                     }
                 }
 
-                db.Update(group);
+                Db.Update(group);
 
             }
             catch (Exception ex)
             {
-                log.Error(ex);
+                Log.Error(ex);
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
             }
 
             // feedback to the browser
-            msgText = "User group '" + group.Name + "' has been saved.";
-            log.Debug(msgText);
+            var msgText = "User group '" + group.Name + "' has been saved.";
+            Log.Debug(msgText);
 
             return Ok(new { status = 200, msg = msgText });
         }
@@ -164,22 +155,18 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [System.Web.Http.HttpDelete]
+        [HttpDelete]
         [Route("delete/{id:int}")]
         public IHttpActionResult Delete(int id)
         {
-            // remove all users, permissions and the group itself
             // existing workflow processes are left as is, and need to be managed by a human person
             try
             {
-                db.Execute("UPDATE WorkflowUserGroups SET Deleted = 1 WHERE GroupId = @0", id);
-
-                //db.Execute("DELETE FROM WorkflowUser2UserGroup WHERE GroupId = @0", id);
-                //db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE GroupId = @0", id);
+                Db.Execute("UPDATE WorkflowUserGroups SET Deleted = 1 WHERE GroupId = @0", id);
             }
             catch (Exception ex)
             {
-                log.Error("Error deleting user group. " + ex.Message, ex);
+                Log.Error("Error deleting user group. " + ex.Message, ex);
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, "Error deleting user group"));
             }
 

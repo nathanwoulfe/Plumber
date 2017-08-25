@@ -161,12 +161,12 @@ namespace Workflow.Api
         {
             try
             {
-                var excludeOwn = Helpers.GetSettings().FlowType != (int)FlowType.All;
+                var excludeOwn = Utility.GetSettings().FlowType != (int)FlowType.All;
                 var taskInstances = type == 0 ? _pr.TasksForUser(userId, (int)TaskStatus.PendingApproval) : _pr.SubmissionsForUser(userId, (int)TaskStatus.PendingApproval);
 
                 if (excludeOwn && type == 0)
                 {
-                    taskInstances = taskInstances.Where(t => t.WorkflowInstance.AuthorUserId != Helpers.GetCurrentUser().Id).ToList();
+                    taskInstances = taskInstances.Where(t => t.WorkflowInstance.AuthorUserId != Utility.GetCurrentUser().Id).ToList();
                 }
 
                 var workflowItems = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
@@ -181,7 +181,7 @@ namespace Workflow.Api
             catch (Exception ex)
             {
                 var s = "Error trying to build user workflow tasks list for user ";
-                log.Error(string.Concat(s + Helpers.GetUser(userId).Name, ex));
+                log.Error(string.Concat(s + Utility.GetUser(userId).Name, ex));
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, s));
             }
         }

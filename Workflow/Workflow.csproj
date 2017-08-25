@@ -37,6 +37,7 @@
     <Compile Include="Extensions\ContentExtensions.cs" />
     <Compile Include="Helpers\Installer.cs" />
     <Compile Include="Helpers\Uninstaller.cs" />
+    <Compile Include="Models\SectionTreeNodeModel.cs" />
     <Compile Include="Relators\UserToGroupForPermissionsRelator.cs" />
     <Compile Include="Startup\RegisterEvents.cs" />
     <Compile Include="Startup\StringContraint.cs" />

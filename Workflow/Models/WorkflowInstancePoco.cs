@@ -143,7 +143,7 @@ namespace Workflow.Models
             {
                 if (_node == null)
                 {
-                    _node = Helpers.GetNode(NodeId);
+                    _node = Utility.GetNode(NodeId);
                 }
                 return _node;
             } 
@@ -159,7 +159,7 @@ namespace Workflow.Models
             {
                 if (_authorUser == null)
                 {
-                    _authorUser = Helpers.GetUser(AuthorUserId);
+                    _authorUser = Utility.GetUser(AuthorUserId);
                 }
                 return _authorUser;
             }
@@ -173,7 +173,7 @@ namespace Workflow.Models
         {
             get
             {
-                return Helpers.PascalCaseToTitleCase(_Status.ToString()); ;
+                return Utility.PascalCaseToTitleCase(_Status.ToString()); ;
             }
         }
 
@@ -212,12 +212,12 @@ namespace Workflow.Models
 
         public static string WorkflowTypeName(WorkflowType type)
         {
-            return Helpers.PascalCaseToTitleCase(type.ToString());
+            return Utility.PascalCaseToTitleCase(type.ToString());
         }
 
         public static string EmailTypeName(EmailType type)
         {
-            return Helpers.PascalCaseToTitleCase(type.ToString());
+            return Utility.PascalCaseToTitleCase(type.ToString());
         }
     }
 }

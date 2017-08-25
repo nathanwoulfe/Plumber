@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Workflow
+namespace Workflow.Helpers
 {
-    class WorkflowException : Exception
+    internal class WorkflowException : Exception
     {
         public WorkflowException(string message) : base(message) { }
     }    

@@ -34,7 +34,7 @@ namespace Workflow.Models
         {
             get
             {
-                return NodeId > 0 ? Helpers.GetNodeName(NodeId) : string.Empty;
+                return NodeId > 0 ? Utility.GetNodeName(NodeId) : string.Empty;
             }
         }
 
@@ -43,7 +43,7 @@ namespace Workflow.Models
         {
             get
             {
-                return ContentTypeId > 0 ? Helpers.GetContentType(ContentTypeId).Name : string.Empty;
+                return ContentTypeId > 0 ? Utility.GetContentType(ContentTypeId).Name : string.Empty;
             }
         }
 

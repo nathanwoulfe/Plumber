@@ -22,7 +22,7 @@ namespace Workflow.Relators
                     Current.Users.Add(b);
                 }
 
-                if (Current.Permissions.All(p => p.Id != c.Id))
+                if (Current.Permissions.All(p => p.Id != c.Id) && c.NodeName != MagicStrings.NoNode)
                 {
                     Current.Permissions.Add(c);
                 }

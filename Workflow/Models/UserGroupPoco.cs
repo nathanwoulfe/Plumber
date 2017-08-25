@@ -70,13 +70,13 @@ namespace Workflow.Models
         {
             MailAddressCollection addresses = new MailAddressCollection();
 
-            if (Helpers.IsValidEmailAddress(GroupEmail))
+            if (Utility.IsValidEmailAddress(GroupEmail))
             {
                 addresses.Add(new MailAddress(GroupEmail));
             }
             else
             {
-                foreach (var user in Users.Where(u => u.User.IsApproved && !u.User.IsLockedOut && u.UserId != idToExclude && Helpers.IsValidEmailAddress(u.User.Email)))
+                foreach (var user in Users.Where(u => u.User.IsApproved && !u.User.IsLockedOut && u.UserId != idToExclude && Utility.IsValidEmailAddress(u.User.Email)))
                 {
                     addresses.Add(new MailAddress(user.User.Email));                    
                 }

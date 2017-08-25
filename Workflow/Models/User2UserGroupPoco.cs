@@ -25,7 +25,7 @@ namespace Workflow.Models
         {
             get
             {
-                return Helpers.GetUser(UserId).Name;
+                return Utility.GetUser(UserId).Name;
             }
         }
 
@@ -34,7 +34,7 @@ namespace Workflow.Models
         {
             get
             {
-                return Helpers.GetUser(UserId);
+                return Utility.GetUser(UserId);
             }
         }
     }

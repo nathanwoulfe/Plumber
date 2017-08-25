@@ -1,4 +1,4 @@
-﻿namespace Workflow
+﻿namespace Workflow.Helpers
 {
     public class SqlHelpers
     {        

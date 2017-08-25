@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 
-namespace Workflow
+namespace Workflow.Helpers
 {
     public class UrlHelpers
     {
@@ -19,14 +15,18 @@ namespace Workflow
         /// <returns>The fully qualified web site url</returns>
         public static string GetFullyQualifiedSiteUrl(string partialUrl)
         {
-            var editUrl = Helpers.GetSettings().EditUrl;
+            var editUrl = Utility.GetSettings().EditUrl;
             if (string.IsNullOrEmpty(editUrl))
             {
                 var request = HttpContext.Current.Request;
-                editUrl = request.Url.Scheme + "://" + request.Url.Authority + request.ApplicationPath.TrimEnd('/') + "/";
+                if (request.ApplicationPath != null)
+                    editUrl = request.Url.Scheme + "://" + request.Url.Authority +
+                              request.ApplicationPath.TrimEnd('/') + "/";
             }
 
-            Uri baseUrl = new Uri(editUrl);
+            if (editUrl == null) return string.Empty;
+
+            var baseUrl = new Uri(editUrl);
             return (new Uri(baseUrl, partialUrl)).ToString();
         }
 
@@ -37,14 +37,18 @@ namespace Workflow
         /// <returns>The fully qualified Back Office edit url</returns>
         public static string GetFullyQualifiedEditUrl(string partialUrl)
         {
-            var editUrl = Helpers.GetSettings().EditUrl;
+            var editUrl = Utility.GetSettings().EditUrl;
             if (string.IsNullOrEmpty(editUrl))
             {
                 var request = HttpContext.Current.Request;
-                editUrl = request.Url.Scheme + "://" + request.Url.Authority + request.ApplicationPath.TrimEnd('/') + "/";
+                if (request.ApplicationPath != null)
+                    editUrl = request.Url.Scheme + "://" + request.Url.Authority +
+                              request.ApplicationPath.TrimEnd('/') + "/";
             }
 
-            Uri baseUrl = new Uri(editUrl);
+            if (editUrl == null) return string.Empty;
+
+            var baseUrl = new Uri(editUrl);
             return (new Uri(baseUrl, partialUrl)).ToString();
         }
 

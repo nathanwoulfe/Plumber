@@ -35,7 +35,7 @@ namespace Workflow
                     string docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
 
                     var flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep);
-                    var userIdToExclude = Helpers.GetSettings().FlowType != (int)FlowType.All ? instance.AuthorUserId : int.MinValue;
+                    var userIdToExclude = Utility.GetSettings().FlowType != (int)FlowType.All ? instance.AuthorUserId : int.MinValue;
 
                     var emailsForAllTaskUsers = new MailAddressCollection();
                     foreach (var task in flowTasks)
@@ -50,7 +50,7 @@ namespace Workflow
                     }
 
                     MailAddressCollection to = new MailAddressCollection();
-                    string email = Helpers.GetSettings().Email;
+                    string email = Utility.GetSettings().Email;
                     string subject = "";
                     string body = "";
 
@@ -80,7 +80,7 @@ namespace Workflow
 
                             if (instance._Type == WorkflowType.Publish)
                             {
-                                var n = Helpers.GetNode(instance.NodeId);
+                                var n = Utility.GetNode(instance.NodeId);
                                 docUrl = UrlHelpers.GetFullyQualifiedSiteUrl(n.Url);
                             }
                             else
@@ -91,7 +91,7 @@ namespace Workflow
                             body = string.Format(EmailApprovedString,
                                 instance.AuthorUser.Name, docUrl, docTitle, instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
 
-                            body += Helpers.BuildProcessSummary(instance, false, false, true);
+                            body += Utility.BuildProcessSummary(instance, false, false, true);
 
                             break;
 
@@ -104,7 +104,7 @@ namespace Workflow
                             body = string.Format(EmailApprovedString,
                                 instance.AuthorUser.Name, docUrl, docTitle, instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
 
-                            body += Helpers.BuildProcessSummary(instance, false, false, true);
+                            body += Utility.BuildProcessSummary(instance, false, false, true);
 
                             break;
 
@@ -128,7 +128,7 @@ namespace Workflow
                         string head = "<head><title>" + subject + "</title></head >";
                         string html = "<!DOCTYPE HTML SYSTEM><html>" + head + "<body><font face=\"verdana\" size=\"2\">" + body + "</font></body></html>";
 
-                        subject = Helpers.BuildEmailSubject(emailType, instance);
+                        subject = Utility.BuildEmailSubject(emailType, instance);
 
                         SmtpClient client = new SmtpClient();
                         MailMessage msg = new MailMessage();

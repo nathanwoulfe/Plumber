@@ -86,7 +86,7 @@ namespace Workflow.Models
             {
                 if (_actionedByUser == null && ActionedByUserId.HasValue)
                 {
-                    _actionedByUser = Helpers.GetUser(ActionedByUserId.Value);
+                    _actionedByUser = Utility.GetUser(ActionedByUserId.Value);
                 }
                 return _actionedByUser;
             }
@@ -97,7 +97,7 @@ namespace Workflow.Models
         {
             get
             {
-                return Helpers.PascalCaseToTitleCase(Type.ToString());
+                return Utility.PascalCaseToTitleCase(Type.ToString());
             }
         }
 
@@ -106,7 +106,7 @@ namespace Workflow.Models
         {
             get
             {
-                return Helpers.PascalCaseToTitleCase(_Status.ToString()); ;
+                return Utility.PascalCaseToTitleCase(_Status.ToString()); ;
             }
         }
 
