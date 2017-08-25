@@ -2,21 +2,22 @@
     'use strict';
 
     // create controller 
-    function configController($scope, userGroupsResource, workflowResource, notificationsService, contentResource, navigationService) {
+    function configController($scope, workflowGroupsResource, workflowResource, notificationsService, contentResource, navigationService) {
         var vm = this,
-			nodeId = $scope.dialogOptions.currentNode ? $scope.dialogOptions.currentNode.id : undefined;
+            nodeId = $scope.dialogOptions.currentNode ? $scope.dialogOptions.currentNode.id : undefined,
+            nodeIdInt = nodeId ? parseInt(nodeId, 10) : undefined;
 
         function init() {
-            userGroupsResource.get()
+            workflowGroupsResource.get()
 				.then(function (resp) {
-                    vm.groups = resp;
+				    vm.groups = resp;
 
-                    contentResource.getById(nodeId)
-						.then(function (resp) {
+				    contentResource.getById(nodeId)
+                        .then(function (resp) {
                             vm.contentTypeName = resp.contentTypeName;
                             checkNodePermissions();
                             checkAncestorPermissions(resp.path.split(','));
-						});
+                        });
 				});
         }
 
@@ -29,9 +30,9 @@
         }
 
         function checkNodePermissions() {
-            angular.forEach(vm.groups, function (v, i) {
+            angular.forEach(vm.groups, function (v) {
                 angular.forEach(v.permissions, function (p) {
-                    if (p.nodeId == nodeId) {
+                    if (p.nodeId === nodeIdInt) {
                         vm.approvalPath[p.permission] = v;
                     }
 
@@ -47,10 +48,10 @@
             path.shift();
             path.pop();
 
-            angular.forEach(path, function (id, i) {
-                angular.forEach(vm.groups, function (v, i) {
+            angular.forEach(path, function (id) {
+                angular.forEach(vm.groups, function (v) {
                     angular.forEach(v.permissions, function (p) {
-                        if (p.nodeId == id) {
+                        if (p.nodeId === parseInt(id, 10)) {
                             vm.inherited[p.permission] = {
                                 name: v.name,
                                 groupId: p.groupId,
@@ -69,13 +70,13 @@
                 var response = [];
                 angular.forEach(vm.approvalPath, function (v, i) {
                     response.push(v.permissions.filter(function (p) {
-                        return p.nodeId == nodeId && p.permission === i;
+                        return p.nodeId === nodeIdInt && p.permission === i;
                     })[0]);
                 });
 
                 if (response.length) {
                     workflowResource.saveConfig(response)
-                        .then(function (resp) {
+                        .then(function () {
                             notificationsService.success('SUCCESS', 'Workflow configuration updated');
                             init();
                         }, function (err) {
@@ -102,7 +103,7 @@
 
             vm.approvalPath.forEach(function (v, i) {
                 v.permissions.forEach(function (p) {
-                    if (p.nodeId == nodeId) {
+                    if (p.nodeId === nodeIdInt) {
                         p.permission = i;
                     }
                 });

@@ -1,11 +1,11 @@
 ﻿(function () {
     'use strict';
 
-    function dashboardController(userGroupsResource, dialogService) {
+    function dashboardController(workflowGroupsResource) {
 
         var vm = this;
 
-        userGroupsResource.get()
+      workflowGroupsResource.get()
             .then(function (resp) {
                 vm.loading = false;
                 vm.items = resp;

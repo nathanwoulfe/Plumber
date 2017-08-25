@@ -3,7 +3,8 @@
 
     // create controller 
     function controller($scope, $rootScope, userService, workflowResource, workflowActionsService, contentEditingHelper, contentResource, editorState, $routeParams) {
-        var vm = this;
+        var vm = this,
+            user;
 
         var defaultButtons = contentEditingHelper.configureContentEditorButtons({
             create: $routeParams.create,
@@ -29,13 +30,13 @@
                         vm.active = false;
                         setButtons();
                     }
-                }, function (err) {
+                }, function () {
 
                 });
         }
 
         // must be a better way of doing this - need to watch the editor state to dynamically change buttons
-        $scope.$watch('$parent.$parent.$parent.contentForm.$dirty', function (newVal, oldVal) {
+        $scope.$watch('$parent.$parent.$parent.contentForm.$dirty', function (newVal) {
             $scope.dirty = newVal === true;
             setButtons();
         });
@@ -44,15 +45,55 @@
             getNodeTasks();
         });
 
-        function setButtons() {
-            
-            var subButtons = saveAndPublish ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] : [buttons.unpublishButton, buttons.saveButton];
-
-            vm.buttonGroup = {
-                defaultButton: $scope.dirty ? buttons.saveButton : buttons.publishButton,
-                subButtons: $scope.dirty ? (saveAndPublish ? [defaultButtons.defaultButton] : []) : subButtons
-            };
-        }
+        var buttons = {
+            approveButton: {
+                labelKey: 'workflow_approveButtonLong',
+                handler: function (item) {
+                    vm.workflowOverlay = workflowActionsService.action(item, true);
+                }
+            },
+            cancelButton: {
+                labelKey: 'workflow_cancelButtonLong',
+                cssClass: 'danger',
+                handler: function (item) {
+                    vm.workflowOverlay = workflowActionsService.cancel(item);
+                }
+            },
+            rejectButton: {
+                labelKey: 'workflow_rejectButton',
+                cssClass: 'warning',
+                handler: function (item) {
+                    vm.workflowOverlay = workflowActionsService.action(item, false);
+                }
+            },
+            saveButton: {
+                labelKey: 'workflow_saveButton',
+                cssClass: 'success',
+                handler: function () {
+                    contentEditingHelper.contentEditorPerformSave({
+                        statusMessage: 'Saving...',
+                        saveMethod: contentResource.save,
+                        scope: $scope,
+                        content: editorState.current
+                    });
+                    $scope.$parent.$parent.$parent.contentForm.$setPristine();
+                }
+            },
+            publishButton: {
+                labelKey: 'workflow_publishButton',
+                cssClass: 'success',
+                handler: function () {
+                    vm.workflowOverlay = workflowActionsService.initiate(editorState.current.name, editorState.current.id, true);
+                }
+            },
+            unpublishButton: {
+                labelKey: 'workflow_unpublishButton',
+                cssClass: 'warning',
+                handler: function () {
+                    vm.workflowOverlay = workflowActionsService.initiate(editorState.current.name, editorState.current.id, false);
+                }
+            }
+        };
 
         function checkUserAccess(task) {
             vm.task = task;
@@ -71,57 +112,16 @@
             }
         }
 
-        var buttons = {
-            approveButton: {
-                labelKey: "workflow_approveButtonLong",
-                handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.action(item, true);
-                }
-            },
-            cancelButton: {
-                labelKey: "workflow_cancelButtonLong",
-                cssClass: 'danger',
-                handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.cancel(item);
-                }
-            },
-            rejectButton: {
-                labelKey: "workflow_rejectButton",
-                cssClass: 'warning',
-                handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.action(item, false);
-                }
-            },
-            saveButton: {
-                labelKey: "workflow_saveButton",
-                cssClass: 'success',
-                handler: function (item) {
-                    contentEditingHelper.contentEditorPerformSave({
-                        statusMessage: 'Saving...',
-                        saveMethod: contentResource.save,
-                        scope: $scope,
-                        content: editorState.current
-                    });
-                    $scope.$parent.$parent.$parent.contentForm.$setPristine();
-                }
-            },
-            publishButton: {
-                labelKey: "workflow_publishButton",
-                cssClass: 'success',
-                handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.initiate(editorState.current.name, editorState.current.id, true);
-                }
-            },
-            unpublishButton: {
-                labelKey: "workflow_unpublishButton",
-                cssClass: 'warning',
-                handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.initiate(editorState.current.name, editorState.current.id, false);
-                }
-            }
-        };
+        function setButtons() {
 
-        var user;
+            var subButtons = saveAndPublish ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] : [buttons.unpublishButton, buttons.saveButton];
+
+            vm.buttonGroup = {
+                defaultButton: $scope.dirty ? buttons.saveButton : buttons.publishButton,
+                subButtons: $scope.dirty ? (saveAndPublish ? [defaultButtons.defaultButton] : []) : subButtons
+            };
+        }
+
         userService.getCurrentUser()
             .then(function (userResp) {
                 user = userResp;

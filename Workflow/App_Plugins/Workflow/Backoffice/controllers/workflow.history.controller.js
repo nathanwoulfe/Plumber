@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function historyController($scope, workflowResource, contentResource, dialogService, $timeout, editorState) {
+    function historyController($scope, workflowResource) {
 
         var vm = this,
             width = $scope.dialogOptions ? $scope.dialogOptions.currentAction.metaData.width : undefined,
@@ -17,7 +17,7 @@
 
         function selectNode() {
             vm.overlay = {
-                view: "contentpicker",
+                view: 'contentpicker',
                 show: true,
                 submit: function (model) {
                     vm.overlay.show = false;
@@ -28,7 +28,7 @@
                         $scope.items = [];
                     }
                 },
-                close: function (oldModel) {
+                close: function () {
                     vm.overlay.show = false;
                     vm.overlay = null;
                 }

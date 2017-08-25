@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function editController($scope, $routeParams, userGroupsResource, workflowResource, entityResource, notificationsService, localizationService) {
+    function editController($scope, $routeParams, workflowGroupsResource, workflowResource, entityResource, notificationsService) {
 
         var vm = this;
 
@@ -18,7 +18,7 @@
         // only fetch group if id is valid - otherwise it's a create action
         function getGroup() {
             if ($routeParams.id !== '-1') {
-                userGroupsResource.get($routeParams.id)
+                workflowGroupsResource.get($routeParams.id)
                     .then(function (resp) {
                         vm.group = resp;
                         vm.name = $routeParams.id !== '-1' ? 'Edit ' : 'Create ' + resp.name;
@@ -65,37 +65,32 @@
 
         // add a user to the group, and remove from notInGroup
         function add(id) {
-            var index,
-                user = $.grep(vm.notInGroup, function (u, i) {
-                    if (u.id === id) {
-                        index = i;
-                        vm.group.users.push({ userId: u.id, groupId: vm.group.groupId, name: u.name });
-                        return true;
-                    }
-                    return false;
-                })[0];
+            var index;
+            vm.notInGroup.forEach(function(u, i) {
+                if (u.id === id) {
+                    index = i;
+                    vm.group.users.push({ userId: u.id, groupId: vm.group.groupId, name: u.name });
+                }
+            });
 
             vm.notInGroup.splice(index, 1);
         }
 
         //
         function remove(id) {
-            var index,
-                user = $.grep(vm.group.users, function (u, i) {
-                    if (u.userId === id) {
-                        index = i;
-                        vm.notInGroup.push({ id: u.userId, name: u.name });
-                        return true;
-                    }
-                    return false;
-                });
-
+            var index;
+            vm.group.users.forEach(function (u, i) {
+                if (u.userId === id) {
+                    index = i;
+                    vm.notInGroup.push({ id: u.userId, name: u.name });
+                }
+            });
             vm.group.users.splice(index, 1);
         }
 
         //
         function save() {
-            userGroupsResource.save(vm.group)
+            workflowGroupsResource.save(vm.group)
                 .then(function (resp) {
                     if (resp.status === 200) {
                         notificationsService.success('SUCCESS', resp.msg);

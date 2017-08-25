@@ -10,10 +10,10 @@ using Workflow.Relators;
 
 namespace Workflow
 {
-    internal class PocoRepository
+    class PocoRepository
     {
         /// ensure GetDb() connection exists
-        private static Database GetDb()
+        private Database GetDb()
         {
             return ApplicationContext.Current.DatabaseContext.Database;
         }

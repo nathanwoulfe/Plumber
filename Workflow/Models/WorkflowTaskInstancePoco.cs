@@ -17,7 +17,7 @@ namespace Workflow.Models
         {
             CreatedDate = DateTime.Now;
             CompletedDate = null;
-            Status = (int)TaskStatus.PendingApproval;
+            Status = (int)Models.TaskStatus.PendingApproval;
             ApprovalStep = 0;
         }
 
@@ -63,10 +63,10 @@ namespace Workflow.Models
         public int? ActionedByUserId { get; set; }
 
         [ResultColumn]
-        public TaskStatus? _Status => (TaskStatus?)Status;
+        public TaskStatus? TaskStatus => (TaskStatus?)Status;
 
         [ResultColumn]
-        public TaskType _Type => (TaskType)Type;
+        public TaskType TaskType => (TaskType)Type;
 
         [ResultColumn]
         public IUser ActionedByUser
@@ -85,7 +85,7 @@ namespace Workflow.Models
         public string TypeName => Utility.PascalCaseToTitleCase(Type.ToString());
 
         [ResultColumn]
-        public string StatusName => Utility.PascalCaseToTitleCase(_Status.ToString());
+        public string StatusName => Utility.PascalCaseToTitleCase(TaskStatus.ToString());
 
         [ResultColumn]
         public virtual UserGroupPoco UserGroup { get; set; }
@@ -98,6 +98,6 @@ namespace Workflow.Models
         /// Indicates whether the task instance is currently active.
         /// </summary>        
         [ResultColumn]
-        public bool Active => _Status == TaskStatus.PendingApproval;
+        public bool Active => TaskStatus == Models.TaskStatus.PendingApproval;
     }
 }

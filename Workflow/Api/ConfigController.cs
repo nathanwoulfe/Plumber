@@ -31,12 +31,12 @@ namespace Workflow.Api
                 {
                     // set defaults for doctype - delete all previous
                     _db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE ContentTypeId != 0");
-                    _db.BulkInsertRecords(model);
+                    _db.BulkInsertRecords(model, DatabaseContext.SqlSyntax);
                 }
                 else
                 {
                     _db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE NodeId = @0", model.First().NodeId);
-                    _db.BulkInsertRecords(model);            
+                    _db.BulkInsertRecords(model, DatabaseContext.SqlSyntax);            
                 }
             }
             catch (Exception ex)

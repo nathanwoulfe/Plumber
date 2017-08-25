@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Mail;
-using Workflow.Helpers;
+using System.Reflection;
+using log4net;
 using Workflow.Models;
 
-namespace Workflow
+namespace Workflow.Helpers
 {
     public class Notifications
     {
         private static readonly PocoRepository Pr = new PocoRepository();
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// TODO: these should come from a config file rather than static strings...
@@ -34,13 +36,15 @@ namespace Workflow
                 var docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
 
                 var flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep);
-                var userIdToExclude = Utility.GetSettings().FlowType != (int)FlowType.All ? instance.AuthorUserId : int.MinValue;
+                var userIdToExclude = Utility.GetSettings().FlowType != (int) FlowType.All
+                    ? instance.AuthorUserId
+                    : int.MinValue;
 
                 var emailsForAllTaskUsers = new MailAddressCollection();
                 foreach (var task in flowTasks)
                 {
                     var group = task.UserGroup ?? Pr.PopulatedUserGroup(task.GroupId).First();
-                    emailsForAllTaskUsers.Union(@group.PreferredEmailAddresses(userIdToExclude));
+                    emailsForAllTaskUsers.Union(group.PreferredEmailAddresses(userIdToExclude));
                 }
 
                 var to = new MailAddressCollection();
@@ -53,7 +57,8 @@ namespace Workflow
                     case EmailType.ApprovalRequest:
                         to = flowTasks.Last().UserGroup.PreferredEmailAddresses(userIdToExclude);
                         body = string.Format(EmailApprovalRequestString,
-                            flowTasks.Last().UserGroup.Name, docUrl, docTitle, instance.AuthorComment, instance.AuthorUser.Name, instance.TypeDescription);
+                            flowTasks.Last().UserGroup.Name, docUrl, docTitle, instance.AuthorComment,
+                            instance.AuthorUser.Name, instance.TypeDescription);
 
                         break;
 
@@ -61,7 +66,8 @@ namespace Workflow
                         to = emailsForAllTaskUsers;
                         to.Add(instance.AuthorUser.Email);
                         body = string.Format(EmailRejectedString,
-                            instance.AuthorUser.Name, docUrl, docTitle, flowTasks.Last().Comment, flowTasks.Last().ActionedByUser.Name, instance.TypeDescription.ToLower());
+                            instance.AuthorUser.Name, docUrl, docTitle, flowTasks.Last().Comment,
+                            flowTasks.Last().ActionedByUser.Name, instance.TypeDescription.ToLower());
 
                         break;
 
@@ -72,7 +78,7 @@ namespace Workflow
                         //Notify web admins
                         to.Add(email);
 
-                        if (instance._Type == WorkflowType.Publish)
+                        if (instance.WorkflowType == WorkflowType.Publish)
                         {
                             var n = Utility.GetNode(instance.NodeId);
                             docUrl = UrlHelpers.GetFullyQualifiedSiteUrl(n.Url);
@@ -83,9 +89,10 @@ namespace Workflow
                         }
 
                         body = string.Format(EmailApprovedString,
-                                   instance.AuthorUser.Name, docUrl, docTitle, instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
+                                   instance.AuthorUser.Name, docUrl, docTitle,
+                                   instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
 
-                        body += Utility.BuildProcessSummary(instance, false, false, true);
+                        body += Utility.BuildProcessSummary(instance);
 
                         break;
 
@@ -96,9 +103,10 @@ namespace Workflow
                         docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
 
                         body = string.Format(EmailApprovedString,
-                                   instance.AuthorUser.Name, docUrl, docTitle, instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
+                                   instance.AuthorUser.Name, docUrl, docTitle,
+                                   instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
 
-                        body += Utility.BuildProcessSummary(instance, false, false, true);
+                        body += Utility.BuildProcessSummary(instance);
 
                         break;
 
@@ -113,13 +121,18 @@ namespace Workflow
                         body = string.Format(EmailCancelledString,
                             "Umbraco user", instance.TypeDescription, docUrl, docTitle, cancelledBy.Name, reason);
                         break;
+                    case EmailType.SchedulerActionCancelled:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(emailType), emailType, null);
                 }
 
                 if (!to.Any()) return;
 
                 // Add a footer with information about having to login to umbraco first and listing the compatible browsers.
                 var head = "<head><title>" + subject + "</title></head >";
-                var html = "<!DOCTYPE HTML SYSTEM><html>" + head + "<body><font face=\"verdana\" size=\"2\">" + body + "</font></body></html>";
+                var html = "<!DOCTYPE HTML SYSTEM><html>" + head + "<body><font face=\"verdana\" size=\"2\">" + body +
+                           "</font></body></html>";
 
                 subject = Utility.BuildEmailSubject(emailType, instance);
 
@@ -140,7 +153,10 @@ namespace Workflow
 
                 client.Send(msg);
             }
-            catch (Exception) { }
+            catch (Exception e)
+            {
+                Log.Error("Error sending notifications", e);
+            }
         }
     }
 }

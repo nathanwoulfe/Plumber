@@ -1,13 +1,13 @@
 ﻿(function () {
     'use strict';
 
-    function deleteController($scope, userGroupsResource, navigationService, treeService, notificationsService) {
+    function deleteController($scope, workflowGroupsResource, navigationService, treeService, notificationsService) {
 
         $scope.delete = function (id) {
-            userGroupsResource.delete(id)
+          workflowGroupsResource.delete(id)
                 .then(function (resp) {
                     treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'users' })
-                        .then(function (r) {
+                        .then(function () {
                             window.location = '/umbraco/#/workflow/tree/view/groups';
                         });
                     navigationService.hideNavigation();

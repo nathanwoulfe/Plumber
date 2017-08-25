@@ -45,7 +45,7 @@ namespace Workflow.Api
 
                 var msg = string.Empty;
 
-                switch (instance._Status)
+                switch (instance.WorkflowStatus)
                 {
                     case WorkflowStatus.PendingApproval:
                         msg = "Page submitted for " + (model.Publish ? "publish" : "unpublish") + " approval.";
@@ -105,7 +105,7 @@ namespace Workflow.Api
 
                 var msg = string.Empty;
 
-                switch (instance._Status)
+                switch (instance.WorkflowStatus)
                 {
                     case WorkflowStatus.PendingApproval:
                         msg = "Approval completed successfully. Page will be " + instance.TypeDescriptionPastTense.ToLower() + " following workflow completion.";

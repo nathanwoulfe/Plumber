@@ -1,12 +1,9 @@
 ﻿<div ng-controller="Workflow.Submit.Controller">
     <div class="umb-dialog-body with-footer workflow">
         <umb-pane>
-            <div ng-show="dirty" class="alert alert-warning">
-                <strong>WARNING!</strong> Page has unsaved changes.
-            </div>
-                <p ng-show="model.isPublish">Please add a comment describing the changes.</p>
-                <p ng-show="!model.isPublish">Please add a comment.</p>
-                <textarea ng-model="model.comment"></textarea>
+            <p ng-show="model.isPublish">Please add a comment describing the changes.</p>
+            <p ng-show="!model.isPublish">Please add a comment.</p>
+            <textarea ng-model="model.comment"></textarea>
         </umb-pane>
     </div>
 </div>

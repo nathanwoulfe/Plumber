@@ -1,14 +1,14 @@
 ﻿(function () {
     'use strict';
 
-    function addController($scope, userGroupsResource, navigationService, notificationsService, treeService) {
+    function addController($scope, workflowGroupsResource, navigationService, notificationsService, treeService) {
 
         $scope.add = function (name) {
-            userGroupsResource.add(name)
+          workflowGroupsResource.add(name)
                 .then(function (resp) {
                     if (resp.status === 200) {
                         treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'users' })
-                            .then(function (r) {
+                            .then(function () {
                                 window.location = '/umbraco/#/workflow/tree/edit/' + resp.id;
                             });
                         notificationsService.success('SUCCESS', resp.msg);

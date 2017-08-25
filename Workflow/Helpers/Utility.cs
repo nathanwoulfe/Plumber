@@ -100,11 +100,11 @@ namespace Workflow.Helpers
         /// <param name="includeCancel">true if the Cancel link should be included for those who have access to it.</param>
         /// <param name="includeComments">true if comments should be included in the details</param>
         /// <returns>HTML tr inner html definition</returns>
-        public static string BuildProcessSummary(WorkflowInstancePoco instance, bool includeAction, bool includeCancel, bool includeComments)
+        public static string BuildProcessSummary(WorkflowInstancePoco instance)
         {
             var result = instance.TypeDescription + " requested by " + instance.AuthorUser.Name + " on " + instance.CreatedDate.ToString("dd/MM/yy") + " - " + instance.Status + "<br/>";
 
-            if (includeComments && !string.IsNullOrEmpty(instance.AuthorComment))
+            if (!string.IsNullOrEmpty(instance.AuthorComment))
             {
                 result += "&nbsp;&nbsp;Comment: <i>" + instance.AuthorComment + "</i>";
             }
@@ -114,11 +114,11 @@ namespace Workflow.Helpers
             {
                 if (taskInstance.Status == (int)TaskStatus.PendingApproval)
                 {
-                    result += BuildActiveTaskSummary(taskInstance, includeAction, includeCancel, false) + "<br/>";
+                    result += BuildActiveTaskSummary(taskInstance) + "<br/>";
                 }
                 else
                 {
-                    result += BuildInactiveTaskSummary(taskInstance, includeComments) + "<br/>";
+                    result += BuildInactiveTaskSummary(taskInstance) + "<br/>";
                 }
             }
 
@@ -154,34 +154,22 @@ namespace Workflow.Helpers
         /// Create html markup for an active workflow task including links to action, cancel, view, difference it.
         /// </summary>
         /// <param name="taskInstance">The task instance.</param>
-        /// <param name="includeAction">true if the Action link should be included for those who have access to it.</param>
-        /// <param name="includeCancel">true if the Cancel link should be included for those who have access to it.</param>
         /// <param name="includeEdit">true if the Edit icon should be included.</param>
         /// <returns>HTML markup describing an active task instance.</returns>
-        public static string BuildActiveTaskSummary(WorkflowTaskInstancePoco taskInstance, bool includeAction, bool includeCancel, bool includeEdit)
+        public static string BuildActiveTaskSummary(WorkflowTaskInstancePoco taskInstance)
         {
             var result = "";
 
             // Get the node from the cache if it's already published, otherwise look up the document from the DB
-            var docId = taskInstance.WorkflowInstance.NodeId;
-            var docTitle = taskInstance.WorkflowInstance.Node.Name;
+            var docUrl = GetDocPreviewUrl(taskInstance.WorkflowInstance.NodeId);
 
-            var pageEditLink = "";
-
-            var docUrl = GetDocPreviewUrl(docId);
-
-            if (includeEdit)
-            {
-                pageEditLink = "<img alt=\"Edit\" title=\"Edit this document\" style=\"float:right\" src=\"../../images/edit.png\" onClick=\"window.open('" + "');\">";
-            }
-
-            var pageViewLink = "<a  target=\"_blank\" href=\"" + docUrl + "\">" + docTitle + "</a>";
+            var pageViewLink = "<a  target=\"_blank\" href=\"" + docUrl + "\">" + taskInstance.WorkflowInstance.Node.Name + "</a>";
 
             var createdDate = taskInstance.CreatedDate.ToString("dd/MM/yy");
             var authorText = taskInstance.WorkflowInstance.AuthorUser.Name;
             var approverText = "<a title='" + taskInstance.UserGroup.UsersSummary + "'>" + taskInstance.UserGroup.Name + "</a>";
 
-            result += "<td>" + taskInstance.WorkflowInstance.TypeDescription + "</td><td><div>" + pageViewLink + "&nbsp" + pageEditLink + "</div></td><td>" + authorText + "</td><td>" + createdDate + "</td><td>" + approverText +
+            result += "<td>" + taskInstance.WorkflowInstance.TypeDescription + "</td><td><div>" + pageViewLink + "&nbsp;</div></td><td>" + authorText + "</td><td>" + createdDate + "</td><td>" + approverText +
                 "</td><td><small>" + taskInstance.WorkflowInstance.AuthorComment + "</small></td>";
 
             return result;
@@ -191,9 +179,8 @@ namespace Workflow.Helpers
         /// Create simple html markup for an inactive workflow task.
         /// </summary>
         /// <param name="taskInstance">The task instance.</param>
-        /// <param name="includeComments">true if the comments should be included..</param>
         /// <returns>HTML markup describing an active task instance.</returns>
-        public static string BuildInactiveTaskSummary(WorkflowTaskInstancePoco taskInstance, bool includeComments)
+        public static string BuildInactiveTaskSummary(WorkflowTaskInstancePoco taskInstance)
         {
             var result = taskInstance.TypeName;
 
@@ -206,7 +193,7 @@ namespace Workflow.Helpers
                     {
                         result += ": " + taskInstance.Status + " by " + taskInstance.ActionedByUser.Name + " on " + taskInstance.CompletedDate.Value.ToString("dd/MM/yy");
                     }
-                    if (includeComments && !string.IsNullOrEmpty(taskInstance.Comment))
+                    if (!string.IsNullOrEmpty(taskInstance.Comment))
                     {
                         result += "<br/>&nbsp;&nbsp;Comment: <i>" + taskInstance.Comment + "</i>";
                     }

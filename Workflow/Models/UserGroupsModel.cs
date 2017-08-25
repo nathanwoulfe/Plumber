@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace Workflow.Models.UserGroups
+namespace Workflow.Models
 { 
-
     public class UserGroupModel
     {
         public string Name { get; set; }
@@ -35,13 +34,5 @@ namespace Workflow.Models.UserGroups
     {
         public int Id { get; set; }
         public string Name { get; set; }
-    }
-
-    public class SectionTreeNode
-    {
-        public string Id { get; set; }
-        public string Title { get; set; }
-        public string Icon { get; set; }
-        public string Route { get; set; }
     }
 }

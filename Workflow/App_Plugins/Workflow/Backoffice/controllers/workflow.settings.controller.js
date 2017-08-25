@@ -1,9 +1,9 @@
 ﻿(function () {
     'use strict';
 
-    function settingsController($q, workflowResource, notificationsService, contentTypeResource, userGroupsResource, localizationService) {
+    function settingsController($q, workflowResource, notificationsService, workflowGroupsResource) {
         var vm = this,
-            promises = [workflowResource.getSettings(), contentTypeResource.getAll(), userGroupsResource.get()];
+            promises = [workflowResource.getSettings(), workflowResource.getContentTypes(), workflowGroupsResource.get()];
 
         $q.all(promises)
             .then(function (resp) {
@@ -22,7 +22,7 @@
 
                 if (vm.settings.defaultApprover) {
                     vm.defaultApprover = vm.groups.filter(function (v) {
-                        return v.groupId == vm.settings.defaultApprover;
+                        return parseInt(v.groupId, 10) === parseInt(vm.settings.defaultApprover, 10);
                     })[0];
                 }                
 
@@ -49,7 +49,7 @@
             vm.settings.defaultApprover = vm.defaultApprover.groupId;
             vm.settings.flowType = vm.flowType.i;
 
-            angular.forEach(vm.docTypes, function (dt, i) {
+            angular.forEach(vm.docTypes, function (dt) {
                 if (dt.approvalPath && dt.approvalPath.length) {
                     angular.forEach(dt.approvalPath, function (path, ii) {
                         permissions.push({
@@ -63,10 +63,10 @@
 
             var p = [workflowResource.saveConfig(permissions), workflowResource.saveSettings(vm.settings)];
             $q.all(p)
-                .then(function (resp) {
-                    notificationsService.success("SUCCESS!", "Settings updated");
+                .then(function () {
+                    notificationsService.success('SUCCESS!', 'Settings updated');
                 }, function (err) {
-                    notificationsService.error("OH SNAP!", err);
+                    notificationsService.error('OH SNAP!', err);
                 });
         }
 
@@ -77,8 +77,7 @@
                 dt.approvalPath = [dt.selectedApprovalGroup];
             }       
         }
-
-
+        
         function remove(dt, index) {
             dt.approvalPath.splice(index, 1);
         }

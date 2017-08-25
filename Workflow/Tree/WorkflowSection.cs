@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Formatting;
 using Umbraco.Core;
+using Umbraco.Core.Models;
 using Umbraco.Web;
 using Umbraco.Web.Models.Trees;
 using Umbraco.Web.Mvc;
@@ -26,7 +27,7 @@ namespace Workflow.Tree
 
                 var user = UmbracoContext.Current.Security.CurrentUser;
 
-                if (user.AllowedSections.Contains("settings") || user.UserType.Alias =="admin")
+                if (user.IsAdmin())
                 {
                     treeNodes.Add(new SectionTreeNode() { Id = "settings", Title = "Settings", Icon = "icon-umb-settings", Route = $"{route}settings"});
                     treeNodes.Add(new SectionTreeNode() { Id = "groups", Title = "Approval groups", Icon = "icon-users", Route =$"{route}groups"});

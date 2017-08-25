@@ -1,17 +1,16 @@
 ﻿(function () {
     'use strict';
 
-    function dashboardController(workflowResource, localizationService) {
+    function dashboardController(workflowResource) {
 
         var vm = this,
-            _MS_PER_DAY = 1000 * 60 * 60 * 24,
+            msPerDay = 1000 * 60 * 60 * 24,
             now = new Date();
 
         function lineChart(items) {
 
             var series = [],
                 seriesNames = [],
-                active = [],
                 s, o,
                 isTask = vm.type === 'Task',
                 d = new Date();
@@ -25,10 +24,10 @@
                 data: defaultData(),
                 colorIndex: 2,
                 pointStart: then,
-                pointInterval: _MS_PER_DAY
+                pointInterval: msPerDay
             };
 
-            items.forEach(function (v, i) {
+            items.forEach(function (v) {
                 var statusName = isTask ? v.statusName : v.status;
 
                 if (statusName !== 'Pending Approval') {
@@ -38,7 +37,7 @@
                             type: 'column',
                             data: defaultData(),
                             pointStart: then,
-                            pointInterval: _MS_PER_DAY
+                            pointInterval: msPerDay
                         };
                         series.push(o);
                         seriesNames.push(statusName);
@@ -88,7 +87,7 @@
             var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
             var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
-            return Math.floor((utc2 - utc1) / _MS_PER_DAY - 1);
+            return Math.floor((utc2 - utc1) / msPerDay - 1);
         }
 
         function defaultData() {

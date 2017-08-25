@@ -7,7 +7,7 @@ using Umbraco.Core.Persistence;
 using Workflow.Helpers;
 using Workflow.Models;
 
-namespace Workflow
+namespace Workflow.Processes
 {
     public abstract class WorkflowApprovalProcess : IWorkflowProcess
     {
@@ -44,7 +44,7 @@ namespace Workflow
 
             // create the first task in the workflow
             bool complete;
-            var taskInstance = CreateApprovalTask(nodeId, authorUserId, out complete);
+            var taskInstance = CreateApprovalTask(nodeId, out complete);
 
             if (taskInstance.UserGroup == null)
             {
@@ -83,7 +83,7 @@ namespace Workflow
                         {
                             // create the next task, then check if it should be a
                             bool approvalRequired;
-                            var taskInstance = CreateApprovalTask(Instance.NodeId, userId, out approvalRequired);
+                            var taskInstance = CreateApprovalTask(Instance.NodeId, out approvalRequired);
                             if (approvalRequired)
                             {
                                 ApproveOrContinue(taskInstance, userId);
@@ -132,7 +132,7 @@ namespace Workflow
                 Instance.CompletedDate = DateTime.Now;
                 Instance.Status = (int)WorkflowStatus.Cancelled;
 
-                var taskInstance = Instance.TaskInstances.FirstOrDefault(ti => ti._Status == TaskStatus.PendingApproval);
+                var taskInstance = Instance.TaskInstances.FirstOrDefault(ti => ti.TaskStatus == TaskStatus.PendingApproval);
                 if (taskInstance != null)
                 {
                     // Cancel the task and workflow instances
@@ -199,7 +199,7 @@ namespace Workflow
         /// <param name="comment"></param>
         private void ProcessApprovalAction(WorkflowAction action, int userId, string comment)
         {
-            var taskInstance = Instance.TaskInstances.FirstOrDefault(ti => ti._Status == TaskStatus.PendingApproval || ti._Status == TaskStatus.NotRequired );
+            var taskInstance = Instance.TaskInstances.FirstOrDefault(ti => ti.TaskStatus == TaskStatus.PendingApproval || ti.TaskStatus == TaskStatus.NotRequired );
             if (taskInstance == null) return;
 
             EmailType? emailType = null;
@@ -238,10 +238,9 @@ namespace Workflow
         /// Generate the next approval flow task, returning the new task and a bool indicating whether the publish action should becompleted (ie, this is the end of the flow)
         /// </summary>
         /// <param name="nodeId"></param>
-        /// <param name="authorId"></param>
         /// <param name="approvalRequired"></param>
         /// <returns></returns>
-        private WorkflowTaskInstancePoco CreateApprovalTask(int nodeId, int authorId, out bool approvalRequired)
+        private WorkflowTaskInstancePoco CreateApprovalTask(int nodeId, out bool approvalRequired)
         {
             var taskInstance =
                 new WorkflowTaskInstancePoco(TaskType.Approve)
@@ -251,8 +250,7 @@ namespace Workflow
                     Comment = Instance.AuthorComment
                 };
             Instance.TaskInstances.Add(taskInstance);
-
-            SetApprovalGroup(taskInstance, nodeId, authorId);
+            SetApprovalGroup(taskInstance, nodeId);
             approvalRequired = IsStepApprovalRequired(taskInstance);
 
             GetDb().Insert(taskInstance);            
@@ -265,8 +263,7 @@ namespace Workflow
         /// </summary>
         /// <param name="taskInstance"></param>
         /// <param name="nodeId"></param>
-        /// <param name="authorId"></param>
-        private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId, int authorId)
+        private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId)
         {
             var approvalGroup = Pr.PermissionsForNode(nodeId, 0);
             UserGroupPermissionsPoco group = null;
@@ -284,7 +281,7 @@ namespace Workflow
                 var node = Utility.GetNode(nodeId);
                 if (node.Level != 1)
                 {
-                    SetApprovalGroup(taskInstance, node.Parent.Id, authorId);
+                    SetApprovalGroup(taskInstance, node.Parent.Id);
                 }
                 else // no group set, check for content-type approval then fallback to default approver
                 {

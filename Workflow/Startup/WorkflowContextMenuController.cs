@@ -1,4 +1,5 @@
 ﻿using Umbraco.Core;
+using Umbraco.Core.Models;
 using Umbraco.Web;
 using Workflow.Helpers;
 
@@ -17,7 +18,7 @@ namespace Workflow.Startup
 
             var menuLength = e.Menu.Items.Count;
             var nodeName = Utility.GetNode(int.Parse(e.NodeId)).Name;
-            var currentUser = UmbracoContext.Current.Security.CurrentUser.UserType;
+            var currentUser = UmbracoContext.Current.Security.CurrentUser;
             var items = new Umbraco.Web.Models.Trees.MenuItemList();
 
             var i = new Umbraco.Web.Models.Trees.MenuItem("workflowHistory", "Workflow history");
@@ -28,7 +29,7 @@ namespace Workflow.Startup
 
             items.Add(i);
 
-            if (currentUser.Alias == "admin")
+            if (currentUser.IsAdmin())
             {
                 i = new Umbraco.Web.Models.Trees.MenuItem("workflowConfig", "Workflow configuration");
                 i.LaunchDialogView("/App_Plugins/workflow/Backoffice/dialogs/workflow.config.dialog.html", "Workflow configuration: " + nodeName);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 using Umbraco.Core;
@@ -26,7 +27,8 @@ namespace Workflow.Api
             {
                 return Json(Pr.GetSettings(), ViewHelpers.CamelCase);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
             }
         }
@@ -43,11 +45,30 @@ namespace Workflow.Api
             {
                 Db.Update(model);
                 return Ok("Settings updated");
-            } 
+            }
             catch (Exception ex)
             {
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
             }
-        }     
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Route("getcontenttypes")]
+        public IHttpActionResult GetContentTypes()
+        {
+            try
+            {
+                var contentTypes = ApplicationContext.Current.Services.ContentTypeService.GetAllContentTypes().ToList();
+                return Json(contentTypes, ViewHelpers.CamelCase);
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
+
+            }
+        }
     }
 }

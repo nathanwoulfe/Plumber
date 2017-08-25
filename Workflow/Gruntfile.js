@@ -19,13 +19,13 @@
                 packageSuffix = grunt.option('packagesuffix') || 'build',
                 buildBranch = grunt.option('buildbranch') || 'master';
 
-            var findPoint = buildVersion.lastIndexOf(".");
+            var findPoint = buildVersion.lastIndexOf('.');
             var basePackageVer = buildVersion.substring(0, findPoint);
             var buildNumber = buildVersion.substring(findPoint + 1, buildVersion.length);
-            if (buildBranch.toLowerCase() != 'release') {
-                return basePackageVer + "-" + 'build' + buildNumber;
-            } else if (packageSuffix != 'build' && packageSuffix.length > 0) {
-                return basePackageVer + "-" + packageSuffix;
+            if (buildBranch.toLowerCase() !== 'release') {
+                return basePackageVer + '-' + 'build' + buildNumber;
+            } else if (packageSuffix !== 'build' && packageSuffix.length > 0) {
+                return basePackageVer + '-' + packageSuffix;
             } else {
                 return basePackageVer;
             }
@@ -50,7 +50,7 @@
                 dest: '<%= dest %>/<%= basePath %>/backoffice/js/workflow.js',
                 nonull: true,
                 options: {
-                    banner: "/<%= banner %>/\n\n"
+                    banner: '/<%= banner %>/\n\n'
                 }
             }
         },

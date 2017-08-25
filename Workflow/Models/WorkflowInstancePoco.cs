@@ -13,7 +13,7 @@ namespace Workflow.Models
     [TableName("WorkflowInstance")]
     [ExplicitColumns]
     [PrimaryKey("Id", autoIncrement = true)]
-    public sealed class WorkflowInstancePoco
+    public class WorkflowInstancePoco
     {
         private IPublishedContent _node;
         private IUser _authorUser;
@@ -64,10 +64,10 @@ namespace Workflow.Models
         public string AuthorComment { get; set; }
 
         [ResultColumn]
-        public WorkflowStatus _Status => (WorkflowStatus)Status;
+        public WorkflowStatus WorkflowStatus => (WorkflowStatus)Status;
 
         [ResultColumn]
-        public WorkflowType _Type => (WorkflowType)Type;
+        public WorkflowType WorkflowType => (WorkflowType)Type;
 
         public void SetScheduledDate()
         {
@@ -90,7 +90,7 @@ namespace Workflow.Models
         /// Title case text name for the workflow type.
         /// </summary>
         [ResultColumn]
-        public string TypeName => WorkflowTypeName(_Type);
+        public string TypeName => WorkflowTypeName(WorkflowType);
 
         [ResultColumn]
         public string TypeDescriptionPastTense => TypeDescription.Replace("ish", "ished").Replace("dule", "duled").Replace("for", "to be");
@@ -99,7 +99,7 @@ namespace Workflow.Models
         /// Describe the workflow type by including details for release at / expire at scheduling.
         /// </summary>
         [ResultColumn]
-        public string TypeDescription => WorkflowTypeDescription(_Type, ScheduledDate);
+        public string TypeDescription => WorkflowTypeDescription(WorkflowType, ScheduledDate);
 
         /// <summary>
         /// The document object associated with this workflow.
@@ -117,13 +117,13 @@ namespace Workflow.Models
         /// Title case text name for the workflow status.
         /// </summary>
         [ResultColumn]       
-        public string StatusName => Utility.PascalCaseToTitleCase(_Status.ToString());
+        public string StatusName => Utility.PascalCaseToTitleCase(WorkflowStatus.ToString());
 
         /// <summary>
         /// Indicates whether the workflow instance is currently active.
         /// </summary>
         [ResultColumn]        
-        public bool Active => _Status != WorkflowStatus.Cancelled && _Status != WorkflowStatus.Rejected;
+        public bool Active => WorkflowStatus != WorkflowStatus.Cancelled && WorkflowStatus != WorkflowStatus.Rejected;
 
         [ResultColumn]
         public DateTime? CompletedDate { get; set; }

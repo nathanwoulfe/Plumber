@@ -1,8 +1,8 @@
 ﻿using Workflow.Models;
 
-namespace Workflow
+namespace Workflow.Processes
 {
-    interface IWorkflowProcess
+    internal interface IWorkflowProcess
     {
         WorkflowInstancePoco InitiateWorkflow(int nodeId, int authorUserId, string authorComment);
         WorkflowInstancePoco ActionWorkflow(WorkflowInstancePoco instance, WorkflowAction action, int userId, string comment);

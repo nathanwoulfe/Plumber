@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function workflowActionsService($rootScope, workflowResource, notificationsService) {
+    function workflowActionsService($rootScope, workflowResource, notificationsService, editorState, angularHelper) {
         var service = {
 
             action: function (item, approve, fromDash) {
@@ -29,7 +29,7 @@
                         }
                         workflowOverlay.close();
                     },
-                    close: function (model) {
+                    close: function () {
                         workflowOverlay.show = false;
                         workflowOverlay = null;
                     }
@@ -54,7 +54,7 @@
 
                         workflowOverlay.close();
                     },
-                    close: function (model) {
+                    close: function () {
                         workflowOverlay.show = false;
                         workflowOverlay = null;
                     }
@@ -78,7 +78,7 @@
                                 workflowOverlay.close();
                             });
                     },
-                    close: function (model) {
+                    close: function () {
                         workflowOverlay.show = false;
                         workflowOverlay = null;
                     }
@@ -91,21 +91,23 @@
         // display notification after actioning workflow task
         function notify(d, fromDash) {
             if (d.status === 200) {
-                var contentForm = document.querySelector('[name="contentForm"]');
-                if (contentForm) {
-                    var scope = angular.element(contentForm).scope();
-                    scope.contentForm.$setPristine();
-                }
-                notificationsService.success("SUCCESS!", d.message);
+                // todo -> find a v7.7 way to make this work
+                //var contentForm = document.querySelector('[name="contentForm"]');
+                //if (contentForm) {
+                //    var scope = angular.element(contentForm).scope();
+                //    scope.contentForm.$setPristine();
+                //}
+                debugger;
+                notificationsService.success('SUCCESS!', d.message);
 
                 if (fromDash) {
                     $rootScope.$emit('refreshWorkflowDash');
                 } else {
-                    $rootScope.$emit('workflowActioned')
+                    $rootScope.$emit('workflowActioned');
                 }
             }
             else {
-                notificationsService.error("OH SNAP!", d.message);
+                notificationsService.error('OH SNAP!', d.message);
             }
         }
 

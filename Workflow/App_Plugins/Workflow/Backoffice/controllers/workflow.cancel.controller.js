@@ -2,7 +2,7 @@
     'use strict';
 
     // create controller 
-    function cancelController($scope, workflowResource) {
+    function cancelController($scope) {
         $scope.model.comment = '';
         $scope.limit = 250;
         $scope.intro = 'This operation will cancel the workflow on this document and notify the workflow participants. Are you sure?';

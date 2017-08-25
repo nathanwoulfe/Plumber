@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function userGroupsResource($http, $q, umbRequestHelper) {
+    function workflowGroupsResource($http, $q, umbRequestHelper) {
         var service = {
 
             urlBase: '/umbraco/backoffice/api/workflow/groups/',
@@ -52,6 +52,6 @@
         return service;
     }
 
-    angular.module('umbraco.services').factory('userGroupsResource', userGroupsResource);
+    angular.module('umbraco.services').factory('workflowGroupsResource', workflowGroupsResource);
 
 }());

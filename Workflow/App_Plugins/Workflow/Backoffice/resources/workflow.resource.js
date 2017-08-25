@@ -25,6 +25,10 @@
                 return this.request('GET', this.tasksUrl + 'status/' + id);
             },
 
+            getContentTypes: function() {
+                return this.request('GET', this.settingsUrl + 'getcontenttypes');
+            },
+
             /* tasks and approval endpoints */
             getApprovalsForUser: function (userId, count, page) {
                 return this.request('GET', this.tasksUrl + 'flows/' + userId + '/0/' + count + '/' + page);

@@ -45,7 +45,7 @@ namespace Workflow.Processes
         {
             bool success;
             var errorText = "";
-            var originalWfStatus = Instance._Status;
+            var originalWfStatus = Instance.WorkflowStatus;
 
             try
             {
