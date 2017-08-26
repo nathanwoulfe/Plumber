@@ -54,12 +54,14 @@ namespace Workflow.Extensions
                 throw new NullReferenceException("inner");
             }
 
+            var UserService = ApplicationContext.Current.Services.UserService;
+
             this.inner = inner;
             this.isPreviewing = isPreviewing;
 
             this.lazyUrlName = new Lazy<string>(() => this.inner.GetUrlSegment().ToLower());
-            this.lazyCreatorName = new Lazy<string>(() => this.inner.GetCreatorProfile().Name);
-            this.lazyWriterName = new Lazy<string>(() => this.inner.GetWriterProfile().Name);
+            this.lazyCreatorName = new Lazy<string>(() => this.inner.GetCreatorProfile(UserService).Name);
+            this.lazyWriterName = new Lazy<string>(() => this.inner.GetWriterProfile(UserService).Name);
 
             this.contentType = PublishedContentType.Get(PublishedItemType.Content, this.inner.ContentType.Alias);
 
