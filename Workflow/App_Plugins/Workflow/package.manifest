@@ -1,38 +1,39 @@
-﻿{   
-    javascript: [ 
-        '~/App_Plugins/workflow/backoffice/controllers/groups.add.controller.js',		
-        '~/App_Plugins/workflow/backoffice/controllers/groups.dashboard.controller.js',						
-        '~/App_Plugins/workflow/backoffice/controllers/groups.delete.controller.js',
-        '~/App_Plugins/workflow/backoffice/controllers/groups.edit.controller.js',		
-		'~/App_Plugins/workflow/backoffice/controllers/tree.view.controller.js',
-		'~/App_Plugins/workflow/backoffice/controllers/workflow.action.controller.js',
-		'~/App_Plugins/workflow/backoffice/controllers/workflow.admin.dashboard.controller.js',
-		'~/App_Plugins/workflow/backoffice/controllers/workflow.cancel.controller.js',
-		'~/App_Plugins/workflow/backoffice/controllers/workflow.config.controller.js',
-		'~/App_Plugins/workflow/backoffice/controllers/workflow.docs.dashboard.controller.js',
-		'~/App_Plugins/workflow/backoffice/controllers/workflow.drawerbuttons.controller.js',
-		'~/App_Plugins/workflow/backoffice/controllers/workflow.history.controller.js',
-		'~/App_Plugins/workflow/backoffice/controllers/workflow.settings.controller.js',
-		'~/App_Plugins/workflow/backoffice/controllers/workflow.submit.controller.js',
-		'~/App_Plugins/workflow/backoffice/controllers/workflow.user.dashboard.controller.js',
-        '~/App_Plugins/workflow/backoffice/directives/workflow.buttongroup.directive.js',
-        '~/App_Plugins/workflow/backoffice/directives/workflow.comments.directive.js',
-        '~/App_Plugins/workflow/backoffice/directives/workflow.history.directive.js',
-        '~/App_Plugins/workflow/backoffice/directives/workflow.linechart.directive.js',
-        '~/App_Plugins/workflow/backoffice/directives/workflow.tablerow.directive.js',
-        '~/App_Plugins/workflow/backoffice/directives/workflow.tasks.directive.js',
-        '~/App_Plugins/workflow/backoffice/interceptors/workflow.config.interceptors.js',
-        '~/App_Plugins/workflow/backoffice/interceptors/workflow.drawerbuttons.interceptor.js',
-        '~/App_Plugins/workflow/backoffice/resources/actions.resource.js',
-        '~/App_Plugins/workflow/backoffice/resources/groups.resource.js',
-        '~/App_Plugins/workflow/backoffice/resources/workflow.resource.js',
+﻿{
+  javascript: [
+    "~/App_Plugins/workflow/backoffice/controllers/groups.add.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/groups.dashboard.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/groups.delete.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/groups.edit.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/tree.view.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.action.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.admin.dashboard.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.cancel.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.config.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.docs.dashboard.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.drawerbuttons.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.history.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.settings.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.submit.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.user.dashboard.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.userpicker.controller.js",
+    "~/App_Plugins/workflow/backoffice/directives/workflow.buttongroup.directive.js",
+    "~/App_Plugins/workflow/backoffice/directives/workflow.comments.directive.js",
+    "~/App_Plugins/workflow/backoffice/directives/workflow.history.directive.js",
+    "~/App_Plugins/workflow/backoffice/directives/workflow.linechart.directive.js",
+    "~/App_Plugins/workflow/backoffice/directives/workflow.tablerow.directive.js",
+    "~/App_Plugins/workflow/backoffice/directives/workflow.tasks.directive.js",
+    "~/App_Plugins/workflow/backoffice/interceptors/workflow.config.interceptors.js",
+    "~/App_Plugins/workflow/backoffice/interceptors/workflow.drawerbuttons.interceptor.js",
+    "~/App_Plugins/workflow/backoffice/resources/actions.resource.js",
+    "~/App_Plugins/workflow/backoffice/resources/groups.resource.js",
+    "~/App_Plugins/workflow/backoffice/resources/workflow.resource.js",
 
-		'~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.js',
-		'~/App_Plugins/workflow/backoffice/lib/highcharts/modules/exporting.js'
+    "~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.js",
+    "~/App_Plugins/workflow/backoffice/lib/highcharts/modules/exporting.js"
 
-    ],
-    css: [
-		'~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.css',
-		'~/App_Plugins/workflow/backoffice/css/styles.min.css'
+  ],
+  css: [
+		"~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.css",
+		"~/App_Plugins/workflow/backoffice/css/styles.min.css"
     ]
 }

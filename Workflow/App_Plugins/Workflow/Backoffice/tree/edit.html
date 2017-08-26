@@ -1,73 +1,90 @@
 ﻿<form class="form-horizontal workflow" name="approvalGroupForm" novalidate val-form-manager ng-controller="Workflow.Groups.Edit.Controller as vm">
     <umb-editor-view umb-tabs>
-        <umb-editor-header name="vm.name"
-                           name-locked="true"
+        <umb-editor-header name="vm.group.name"
+                           alias="vm.group.alias"
                            tabs="vm.tabs"
-                           hide-alias="true"
                            hide-description="true"
                            hide-icon="true">
         </umb-editor-header>
         <umb-editor-container>
             <umb-tabs-content view="true">
                 <umb-tab id="tab{{tab.id}}" ng-repeat="tab in vm.tabs" rel="{{tab.id}}">
-
                     <div ng-if="tab.alias === 'tab0'">
-                        <div class="umb-control-group">
-                            <div class="umb-el-wrap">
-                                <label for="groupName" class="control-label">Name</label>
-                                <div class="controls controls-row">
-                                    <input type="text" ng-model="vm.group.name" name="groupName" disabled />
+
+                        <!---->
+
+                        <div class="umb-packages-view-wrapper" style="padding: 0;">
+
+                            <div class="umb-package-details">
+
+                                <div class="umb-package-details__main-content">
+                                    <div class="umb-box">
+                                        <div class="umb-box-header">
+                                            <div class="umb-box-header-title"><localize key="workflow_config">Configuration</localize></div>
+                                        </div>
+                                        <div class="umb-box-content block-form">
+
+                                            <umb-control-group label="@general_email" description="@workflow_workflowGroupEmail">
+                                                <input type="email" ng-model="vm.group.groupEmail" name="groupEmail" />                       
+                                            </umb-control-group>
+
+                                            <umb-control-group label="@workflow_groupDescription" description="@workflow_groupDescriptionDetail">
+                                                <textarea name="groupDescription" ng-model="vm.group.description" class="group-description"></textarea>
+                                            </umb-control-group>                                                                                  
+
+                                        </div>
+                                    </div>     
+                                    <div class="umb-box permissions">
+                                        <div class="umb-box-header">
+                                            <div class="umb-box-header-title"><localize key="workflow_currentWorkflowRoles">Current workflow roles</localize></div>
+                                        </div>
+                                        <div class="umb-box-content block-form">
+                                            <umb-control-group label="@workflow_nodeApprovalFlows" description="@workflow_nodeApprovalFlowsDescription">
+                                                <umb-node-preview ng-repeat="node in vm.nodePermissions | filter: { name : '!!' }"
+                                                                  style="max-width: 100%;"
+                                                                  allow-edit="true"
+                                                                  on-edit="vm.editContentPermission(node.nodeId, node.path)"
+                                                                  icon="node.icon"
+                                                                  name="node.name">
+                                                </umb-node-preview>
+                                            </umb-control-group>
+                                            <umb-control-group label="@workflow_documentFlows" description="@workflow_documentFlowsSmall">
+                                                <umb-node-preview ng-repeat="node in vm.docPermissions"
+                                                                  style="max-width: 100%;"
+                                                                  allow-edit="true"
+                                                                  on-edit="vm.editDocTypePermission()"
+                                                                  icon="node.icon"
+                                                                  name="node.name">
+                                                </umb-node-preview>
+                                            </umb-control-group>
+                                        </div>
+                                    </div>                                                                                         
+                                </div>                                
+
+                                <div class="umb-package-details__sidebar">
+                                    <div class="umb-package-details__section">
+
+                                        <div class="umb-package-details__section-title"><localize key="workflow_membership">Group members</localize></div>
+
+                                        <umb-user-preview ng-repeat="user in vm.group.users | orderBy: 'name'"
+                                                          name="user.name"
+                                                          avatars="user.avatars"
+                                                          allow-remove="true"
+                                                          on-remove="vm.remove(user.userId)">
+                                        </umb-user-preview>
+
+                                        <a href=""
+                                           style="max-width: 100%;"
+                                           class="umb-node-preview-add"
+                                           ng-click="vm.openUserPicker()"
+                                           prevent-default>
+                                            <localize key="general_add">Add</localize>
+                                        </a>
+
+                                    </div>
                                 </div>
                             </div>
-                            <div class="umb-el-wrap">
-                                <label for="groupAlias" class="control-label">Alias</label>
-                                <div class="controls controls-row">
-                                    <input type="text" ng-model="vm.group.alias" name="groupAlias" disabled />
-                                </div>
-                            </div>
-                            <div class="umb-el-wrap">
-                                <label for="groupEmail" class="control-label">Email</label>
-                                <div class="controls controls-row">
-                                    <input type="email" ng-model="vm.group.groupEmail" name="groupEmail" />
-                                </div>
-                            </div>
-                            <div class="umb-el-wrap">
-                                <label for="groupDescription" class="control-label">Description</label>
-                                <div class="controls controls-row">
-                                    <textarea name="groupDescription" rows="3" cols="20" ng-model="vm.group.description"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <umb-control-group label="@workflow_membership" class="user-lists">
-                            <div class="user-list">
-                                <h5>All users</h5>
-                                <input type="text" ng-model="addUserFilter" placeholder="Search" />
-                                <ul class="user-list">
-                                    <li ng-repeat="u in vm.notInGroup | orderBy: 'name' | filter:{name:addUserFilter}" ng-click="vm.add(u.id)" title="Add {{u.name}} to {{vm.group.name}}">{{u.name}}</li>
-                                </ul>
-                            </div>
-                            <div class="user-list">
-                                <h5>Current members</h5>
-                                <input type="text" ng-model="removeUserFilter" placeholder="Search" />
-                                <ul>
-                                    <li ng-repeat="u in vm.group.users | orderBy: 'name' | filter:{Name:removeUserFilter}" ng-click="vm.remove(u.userId)" title="Remove {{u.name}} from {{vm.group.name}}">{{u.name}}</li>
-                                </ul>
-                            </div>
-                        </umb-control-group>
-                        <umb-control-group label="@workflow_nodeApprovalFlows" ng-if="$routeParams.id !== '-1' && vm.group.permissions.length">
-                            <ul>
-                                <li ng-repeat="p in vm.group.permissions" ng-show="p.nodeName.length">
-                                    <a ng-if="p.nodeName" ng-href="#/content/content/edit/{{ p.nodeId }}" title="Edit node: {{ p.nodeName }}">{{ p.nodeName}} (stage: {{ p.permission + 1 }})</a>
-                                </li>
-                            </ul>
-                        </umb-control-group>
-                        <umb-control-group label="@workflow_documentFlows" ng-if="$routeParams.id !== '-1' && group.permissions.length">
-                            <ul>
-                                <li ng-repeat="p in vm.group.permissions" ng-show="p.contentTypeName.length">
-                                    <a ng-if="p.contentTypeName" ng-href="#/settings/documentTypes/edit/{{ p.contentTypeId }}" title="Edit content type: {{ p.contentTypeName }}">{{ p.contentTypeName }} (stage: {{ p.Permission + 1 }})</a>
-                                </li>
-                            </ul>
-                        </umb-control-group>
+                        </div>          
                     </div>
                     <div ng-if="tab.alias === 'tab1'">
                         <umb-editor-sub-header>
@@ -76,7 +93,7 @@
                                 <select name="per-page" ng-model="vm.pagination.perPage" ng-options="n for n in vm.perPage()" ng-change="vm.pagination.goToPage(1)"></select>
                             </umb-editor-sub-header-content-right>
                         </umb-editor-sub-header>
-              
+
                         <wf-history items="vm.tasks" instance-view="false" group-history-view="true"></wf-history>
 
                         <div class="flex justify-center">
@@ -102,4 +119,11 @@
             </umb-editor-footer-content-right>
         </umb-editor-footer>
     </umb-editor-view>
+
+    <umb-overlay ng-if="vm.userPicker.show"
+                 model="vm.userPicker"
+                 view="vm.userPicker.view"
+                 position="right">
+    </umb-overlay>
+
 </form>

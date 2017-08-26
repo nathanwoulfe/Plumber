@@ -1,28 +1,21 @@
 ﻿(function () {
     'use strict';
 
-    function editController($scope, $routeParams, workflowGroupsResource, workflowResource, entityResource, notificationsService) {
+    function editController($scope, $routeParams, $location, $timeout, workflowGroupsResource, workflowResource, dialogService, entityResource, notificationsService, contentResource, navigationService) {
 
         var vm = this;
 
-        // filter all users to remove those in the group
-        function getUsersNotInGroup() {
-            vm.notInGroup = [];
-            angular.forEach(vm.allUsers, function (user) {
-                if (!vm.group.usersSummary || vm.group.usersSummary.indexOf('|' + user.id + '|') === -1) {
-                    vm.notInGroup.push(user);
-                }
-            });
-        }
-
         // only fetch group if id is valid - otherwise it's a create action
-        function getGroup() {
+        function init() {
             if ($routeParams.id !== '-1') {
                 workflowGroupsResource.get($routeParams.id)
                     .then(function (resp) {
                         vm.group = resp;
                         vm.name = $routeParams.id !== '-1' ? 'Edit ' : 'Create ' + resp.name;
-                        getUsersNotInGroup();
+
+                        if (vm.group.permissions) {
+                            getContentTypes();
+                        }
                     });
             } else {
                 vm.group = {
@@ -34,18 +27,52 @@
                     users: [],
                     usersSummary: ''
                 };
-                getUsersNotInGroup();
             }
         }
 
-        // fetch all active users, then get the group
-        // this kicks it all off...
-        function getAllUsers() {
-            entityResource.getAll('User', 'IsApproved')
-                .then(function (resp) {
-                    vm.allUsers = resp;
-                    getGroup();
-                });
+        function getPermissionName() {
+            return "a string";
+        }
+
+        function getContentTypes() {
+
+            vm.nodePermissions = vm.group.permissions.filter(function (v) {
+                return v.nodeId;
+            });
+            
+            vm.docPermissions = vm.group.permissions.filter(function (v) {
+                return v.contentTypeId;
+            });
+
+            if (vm.nodePermissions.length) {
+                contentResource.getByIds(vm.nodePermissions.map(function (v) { return v.nodeId; }))
+                    .then(function (resp) {                        
+                        resp.forEach(function (v) {
+                            vm.nodePermissions.forEach(function (p) {
+                                if (p.nodeId === v.id) {
+                                    p.icon = v.icon;
+                                    p.path = v.path;
+                                    p.name = v.name + ' - stage ' + (p.permission + 1);
+                                }
+                            });
+                        });
+                    });
+            }
+
+            if (vm.docPermissions.length) {
+                workflowResource.getContentTypes()
+                    .then(function (resp) {
+                        resp.forEach(function (v) {
+                            vm.docPermissions.forEach(function (p) {
+                                if (p.contentTypeId === v.id) {
+                                    p.icon = v.icon;
+                                    p.path = v.path;
+                                    p.name = v.name + ' - stage ' + (p.permission + 1);
+                                }
+                            });
+                        });
+                    });
+            }
         }
 
         // history tab
@@ -63,17 +90,14 @@
             getHistory();
         }
 
-        // add a user to the group, and remove from notInGroup
-        function add(id) {
-            var index;
-            vm.notInGroup.forEach(function(u, i) {
-                if (u.id === id) {
-                    index = i;
-                    vm.group.users.push({ userId: u.id, groupId: vm.group.groupId, name: u.name });
-                }
-            });
+        function editDocTypePermission() {
+            $location.path('/workflow/tree/view/settings');
+        }
 
-            vm.notInGroup.splice(index, 1);
+        // todo -> Would be sweet to open the config dialog from here, rather than just navigating to the node...
+        function editContentPermission(id, path) {
+            navigationService.changeSection('content');
+            $location.path('/content/content/edit/' + id);            
         }
 
         //
@@ -82,10 +106,30 @@
             vm.group.users.forEach(function (u, i) {
                 if (u.userId === id) {
                     index = i;
-                    vm.notInGroup.push({ id: u.userId, name: u.name });
                 }
             });
             vm.group.users.splice(index, 1);
+        }
+
+        function openUserPicker() {
+            vm.userPicker = {
+                view: '../app_plugins/workflow/backoffice/dialogs/workflow.userpicker.overlay.html',
+                selection: vm.group.users,
+                show: true,
+                submit: function (model) {
+                    vm.userPicker.show = false;
+                    vm.userPicker = null;
+
+                    vm.group.users = [];
+                    model.selection.forEach(function (u) {
+                        vm.group.users.push({ userId: u.userId || u.id, groupId: vm.group.groupId, name: u.name });
+                    });
+                },
+                close: function (oldModel) {
+                    vm.userPicker.show = false;
+                    vm.userPicker = null;
+                }
+            };
         }
 
         //
@@ -105,8 +149,10 @@
 
         angular.extend(vm, {
             save: save,
-            add: add,
             remove: remove,
+            editContentPermission: editContentPermission,
+            editDocTypePermission: editDocTypePermission,
+            openUserPicker: openUserPicker,
             perPage: function() {
                 return [2, 5, 10, 20, 50];
             },
@@ -131,7 +177,7 @@
             } 
         });
 
-        getAllUsers();
+        init();
         getHistory();
     }
 

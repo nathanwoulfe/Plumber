@@ -84,7 +84,9 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.drawerbuttons.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.admin.dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.userpicker.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.history.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.userpicker.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.buttongroup.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.comments.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.history.directive.js" />

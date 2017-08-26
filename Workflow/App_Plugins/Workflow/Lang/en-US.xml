@@ -17,13 +17,19 @@
     <key alias="viewType">View type</key>
     <key alias="flowType">Flow type</key>
     <key alias="defaultApprovalGroup">Default approval group</key>
-    <key alias="workflowEmail">Workflow notification email</key>
+    <key alias="workflowEmail">Workflow email</key>
+    <key alias="workflowGroupEmail">Notifications will be sent to this address instead of group members (optional)</key>
     <key alias="sendNotifications">Send notifications</key>
     <key alias="editSiteUrl">Edit site URL</key>
     <key alias="baseSiteUrl">Site URL</key>
-    <key alias="nodeApprovalFlows">Node approval flows</key>
-    <key alias="documentFlows">Document-type approval flows</key>
+    <key alias="nodeApprovalFlows">Node-based approvals</key>
+    <key alias="nodeApprovalFlowsDescription">These workflows apply only to the specified node</key>
+    <key alias="documentFlows">Document-type approvals</key>
     <key alias="documentFlowsSmall">Default workflow for all nodes of a given document type</key>
-    <key alias="membership">Membership</key>
+    <key alias="membership">Group members</key>
+    <key alias="groupDescription">Description</key>
+    <key alias="groupDescriptionDetail">Describe the group's role and responsibilities</key>
+    <key alias="config">Configuration</key>
+    <key alias="currentWorkflowRoles">Current workflow roles</key>
   </area>  
 </language>
