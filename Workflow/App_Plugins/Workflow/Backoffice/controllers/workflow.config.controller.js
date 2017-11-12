@@ -65,8 +65,6 @@
         }
 
         function save() {
-            debugger;
-
             var response = {};
             response[nodeIdInt] = [];
 
