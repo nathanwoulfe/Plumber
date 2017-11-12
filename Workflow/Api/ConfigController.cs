@@ -23,20 +23,25 @@ namespace Workflow.Api
         /// <returns></returns>
         [HttpPost]
         [Route("save")]
-        public IHttpActionResult Save(List<UserGroupPermissionsPoco> model)
+        public IHttpActionResult Save(Dictionary<int, List<UserGroupPermissionsPoco>> model)
         {
             try
             {
-                if (model.Any(p => p.ContentTypeId > 0))
+                var data = model.First();
+
+                if (data.Value.Any(p => p.ContentTypeId > 0))
                 {
                     // set defaults for doctype - delete all previous
                     _db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE ContentTypeId != 0");
-                    _db.BulkInsertRecords(model, DatabaseContext.SqlSyntax);
                 }
                 else
                 {
-                    _db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE NodeId = @0", model.First().NodeId);
-                    _db.BulkInsertRecords(model, DatabaseContext.SqlSyntax);            
+                    _db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE NodeId = @0", data.Key);
+                }
+
+                if (data.Value.Any())
+                {
+                    _db.BulkInsertRecords(data.Value, DatabaseContext.SqlSyntax);
                 }
             }
             catch (Exception ex)

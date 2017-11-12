@@ -17,7 +17,7 @@
             }
         });
 
-        var saveAndPublish = defaultButtons.defaultButton.labelKey === 'buttons_saveAndPublish';
+        var saveAndPublish = defaultButtons.defaultButton && defaultButtons.defaultButton.labelKey === 'buttons_saveAndPublish';
 
         function getNodeTasks() {
             workflowResource.getNodePendingTasks(editorState.current.id)
@@ -95,6 +95,7 @@
             }
         };
 
+        // any user with access to the workflow section will be able to action workflows ie cancel outside their group membership
         function checkUserAccess(task) {
             vm.task = task;
             vm.adminUser = user.allowedSections.indexOf('workflow') !== -1;
@@ -103,7 +104,6 @@
             if (currentTaskUsers.indexOf('|' + user.id + '|') !== -1) {
                 vm.canAction = true;
             }
-
             if (vm.active) {
                 vm.buttonGroup = {
                     defaultButton: vm.adminUser || vm.canAction ? buttons.cancelButton : buttons.approveButton,
@@ -113,13 +113,15 @@
         }
 
         function setButtons() {
+            // default button will be null when the current user has browse-only permission
+            if (defaultButtons.defaultButton !== null) {
+                var subButtons = saveAndPublish ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] : [buttons.unpublishButton, buttons.saveButton];
 
-            var subButtons = saveAndPublish ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] : [buttons.unpublishButton, buttons.saveButton];
-
-            vm.buttonGroup = {
-                defaultButton: $scope.dirty ? buttons.saveButton : buttons.publishButton,
-                subButtons: $scope.dirty ? (saveAndPublish ? [defaultButtons.defaultButton] : []) : subButtons
-            };
+                vm.buttonGroup = {
+                    defaultButton: $scope.dirty ? buttons.saveButton : buttons.publishButton,
+                    subButtons: $scope.dirty ? (saveAndPublish ? [defaultButtons.defaultButton] : []) : subButtons
+                };
+            }
         }
 
         userService.getCurrentUser()

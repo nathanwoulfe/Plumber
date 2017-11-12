@@ -2,6 +2,7 @@
     <div class="umb-dialog-body with-footer">
         <div class="umb-pane">
             <h5>Workflow approval flow</h5>
+            <p>Flows set on the current node take priority over content-type and inherited flows.</p>
             <select class="flow-select" ng-model="vm.selectedApprovalGroup" ng-options="g as g.name for g in vm.groups">
                 <option selected disabled>--- Add ---</option>
             </select>
@@ -14,7 +15,7 @@
             </div>
             <hr />
             <h5>Content type approval flow ({{ vm.contentTypeName }})</h5>
-            <p>Approval flow can be set by content type - this flow takes priority over any inherited flow.</p>
+            <p>Flows set on the content type take priority over inherited flows.</p>
             <ul class="current-flow" ng-if="vm.contentTypeApprovalPath.length">
                 <li ng-class="{'last': $last}" ng-repeat="u in vm.contentTypeApprovalPath"><a href="/umbraco/#/workflow/tree/edit/{{ u.groupId }}">{{ u.name }}</a></li>
             </ul>

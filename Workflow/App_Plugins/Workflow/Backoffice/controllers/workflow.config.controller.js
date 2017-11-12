@@ -65,25 +65,25 @@
         }
 
         function save() {
-            if (vm.approvalPath.length) {
+            debugger;
 
-                var response = [];
-                angular.forEach(vm.approvalPath, function (v, i) {
-                    response.push(v.permissions.filter(function (p) {
-                        return p.nodeId === nodeIdInt && p.permission === i;
-                    })[0]);
-                });
+            var response = {};
+            response[nodeIdInt] = [];
 
-                if (response.length) {
-                    workflowResource.saveConfig(response)
-                        .then(function () {
-                            notificationsService.success('SUCCESS', 'Workflow configuration updated');
-                            init();
-                        }, function (err) {
-                            notificationsService.error('ERROR', err);
-                        });
-                }
-            }
+            angular.forEach(vm.approvalPath, function (v, i) {
+                response[nodeIdInt].push(v.permissions.filter(function (p) {
+                    return +p.nodeId === nodeIdInt && p.permission === i;
+                })[0]);
+            });
+
+            workflowResource.saveConfig(response)
+                .then(function () {
+                    notificationsService.success('SUCCESS', 'Workflow configuration updated');
+                    init();
+                }, function (err) {
+                    notificationsService.error('ERROR', err);
+                });               
+            
         }
 
         function add() {

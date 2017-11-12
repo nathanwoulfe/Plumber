@@ -54,7 +54,8 @@ namespace Workflow
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetPendingTasks(int status, int count, int page)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, status, (page - 1) * count, count);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, status)
+                .Skip((page - 1) * count).Take(count).ToList();
         }
 
         /// <summary>
@@ -66,7 +67,8 @@ namespace Workflow
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetAllGroupTasks(int groupId, int count, int page)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.AllGroupTasks, groupId, (page - 1) * count, count);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.AllGroupTasks, groupId)
+                .Skip((page - 1) * count).Take(count).ToList();
         }
 
         /// <summary>
