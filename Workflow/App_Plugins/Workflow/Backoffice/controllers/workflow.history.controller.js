@@ -3,7 +3,7 @@
 
     function historyController($scope, workflowResource) {
 
-        var vm = this,
+      var vm = this,
             width = $scope.dialogOptions ? $scope.dialogOptions.currentAction.metaData.width : undefined,
             node = $scope.dialogOptions ? $scope.dialogOptions.currentNode : undefined;
 

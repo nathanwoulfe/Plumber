@@ -18,7 +18,7 @@
         }
 
         angular.extend(vm, {
-            name: 'User groups',
+            name: 'Approval groups',
             loading: true,
             items: [],
 

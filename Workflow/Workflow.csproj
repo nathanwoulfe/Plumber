@@ -46,8 +46,7 @@
     <Compile Include="Startup\UmbracoStartup.cs" />
     <Compile Include="Startup\WebApiConfig.cs" />
     <Compile Include="Startup\WorkflowContextMenuController.cs" />
-    <Compile Include="Tree\WorkflowApplication.cs" />
-    <Compile Include="Tree\WorkflowSection.cs" />
+    <Compile Include="Trees\WorkflowApplication.cs" />
     <Compile Include="Api\ConfigController.cs" />
     <Compile Include="Api\SettingsController.cs" />
     <Compile Include="Api\GroupsController.cs" />
@@ -78,6 +77,9 @@
     <Compile Include="Helpers\UrlHelpers.cs" />
     <Compile Include="Helpers\Exceptions.cs" />
     <Compile Include="Relators\UserToGroupForInstanceRelator.cs" />
+    <Compile Include="Trees\WorkflowApprovalGroupsTree.cs" />
+    <Compile Include="Trees\WorkflowHistoryTree.cs" />
+    <Compile Include="Trees\WorkflowSettingsTree.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.docs.dashboard.controller.js" />
@@ -115,7 +117,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\tree\history.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\tree.view.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.dashboard.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\groups.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\tree\approval-groups.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.config.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\workflow.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\tree\view.html" />
@@ -124,6 +126,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.user.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.submit.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.settings.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\workflow.routing.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.admindashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.docsdashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.userdashboard.html" />
@@ -151,12 +154,12 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\add.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\approval-groups\add.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.add.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.delete.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.edit.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\delete.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\edit.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\approval-groups\delete.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\approval-groups\edit.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\groups.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.config.dialog.html" />
   </ItemGroup>

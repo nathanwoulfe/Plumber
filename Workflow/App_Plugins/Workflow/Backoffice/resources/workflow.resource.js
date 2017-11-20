@@ -83,6 +83,28 @@
             /*** SAVE PERMISSIONS ***/
             saveConfig: function (p) {
                 return this.request('POST', urlBase + 'config/save', p);              
+            },
+
+            /**
+             *  Helper for generating node path for setting active state in tree
+             * @param {} node 
+             * @param {} path 
+             * @returns {} 
+             */
+            buildPath: function(node, path) {
+              path.push(node.id);
+
+              if (node.id === '-1') {
+                return path.reverse();
+              }
+
+              var parent = node.parent();
+
+              if (parent === undefined) {
+                return path;
+              }
+
+              return service.buildPath(parent, path);
             }
 
         };
