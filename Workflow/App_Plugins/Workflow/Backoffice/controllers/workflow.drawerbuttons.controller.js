@@ -24,8 +24,8 @@
     function getNodeTasks() {
       workflowResource.getNodePendingTasks(editorState.current.id)
           .then(function (resp) {
-            if (resp.groups || resp.settings) {
-              var msg = resp.groups
+            if (resp.noFlow || resp.settings) {
+              var msg = resp.noFlow
                 ? 'No workflow groups have been configured - refer to the documentation tab in the Workflow section, then set at minimum an approval flow on the homepage node or document type.'
                 : 'Workflow settings are configured incorrectly - refer to the documentation tab in the Workflow section.';
               notificationsService.warning('WORKFLOW INSTALLED BUT NOT CONFIGURED', msg);
@@ -42,10 +42,10 @@
     }
 
     // must be a better way of doing this - need to watch the editor state to dynamically change buttons
-    $scope.$watch('$parent.$parent.$parent.contentForm.$dirty', function (newVal) {
-      $scope.dirty = newVal === true;
-      setButtons();
-    });
+    //$scope.$watch('$parent.$parent.$parent.contentForm.$dirty', function (newVal) {
+    //  $scope.dirty = newVal === true;
+    //  getNodeTasks();
+    //});
 
     $rootScope.$on('workflowActioned', function () {
       getNodeTasks();

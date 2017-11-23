@@ -82,7 +82,11 @@
 
             /*** SAVE PERMISSIONS ***/
             saveConfig: function (p) {
-                return this.request('POST', urlBase + 'config/save', p);              
+                return this.request('POST', urlBase + 'config/saveconfig', p);              
+            },
+
+            saveDocTypeConfig: function (p) {
+              return this.request('POST', urlBase + 'config/savedoctypeconfig', p);
             },
 
             /**

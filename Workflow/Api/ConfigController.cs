@@ -16,32 +16,66 @@ namespace Workflow.Api
     {
         private readonly Database _db = ApplicationContext.Current.DatabaseContext.Database;
 
+
         /// <summary>
-        /// Persist the workflow approval config
+        /// Persist the workflow approval config for single node
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("save")]
-        public IHttpActionResult Save(Dictionary<int, List<UserGroupPermissionsPoco>> model)
+        [Route("saveconfig")]
+        public IHttpActionResult SaveConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model)
         {
             try
             {
-                var data = model.First();
-
-                if (data.Value.Any(p => p.ContentTypeId > 0))
+                if (null != model && model.Any())
                 {
-                    // set defaults for doctype - delete all previous
+                    KeyValuePair<int, List<UserGroupPermissionsPoco>> permission = model.First();
+
+                    _db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE NodeId = @0", permission.Key);
+
+                    if (permission.Value.Any())
+                    {
+                        _db.BulkInsertRecords(permission.Value, DatabaseContext.SqlSyntax);
+                    }
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                var msg = "Error saving config. " + ex.Message;
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
+            }
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Persist the workflow approval config for doctypes
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("savedoctypeconfig")]
+        public IHttpActionResult SaveDocTypeConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model)
+        {
+            try
+            {
+                if (null != model)
+                {
+                    // set defaults for doctype - delete all previous if any model data exists
                     _db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE ContentTypeId != 0");
-                }
-                else
-                {
-                    _db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE NodeId = @0", data.Key);
-                }
 
-                if (data.Value.Any())
-                {
-                    _db.BulkInsertRecords(data.Value, DatabaseContext.SqlSyntax);
+                    if (model.Any())
+                    {
+                        foreach (var permission in model)
+                        {
+                            if (permission.Value.Any())
+                            {
+                                _db.BulkInsertRecords(permission.Value, DatabaseContext.SqlSyntax);
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)

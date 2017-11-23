@@ -113,14 +113,14 @@ namespace Workflow.Api
             try
             {
                 var settings = Pr.GetSettings();
-                var groups = Pr.PermissionsForNode(id, Umbraco.TypedContent(id).ContentType.Id);
+                var hasFlow = Pr.HasFlow(id);
 
-                if (null == settings || !groups.Any())
+                if (null == settings || !hasFlow)
                 {
                     return Json(new
                     {
                         settings = settings == null,
-                        groups = !groups.Any()
+                        noFlow = !hasFlow
                     }, ViewHelpers.CamelCase);
                 }
 

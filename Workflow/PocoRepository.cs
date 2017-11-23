@@ -12,6 +12,9 @@ namespace Workflow
 {
     class PocoRepository
     {
+        private static bool HomepageHasFlow = false;
+        private static bool HomepageChecked = false;
+
         /// ensure GetDb() connection exists
         private Database GetDb()
         {
@@ -218,6 +221,12 @@ namespace Workflow
         public int CountGroupTasks(int groupId)
         {
             return GetDb().Fetch<int>(SqlHelpers.CountGroupTasks, groupId).First();
+        }
+
+        public bool HasFlow(int nodeId)
+        {
+            var homepageNodeId = ApplicationContext.Current.Services.ContentService.GetById(nodeId).Path.Split(',')[1];
+            return GetDb().Fetch<int>("SELECT * FROM WorkflowUserGroupPermissions WHERE NodeId = @0", homepageNodeId).Any();
         }
     }
 }
