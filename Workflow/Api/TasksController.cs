@@ -112,6 +112,18 @@ namespace Workflow.Api
         {
             try
             {
+                var settings = Pr.GetSettings();
+                var groups = Pr.PermissionsForNode(id, Umbraco.TypedContent(id).ContentType.Id);
+
+                if (null == settings || !groups.Any())
+                {
+                    return Json(new
+                    {
+                        settings = settings == null,
+                        groups = !groups.Any()
+                    }, ViewHelpers.CamelCase);
+                }
+
                 var taskInstances = Pr.TasksByNode(id).Where(t => t.Status == (int)TaskStatus.PendingApproval).ToList();
                 var workflowItems = taskInstances.ToWorkflowTaskList();
                 return Json(new
