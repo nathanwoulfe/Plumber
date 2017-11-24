@@ -46,6 +46,7 @@
                   '<%= basePath %>/backoffice/directives/*.js',
                   '<%= basePath %>/backoffice/interceptors/*.js',
                   '<%= basePath %>/backoffice/resources/*.js',
+                  '<%= basePath %>/backoffice/*.js',				  
                 ],
                 dest: '<%= dest %>/<%= basePath %>/backoffice/js/workflow.js',
                 nonull: true,
@@ -115,6 +116,11 @@
                 files: ['<%= basePath %>/backoffice/dialogs/**/*.html'],
                 tasks: ['copy:dialogs']
             },
+			
+            groups: {
+                files: ['<%= basePath %>/backoffice/approval-groups/**/*.html'],
+                tasks: ['copy:groups']
+            },			
 
             config: {
                 files: ['<%= basePath %>/package.manifest'],
@@ -168,6 +174,13 @@
                 src: '**',
                 dest: '<%= dest %>/<%= basePath %>/backoffice/partials/'
             },
+			
+            groups: {
+                expand: true,
+                cwd: '<%= basePath %>/backoffice/approval-groups/',
+                src: '**',
+                dest: '<%= dest %>/<%= basePath %>/backoffice/approval-groups/'
+            },			
 
             dialogs: {
                 expand: true,
@@ -293,7 +306,7 @@
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:views', 'copy:tree', 'copy:partials', 'copy:dialogs', 'copy:lib', 'copy:lang']);
+    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:groups', 'copy:views', 'copy:tree', 'copy:partials', 'copy:dialogs', 'copy:lib', 'copy:lang']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 
