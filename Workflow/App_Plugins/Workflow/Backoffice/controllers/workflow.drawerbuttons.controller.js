@@ -112,9 +112,9 @@
       }
       if (vm.active) {
         vm.buttonGroup = {
-          defaultButton: vm.adminUser || vm.canAction ? buttons.cancelButton : buttons.approveButton,
-          subButtons: vm.adminUser || vm.canAction ? [] : [buttons.rejectButton, buttons.cancelButton]
-        };
+          defaultButton: vm.canAction ? buttons.approveButton : vm.adminUser ? buttons.cancelButton : null,
+          subButtons: vm.canAction ? [buttons.rejectButton, buttons.cancelButton] : []
+      };
       }
     }
 
