@@ -4,7 +4,7 @@
     // create controller 
     // since this controller is loaded in response to an injector match, we can use it to check for active workflow groups 
     // and display a message if none are configured, while also displaying the default button set
-    function controller($scope, $rootScope, userService, workflowResource, workflowActionsService, contentEditingHelper, contentResource, editorState, $routeParams, notificationsService) {
+    function controller($scope, $rootScope, $window, userService, workflowResource, workflowActionsService, contentEditingHelper, contentResource, editorState, $routeParams, notificationsService) {
         var vm = this,
             user;
 
@@ -133,6 +133,16 @@
             }
         }
 
+        // preview should not save, if the content is in a workflow
+        function preview(content) {
+            // Chromes popup blocker will kick in if a window is opened 
+            // outwith the initial scoped request. This trick will fix that.
+            var previewWindow = $window.open('preview/?id=' + content.id, 'umbpreview');
+            // Build the correct path so both /#/ and #/ work.
+            var redirect = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/preview/?id=' + content.id;
+            previewWindow.location.href = redirect;
+        }
+
         userService.getCurrentUser()
             .then(function (userResp) {
                 user = userResp;
@@ -140,7 +150,8 @@
             });
 
         angular.extend(vm, {
-            active: false
+            active: false,
+            preview: preview
         });
     }
 

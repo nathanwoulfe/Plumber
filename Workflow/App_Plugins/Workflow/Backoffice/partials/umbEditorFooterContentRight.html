@@ -13,7 +13,7 @@
 
     <umb-button ng-if="!page.isNew"
                 type="button"
-                action="preview(content)"
+                action="(vm.active ? vm.preview(content) : preview(content))"
                 label="Preview">
     </umb-button>
 
@@ -23,7 +23,7 @@
                 label="Save">
     </umb-button>
 
-    <workflow-button-group ng-if="!page.isNew"
+    <workflow-button-group ng-if="!page.isNew && (!vm.active || vm.active && vm.canAction)"
                            default-button="vm.buttonGroup.defaultButton"
                            sub-buttons="vm.buttonGroup.subButtons"
                            direction="up"
