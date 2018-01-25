@@ -1,10 +1,11 @@
 ﻿(function () {
     'use strict';
 
-    function workflowActionsService($rootScope, workflowResource, notificationsService, editorState, angularHelper) {
+    function workflowActionsService($rootScope, workflowResource, notificationsService, contentResource) {
+
         var service = {
 
-            action: function (item, approve, fromDash) {
+            action: function (item, approve, dirty, fromDash) {
                 var workflowOverlay = {
                     view: '../app_plugins/workflow/backoffice/dialogs/workflow.action.dialog.html',
                     show: true,
@@ -38,13 +39,14 @@
                 return workflowOverlay;
             },
 
-            initiate: function (name, id, publish) {
+            initiate: function (name, id, dirty, publish) {
                 var workflowOverlay = {
                     view: '../app_plugins/workflow/backoffice/dialogs/workflow.submit.dialog.html',
                     show: true,
                     title: 'Send for ' + (publish ? 'publish' : 'unpublish') + ' approval',
                     subtitle: 'Document: ' + name,
                     isPublish: publish,
+                    isDirty: dirty,
                     nodeId: id,
                     submit: function (model) {
                         workflowResource.initiateWorkflow(id, model.comment, publish)
@@ -59,7 +61,6 @@
                         workflowOverlay = null;
                     }
                 };
-
                 return workflowOverlay;
             },
 

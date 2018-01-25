@@ -3,6 +3,8 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
+using Umbraco.Core;
+using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 using Workflow.Helpers;
