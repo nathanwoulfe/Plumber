@@ -43,8 +43,7 @@ namespace Workflow.Processes
             GetDb().Insert(Instance);
 
             // create the first task in the workflow
-            bool complete;
-            var taskInstance = CreateApprovalTask(nodeId, out complete);
+            var taskInstance = CreateApprovalTask(nodeId, out bool complete);
 
             if (taskInstance.UserGroup == null)
             {
@@ -82,8 +81,7 @@ namespace Workflow.Processes
                         if (Instance.TotalSteps > Instance.TaskInstances.Count)
                         {
                             // create the next task, then check if it should be a
-                            bool approvalRequired;
-                            var taskInstance = CreateApprovalTask(Instance.NodeId, out approvalRequired);
+                            var taskInstance = CreateApprovalTask(Instance.NodeId, out bool approvalRequired);
                             if (approvalRequired)
                             {
                                 ApproveOrContinue(taskInstance, userId);

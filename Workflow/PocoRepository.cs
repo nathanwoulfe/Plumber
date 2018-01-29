@@ -12,9 +12,6 @@ namespace Workflow
 {
     class PocoRepository
     {
-        private static bool HomepageHasFlow = false;
-        private static bool HomepageChecked = false;
-
         /// ensure GetDb() connection exists
         private Database GetDb()
         {

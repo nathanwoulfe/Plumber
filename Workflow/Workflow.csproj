@@ -150,7 +150,7 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
-    <Compile Include="Migrations\Migrations-0.3.0.cs" />
+    <Compile Include="Migrations\VersionZeroThreeZero.cs" />
     <None Include="package.json" />
     <None Include="packages.config" />
   </ItemGroup>
