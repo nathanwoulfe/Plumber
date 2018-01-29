@@ -25,7 +25,7 @@
 
                     // this feels super hacky - fetch nodes and push into the content picker
                     // there's a watch in the picker controller, but it's not seeing changes to the value
-                    var picker = document.querySelector('.exclude-nodes-picker ng-form');
+                    var picker = document.querySelector('#exclude-nodes-picker ng-form');
                     if (picker) {
                         var s = angular.element(picker).scope();
 

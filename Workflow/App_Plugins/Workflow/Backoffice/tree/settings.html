@@ -9,39 +9,39 @@
         </umb-editor-header>
         <umb-editor-container>
 
-            <umb-control-group label="@workflow_defaultApprovalGroup">
+            <umb-control-group label="@workflow_defaultApprovalGroup" description="@workflow_defaultApprovalGroupDescription">
                 <select ng-model="vm.defaultApprover" ng-options="g.name for g in vm.groups" name="Default approval group">
                     <option></option>
                 </select>
             </umb-control-group>
 
-            <umb-control-group label="@workflow_flowType">
+            <umb-control-group label="@workflow_flowType" description="@workflow_flowTypeDescription">
                 <select ng-model="vm.flowType" ng-options="f as f.v for f in vm.flowTypes" name="Flow type">
                     <option></option>
                 </select>
             </umb-control-group>
 
-            <umb-control-group label="@workflow_sendNotifications">
+            <umb-control-group label="@workflow_sendNotifications" description="@workflow_sendNotificationsDescription">
                 <input type="checkbox" ng-model="vm.settings.sendNotifications"/>
             </umb-control-group>
 
-            <umb-control-group label="@workflow_workflowEmail">
+            <umb-control-group label="@workflow_workflowEmail" description="@workflow_workflowEmailDescription">
                 <input type="email" ng-model="vm.settings.email"/>
             </umb-control-group>
 
-            <umb-control-group label="@workflow_baseSiteUrl">
+            <umb-control-group label="@workflow_baseSiteUrl" description="@workflow_baseSiteUrlDescription">
                 <input type="text" ng-model="vm.settings.siteUrl"/>
             </umb-control-group>
 
-            <umb-control-group label="@workflow_editSiteUrl">
+            <umb-control-group label="@workflow_editSiteUrl" description="@workflow_editSiteUrlDescription">
                 <input type="text" ng-model="vm.settings.editUrl"/>
             </umb-control-group>
 
-            <umb-control-group label="@workflow_excludeNodes">
-                <umb-property-editor model="vm.excludeNodesModel" class="exclude-nodes-picker"></umb-property-editor>
+            <umb-control-group label="@workflow_excludeNodes" description="@workflow_excludeNodesDescription">
+                <umb-property-editor model="vm.excludeNodesModel" id="exclude-nodes-picker"></umb-property-editor>
             </umb-control-group>
 
-            <umb-control-group label="@workflow_documentFlows" description="@workflow_documentFlowsSmall">
+            <umb-control-group label="@workflow_documentFlows" description="@workflow_documentFlowsDescription">
                 <input type="text" ng-model="search.$" placeholder="Search" prevent-enter-submit no-dirty-check/>
                 <div class="control-panel" ng-repeat="d in vm.docTypes | filter:search | limitTo:5 ">
                     <h5 ng-bind="d.name"></h5>

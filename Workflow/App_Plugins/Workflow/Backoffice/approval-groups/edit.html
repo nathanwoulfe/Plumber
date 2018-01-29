@@ -48,7 +48,7 @@
                                                                   name="node.name">
                                                 </umb-node-preview>
                                             </umb-control-group>
-                                            <umb-control-group label="@workflow_documentFlows" description="@workflow_documentFlowsSmall">
+                                            <umb-control-group label="@workflow_documentFlows" description="@workflow_documentFlowsDescription">
                                                 <umb-node-preview ng-repeat="node in vm.docPermissions"
                                                                   style="max-width: 100%;"
                                                                   allow-edit="true"
@@ -115,7 +115,7 @@
                             type="button"
                             button-style="success"
                             shortcut="ctrl+s"
-                            label="Save group">
+                            label="Save group" />
             </umb-editor-footer-content-right>
         </umb-editor-footer>
     </umb-editor-view>
