@@ -43,7 +43,8 @@ namespace Workflow.Processes
             GetDb().Insert(Instance);
 
             // create the first task in the workflow
-            var taskInstance = CreateApprovalTask(nodeId, out bool complete);
+            bool complete;
+            var taskInstance = CreateApprovalTask(nodeId, out complete);
 
             if (taskInstance.UserGroup == null)
             {

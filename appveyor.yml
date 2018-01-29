@@ -1,6 +1,8 @@
 # version format
 version: 0.3.0.{build}
 
+image: Visual Studio 2017
+
 # UMBRACO_PACKAGE_PRERELEASE_SUFFIX will only be used for Release builds
 # example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
 install:
