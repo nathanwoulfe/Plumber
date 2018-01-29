@@ -31,5 +31,6 @@
     <key alias="groupDescriptionDetail">Describe the group's role and responsibilities</key>
     <key alias="config">Configuration</key>
     <key alias="currentWorkflowRoles">Current workflow roles</key>
+    <key alias="excludeNodes">Exclude nodes</key>
   </area>  
 </language>

@@ -1,4 +1,5 @@
-﻿using Umbraco.Core.Persistence;
+﻿using System.Collections.Generic;
+using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
 
 namespace Workflow.Models
@@ -35,5 +36,9 @@ namespace Workflow.Models
         [Column("SendNotifications")]
         [NullSetting(NullSetting = NullSettings.Null)]
         public bool SendNotifications { get; set; }
+
+        [Column("ExcludeNodes")]
+        [NullSetting(NullSetting = NullSettings.Null)]
+        public string ExcludeNodes { get; set; }
     }
 }

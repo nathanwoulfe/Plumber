@@ -8,6 +8,26 @@
         var vm = this,
             user;
 
+        // are there common elements between two arrays?
+        function common(arr1, arr2) {
+            return arr1.some(function(el) {
+                return arr2.indexOf(el) > -1;
+            });
+        }
+
+        workflowResource.getSettings()
+            .then(function(settings) {
+                if (settings && settings.excludeNodes) {
+                    var exclude = settings.excludeNodes.split(',');
+                    // if any elements are shared, exclude the node from the workflow mechanism
+                    // by checking the path not just the id, this becomes recursive, and the excludeNodes cascades down the tree
+                    if (common(editorState.current.path.split(','), exclude)) {
+                        vm.excludeNode = true;
+                    }
+                }
+            });
+
+
         var defaultButtons = contentEditingHelper.configureContentEditorButtons({
             create: $routeParams.create,
             content: $scope.content,
@@ -151,6 +171,7 @@
 
         angular.extend(vm, {
             active: false,
+            excludeNode: false,
             preview: preview
         });
     }

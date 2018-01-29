@@ -22,8 +22,17 @@
                 action="save(content)"
                 label="Save">
     </umb-button>
+    
+    <umb-button-group
+        ng-if="defaultButton && vm.excludeNode"
+        default-button="defaultButton"
+        sub-buttons="subButtons"
+        state="page.buttonGroupState"
+        direction="up"
+        float="right">
+    </umb-button-group>
 
-    <workflow-button-group ng-if="!page.isNew && (!vm.active || vm.active && vm.canAction)"
+    <workflow-button-group ng-if="!page.isNew && !vm.excludeNode && (!vm.active || vm.active && vm.canAction)"
                            default-button="vm.buttonGroup.defaultButton"
                            sub-buttons="vm.buttonGroup.subButtons"
                            direction="up"

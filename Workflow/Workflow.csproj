@@ -41,6 +41,7 @@
     <Compile Include="Helpers\Uninstaller.cs" />
     <Compile Include="Models\SectionTreeNodeModel.cs" />
     <Compile Include="Relators\UserToGroupForPermissionsRelator.cs" />
+    <Compile Include="Startup\MigrationEvents.cs" />
     <Compile Include="Startup\RegisterEvents.cs" />
     <Compile Include="Startup\StringContraint.cs" />
     <Compile Include="Startup\UmbracoStartup.cs" />
@@ -149,6 +150,7 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
+    <Compile Include="Migrations\Migrations-0.3.0.cs" />
     <None Include="package.json" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -240,6 +242,9 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Semver, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Semver.2.0.4\lib\net452\Semver.dll</HintPath>
     </Reference>
     <Reference Include="SQLCE4Umbraco, Version=1.0.6471.23333, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\UmbracoCms.Core.7.7.1\lib\net45\SQLCE4Umbraco.dll</HintPath>

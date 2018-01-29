@@ -8,30 +8,41 @@
             hide-alias="true">
         </umb-editor-header>
         <umb-editor-container>
+
             <umb-control-group label="@workflow_defaultApprovalGroup">
                 <select ng-model="vm.defaultApprover" ng-options="g.name for g in vm.groups" name="Default approval group">
                     <option></option>
                 </select>
             </umb-control-group>
+
             <umb-control-group label="@workflow_flowType">
                 <select ng-model="vm.flowType" ng-options="f as f.v for f in vm.flowTypes" name="Flow type">
                     <option></option>
                 </select>
             </umb-control-group>
+
             <umb-control-group label="@workflow_sendNotifications">
-                <input type="checkbox" ng-model="vm.settings.sendNotifications" />
+                <input type="checkbox" ng-model="vm.settings.sendNotifications"/>
             </umb-control-group>
+
             <umb-control-group label="@workflow_workflowEmail">
-                <input type="email" ng-model="vm.settings.email" />
+                <input type="email" ng-model="vm.settings.email"/>
             </umb-control-group>
+
             <umb-control-group label="@workflow_baseSiteUrl">
-                <input type="text" ng-model="vm.settings.siteUrl" />
+                <input type="text" ng-model="vm.settings.siteUrl"/>
             </umb-control-group>
+
             <umb-control-group label="@workflow_editSiteUrl">
-                <input type="text" ng-model="vm.settings.editUrl" />
+                <input type="text" ng-model="vm.settings.editUrl"/>
             </umb-control-group>
+
+            <umb-control-group label="@workflow_excludeNodes">
+                <umb-property-editor model="vm.excludeNodesModel" class="exclude-nodes-picker"></umb-property-editor>
+            </umb-control-group>
+
             <umb-control-group label="@workflow_documentFlows" description="@workflow_documentFlowsSmall">
-                <input type="text" ng-model="search.$" placeholder="Search" prevent-enter-submit no-dirty-check />
+                <input type="text" ng-model="search.$" placeholder="Search" prevent-enter-submit no-dirty-check/>
                 <div class="control-panel" ng-repeat="d in vm.docTypes | filter:search | limitTo:5 ">
                     <h5 ng-bind="d.name"></h5>
                     <select ng-model="d.selectedApprovalGroup" ng-options="g as g.name for g in vm.groups">
@@ -44,7 +55,7 @@
                             <li ng-class="{'last': $last}" ng-repeat="u in d.approvalPath track by $index" ng-click="vm.remove(d, $index)" title="Remove approval role for {{u.name}}">{{u.name}}</li>
                         </ul>
                     </div>
-                </div>            
+                </div>
             </umb-control-group>
         </umb-editor-container>
         <umb-editor-footer>
