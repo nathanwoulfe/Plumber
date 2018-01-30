@@ -2,45 +2,45 @@
 @import "highcharts";
 
 .workflow {
-    
+
     hr {
-        clear:both;
+        clear: both;
     }
 
     label {
-        float:left;
-        width:160px;
+        float: left;
+        width: 160px;
     }
 
     wf-comments label {
-        width:auto;
+        width: auto;
     }
 
     textarea, input {
-        border:1px solid #ccc;
+        border: 1px solid #ccc;
     }
 
     textarea {
-        width:386px;
-        height:200px;
+        width: 386px;
+        height: 200px;
 
         &.group-description {
-            width:auto;
+            width: auto;
         }
     }
 
     &.umb-panel .umb-nav-tabs {
-        margin:15px auto;
-        position:relative;
+        margin: 15px auto;
+        position: relative;
     }
 
     .flow-select {
-        margin-bottom:0;
-    }    
+        margin-bottom: 0;
+    }
 
     .umb-box {
         .umb-node-preview {
-            min-width:100%;
+            min-width: 100%;
         }
     }
 
@@ -48,226 +48,268 @@
         &::after {
             content: '(Publisher)';
             display: inline-block;
-            padding-left:5px;
+            padding-left: 5px;
         }
     }
-
     // listview
     .umb-table-cell {
         ul {
-            margin:0;
+            margin: 0;
         }
 
         &.show-overflow, &.show-overflow > * {
-            overflow:visible;
+            overflow: visible;
         }
     }
-    
+
     .controls {
         h5 {
-            margin-top:0;
+            margin-top: 0;
         }
     }
 
     .control-panel {
-        padding:10px 0;
-        margin:10px 0;
+        padding: 10px 0;
+        margin: 10px 0;
     }
-
     // progress bar
     .workflow-progress {
-        margin:0 10px 10px;
-        padding-top:10px;
-        border-top:1px solid #d9d9d9;
-        display:flex;
-        position:relative;
+        margin: 0 10px 10px;
+        padding-top: 10px;
+        border-top: 1px solid #d9d9d9;
+        display: flex;
+        position: relative;
     }
 
     .progress-step {
-        text-align:center;
-        position:relative;
+        text-align: center;
+        position: relative;
 
         &::before, &::after {
-            content:'';
-            width:50%;
-            height:1px;
-            position:absolute;
-            top:6px;
-            background:#d9d9d9;
+            content: '';
+            width: 50%;
+            height: 1px;
+            position: absolute;
+            top: 6px;
+            background: #d9d9d9;
         }
 
         &::before {
-            left:0;
+            left: 0;
         }
 
         &::after {
-            right:0;
+            right: 0;
         }
 
         &.done {
             .tooltip-done {
-                display:block;
+                display: block;
             }
+
             &::before, &::after, .marker, .tooltip::after {
-                background:$success;
+                background: $success;
             }
+
             .tooltip {
-                border-color:$success;
+                border-color: $success;
             }
         }
 
         &.current {
             .tooltip-current {
-                display:block;
+                display: block;
             }
+
             .marker, .tooltip::after {
-                background:$pending;
+                background: $pending;
             }
+
             &::before {
-                background:linear-gradient(90deg, $success, $pending);
+                background: linear-gradient(90deg, $success, $pending);
             }
+
             &::after {
-                background:linear-gradient(90deg, $pending, #d9d9d9);
+                background: linear-gradient(90deg, $pending, #d9d9d9);
             }
+
             .tooltip {
-                border-color:$pending;
+                border-color: $pending;
             }
         }
     }
 
     .marker {
-        display:block;
-        width:15px;
-        height:15px;
-        border-radius:50%;
-        margin:0 auto;
-        background:#d9d9d9;            
-        position:relative;
-        cursor:pointer;
+        display: block;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin: 0 auto;
+        background: #d9d9d9;
+        position: relative;
+        cursor: pointer;
 
         &:hover + .tooltip {
-            display:block;
-            bottom:calc(100% + 5px);
+            display: block;
+            bottom: calc(100% + 5px);
             left: 50%;
             transform: translateX(-50%);
-            opacity: 1;             
-        }        
+            opacity: 1;
+        }
 
         + .tooltip {
-            display:none;
+            display: none;
             background: #f8f8f8;
             padding: 5px;
-            border:1px solid #d9d9d9;   
+            border: 1px solid #d9d9d9;
 
             &::after {
-                content:'';
-                width:1px;
-                height:10px;
-                background:#d9d9d9;
+                content: '';
+                width: 1px;
+                height: 10px;
+                background: #d9d9d9;
                 position: absolute;
                 top: 100%;
                 left: calc(50% - 1px);
             }
 
             span {
-                display:none;
+                display: none;
             }
         }
     }
 
     .dropdown-menu {
         .warning {
-            color:$warning;
+            color: $warning;
         }
+
         .danger {
-            color:$danger;
+            color: $danger;
         }
     }
-
     // history - nested tasks for instance
     .workflow-nested {
-        margin:10px;
-        padding-top:10px;
-        border-top:1px solid #d9d9d9;
-        display:flex;
-        position:relative;
+        margin: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #d9d9d9;
+        display: flex;
+        position: relative;
     }
 
     .umb-table__input[type=checkbox] {
-        opacity:0;
-        cursor:default;
+        opacity: 0;
+        cursor: default;
     }
 
     .umb-table-body__icon.soft {
-        opacity:.25;
+        opacity: .25;
     }
-        
+
     .pending {
-        color:$pending;        
-        background:rgba($pending, .05);
+        color: $pending;
+        background: rgba($pending, .05);
+
         .umb-table-body__icon {
-            color:$pending;
-            background:0, 0;
-        }
-    }        
-    .approved {
-        color:$success;
-        background:rgba($success, .05);
-        .umb-table-body__icon {
-            color:$success;
-            background:0, 0;
+            color: $pending;
+            background: 0, 0;
         }
     }
-    .cancelled {
-        color:$danger;
-        background:rgba($danger, .05);
+
+    .approved {
+        color: $success;
+        background: rgba($success, .05);
+
         .umb-table-body__icon {
-            color:$danger;
-            background:0, 0;
+            color: $success;
+            background: 0, 0;
+        }
+    }
+
+    .cancelled {
+        color: $danger;
+        background: rgba($danger, .05);
+
+        .umb-table-body__icon {
+            color: $danger;
+            background: 0, 0;
         }
     }
 
     .chart-header {
-        list-style-type:none;
-        margin:0;
-        padding:0;
-        display:flex;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        text-transform:uppercase;
 
         li {
-            flex:1;
-            text-align:center;
-            text-transform:uppercase;
+            flex-basis:25%;
+            max-width:25%;
+            flex: 1 0 auto;
+            flex-wrap: wrap;
+            flex-direction: column;
+            background: #f3f3f5;
+            border-radius: 3px;
+            padding: 15px 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            height: 100%;
+            margin:0 15px 30px;
+            line-height:1;
         }
 
         span {
-            font-weight:bold;
-            display:block;
+            font-weight: bold;
+            display: block;
+            font-size:3rem;
         }
     }
 
     .chart-controls {
-        display:flex;
+        display: flex;
+        justify-content:center;
+        margin-bottom:30px;
 
         label {
-            width:100px;
-        }
-
-        .controls-row {
-            margin-left:130px;
+            width: 100px;
         }
 
         .umb-property {
+            flex: 0;
+            margin:0 15px;
+            display:flex;
+        }
+
+        .umb-el-wrap {            
+            display:flex;
             flex:1;
+            height:100%;
+            align-items:center;
+        }
+
+        .control-group {
+            padding:15px;
+            border:1px solid #f3f3f3;
+            margin:0!important;
+        }
+
+        input, label, select {
+            margin-bottom:0;
+        }
+
+        .controls-row {
+            margin-left: 0;
+            padding:0;
         }
     }
 
 
     .active-banner {
-        display:inline-block;
-        margin-right:10px;
-        color:$warning;
+        display: inline-block;
+        margin-right: 10px;
+        color: $warning;
     }
-
     // docs dashboard - mimic Umbraco get started content
     h1.title {
         font-size: 30px;

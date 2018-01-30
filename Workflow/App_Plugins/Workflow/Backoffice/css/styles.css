@@ -2,7 +2,7 @@
   width: 100%; }
 
 .workflow .highcharts-container {
-  font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif; }
+  font-family: Lato,Helvetica Neue,Helvetica,Arial,sans-serif; }
 
 .workflow .highcharts-color-0 {
   fill: #53a93f;
@@ -189,23 +189,51 @@
   list-style-type: none;
   margin: 0;
   padding: 0;
-  display: flex; }
+  display: flex;
+  text-transform: uppercase; }
   .workflow .chart-header li {
-    flex: 1;
+    flex-basis: 25%;
+    max-width: 25%;
+    flex: 1 0 auto;
+    flex-wrap: wrap;
+    flex-direction: column;
+    background: #f3f3f5;
+    border-radius: 3px;
+    padding: 15px 10px;
     text-align: center;
-    text-transform: uppercase; }
+    border: 2px solid transparent;
+    height: 100%;
+    margin: 0 15px 30px;
+    line-height: 1; }
   .workflow .chart-header span {
     font-weight: bold;
-    display: block; }
+    display: block;
+    font-size: 3rem; }
 
 .workflow .chart-controls {
-  display: flex; }
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px; }
   .workflow .chart-controls label {
     width: 100px; }
-  .workflow .chart-controls .controls-row {
-    margin-left: 130px; }
   .workflow .chart-controls .umb-property {
-    flex: 1; }
+    flex: 0;
+    margin: 0 15px;
+    display: flex; }
+  .workflow .chart-controls .umb-el-wrap {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    align-items: center; }
+  .workflow .chart-controls .control-group {
+    padding: 15px;
+    border: 1px solid #f3f3f3;
+    margin: 0 !important; }
+  .workflow .chart-controls input, .workflow .chart-controls label, .workflow .chart-controls select {
+    margin-bottom: 0; }
+  .workflow .chart-controls .controls-row {
+    margin-left: 0;
+    padding: 0; }
 
 .workflow .active-banner {
   display: inline-block;

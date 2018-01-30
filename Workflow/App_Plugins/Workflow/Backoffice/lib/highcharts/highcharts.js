@@ -1214,3 +1214,34 @@
         }; B.prototype.currentOptions = function (a) { function d(a, c, h, m) { var b, e; for (b in a) if (!m && -1 < D(b, ["series", "xAxis", "yAxis"])) for (a[b] = g(a[b]), h[b] = [], e = 0; e < a[b].length; e++) c[b][e] && (h[b][e] = {}, d(a[b][e], c[b][e], h[b][e], m + 1)); else q(a[b]) ? (h[b] = F(a[b]) ? [] : {}, d(a[b], c[b] || {}, h[b], m + 1)) : h[b] = c[b] || null } var h = {}; d(a, this.options, h, 0); return h }
     })(J); return J
 });
+
+/**
+ * Custom Axis extension to allow emulation of negative values on a logarithmic
+ * Y axis. Note that the scale is not mathematically correct, as a true
+ * logarithmic axis never reaches or crosses zero.
+ */
+(function (H) {
+    // Pass error messages
+    H.Axis.prototype.allowNegativeLog = true;
+
+    // Override conversions
+    H.Axis.prototype.log2lin = function (num) {
+        var isNegative = num < 0,
+            adjustedNum = Math.abs(num),
+            result;
+        if (adjustedNum < 10) {
+            adjustedNum += (10 - adjustedNum) / 10;
+        }
+        result = Math.log(adjustedNum) / Math.LN10;
+        return isNegative ? -result : result;
+    };
+    H.Axis.prototype.lin2log = function (num) {
+        var isNegative = num < 0,
+            absNum = Math.abs(num),
+            result = Math.pow(10, absNum);
+        if (result < 10) {
+            result = (10 * (result - 1)) / (10 - 1);
+        }
+        return isNegative ? -result : result;
+    };
+}(Highcharts));

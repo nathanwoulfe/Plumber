@@ -151,6 +151,7 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <Compile Include="Migrations\VersionZeroThreeZero.cs" />
+	<Compile Include="Migrations\VersionZeroFourZero.cs" />	
     <None Include="package.json" />
     <None Include="packages.config" />
   </ItemGroup>

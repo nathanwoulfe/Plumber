@@ -60,6 +60,10 @@ namespace Workflow.Models
         [Column("CreatedDate")]
         public DateTime CreatedDate { get; set; }
 
+        [Column("CompletedDate")]
+        [NullSetting(NullSetting = NullSettings.Null)]
+        public DateTime? CompletedDate { get; set; }
+
         [Column("AuthorComment")]
         public string AuthorComment { get; set; }
 
@@ -124,9 +128,6 @@ namespace Workflow.Models
         /// </summary>
         [ResultColumn]        
         public bool Active => WorkflowStatus != WorkflowStatus.Cancelled && WorkflowStatus != WorkflowStatus.Rejected;
-
-        [ResultColumn]
-        public DateTime? CompletedDate { get; set; }
 
         [ResultColumn]
         public DateTime? ScheduledDate { get; set; }

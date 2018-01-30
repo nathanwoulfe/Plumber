@@ -18,13 +18,30 @@
             d.setDate(d.getDate() - vm.range);
             var then = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
 
-            var spline = {
+            var active = {
                 type: 'spline',
-                name: 'Pending ' + vm.type.toLowerCase() + 's',
+                name: 'Pending (cumulative)',
                 data: defaultData(),
                 colorIndex: 2,
+                lineWidth: 4,
                 pointStart: then,
-                pointInterval: msPerDay
+                pointInterval: msPerDay,
+                marker: {
+                    enabled: false
+                }
+            };
+
+            var created = {
+                name: 'Created (cumulative)',
+                type: 'spline',
+                data: defaultData(),
+                pointStart: then,
+                pointInterval: msPerDay,
+                colorIndex: 3,
+                lineWidth: 4,
+                marker: {
+                    enabled: false
+                }
             };
 
             items.forEach(function (v) {
@@ -47,7 +64,8 @@
                         return s.name === statusName;
                     })[0];
 
-                    s.data[vm.range + dateDiffInDays(now, new Date(isTask ? v.createdDate : v.requestedOn))] += 1;
+                    s.data[vm.range + dateDiffInDays(now, new Date(isTask ? v.completedDate : v.completedOn))] += 1;
+                    created.data[vm.range + dateDiffInDays(now, new Date(isTask ? v.createdDate : v.requestedOn))] += 1;
 
                     if (statusName === 'Approved') {
                         vm.totalApproved += 1;
@@ -63,17 +81,26 @@
                     }
 
                 } else {
-                    spline.data[vm.range + dateDiffInDays(now, new Date(isTask ? v.createdDate : v.requestedOn))] += 1;
+                    var index = vm.range + dateDiffInDays(now, new Date(isTask ? v.createdDate : v.requestedOn));
+                    active.data[index < 0 ? 0 : index] += 1;
+                    created.data[index < 0 ? 0 : index] += 1;
                     vm.totalPending += 1;
                 }
             });
 
-            spline.data.forEach(function (d, i) {
+            active.data.forEach(function (d, i) {
                 if (i > 0) {
-                    spline.data[i] += spline.data[i - 1];
+                    active.data[i] += active.data[i - 1];
                 }
             });
-            series.push(spline);
+            series.push(active);
+
+            created.data.forEach(function(d, i) {
+                if (i > 0) {
+                    created.data[i] += created.data[i - 1];
+                }
+            });
+            series.push(created);
 
             vm.series = series.sort(function (a, b) { return a.name > b.name; });
 
@@ -87,7 +114,7 @@
             var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
             var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
-            return Math.floor((utc2 - utc1) / msPerDay - 1);
+            return Math.floor((utc2 - utc1) / msPerDay - 1) + 1;
         }
 
         function defaultData() {
@@ -102,7 +129,6 @@
             if (vm.range > 0) {
                 vm.loaded = false;
                 vm.totalApproved = vm.totalCancelled = vm.totalPending = vm.totalRejected = 0;
-
                 if (vm.type === 'Task') {
                     workflowResource.getAllTasksForRange(vm.range)
                         .then(function (resp) {

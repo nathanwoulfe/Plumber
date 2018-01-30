@@ -27,7 +27,7 @@
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId";
         public const string AllInstancesForDateRange = @"SELECT * FROM WorkflowInstance
-                            WHERE CreatedDate >= CONVERT(DATETIME, @0)";
+                            WHERE CompletedDate IS NULL OR CompletedDate >= CONVERT(DATETIME, @0)";
 
         // tasks
         public const string CountGroupTasks = @"SELECT COUNT(*) FROM WorkflowTaskInstance WHERE GroupId = @0";
@@ -64,7 +64,7 @@
                             ORDER BY WorkflowTaskInstance.CreatedDate";
                             //OFFSET @1 ROWS FETCH NEXT @2 ROWS ONLY";
         public const string AllTasksForDateRange = @"SELECT * FROM WorkflowTaskInstance
-                            WHERE CreatedDate >= CONVERT(DATETIME, @0)";
+                            WHERE CompletedDate IS NULL OR CompletedDate >= CONVERT(DATETIME, @0)";
         public const string PendingTasks = @"SELECT * FROM WorkflowTaskInstance 
                             LEFT JOIN WorkflowInstance
                             on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid

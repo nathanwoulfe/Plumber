@@ -13,7 +13,7 @@
     <key alias="saveButton">Save</key>
     <key alias="publishButton">Request publish</key>
     <key alias="unpublishButton">Request unpublish</key>
-    <key alias="dateRange">Date range</key>
+    <key alias="dateRange">Date range (days)</key>
     <key alias="viewType">View type</key>
     <key alias="flowType">Flow type</key>
     <key alias="defaultApprovalGroup">Default approval group</key>
