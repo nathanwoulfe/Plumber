@@ -1,5 +1,5 @@
 # version format
-version: 0.4.3.{build}
+version: 0.4.1.{build}
 
 image: Visual Studio 2017
 
@@ -37,11 +37,12 @@ deploy:
     artifact: /.*\.nupkg/
     
   - provider: GitHub
-    tag: v$(appveyor_build_version)
+    tag: $(appveyor_build_version)
     release: Plumber v$(appveyor_build_version)
     description: 'Adding GitHub release deployment to AppVeyor'
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
     artifact: /.*\.zip/     
     on:
+        branch: master
         appveyor_repo_tag: true     
