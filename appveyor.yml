@@ -26,4 +26,6 @@ artifacts:
     server:
     api_key:
       secure: 0NpBePahJSE05yOwqbFIKfbfEv83bju7OKvYpHH6FeROlps+UjZcoKk7a4ToEHOG
+    skip_symbols: false      
+    symbol_server:    
     artifact: /.*\.nupkg/
