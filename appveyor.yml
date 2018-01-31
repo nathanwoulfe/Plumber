@@ -1,5 +1,5 @@
 # version format
-version: 0.4.4.{build}
+version: 0.4.1.{build}
 
 image: Visual Studio 2017
 
@@ -23,6 +23,8 @@ build: off
 
 test: off
 
+skip_non_tags: true
+
 artifacts:
   - path: BuildPackage\artifacts\*.nupkg
   - path: BuildPackage\artifacts\*.zip
@@ -40,9 +42,10 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v$(appveyor_build_version)
-    release: Release $(appveyor_build_version)
+    tag: v0.4.1
+    release: Release 0.4.1
     description: 'Adding GitHub release deployment to AppVeyor'
+    force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
     artifact: /.*\.zip/     
