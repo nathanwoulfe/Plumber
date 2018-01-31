@@ -21,6 +21,8 @@ install:
 # to disable automatic builds
 build: off
 
+test: off
+
 artifacts:
   - path: BuildPackage\artifacts\*.nupkg
   - path: BuildPackage\artifacts\*.zip
@@ -34,8 +36,9 @@ deploy:
     symbol_server:    
     artifact: /.*\.nupkg/
     
-  - provider: GitHub    
-    release: v$(appveyor_build_version)
+  - provider: GitHub
+    tag: v$(appveyor_build_version)
+    release: Plumber v$(appveyor_build_version)
     description: 'Adding GitHub release deployment to AppVeyor'
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
