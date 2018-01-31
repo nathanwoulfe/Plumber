@@ -5,7 +5,7 @@ image: Visual Studio 2017
 
 cache:
   - packages -> **\packages.config
-  - **\node_modules -> **\packages.json
+  - node_modules -> **\packages.json
   
 # UMBRACO_PACKAGE_PRERELEASE_SUFFIX will only be used for Release builds
 # example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
