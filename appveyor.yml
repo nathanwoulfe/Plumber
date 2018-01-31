@@ -22,8 +22,8 @@ artifacts:
   - path: BuildPackage\artifacts\*.zip
   
  deploy:
-     # Nuget Deployment for builds & releases
   - provider: NuGet
+    server:
     api_key:
       secure: 0NpBePahJSE05yOwqbFIKfbfEv83bju7OKvYpHH6FeROlps+UjZcoKk7a4ToEHOG
     artifact: /.*\.nupkg/
