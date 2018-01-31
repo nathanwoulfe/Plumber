@@ -3,6 +3,10 @@ version: 0.4.0.{build}
 
 image: Visual Studio 2017
 
+# speedy speedy
+cache:
+  - packages -> **\packages.config
+
 # UMBRACO_PACKAGE_PRERELEASE_SUFFIX will only be used for Release builds
 # example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
 install:
@@ -20,3 +24,10 @@ build: off
 artifacts:
   - path: BuildPackage\artifacts\*.nupkg
   - path: BuildPackage\artifacts\*.zip
+  
+ deploy:
+     # Nuget Deployment for builds & releases
+  - provider: NuGet
+    api_key:
+      secure: 0NpBePahJSE05yOwqbFIKfbfEv83bju7OKvYpHH6FeROlps+UjZcoKk7a4ToEHOG
+    artifact: /.*\.nupkg/

@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
+  <area alias="sections">
+    <key alias="workflow">Workflow</key>
+  </area>
+  <area alias="workflow">
+    <key alias="approveButton">Approve</key>
+    <key alias="approveButtonLong">Approve changes</key>
+    <key alias="editButton">Edit</key>
+    <key alias="cancelButton">Cancel</key>
+    <key alias="cancelButtonLong">Cancel workflow</key>
+    <key alias="rejectButton">Reject changes</key>
+    <key alias="saveButton">Save</key>
+    <key alias="publishButton">Request publish</key>
+    <key alias="unpublishButton">Request unpublish</key>
+    <key alias="dateRange">Date range (days)</key>
+    <key alias="viewType">View type</key>
+    <key alias="flowType">Flow type</key>
+    <key alias="defaultApprovalGroup">Default approval group</key>
+    <key alias="workflowEmail">Workflow email</key>
+    <key alias="workflowGroupEmail">Notifications will be sent to this address instead of group members (optional)</key>
+    <key alias="sendNotifications">Send notifications</key>
+    <key alias="editSiteUrl">Edit site URL</key>
+    <key alias="baseSiteUrl">Site URL</key>
+    <key alias="nodeApprovalFlows">Node-based approvals</key>
+    <key alias="documentFlows">Document-type approvals</key>
+    <key alias="membership">Group members</key>
+    <key alias="groupDescription">Description</key>
+    <key alias="config">Configuration</key>
+    <key alias="currentWorkflowRoles">Current workflow roles</key>
+    <key alias="excludeNodes">Exclude nodes</key>
+    
+    <!-- text for description -->
+    <key alias="defaultApprovalGroupDescription">The fallback publishing group for cases when no workflows are configured</key>
+    <key alias="flowTypeDescription">Controls how the original author is managed in subsequent tasks</key>
+    <key alias="sendNotificationsDescription">Should email notifications be sent to approval groups?</key>
+    <key alias="workflowEmailDescription">FROM address for email notifications</key>
+    <key alias="editSiteUrlDescription">Edit site URL for inclusion in email notifications (eg edit.mydomain.com)</key>
+    <key alias="baseSiteUrlDescription">Live site URL for inclusion in email notifications (eg www.mydomain.com)</key>
+
+
+    <key alias="excludeNodesDescription">Nodes (and their descendants) selected here will NOT be included in the workflow, and will revert to the default Umbraco actions</key>
+    <key alias="documentFlowsDescription">Default workflow for all nodes of a given document type</key>
+    <key alias="nodeApprovalFlowsDescription">These workflows apply only to the specified node</key>
+    <key alias="groupDescriptionDetail">Describe the group's role and responsibilities</key>
+
+  </area>  
+</language>

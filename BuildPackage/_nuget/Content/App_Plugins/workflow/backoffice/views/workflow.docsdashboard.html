@@ -1,0 +1,64 @@
+﻿<div class="umb-panel workflow" ng-controller="Workflow.DocsDashboard.Controller as vm">
+    <div class="umb-dashboard-grid">
+        <umb-editor-view footer="false">
+            <umb-editor-container>
+                <div class="dash-inner-area">
+                    <h1 class="title">Plumber - the workflow solution for Umbraco.</h1>
+                    <div class="intro-text">Sometimes more complex content or more complicated organistaions need more control in their approach to content management. Plumber integrates with the Umbraco backoffice to add multi-stage approval processes for content changes.</div>
+                </div>
+                <div class="dash-inner-area">
+                    <p>Workflows can be managed at the node level, by document type or by tree inheritance. Workflows are administered from a dashboard view or on individual nodes.</p>
+                    <p>Workflow roles are managed by approval groups specific to Plumber, keeping this tool separate from the rest of your Umbraco installation.</p>
+                    <p>Plumber adds a new section to the Backoffice, called 'Workflow' (super creative!). The workflow section contains three options - settings, history and approval groups. </p>
+                    <p>The default dashboard in the workflow section displays a visualisation of workflow activity in the previous 28 days (range is editable), summarising the task/instance statuses over that period (approved, cancelled, rejected, pending).</p>
+                </div>
+                <umb-tabs-nav model="vm.tabs"></umb-tabs-nav>
+                <umb-tabs-content view="true">
+                    <umb-tab id="tab{{tab.id}}" ng-repeat="tab in vm.tabs" rel="{{tab.id}}">
+                        <div class="dash-inner-area" ng-if="tab.alias === 'tab101'">
+                            <p>Contains the global options for the Plumber install.</p>
+                            <p><strong>Default approval group:</strong> the fallback group for nodes sent for workflow approval, used when no group is defined either on the node, on the content type, or in content tree ancestors. Ideally, this would never be used, instead a default workflow approval flow would be set on the root node.</p>
+                            <p><strong>Flow type:</strong> three options to define how the flow initiator is involved in the approval process:</p>
+                            <ul>
+                                <li><strong>All groups must approve:</strong> notifies all members of the relevant group at each approval step, even if the original editor is in that group. Esssentially this flow type enforces the exact workflow be followed.</li>
+                                <li><strong>Other groups must approve:</strong> only groups where the original editor is not a member are required to approve the changes. This type allows implied approval, and skips workflow steps where the editor is a member of the approval group. Notifications are not sent to skipped groups.</li>
+                                <li><strong>All groups must approve, ignore author:</strong> similar to the first option, but notifications are not sent to the original editor. The change must still be approved at all stages, regardless of group membership.</li>
+                            </ul>
+                            <p><strong>Send notifications:</strong> optionally disable notification emails. Current tasks are still displayed in the user dashboard view.</p>
+                            <p><strong>Workflow notification email:</strong> specify an email address as the sender for workflow emails. Allows separation of other system actions from the workflow notifications.</p>
+                            <p><strong>Site URL:</strong> the URL of the live site. This is used to generate links in the notification emails.</p>
+                            <p><strong>Edit site URL:</strong> the URL of the Umbraco backoffice. This is also used to generate links in the notification emails.</p>
+                            <p><strong>Document-type approval flows:</strong> allows workflow approval sequences to be set on individual document types. These flows are used if there is no flow set at the node level. </p>
+                        </div>
+                        <div class="dash-inner-area" ng-if="tab.alias === 'tab102'">
+                            <p>The history view provides a paginated view of all workflow instances in the system, in reverse chronological order. Tasks are nested below the relevant instance, with the view displaying detail of each instance and its related tasks.</p>
+                            <p>The 'Select node' button allows auditing of the workflow history for an individual node.</p>
+                        </div>
+                        <div class="dash-inner-area" ng-if="tab.alias === 'tab103'">
+                            <p>The approval groups tree provides an interface to the workflow groups defined in the system. Each group can have a generic email address, which is used in place of contacting individual group members.</p>
+                            <p>Group membership is managed from the group view, simply by clicking user names in the ALL USERS list to add, or in the CURRENT MEMBERS list to remove.</p>
+                            <p>This view also provides an overview of the current approval flows the group belongs to.</p>
+                            <p>Groups can be added and removed using the familiar Umbraco context menu. </p>
+                        </div>
+                        <div class="dash-inner-area" ng-if="tab.alias === 'tab104'">
+                            <p>Plumber adds a pair of new options to the content tree context/actions menu:</p>
+                            <ul>
+                                  <li><strong>Workflow history:</strong> launches an overlay displaying the workflow history for the current node.</li>
+                                <li><strong>Workflow configuration:</strong> only displays for users with access to the workflow section. This dialog displays all approval flows applied to the current node - explicit, inherited and/or content-type. Setting the explicit flow is as simple as selecting a sequence of approval groups from a dropdown, then hitting the OK button. Flows are applied in this order: explixit, content-type, inherited.</li>
+                            </ul>
+                        </div>
+                        <div class="dash-inner-area" ng-if="tab.alias === 'tab105'">
+                            <p>The user dashboard displays in the content section, and provides an overview of tasks requiring approval by the current user, as well as a list of any workflow processes initiated by the current user.</p>
+                            <p>Users with access to the workflow section are also presented a third table, displaying all active workflow processes.</p>
+                            <p>The view provides a button set to either approve, cancel, reject or edit the node (exact options vary based on the user and list type). Each process is visualised with a simple progress bar, displaying completed and pending tasks for the current approval flow. </p>
+                        </div>
+                        <div class="dash-inner-area" ng-if="tab.alias === 'tab106'">
+                            <p>The regular save and publish button is replaced with a custom view for nodes in a workflow - users with permission to action the current approval task are presented a similar button set to the user dashboard, while all users with access to the workflow section are presented the option to cancel the workflow.</p>
+                        </div>
+                    </umb-tab>
+                </umb-tabs-content>
+            </umb-editor-container>
+        </umb-editor-view>
+    </div>
+</div>
+

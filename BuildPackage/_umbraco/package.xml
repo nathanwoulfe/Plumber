@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<umbPackage>
+  <info>
+    <package>
+      <name>Plumber</name>
+      <version>7-alpha-000005</version>
+      <license url="http://www.opensource.org/licenses/mit-license.php">MIT license</license>
+      <url>https://github.com/nathanwoulfe/UmbracoWorkflow</url>
+      <requirements>
+        <major>7</major>
+        <minor>7</minor>
+        <patch>0</patch>
+      </requirements>
+    </package>
+    <author>
+      <name>Nathan Woulfe</name>
+      <website>https://github.com/nathanwoulfe</website>
+    </author>
+    <readme><![CDATA[Add workflow functionality to Umbraco.]]></readme>
+  </info>
+
+  <DocumentTypes />
+  <Templates />
+  <Stylesheets />
+  <Macros />
+  <DictionaryItems />
+  <Languages />
+  <DataTypes />
+
+  <Actions />
+
+  <control />
+
+  <files><file><guid>d93888e3-277a-4b61-9ede-315f71b8684b.html</guid><orgPath>/App_Plugins/workflow/backoffice/approval-groups</orgPath><orgName>add.html</orgName></file><file><guid>51347b9f-5f29-4731-adc2-79f0743e60fd.html</guid><orgPath>/App_Plugins/workflow/backoffice/approval-groups</orgPath><orgName>delete.html</orgName></file><file><guid>a2899baf-0852-4de7-9e59-a7c2e0d13697.html</guid><orgPath>/App_Plugins/workflow/backoffice/approval-groups</orgPath><orgName>edit.html</orgName></file><file><guid>ea009855-5950-480e-a922-cd5253749a3c.css</guid><orgPath>/App_Plugins/workflow/backoffice/css</orgPath><orgName>styles.min.css</orgName></file><file><guid>cc7e2001-b40e-4aef-88d0-1d49604598ad.html</guid><orgPath>/App_Plugins/workflow/backoffice/dialogs</orgPath><orgName>workflow.action.dialog.html</orgName></file><file><guid>e6f000a8-1d74-4ecd-bef5-180b9bc5cb64.html</guid><orgPath>/App_Plugins/workflow/backoffice/dialogs</orgPath><orgName>workflow.cancel.dialog.html</orgName></file><file><guid>7caeaefc-0249-4385-b9d8-0344c23e2e7b.html</guid><orgPath>/App_Plugins/workflow/backoffice/dialogs</orgPath><orgName>workflow.config.dialog.html</orgName></file><file><guid>bdc41793-54bb-4cc8-9953-8fbf3a4b3c02.html</guid><orgPath>/App_Plugins/workflow/backoffice/dialogs</orgPath><orgName>workflow.history.dialog.html</orgName></file><file><guid>7b9fbe7c-be72-455b-aaa9-cb7af0a86da7.html</guid><orgPath>/App_Plugins/workflow/backoffice/dialogs</orgPath><orgName>workflow.submit.dialog.html</orgName></file><file><guid>8b42e995-2090-4d35-9cb6-8cd5277f6d16.html</guid><orgPath>/App_Plugins/workflow/backoffice/dialogs</orgPath><orgName>workflow.userpicker.overlay.html</orgName></file><file><guid>ea3eb7b3-eb17-4cef-87e2-f6a3b249233c.js</guid><orgPath>/App_Plugins/workflow/backoffice/js</orgPath><orgName>workflow.js</orgName></file><file><guid>b6d1951c-66dd-4f0b-b8aa-6cdaab253e34.css</guid><orgPath>/App_Plugins/workflow/backoffice/lib/highcharts</orgPath><orgName>highcharts.css</orgName></file><file><guid>06d7862d-b63b-4b31-a91a-111e082b6842.js</guid><orgPath>/App_Plugins/workflow/backoffice/lib/highcharts</orgPath><orgName>highcharts.js</orgName></file><file><guid>9450b7e7-e4de-4e16-a60a-e40241874f15.js</guid><orgPath>/App_Plugins/workflow/backoffice/lib/highcharts/modules</orgPath><orgName>exporting.js</orgName></file><file><guid>048ee6b1-484a-4a82-8634-b94b0c828375.html</guid><orgPath>/App_Plugins/workflow/backoffice/partials/table</orgPath><orgName>historyinstance.html</orgName></file><file><guid>29315174-fcb3-449a-a462-3e26cf3c330a.html</guid><orgPath>/App_Plugins/workflow/backoffice/partials/table</orgPath><orgName>historytask.html</orgName></file><file><guid>cb80e264-903a-4cf8-84eb-560f534a8eaf.html</guid><orgPath>/App_Plugins/workflow/backoffice/partials</orgPath><orgName>umbEditorFooterContentRight.html</orgName></file><file><guid>9d428112-509e-44ed-ab22-c709cb063d32.html</guid><orgPath>/App_Plugins/workflow/backoffice/partials</orgPath><orgName>workflowButtonGroup.html</orgName></file><file><guid>bda09cf8-b2a9-4116-bee8-78042aaa831c.html</guid><orgPath>/App_Plugins/workflow/backoffice/partials</orgPath><orgName>workflowHistoryTemplate.html</orgName></file><file><guid>9c584ead-0672-4b2a-a3cd-b8b271f70ead.html</guid><orgPath>/App_Plugins/workflow/backoffice/partials</orgPath><orgName>workflowLineChart.html</orgName></file><file><guid>ff4cf2d9-7124-4fd1-be6c-006689798bda.html</guid><orgPath>/App_Plugins/workflow/backoffice/partials</orgPath><orgName>workflowTasksTemplate.html</orgName></file><file><guid>e70dc9d4-4f5f-4109-96cd-c0b579d09dd0.html</guid><orgPath>/App_Plugins/workflow/backoffice/tree</orgPath><orgName>approval-groups.html</orgName></file><file><guid>38128cab-3e6a-471a-b9d1-5095379f5210.html</guid><orgPath>/App_Plugins/workflow/backoffice/tree</orgPath><orgName>history.html</orgName></file><file><guid>38757655-160b-41bc-b912-62d2896e1b54.html</guid><orgPath>/App_Plugins/workflow/backoffice/tree</orgPath><orgName>settings.html</orgName></file><file><guid>6209bfec-0645-4c15-9109-8ec12ffee0bd.html</guid><orgPath>/App_Plugins/workflow/backoffice/tree</orgPath><orgName>view.html</orgName></file><file><guid>dc1b7dea-14cc-40ba-b591-ccc409b5a4f7.html</guid><orgPath>/App_Plugins/workflow/backoffice/views</orgPath><orgName>workflow.admindashboard.html</orgName></file><file><guid>5e179b73-2ea1-4bb0-bfb8-549c707aa6f0.html</guid><orgPath>/App_Plugins/workflow/backoffice/views</orgPath><orgName>workflow.docsdashboard.html</orgName></file><file><guid>fdcd154e-b42e-4741-9a6a-c0c9cfb477d2.html</guid><orgPath>/App_Plugins/workflow/backoffice/views</orgPath><orgName>workflow.userdashboard.html</orgName></file><file><guid>d01b9e67-b6f0-4648-a88b-9e8293767e4e.xml</guid><orgPath>/App_Plugins/workflow/lang</orgPath><orgName>en-US.xml</orgName></file><file><guid>a160afd7-e032-4f9f-a894-c50c8bbd1612.manifest</guid><orgPath>/App_Plugins/workflow</orgPath><orgName>package.manifest</orgName></file><file><guid>fa050ec7-9802-4b87-8c80-711734e55b9e.dll</guid><orgPath>/bin</orgPath><orgName>Workflow.dll</orgName></file></files>
+
+</umbPackage>

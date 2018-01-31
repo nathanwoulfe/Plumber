@@ -1,0 +1,50 @@
+﻿<div class="umb-table" ng-if="items">
+    <div class="umb-table-head">
+        <div class="umb-table-row">
+            <div class="umb-table-cell">
+                <input class="umb-table__input" type="checkbox">
+            </div>
+            <div class="umb-table-cell" ng-if="instanceView || groupHistoryView">
+                <a class="umb-table-head__link" href="#" prevent-default>
+                    Node
+                </a>
+            </div>
+            <div class="umb-table-cell">
+                <a class="umb-table-head__link" href="#" prevent-default>
+                    Type
+                </a>
+            </div>
+            <div class="umb-table-cell">
+                <a class="umb-table-head__link" href="#" prevent-default>
+                    Requested by
+                </a>
+            </div>
+            <div class="umb-table-cell">
+                <a class="umb-table-head__link" href="#" prevent-default>
+                    Requested on
+                </a>
+            </div>
+            <div class="umb-table-cell">
+                <a class="umb-table-head__link" href="#" prevent-default>
+                    Status
+                </a>
+            </div>
+            <div class="umb-table-cell">
+                <a class="umb-table-head__link" href="#" prevent-default>
+                    Comments
+                </a>
+            </div>
+            <div class="umb-table-cell">
+                <a class="umb-table-head__link" href="#" prevent-default>
+                    Approval group
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="umb-table-body">
+        <wf-table-row item="item" instance-view="instanceView" group-history-view="groupHistoryView" ng-repeat="item in items track by $index"></wf-table-row>
+    </div>
+    <umb-empty-state ng-if="!items.length" position="center">
+        <localize key="content_listViewNoItems">There are no items show in the list.</localize>
+    </umb-empty-state>
+</div>

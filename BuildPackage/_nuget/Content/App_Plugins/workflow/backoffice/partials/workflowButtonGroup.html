@@ -1,0 +1,23 @@
+﻿<div class="btn-group umb-button-group" ng-show="defaultButton != null" ng-class="{'dropup': direction === 'up'}">        
+    <umb-button type="button"
+                action="defaultButton.handler(item)"
+                button-style="success"
+                state="state"
+                label="{{ defaultButton.labelKey }}"
+                label-key="{{ defaultButton.labelKey }}"
+                shortcut="{{ defaultButton.hotKey }}"
+                shortcut-when-hidden="{{ defaultButton.hotKeyWhenHidden }}">
+    </umb-button>
+
+    <a class="btn btn-success dropdown-toggle umb-button-group__toggle" data-toggle="dropdown" ng-if="subButtons.length > 0">
+        <span class="caret"></span>
+    </a>
+
+    <ul aria-labelledby="dLabel" class="dropdown-menu bottom-up umb-button-group__sub-buttons" ng-if="subButtons.length > 0" role="menu" ng-class="{'-align-right': float === 'right'}">
+        <li ng-repeat="subButton in subButtons">
+            <a ng-href="{{ subButton.href ? subButton.href + item.nodeId : '#' }}" ng-click="subButton.handler(item)" hotkey="{{ subButton.hotKey }}" hotkey-when-hidden="{{ subButton.hotKeyWhenHidden }}" class="{{ subButton.cssClass }}" prevent-default="{{ !subButton.href }}">
+                <localize key="{{ subButton.labelKey }}">{{ subButton.labelKey }}</localize>
+            </a>
+        </li>
+    </ul>
+</div>

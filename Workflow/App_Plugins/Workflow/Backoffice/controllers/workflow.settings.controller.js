@@ -11,7 +11,7 @@
             config: {
                 multiPicker: '1'
             }
-        }
+        };
 
         $q.all(promises)
             .then(function (resp) {
