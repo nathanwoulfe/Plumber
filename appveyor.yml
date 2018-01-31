@@ -21,7 +21,7 @@ artifacts:
   - path: BuildPackage\artifacts\*.nupkg
   - path: BuildPackage\artifacts\*.zip
   
- deploy:
+deploy:
   - provider: NuGet
     server:
     api_key:
