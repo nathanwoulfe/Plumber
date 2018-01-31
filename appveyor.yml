@@ -1,11 +1,11 @@
 # version format
-version: 0.4.0.{build}
+version: 0.4.1.{build}
 
 image: Visual Studio 2017
 
 cache:
   - packages -> **\packages.config
-  - node_modules -> **\packages.json
+  - workflow\node_modules -> **\packages.json
   
 # UMBRACO_PACKAGE_PRERELEASE_SUFFIX will only be used for Release builds
 # example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
@@ -33,3 +33,13 @@ deploy:
     skip_symbols: false      
     symbol_server:    
     artifact: /.*\.nupkg/
+    
+  - provider: GitHub    
+    release: v$(appveyor_build_version)
+    description: 'Adding GitHub release deployment to AppVeyor'
+    auth_token:
+        secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
+    artifact: /.*\.zip/     
+    on:
+        branch: master                 
+        appveyor_repo_tag: true     
