@@ -35,6 +35,9 @@ deploy:
     skip_symbols: false      
     symbol_server:    
     artifact: /.*\.nupkg/
+    on:
+        branch: master
+        appveyor_repo_tag: true      
     
   - provider: GitHub
     tag: v$(appveyor_build_version)
