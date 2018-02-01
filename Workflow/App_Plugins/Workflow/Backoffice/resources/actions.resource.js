@@ -1,11 +1,11 @@
 ﻿(function () {
     'use strict';
 
-    function workflowActionsService($rootScope, workflowResource, notificationsService, contentResource) {
+    function workflowActionsService($rootScope, workflowResource, notificationsService) {
 
         var service = {
 
-            action: function (item, approve, dirty, fromDash) {
+            action: function (item, approve) {
                 var workflowOverlay = {
                     view: '../app_plugins/workflow/backoffice/dialogs/workflow.action.dialog.html',
                     show: true,
@@ -19,13 +19,13 @@
                         if (approve) {
                             workflowResource.approveWorkflowTask(item.taskId, model.comment)
                                 .then(function (resp) {
-                                    notify(resp, fromDash);
+                                    notify(resp);
                                 });
                         }
                         else {
                             workflowResource.rejectWorkflowTask(item.taskId, model.comment)
                                 .then(function (resp) {
-                                    notify(resp, fromDash);
+                                    notify(resp);
                                 });
                         }
                         workflowOverlay.close();
@@ -64,7 +64,7 @@
                 return workflowOverlay;
             },
 
-            cancel: function (item, fromDash) {
+            cancel: function (item) {
                 var workflowOverlay = {
                     view: '../app_plugins/workflow/backoffice/dialogs/workflow.cancel.dialog.html',
                     show: true,
@@ -75,9 +75,10 @@
                     submit: function (model) {
                         workflowResource.cancelWorkflowTask(item.taskId, model.comment)
                             .then(function (resp) {
-                                notify(resp, fromDash);
-                                workflowOverlay.close();
+                                notify(resp);
                             });
+
+                        workflowOverlay.close();
                     },
                     close: function () {
                         workflowOverlay.show = false;
@@ -90,21 +91,13 @@
         };
 
         // display notification after actioning workflow task
-        function notify(d, fromDash) {
+        function notify(d) {
             if (d.status === 200) {
-                // todo -> find a v7.7 way to make this work
-                //var contentForm = document.querySelector('[name="contentForm"]');
-                //if (contentForm) {
-                //    var scope = angular.element(contentForm).scope();
-                //    scope.contentForm.$setPristine();
-                //}
+
                 notificationsService.success('SUCCESS!', d.message);
 
-                if (fromDash) {
-                    $rootScope.$emit('refreshWorkflowDash');
-                } else {
-                    $rootScope.$emit('workflowActioned');
-                }
+                $rootScope.$emit('refreshWorkflowDash');
+                $rootScope.$emit('workflowActioned');
             }
             else {
                 notificationsService.error('OH SNAP!', d.message);

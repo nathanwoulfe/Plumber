@@ -76,9 +76,11 @@
 
             workflowResource.saveConfig(response)
                 .then(function () {
+                    navigationService.hideNavigation();
                     notificationsService.success('SUCCESS', 'Workflow configuration updated');
                     init();
                 }, function (err) {
+                    navigationService.hideNavigation();
                     notificationsService.error('ERROR', err);
                 });               
             

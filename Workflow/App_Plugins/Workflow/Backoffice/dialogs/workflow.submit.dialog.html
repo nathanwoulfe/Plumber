@@ -3,7 +3,7 @@
         <umb-pane ng-show="!model.isDirty">
             <p ng-show="model.isPublish">Please add a comment describing the changes.</p>
             <p ng-show="!model.isPublish">Please add a comment.</p>
-            <textarea ng-model="model.comment"></textarea>
+            <textarea ng-model="model.comment" no-dirty-check></textarea>
         </umb-pane>
         <umb-pane ng-show="model.isDirty">
             <div class="alert alert-warning">
