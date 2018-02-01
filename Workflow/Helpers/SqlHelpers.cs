@@ -4,6 +4,7 @@
     {        
         // groups
         public const string UserGroupBasic = @"SELECT * FROM WorkFlowUserGroups WHERE GroupId = @0";
+        public const string GroupsForTree = @"SELECT * FROM WorkflowUserGroups WHERE deleted = 0 ORDER BY name DESC";
         public const string NewestGroup = @"SELECT TOP 1 * FROM WorkflowUserGroups ORDER BY GroupId DESC";
         public const string UserGroups = @"SELECT * FROM WorkflowUserGroups 
                             LEFT JOIN WorkflowUserGroupPermissions
