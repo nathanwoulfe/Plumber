@@ -4,7 +4,6 @@
     "~/App_Plugins/workflow/backoffice/controllers/groups.dashboard.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/groups.delete.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/groups.edit.controller.js",
-    "~/App_Plugins/workflow/backoffice/controllers/tree.view.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.action.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.admin.dashboard.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.cancel.controller.js",
@@ -27,7 +26,6 @@
     "~/App_Plugins/workflow/backoffice/resources/actions.resource.js",
     "~/App_Plugins/workflow/backoffice/resources/groups.resource.js",
     "~/App_Plugins/workflow/backoffice/resources/workflow.resource.js",
-    "~/App_Plugins/workflow/backoffice/workflow.routing.js",
 
     "~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.js",
     "~/App_Plugins/workflow/backoffice/lib/highcharts/modules/exporting.js"

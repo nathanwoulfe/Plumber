@@ -78,9 +78,7 @@
     <Compile Include="Helpers\UrlHelpers.cs" />
     <Compile Include="Helpers\Exceptions.cs" />
     <Compile Include="Relators\UserToGroupForInstanceRelator.cs" />
-    <Compile Include="Trees\WorkflowApprovalGroupsTree.cs" />
-    <Compile Include="Trees\WorkflowHistoryTree.cs" />
-    <Compile Include="Trees\WorkflowSettingsTree.cs" />
+    <Compile Include="Trees\WorkflowTree.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.docs.dashboard.controller.js" />
@@ -115,27 +113,25 @@
       <DependentUpon>styles.css</DependentUpon>
     </Content>
     <Content Include="App_Plugins\Workflow\Backoffice\resources\actions.resource.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\history.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\tree.view.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\workflow\edit-group.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.dashboard.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\approval-groups.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.config.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\workflow.resource.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\view.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.action.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.cancel.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.user.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.submit.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.settings.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\workflow.routing.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.admindashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.docsdashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.userdashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.action.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.cancel.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.submit.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\tree\settings.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\workflow\approval-groups.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\workflow\settings.html" />
     <Content Include="App_Plugins\Workflow\Lang\en-US.xml" />
+    <Content Include="App_Plugins\Workflow\Backoffice\workflow\history.html" />
     <Content Include="Gruntfile.js" />
     <None Include="app.config" />
     <None Include="App_Plugins\Workflow\Backoffice\css\highcharts.scss" />
@@ -151,7 +147,7 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <Compile Include="Migrations\VersionZeroThreeZero.cs" />
-	<Compile Include="Migrations\VersionZeroFourZero.cs" />	
+    <Compile Include="Migrations\VersionZeroFourZero.cs" />
     <None Include="package.json" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -162,7 +158,6 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.delete.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.edit.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\approval-groups\delete.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\approval-groups\edit.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\groups.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.config.dialog.html" />
   </ItemGroup>
