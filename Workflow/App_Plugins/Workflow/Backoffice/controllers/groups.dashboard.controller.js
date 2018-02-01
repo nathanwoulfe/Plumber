@@ -1,15 +1,21 @@
 ﻿(function () {
     'use strict';
 
-    function dashboardController(workflowGroupsResource) {
+    function dashboardController($rootScope, workflowGroupsResource) {
 
         var vm = this;
 
-      workflowGroupsResource.get()
-            .then(function (resp) {
-                vm.loading = false;
-                vm.items = resp;
-            });
+        $rootScope.$on('refreshGroupsDash', function () {
+            init();
+        });
+
+        function init() {
+            workflowGroupsResource.get()
+                .then(function(resp) {
+                    vm.loading = false;
+                    vm.items = resp;
+                });
+        }
 
         function getEmail(users) {
             return users.map(function (v) {
@@ -24,6 +30,8 @@
 
             getEmail: getEmail
         });
+
+        init();
     }
 
     angular.module('umbraco').controller('Workflow.Groups.Dashboard.Controller', dashboardController);

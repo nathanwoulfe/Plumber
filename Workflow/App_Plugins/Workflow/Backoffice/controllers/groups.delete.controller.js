@@ -1,18 +1,20 @@
-﻿(function () {
+﻿(function () {  
     'use strict';
 
-    function deleteController($scope, workflowGroupsResource, navigationService, treeService, notificationsService) {
+    function deleteController($scope, $rootScope, workflowGroupsResource, navigationService, treeService, notificationsService) {
 
         $scope.delete = function (id) {
           workflowGroupsResource.delete(id)
                 .then(function (resp) {
-                    treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'users' })
+                    treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'workflow' })
                         .then(function () {
-                            window.location = '/umbraco/#/workflow/tree/view/groups';
+                            window.location = '/umbraco/#/workflow/workflow/approval-groups/info';
                         });
+
                     navigationService.hideNavigation();
                     notificationsService.success('SUCCESS', resp);
-                });
+                    $rootScope.$emit('refreshGroupsDash');
+              });
         };
 
         $scope.cancelDelete = function () {

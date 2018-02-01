@@ -7,14 +7,16 @@
           workflowGroupsResource.add(name)
                 .then(function (resp) {
                     if (resp.status === 200) {
-                        treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'users' })
+                        treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'workflow' })
                             .then(function () {
-                                window.location = '/umbraco/#/workflow/tree/edit/' + resp.id;
+                                window.location = '/umbraco/#/workflow/workflow/edit-group/' + resp.id;
+                                navigationService.hideNavigation();
                             });
                         notificationsService.success('SUCCESS', resp.msg);
                     } else {
                         notificationsService.error('ERROR', resp.msg);
                     }
+
                 }, function (err) {   
                     notificationsService.error('ERROR', err);
                 });

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Formatting;
+using umbraco.BusinessLogic.Actions;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
 using Umbraco.Web.Models.Trees;
@@ -22,21 +23,35 @@ namespace Workflow.Trees
         protected override MenuItemCollection GetMenuForNode(string id, FormDataCollection queryStrings)
         {
             var menu = new MenuItemCollection();
-            string rootId = CoreConstants.System.Root.ToInvariantString();
 
-            if (!id.InvariantEquals("approvalGroups")) return menu;
-
-            var menuItem = new MenuItem
+            if (id.InvariantEquals("approvalGroups"))
             {
-                Alias = "add",
-                Icon = "add",
-                Name = "Add group"
-            };
 
-            menuItem.LaunchDialogView("/app_plugins/workflow/backoffice/approval-groups/add.html", "Add group");
+                var menuItem = new MenuItem
+                {
+                    Alias = "add",
+                    Icon = "add",
+                    Name = "Add group"
+                };
 
-            menu.Items.Add(menuItem);
-            menu.Items.Add<RefreshNode, umbraco.BusinessLogic.Actions.ActionRefresh>("Reload nodes", true);
+                menuItem.LaunchDialogView("/app_plugins/workflow/backoffice/approval-groups/add.html", "Add group");
+
+                menu.Items.Add(menuItem);
+                menu.Items.Add<ActionRefresh>("Reload nodes", true);
+            }
+            else if (int.TryParse(id, out int parsedId))
+            {
+                var menuItem = new MenuItem
+                {
+                    Alias = "delete",
+                    Icon = "delete",
+                    Name = "Delete group"
+                };
+
+                menuItem.LaunchDialogView("/app_plugins/workflow/backoffice/approval-groups/delete.html", "Delete group");
+
+                menu.Items.Add(menuItem);
+            }
 
             return menu;
         }
