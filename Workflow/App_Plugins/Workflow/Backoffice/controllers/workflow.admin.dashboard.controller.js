@@ -5,7 +5,7 @@
 
         var vm = this,
             msPerDay = 1000 * 60 * 60 * 24,
-            now = new Date();
+            now = new moment();
 
         function lineChart(items) {
 
@@ -18,21 +18,8 @@
             d.setDate(d.getDate() - vm.range);
             var then = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
 
-            var active = {
-                type: 'spline',
-                name: 'Pending (cumulative)',
-                data: defaultData(),
-                colorIndex: 2,
-                lineWidth: 4,
-                pointStart: then,
-                pointInterval: msPerDay,
-                marker: {
-                    enabled: false
-                }
-            };
-
             var created = {
-                name: 'Created (cumulative)',
+                name: 'Total (cumulative)',
                 type: 'spline',
                 data: defaultData(),
                 pointStart: then,
@@ -64,8 +51,8 @@
                         return s.name === statusName;
                     })[0];
 
-                    s.data[vm.range + dateDiffInDays(now, new Date(isTask ? v.completedDate : v.completedOn))] += 1;
-                    created.data[vm.range + dateDiffInDays(now, new Date(isTask ? v.createdDate : v.requestedOn))] += 1;
+                    s.data[vm.range - now.diff(moment(isTask ? v.completedDate : v.completedOn), 'days')] += 1;
+                    created.data[vm.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn), 'days')] += 1;
 
                     if (statusName === 'Approved') {
                         vm.totalApproved += 1;
@@ -81,19 +68,11 @@
                     }
 
                 } else {
-                    var index = vm.range + dateDiffInDays(now, new Date(isTask ? v.createdDate : v.requestedOn));
-                    active.data[index < 0 ? 0 : index] += 1;
+                    var index = vm.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn));
                     created.data[index < 0 ? 0 : index] += 1;
                     vm.totalPending += 1;
                 }
             });
-
-            active.data.forEach(function (d, i) {
-                if (i > 0) {
-                    active.data[i] += active.data[i - 1];
-                }
-            });
-            series.push(active);
 
             created.data.forEach(function(d, i) {
                 if (i > 0) {
@@ -106,15 +85,6 @@
 
             vm.title = 'Workflow ' + vm.type.toLowerCase() + ' activity';
             vm.loaded = true;
-        }
-
-        // a and b are javascript Date objects
-        function dateDiffInDays(a, b) {
-            // Discard the time and time-zone information.
-            var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-            var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-
-            return Math.floor((utc2 - utc1) / msPerDay - 1) + 1;
         }
 
         function defaultData() {

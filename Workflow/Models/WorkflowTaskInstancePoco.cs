@@ -93,11 +93,7 @@ namespace Workflow.Models
         [ResultColumn]
         public virtual WorkflowInstancePoco WorkflowInstance { get; set; }
         
-
-        /// <summary>
-        /// Indicates whether the task instance is currently active.
-        /// </summary>        
         [ResultColumn]
-        public bool Active => TaskStatus == Models.TaskStatus.PendingApproval;
+        public virtual double CompletedDateTicks => CompletedDate?.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds ?? 0;
     }
 }

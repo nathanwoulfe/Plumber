@@ -16,6 +16,7 @@
                 scope.$watch('ready', function (newVal) {
                     if (newVal === true) {
                         var options = {
+
                             credits: {
                                 enabled: false
                             },

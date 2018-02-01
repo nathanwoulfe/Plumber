@@ -102,9 +102,9 @@
                 tasks: ['copy:views']
             },
             
-            tree: {
-                files: ['<%= basePath %>/backoffice/tree/**/*.html'],
-                tasks: ['copy:tree']
+            workflow: {
+                files: ['<%= basePath %>/backoffice/workflow/**/*.html'],
+                tasks: ['copy:workflow']
             },
             
             partials: {
@@ -161,11 +161,11 @@
                 dest: '<%= dest %>/<%= basePath %>/backoffice/views/'
             },
 
-            tree: {
+            workflow: {
                 expand: true,
-                cwd: '<%= basePath %>/backoffice/tree/',
+                cwd: '<%= basePath %>/backoffice/workflow/',
                 src: '**',
-                dest: '<%= dest %>/<%= basePath %>/backoffice/tree/'
+                dest: '<%= dest %>/<%= basePath %>/backoffice/workflow/'
             },
 
             partials: {
@@ -306,7 +306,7 @@
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:groups', 'copy:views', 'copy:tree', 'copy:partials', 'copy:dialogs', 'copy:lib', 'copy:lang']);
+    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:groups', 'copy:views', 'copy:workflow', 'copy:partials', 'copy:dialogs', 'copy:lib', 'copy:lang']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 
