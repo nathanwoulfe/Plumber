@@ -42,23 +42,27 @@
         var saveAndPublish = defaultButtons.defaultButton && defaultButtons.defaultButton.labelKey === 'buttons_saveAndPublish';
 
         function getNodeTasks() {
-            workflowResource.getNodePendingTasks(editorState.current.id)
-                .then(function (resp) {
-                    if (resp.noFlow || resp.settings) {
-                        var msg = resp.noFlow
-                            ? 'No workflow groups have been configured - refer to the documentation tab in the Workflow section, then set at minimum an approval flow on the homepage node or document type.'
-                            : 'Workflow settings are configured incorrectly - refer to the documentation tab in the Workflow section.';
-                        notificationsService.warning('WORKFLOW INSTALLED BUT NOT CONFIGURED', msg);
-                    } else if (resp.items && resp.items.length) {
-                        vm.active = true;
-                        checkUserAccess(resp.items[0]);
-                    } else {
-                        vm.active = false;
-                        setButtons();
-                    }
-                }, function () {
+            // only refresh if viewing a content node
+            if (editorState.current) {
+                workflowResource.getNodePendingTasks(editorState.current.id)
+                    .then(function(resp) {
+                            if (resp.noFlow || resp.settings) {
+                                var msg = resp.noFlow
+                                    ? 'No workflow groups have been configured - refer to the documentation tab in the Workflow section, then set at minimum an approval flow on the homepage node or document type.'
+                                    : 'Workflow settings are configured incorrectly - refer to the documentation tab in the Workflow section.';
+                                notificationsService.warning('WORKFLOW INSTALLED BUT NOT CONFIGURED', msg);
+                            } else if (resp.items && resp.items.length) {
+                                vm.active = true;
+                                checkUserAccess(resp.items[0]);
+                            } else {
+                                vm.active = false;
+                                setButtons();
+                            }
+                        },
+                        function() {
 
-                });
+                        });
+            }
         }
 
         // use this to ensure changes are saved when submitting for publish
@@ -74,25 +78,26 @@
             getNodeTasks();
         });
 
+        // if editorState.current is null, it's a dashboard click
         var buttons = {
             approveButton: {
                 labelKey: 'workflow_approveButtonLong',
                 handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.action(item, $scope.dirty, true);
+                    vm.workflowOverlay = workflowActionsService.action(item, true, editorState.current === null);
                 }
             },
             cancelButton: {
                 labelKey: 'workflow_cancelButtonLong',
                 cssClass: 'danger',
                 handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.cancel(item);
+                    vm.workflowOverlay = workflowActionsService.cancel(item, editorState.current === null);
                 }
             },
             rejectButton: {
                 labelKey: 'workflow_rejectButton',
                 cssClass: 'warning',
                 handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.action(item, false);
+                    vm.workflowOverlay = workflowActionsService.action(item, false, editorState.current === null);
                 }
             },
             saveButton: {

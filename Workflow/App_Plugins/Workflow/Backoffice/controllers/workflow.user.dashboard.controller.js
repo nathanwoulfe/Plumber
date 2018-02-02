@@ -13,12 +13,7 @@
 
         // dash needs notification of when to refresh, as the action is in a deeper scope
         $rootScope.$on('refreshWorkflowDash', function () {
-            authResource.getCurrentUser()
-                .then(function (user) {
-                    vm.currentUser = user;
-                    vm.adminUser = user.allowedSections.indexOf('workflow') !== -1;
-                    init();
-                });
+            init();
         });
 
         function getPending() {
@@ -74,7 +69,7 @@
             }
             else {
                 notificationsService.error("OH SNAP!", d.message);
-            }            
+            }
         }
 
         // expose some bits
