@@ -24,7 +24,7 @@
                 data: defaultData(),
                 pointStart: then,
                 pointInterval: msPerDay,
-                colorIndex: 3,
+                colorIndex: 5,
                 lineWidth: 4,
                 marker: {
                     enabled: false

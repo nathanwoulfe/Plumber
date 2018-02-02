@@ -8,12 +8,10 @@
                 .then(function (resp) {
                     treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'workflow' })
                         .then(function () {
-                            window.location = '/umbraco/#/workflow/workflow/approval-groups/info';
+                            navigationService.hideNavigation();
+                            notificationsService.success('SUCCESS', resp);
+                            $rootScope.$emit('refreshGroupsDash');
                         });
-
-                    navigationService.hideNavigation();
-                    notificationsService.success('SUCCESS', resp);
-                    $rootScope.$emit('refreshGroupsDash');
               });
         };
 

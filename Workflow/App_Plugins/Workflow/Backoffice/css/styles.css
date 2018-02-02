@@ -1,66 +1,87 @@
-.workflow .highcharts-root {
+﻿.workflow .highcharts-root {
   width: 100%; }
+
 .workflow .highcharts-container {
   font-family: Lato,Helvetica Neue,Helvetica,Arial,sans-serif; }
+
 .workflow .highcharts-color-0 {
   fill: #53a93f;
   color: #53a93f; }
+
 .workflow .highcharts-color-1 {
   fill: #ee5f5b;
   color: #ee5f5b; }
+
 .workflow .highcharts-color-2 {
   fill: #2e8aea;
   color: #2e8aea;
   stroke: #2e8aea; }
+
 .workflow .highcharts-color-3 {
   fill: #df7f48;
   color: #df7f48; }
+
 .workflow .highcharts-legend-item text {
   font-weight: normal; }
+
 .workflow .chart-loading {
   opacity: .5;
   transition: all ease-in-out .3s; }
 
 .workflow hr {
   clear: both; }
+
 .workflow label {
   float: left;
   width: 160px; }
+
 .workflow wf-comments label {
   width: auto; }
+
 .workflow textarea, .workflow input {
   border: 1px solid #ccc; }
+
 .workflow textarea {
   width: 386px;
   height: 200px; }
   .workflow textarea.group-description {
     width: auto; }
+
 .workflow.umb-panel .umb-nav-tabs {
   margin: 15px auto;
   position: relative; }
+
 .workflow .flow-select {
   margin-bottom: 0; }
+
 .workflow .umb-box .umb-node-preview {
   min-width: 100%; }
+
 .workflow .current-flow .last::after {
   content: '(Publisher)';
   display: inline-block;
   padding-left: 5px; }
+
 .workflow .umb-table-cell ul {
   margin: 0; }
+
 .workflow .umb-table-cell.show-overflow, .workflow .umb-table-cell.show-overflow > * {
   overflow: visible; }
+
 .workflow .controls h5 {
   margin-top: 0; }
+
 .workflow .control-panel {
   padding: 10px 0;
   margin: 10px 0; }
+
 .workflow .workflow-progress {
   margin: 0 10px 10px;
   padding-top: 10px;
   border-top: 1px solid #d9d9d9;
   display: flex;
   position: relative; }
+
 .workflow .progress-step {
   text-align: center;
   position: relative; }
@@ -91,6 +112,7 @@
     background: linear-gradient(90deg, #2e8aea, #d9d9d9); }
   .workflow .progress-step.current .tooltip {
     border-color: #2e8aea; }
+
 .workflow .marker {
   display: block;
   width: 15px;
@@ -121,39 +143,40 @@
       left: calc(50% - 1px); }
     .workflow .marker + .tooltip span {
       display: none; }
+
 .workflow .dropdown-menu .warning {
   color: #df7f48; }
+
 .workflow .dropdown-menu .danger {
   color: #ee5f5b; }
+
 .workflow .workflow-nested {
   margin: 10px;
   padding-top: 10px;
   border-top: 1px solid #d9d9d9;
   display: flex;
   position: relative; }
+
 .workflow .umb-table__input[type=checkbox] {
   opacity: 0;
   cursor: default; }
+
 .workflow .umb-table-body__icon.soft {
   opacity: .25; }
+
 .workflow .pending {
   color: #2e8aea;
   background: rgba(46, 138, 234, 0.05); }
   .workflow .pending .umb-table-body__icon {
     color: #2e8aea;
     background: 0, 0; }
+
 .workflow .approved {
-  color: #53a93f;
-  background: rgba(83, 169, 63, 0.05); }
-  .workflow .approved .umb-table-body__icon {
-    color: #53a93f;
-    background: 0, 0; }
+  color: #53a93f; }
+
 .workflow .cancelled {
-  color: #ee5f5b;
-  background: rgba(238, 95, 91, 0.05); }
-  .workflow .cancelled .umb-table-body__icon {
-    color: #ee5f5b;
-    background: 0, 0; }
+  color: #ee5f5b; }
+
 .workflow .chart-header {
   list-style-type: none;
   margin: 0;
@@ -178,6 +201,7 @@
     font-weight: bold;
     display: block;
     font-size: 3rem; }
+
 .workflow .chart-controls {
   display: flex;
   justify-content: center;
@@ -202,10 +226,12 @@
   .workflow .chart-controls .controls-row {
     margin-left: 0;
     padding: 0; }
+
 .workflow .active-banner {
   display: inline-block;
   margin-right: 10px;
   color: #df7f48; }
+
 .workflow h1.title {
   font-size: 30px;
   color: #363636;
@@ -216,9 +242,11 @@
   margin-right: auto;
   margin-bottom: 10px;
   font-weight: bold; }
+
 .workflow .dash-inner-area {
   margin: 10px 0px;
   padding: 10px; }
+
 .workflow .intro-text {
   font-size: 18px;
   color: #666666;
@@ -228,4 +256,3 @@
   margin-right: auto;
   line-height: 1.6em; }
 
-/*# sourceMappingURL=styles.css.map */

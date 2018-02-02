@@ -218,22 +218,10 @@
 
     .approved {
         color: $success;
-        background: rgba($success, .05);
-
-        .umb-table-body__icon {
-            color: $success;
-            background: 0, 0;
-        }
     }
 
     .cancelled {
         color: $danger;
-        background: rgba($danger, .05);
-
-        .umb-table-body__icon {
-            color: $danger;
-            background: 0, 0;
-        }
     }
 
     .chart-header {

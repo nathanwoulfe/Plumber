@@ -28,7 +28,7 @@ namespace Workflow.Startup
                 currentVersion = latest.Version;
             }
 
-            var targetVersion = new SemVersion(0, 4);
+            var targetVersion = new SemVersion(0, 5);
             if (targetVersion == currentVersion)
             {
                 return;
