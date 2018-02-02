@@ -1,5 +1,5 @@
 # version format
-version: 0.5.0.{build}
+version: 0.5.1.{build}
 
 image: Visual Studio 2017
 
@@ -42,9 +42,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v0.5.0
-    release: Release 0.5.0
-    description: 'Clean up old trees, improve charting and history views, rename some files, improve add/delete group ui updates'
+    tag: v0.5.1
+    release: Release 0.5.1
+    description: 'Fix SQL error when adding and removing groups in a single config change'
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
