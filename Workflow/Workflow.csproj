@@ -43,8 +43,8 @@
     <Compile Include="Models\SectionTreeNodeModel.cs" />
     <Compile Include="Relators\UserToGroupForPermissionsRelator.cs" />
     <Compile Include="Startup\MigrationEvents.cs" />
-    <Compile Include="Startup\RegisterEvents.cs" />
-    <Compile Include="Startup\StringContraint.cs" />
+    <Compile Include="Startup\CreateTables.cs" />
+    <Compile Include="Startup\StringConstraint.cs" />
     <Compile Include="Startup\UmbracoStartup.cs" />
     <Compile Include="Startup\WebApiConfig.cs" />
     <Compile Include="Startup\WorkflowContextMenuController.cs" />
