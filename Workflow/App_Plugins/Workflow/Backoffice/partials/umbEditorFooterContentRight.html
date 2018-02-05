@@ -14,12 +14,14 @@
     <umb-button ng-if="!page.isNew"
                 type="button"
                 action="(vm.active ? vm.preview(content) : preview(content))"
+                state="page.buttonGroupState"
                 label="Preview">
     </umb-button>
 
     <umb-button ng-if="page.isNew"
                 type="button"
                 action="save(content)"
+                state="page.buttonGroupState"
                 label="Save">
     </umb-button>
     
@@ -36,6 +38,7 @@
                            default-button="vm.buttonGroup.defaultButton"
                            sub-buttons="vm.buttonGroup.subButtons"
                            direction="up"
+                           state="vm.buttonGroup.state || 'init'"
                            item="vm.task"
                            float="right">
     </workflow-button-group>

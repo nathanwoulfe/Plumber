@@ -41,24 +41,42 @@ namespace Workflow.Helpers
 
             dashboardXml.Load(dashboardFilePath);
 
-            var firstTab = dashboardXml.SelectSingleNode("//section [@alias='StartupDashboardSection']/areas");
+            // Section Node
+            var findSection = dashboardXml.SelectSingleNode("//section [@alias='WorkflowContentDashboardSection']");
 
-            if (firstTab != null)
+            //Couldn't find it
+            if (findSection == null)
             {
-                const string xmlToAdd = "<tab caption='Workflow'>" +
-                                        "<control addPanel='true' panelCaption=''>/app_plugins/workflow/backoffice/views/workflow.userdashboard.html</control>" +
-                                        "</tab>";
+                //Let's add the xml
+                const string xmlToAdd = "<section alias='WorkflowContentDashboardSection'>" +
+                                        "<areas>" +
+                                        "<area>workflow</area>" +
+                                        "</areas>" +
+                                        "<tab caption=\"Workflow\">" +
+                                        "<control>/app_plugins/workflow/backoffice/views/workflow.userdashboard.html</control>" +
+                                        "</tab>" +
+                                        "</section>";
 
-                //Load in the XML string above
-                var frag = dashboardXml.CreateDocumentFragment();
-                frag.InnerXml = xmlToAdd;
+                //Get the main root <dashboard> node
+                var dashboardNode = dashboardXml.SelectSingleNode("//dashBoard");
 
-                //Append the xml above to the dashboard node
-                var selectSingleNode = dashboardXml.SelectSingleNode("//section [@alias='StartupDashboardSection']");
-                selectSingleNode?.InsertAfter(frag, firstTab);
+                if (dashboardNode != null)
+                {
+                    //Load in the XML string above
+                    var xmlNodeToAdd = new XmlDocument();
+                    xmlNodeToAdd.LoadXml(xmlToAdd);
 
-                //Save the file flag to true
-                saveFile = true;
+                    var toAdd = xmlNodeToAdd.SelectSingleNode("*");
+
+                    //Append the xml above to the dashboard node
+                    if (toAdd != null && dashboardNode.OwnerDocument != null)
+                    {
+                        dashboardNode.AppendChild(dashboardNode.OwnerDocument.ImportNode(toAdd, true));
+                    }
+
+                    //Save the file flag to true
+                    saveFile = true;
+                }
             }
 
             //If saveFile flag is true then save the file

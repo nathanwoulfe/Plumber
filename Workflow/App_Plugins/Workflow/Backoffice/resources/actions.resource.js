@@ -16,6 +16,9 @@
                     requestedBy: item.requestedBy,
                     requestedOn: item.requestedOn,
                     submit: function (model) {
+
+                        buttonState('busy');
+
                         if (approve) {
                             workflowResource.approveWorkflowTask(item.taskId, model.comment)
                                 .then(function (resp) {
@@ -49,6 +52,9 @@
                     isDirty: dirty,
                     nodeId: id,
                     submit: function (model) {
+
+                        buttonState('busy');
+
                         workflowResource.initiateWorkflow(id, model.comment, publish)
                             .then(function (resp) {
                                 notify(resp);
@@ -73,6 +79,9 @@
                     comment: '',
                     isFinalApproval: item.activeTask === 'Pending Final Approval',
                     submit: function (model) {
+
+                        buttonState('busy');
+
                         workflowResource.cancelWorkflowTask(item.taskId, model.comment)
                             .then(function (resp) {
                                 notify(resp, fromDash);
@@ -90,6 +99,11 @@
             }
         };
 
+        // UI feedback for button directive
+        function buttonState(state) {
+            $rootScope.$emit('buttonStateChanged', state);
+        }
+
         // display notification after actioning workflow task
         function notify(d, fromDash) {
             if (d.status === 200) {
@@ -100,9 +114,11 @@
                     $rootScope.$emit('refreshWorkflowDash');
                 }
                 $rootScope.$emit('workflowActioned');
+                $rootScope.$emit('buttonStateChanged', 'success');
             }
             else {
                 notificationsService.error('OH SNAP!', d.message);
+                $rootScope.$emit('buttonStateChanged', 'error');
             }
         }
 

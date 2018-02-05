@@ -78,6 +78,10 @@
             getNodeTasks();
         });
 
+        $rootScope.$on('buttonStateChanged', function (event, data) {
+            vm.buttonGroup.state = data;
+        });
+
         // if editorState.current is null, it's a dashboard click
         var buttons = {
             approveButton: {
@@ -104,13 +108,16 @@
                 labelKey: 'workflow_saveButton',
                 cssClass: 'success',
                 handler: function () {
+                    vm.buttonGroup.state = 'busy';
                     contentEditingHelper.contentEditorPerformSave({
                         statusMessage: 'Saving...',
                         saveMethod: contentResource.save,
                         scope: $scope,
                         content: editorState.current
+                    }).then(function(resp) {
+                        vm.buttonGroup.state = resp.notifications && resp.notifications[0].type === '3' ? 'success' : 'error';
+                        $scope.$parent.$parent.$parent.contentForm.$setPristine();
                     });
-                    $scope.$parent.$parent.$parent.contentForm.$setPristine();
                 }
             },
             publishButton: {
