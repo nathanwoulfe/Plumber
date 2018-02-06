@@ -13,7 +13,7 @@ using Workflow.Models;
 
 namespace Workflow.Helpers
 {
-    public class Utility
+    public static class Utility
     {
         private static readonly UmbracoHelper Helper = new UmbracoHelper(UmbracoContext.Current);
         private static readonly IUserService Us = ApplicationContext.Current.Services.UserService;

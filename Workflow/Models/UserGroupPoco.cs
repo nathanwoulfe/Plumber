@@ -66,20 +66,21 @@ namespace Workflow.Models
         /// Otherwise it will return email addresses of all users in the group.
         /// </summary>
         /// <returns>collection of email addresses</returns>
-        public MailAddressCollection PreferredEmailAddresses(int idToExclude)
+        public List<string> PreferredEmailAddresses(int idToExclude)
         {
-            MailAddressCollection addresses = new MailAddressCollection();
+            List<string> addresses = new List<string>();
 
             if (Utility.IsValidEmailAddress(GroupEmail))
             {
-                addresses.Add(new MailAddress(GroupEmail));
+                addresses.Add(GroupEmail);
             }
             else
             {
-                foreach (var user in Users.Where(u => u.User.IsApproved && !u.User.IsLockedOut && u.UserId != idToExclude && Utility.IsValidEmailAddress(u.User.Email)))
-                {
-                    addresses.Add(new MailAddress(user.User.Email));                    
-                }
+                addresses.AddRange(from user in Users
+                    .Where(u => u.User.IsApproved && 
+                                !u.User.IsLockedOut && 
+                                u.UserId != idToExclude && 
+                                Utility.IsValidEmailAddress(u.User.Email)) where user.User.Email != null select user.User.Email);
             }
             return addresses;
         }

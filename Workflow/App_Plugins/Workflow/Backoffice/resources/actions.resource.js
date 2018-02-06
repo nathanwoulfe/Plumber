@@ -18,7 +18,6 @@
                     submit: function (model) {
 
                         buttonState('busy');
-                        debugger;
                         if (approve) {
                             workflowResource.approveWorkflowTask(item.instanceGuid, model.approvalComment)
                                 .then(function (resp) {

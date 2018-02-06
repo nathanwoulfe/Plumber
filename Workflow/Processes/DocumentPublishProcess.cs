@@ -11,7 +11,7 @@ namespace Workflow.Processes
     /// </summary>
     public class DocumentPublishProcess : WorkflowApprovalProcess
     {
-        public static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public DocumentPublishProcess()
         {

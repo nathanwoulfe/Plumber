@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
-using System.Web;
+using System.Threading.Tasks.Dataflow;
 using log4net;
 using Workflow.Helpers;
 using Workflow.Models;
 
 namespace Workflow
 {
-    public class Notifications
+    public static class Notifications
     {
         private static readonly PocoRepository Pr = new PocoRepository();
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -18,9 +19,9 @@ namespace Workflow
         /// TODO: these should come from a config file rather than static strings...
         /// </summary>
         private const string EmailApprovalRequestString = "Dear {0},<br/><br/>Please review the following page for {5} approval: <a href=\"{1}\">{2}</a><br/><br/>Comment: {3}<br/><br/>Thanks,<br/>{4}";
-        private const string EmailApprovedString = "Dear {0},<br/>The following document's workflow has been approved and the document {3}: <a href=\"{1}\">{2}</a><br/>";
-        private const string EmailRejectedString = "Dear {0},<br/>The {5} workflow was rejected by {4}: <a href=\"{1}\">{2}</a><br/>Comment: {3}";
-        private const string EmailCancelledString = "Dear {0},<br/>{1} workflow has been cancelled for the following page: <a href=\"{2}\">{3}</a> by {4}.<br/> Reason: {5}.";
+        private const string EmailApprovedString = "Dear {0},<br/><br/>The following document's workflow has been approved and the document {3}: <a href=\"{1}\">{2}</a><br/>";
+        private const string EmailRejectedString = "Dear {0},<br/><br/>The {5} workflow was rejected by {4}: <a href=\"{1}\">{2}</a><br/><br/>Comment: {3}";
+        private const string EmailCancelledString = "Dear {0},<br/><br/>{1} workflow has been cancelled for the following page: <a href=\"{2}\">{3}</a> by {4}.<br/><br/>Reason: {5}.";
 
         /// <summary>
         /// Sends an email notification out for the workflow process
@@ -38,28 +39,47 @@ namespace Workflow
                 var docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
 
                 var flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep);
-                var userIdToExclude = Utility.GetSettings().FlowType != (int) FlowType.All
+
+                var userIdToExclude = Utility.GetSettings().FlowType != (int)FlowType.All
                     ? instance.AuthorUserId
                     : int.MinValue;
 
-                var emailsForAllTaskUsers = new MailAddressCollection();
+                // always take get the emails for all previous users, sometimes they will be discarded later
+                // easier to just grab em all, rather than doing so conditionally
+                var emailsForAllTaskUsers = new List<string>();
+
+                // in the loop, also store the last task to a variable, and keep the populated group
+                var taskIndex = 0;
+                var taskCount = flowTasks.Count();
+                WorkflowTaskInstancePoco finalTask = null;
                 foreach (var task in flowTasks)
                 {
-                    var group = task.UserGroup ?? Pr.PopulatedUserGroup(task.GroupId).First();
-                    emailsForAllTaskUsers.Union(group.PreferredEmailAddresses(userIdToExclude));
+                    taskIndex += 1;
+
+                    var group = Pr.PopulatedUserGroup(task.GroupId).First();
+                    if (group != null)
+                    {
+                        emailsForAllTaskUsers.AddRange(group.PreferredEmailAddresses(userIdToExclude));
+
+                        if (taskIndex == taskCount)
+                        {
+                            finalTask = task;
+                            finalTask.UserGroup = group;
+                        }
+                    }
                 }
 
-                var to = new MailAddressCollection();
-                var email = Utility.GetSettings().Email;
-                var subject = "";
+                var to = new List<string>();
+                var systemEmailAddress = Utility.GetSettings().Email;
+
                 var body = "";
 
                 switch (emailType)
                 {
                     case EmailType.ApprovalRequest:
-                        to = flowTasks.Last().UserGroup.PreferredEmailAddresses(userIdToExclude);
+                        to = finalTask.UserGroup.PreferredEmailAddresses(userIdToExclude);
                         body = string.Format(EmailApprovalRequestString,
-                            flowTasks.Last().UserGroup.Name, docUrl, docTitle, instance.AuthorComment,
+                            to.Count > 1 ? "Umbraco user" : finalTask.UserGroup.Name, docUrl, docTitle, instance.AuthorComment,
                             instance.AuthorUser.Name, instance.TypeDescription);
 
                         break;
@@ -68,8 +88,8 @@ namespace Workflow
                         to = emailsForAllTaskUsers;
                         to.Add(instance.AuthorUser.Email);
                         body = string.Format(EmailRejectedString,
-                            instance.AuthorUser.Name, docUrl, docTitle, flowTasks.Last().Comment,
-                            flowTasks.Last().ActionedByUser.Name, instance.TypeDescription.ToLower());
+                            "Umbraco user", docUrl, docTitle, finalTask.Comment,
+                            finalTask.ActionedByUser.Name, instance.TypeDescription.ToLower());
 
                         break;
 
@@ -78,20 +98,16 @@ namespace Workflow
                         to.Add(instance.AuthorUser.Email);
 
                         //Notify web admins
-                        to.Add(email);
+                        to.Add(systemEmailAddress);
 
                         if (instance.WorkflowType == WorkflowType.Publish)
                         {
                             var n = Utility.GetNode(instance.NodeId);
                             docUrl = UrlHelpers.GetFullyQualifiedSiteUrl(n.Url);
                         }
-                        else
-                        {
-                            docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
-                        }
 
                         body = string.Format(EmailApprovedString,
-                                   instance.AuthorUser.Name, docUrl, docTitle,
+                                   "Umbraco user", docUrl, docTitle,
                                    instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
 
                         body += BuildProcessSummary(instance);
@@ -102,10 +118,8 @@ namespace Workflow
                         to = emailsForAllTaskUsers;
                         to.Add(instance.AuthorUser.Email);
 
-                        docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
-
                         body = string.Format(EmailApprovedString,
-                                   instance.AuthorUser.Name, docUrl, docTitle,
+                                   "Umbraco user", docUrl, docTitle,
                                    instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
 
                         body += BuildProcessSummary(instance);
@@ -113,15 +127,13 @@ namespace Workflow
                         break;
 
                     case EmailType.WorkflowCancelled:
-                        // Get the emails for all usergroups for the tasks that have been raised as part of this workflow.
                         to = emailsForAllTaskUsers;
-                        var reason = flowTasks.Last().Comment;
-                        var cancelledBy = flowTasks.Last().ActionedByUser;
 
                         // include the initiator email
-                        to.Add(new MailAddress(instance.AuthorUser.Email));
+                        to.Add(instance.AuthorUser.Email);
+
                         body = string.Format(EmailCancelledString,
-                            "Umbraco user", instance.TypeDescription, docUrl, docTitle, cancelledBy.Name, reason);
+                            "Umbraco user", instance.TypeDescription, docUrl, docTitle, finalTask.ActionedByUser.Name, finalTask.Comment);
                         break;
                     case EmailType.SchedulerActionCancelled:
                         break;
@@ -131,25 +143,19 @@ namespace Workflow
 
                 if (!to.Any()) return;
 
-                var html = $"<!DOCTYPE HTML SYSTEM><html><head><title>{subject}</title></head><body><font face=\"verdana\" size=\"2\">{body}</font></body></html>";
-
-                subject = BuildEmailSubject(emailType, instance);
-
                 var client = new SmtpClient();
                 var msg = new MailMessage();
 
-                if (!string.IsNullOrEmpty(email))
+                if (!string.IsNullOrEmpty(systemEmailAddress))
                 {
-                    msg.From = new MailAddress(email);
+                    msg.From = new MailAddress(systemEmailAddress);
                 }
 
-                foreach (var address in to)
-                {
-                    msg.To.Add(address);
-                }
+                var subject = BuildEmailSubject(emailType, instance);
 
+                msg.To.Add(string.Join(",", to.Distinct()));
                 msg.Subject = subject;
-                msg.Body = html;
+                msg.Body = $"<!DOCTYPE HTML SYSTEM><html><head><title>{subject}</title></head><body><font face=\"verdana\" size=\"2\">{body}</font></body></html>";
                 msg.IsBodyHtml = true;
 
                 client.Send(msg);
