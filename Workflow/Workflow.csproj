@@ -58,7 +58,7 @@
     <Compile Include="Models\SettingsPoco.cs" />
     <Compile Include="PocoRepository.cs" />
     <Compile Include="Helpers\SqlHelpers.cs" />
-    <Compile Include="Helpers\Notifications.cs" />
+    <Compile Include="Notifications.cs" />
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Processes\DocumentPublishProcess.cs" />
     <Compile Include="Helpers\Utility.cs" />
