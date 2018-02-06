@@ -188,13 +188,17 @@
             color: $danger;
         }
     }
-    // history - nested tasks for instance
-    .workflow-nested {
-        margin: 10px;
-        padding-top: 10px;
-        border-top: 1px solid #d9d9d9;
-        display: flex;
-        position: relative;
+
+    .table-row-outer {
+        .umb-table-row {
+            &:not(:first-child) {
+                border-top:none;
+
+                i {
+                    opacity:0;
+                }
+            }
+        }
     }
 
     .umb-table__input[type=checkbox] {

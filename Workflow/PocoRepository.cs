@@ -138,9 +138,9 @@ namespace Workflow
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public  WorkflowInstancePoco InstanceByTaskId(int id)
+        public  WorkflowInstancePoco InstanceByGuid(Guid guid)
         {
-            return GetDb().Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByTaskId, id).First();
+            return GetDb().Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByGuid, guid).First();
         }        
 
         /// <summary>

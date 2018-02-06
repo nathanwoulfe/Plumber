@@ -62,14 +62,14 @@
             initiateWorkflow: function (nodeId, comment, publish) {
                 return this.request('POST', this.actionsUrl + 'initiate', { nodeId: nodeId, comment: comment, publish: publish });
             },
-            approveWorkflowTask: function (taskId, comment) {
-                return this.request('POST', this.actionsUrl + 'approve', { taskId: taskId, comment: comment });
+            approveWorkflowTask: function (instanceGuid, comment) {
+                return this.request('POST', this.actionsUrl + 'approve', { instanceGuid: instanceGuid, comment: comment });
             },
-            rejectWorkflowTask: function (taskId, comment) {
-                return this.request('POST', this.actionsUrl + 'reject', { taskId: taskId, comment: comment });
+            rejectWorkflowTask: function (instanceGuid, comment) {
+                return this.request('POST', this.actionsUrl + 'reject', { instanceGuid: instanceGuid, comment: comment });
             },
-            cancelWorkflowTask: function (taskId, comment) {
-                return this.request('POST', this.actionsUrl + 'cancel', { taskId: taskId, comment: comment });
+            cancelWorkflowTask: function (instanceGuid, comment) {
+                return this.request('POST', this.actionsUrl + 'cancel', { instanceGuid: instanceGuid, comment: comment });
             },
 
             /* get/set workflow settings*/

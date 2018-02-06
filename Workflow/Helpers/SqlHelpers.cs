@@ -20,7 +20,7 @@
                             WHERE WorkflowUserGroups.GroupId = @0";
 
         // instance
-        public const string InstanceByTaskId = @"SELECT * FROM WorkflowInstance WHERE Id = @0";
+        public const string InstanceByGuid = @"SELECT * FROM WorkflowInstance WHERE Guid = @0";
         public const string InstanceByNodeStr = @"SELECT * FROM WorkflowInstance WHERE NodeId = @0 AND ";
         public const string AllInstances = @"SELECT * FROM WorkflowInstance 
                             LEFT JOIN WorkflowTaskInstance

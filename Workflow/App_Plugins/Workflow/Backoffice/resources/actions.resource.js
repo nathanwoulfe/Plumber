@@ -18,15 +18,15 @@
                     submit: function (model) {
 
                         buttonState('busy');
-
+                        debugger;
                         if (approve) {
-                            workflowResource.approveWorkflowTask(item.taskId, model.comment)
+                            workflowResource.approveWorkflowTask(item.instanceGuid, model.approvalComment)
                                 .then(function (resp) {
                                     notify(resp, fromDash);
                                 });
                         }
                         else {
-                            workflowResource.rejectWorkflowTask(item.taskId, model.comment)
+                            workflowResource.rejectWorkflowTask(item.instanceGuid, model.approvalComment)
                                 .then(function (resp) {
                                     notify(resp, fromDash);
                                 });
@@ -82,7 +82,7 @@
 
                         buttonState('busy');
 
-                        workflowResource.cancelWorkflowTask(item.taskId, model.comment)
+                        workflowResource.cancelWorkflowTask(item.instanceGuid, model.comment)
                             .then(function (resp) {
                                 notify(resp, fromDash);
                             });

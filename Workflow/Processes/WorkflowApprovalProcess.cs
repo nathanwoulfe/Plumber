@@ -75,13 +75,15 @@ namespace Workflow.Processes
                 {
                     // if pending, update to approved
                     ProcessApprovalAction(action, userId, comment);
+
                     if (action == WorkflowAction.Approve)
                     {
                         // only progress if there are pending approval tasks, otherwise the flow is complete and the workflow should exit
                         if (Instance.TotalSteps > Instance.TaskInstances.Count)
                         {
-                            // create the next task, then check if it should be a
+                            // create the next task, then check if it should be approved
                             var taskInstance = CreateApprovalTask(Instance.NodeId, out bool approvalRequired);
+
                             if (approvalRequired)
                             {
                                 ApproveOrContinue(taskInstance, userId);
@@ -172,7 +174,11 @@ namespace Workflow.Processes
         {
             if (IsStepApprovalRequired(taskInstance))
             {
-                InitiateApprovalTask(taskInstance);
+                taskInstance.Status = (int)TaskStatus.PendingApproval;
+                Instance.Status = (int)WorkflowStatus.PendingApproval;
+
+                Notifications.Send(Instance, EmailType.ApprovalRequest);
+
                 GetDb().Update(taskInstance);
             }
             else
@@ -220,7 +226,7 @@ namespace Workflow.Processes
             }
 
             taskInstance.CompletedDate = DateTime.Now;
-            taskInstance.Comment = !string.IsNullOrEmpty(comment) ? comment : taskInstance.Comment;
+            taskInstance.Comment = comment;
             taskInstance.ActionedByUserId = userId;
 
             // Send the email after we've done the updates.
@@ -236,6 +242,7 @@ namespace Workflow.Processes
         /// Generate the next approval flow task, returning the new task and a bool indicating whether the publish action should becompleted (ie, this is the end of the flow)
         /// </summary>
         /// <param name="nodeId"></param>
+        /// <param name="comment"></param>
         /// <param name="approvalRequired"></param>
         /// <returns></returns>
         private WorkflowTaskInstancePoco CreateApprovalTask(int nodeId, out bool approvalRequired)
@@ -244,11 +251,12 @@ namespace Workflow.Processes
                 new WorkflowTaskInstancePoco(TaskType.Approve)
                 {
                     ApprovalStep = Instance.TaskInstances.Count,
-                    WorkflowInstanceGuid = Instance.Guid,
-                    Comment = Instance.AuthorComment
+                    WorkflowInstanceGuid = Instance.Guid
                 };
+
             Instance.TaskInstances.Add(taskInstance);
             SetApprovalGroup(taskInstance, nodeId);
+
             approvalRequired = IsStepApprovalRequired(taskInstance);
 
             GetDb().Insert(taskInstance);            
@@ -306,46 +314,17 @@ namespace Workflow.Processes
         }
 
         /// <summary>
-        /// Is the next step required? Authors shouldn't approve their own work, nor should a user be in subsequent steps
-        /// Function checks these conditions and returns a bool to indicate whether the flow should auto-advance
-        /// </summary>
-        //private bool CheckSubsequentStep(List<UserGroupPermissionsPoco> approvalGroup, UserGroupPermissionsPoco group, int currentUserId, int groupIndex)
-        //{
-        //    var doPublish = false;
-        //    // check the last permission is equal to the current group, and current user or instance author are members of that group, if so, the request should be published
-        //    if (approvalGroup.OrderBy(g => g.Permission).Last().Permission == groupIndex && (group.UserGroup.IsMember(currentUserId) || group.UserGroup.IsMember(Instance.AuthorUserId)))
-        //    {
-        //        doPublish = true;
-        //    }
-        //    else
-        //    {
-        //        // if not the last group, check that the current user or instance author aren't a member of all the subsequent groups
-        //        // if we find a group where the current user or instance author aren't a member, the approval flow continues
-        //        // if they are part of all subsequent groups, the workflow should advance automatically
-        //        // this does mean the current user could be in group 2 and 4, but not 3, so they will recieve a publish request for stage 4
-        //        foreach (var g in approvalGroup.Where(g => g.Permission >= groupIndex))
-        //        {
-        //            if (g.UserGroup.IsMember(Instance.AuthorUserId) || g.UserGroup.IsMember(currentUserId))
-        //            {
-        //                doPublish = true;
-        //            }
-        //            else
-        //            {
-        //                doPublish = false;
-        //                break;
-        //            }
-        //        }
-        //    }
-        //    return doPublish;
-        //}
-
-        /// <summary>
         /// Determines whether approval is required by checking if the Author is in the current task group.
         /// </summary>
         /// <returns>true if approval required, false otherwise</returns>
         private bool IsStepApprovalRequired(WorkflowTaskInstancePoco taskInstance)
         {
-            return Utility.GetSettings().FlowType == (int)FlowType.All || (!taskInstance.UserGroup.IsMember(Instance.AuthorUserId) && !taskInstance.UserGroup.IsMember(Utility.GetCurrentUser().Id));
+            WorkflowSettingsPoco settings = Utility.GetSettings();
+
+            return settings.FlowType == (int)FlowType.All || // if type is all, approval always required
+                   settings.FlowType == (int)FlowType.Exclude || // if type is exclude, approval required, but no notification sent
+                   settings.FlowType == (int)FlowType.Other && !taskInstance.UserGroup.IsMember(Instance.AuthorUserId); // approval required if other and author not in current group
+
         }
 
         /// <summary>
@@ -359,15 +338,6 @@ namespace Workflow.Processes
                 Instance.TotalSteps = stepCount;
                 GetDb().Update(Instance);
             }
-        }
-
-        private void InitiateApprovalTask(WorkflowTaskInstancePoco taskInstance)
-        {
-            // Set task and workflow information.
-            taskInstance.Status = (int)TaskStatus.PendingApproval;
-            Instance.Status = (int)WorkflowStatus.PendingApproval;
-
-            Notifications.Send(Instance, EmailType.ApprovalRequest);
         }
 
         /// <summary>

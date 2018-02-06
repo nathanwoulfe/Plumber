@@ -44,6 +44,7 @@ namespace Workflow.Models
         public string ApprovalGroup { get; set; }
         public string ActiveTask { get; set; }
         public List<UserGroupPermissionsPoco> Permissions { get; set; }
+        public Guid InstanceGuid { get; set; }
     }
 }
 

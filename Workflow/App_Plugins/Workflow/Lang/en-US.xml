@@ -35,8 +35,8 @@
     <key alias="flowTypeDescription">Controls how the original author is managed in subsequent tasks</key>
     <key alias="sendNotificationsDescription">Should email notifications be sent to approval groups?</key>
     <key alias="workflowEmailDescription">FROM address for email notifications</key>
-    <key alias="editSiteUrlDescription">Edit site URL for inclusion in email notifications (eg edit.mydomain.com)</key>
-    <key alias="baseSiteUrlDescription">Live site URL for inclusion in email notifications (eg www.mydomain.com)</key>
+    <key alias="editSiteUrlDescription">Edit site URL for inclusion in email notifications (eg http://edit.mydomain.com)</key>
+    <key alias="baseSiteUrlDescription">Live site URL for inclusion in email notifications (eg http://www.mydomain.com)</key>
 
 
     <key alias="excludeNodesDescription">Nodes (and their descendants) selected here will NOT be included in the workflow, and will revert to the default Umbraco actions</key>

@@ -3,8 +3,6 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
-using Umbraco.Core;
-using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 using Workflow.Helpers;
@@ -90,9 +88,7 @@ namespace Workflow.Api
         [Route("approve")]
         public IHttpActionResult ApproveWorkflowTask(TaskData model)
         {
-            var taskId = model.TaskId;
-            var comment = model.Comment;
-            var instance = GetInstance(taskId);
+            var instance = GetInstance(model.InstanceGuid);
 
             try
             {
@@ -102,7 +98,7 @@ namespace Workflow.Api
                     instance,
                     WorkflowAction.Approve,
                     Utility.GetCurrentUser().Id,
-                    comment
+                    model.Comment
                 );
 
                 var msg = string.Empty;
@@ -154,9 +150,7 @@ namespace Workflow.Api
         [Route("reject")]
         public IHttpActionResult RejectWorkflowTask(TaskData model)
         {
-            var taskId = model.TaskId;
-            var comment = model.Comment;
-            var instance = GetInstance(taskId);
+            var instance = GetInstance(model.InstanceGuid);
 
             try
             {
@@ -166,7 +160,7 @@ namespace Workflow.Api
                     instance,
                     WorkflowAction.Reject,
                     Utility.GetCurrentUser().Id,
-                    comment
+                    model.Comment
                 );
 
                 return Json(new
@@ -198,9 +192,7 @@ namespace Workflow.Api
         [Route("cancel")]
         public IHttpActionResult CancelWorkflowTask(TaskData model)
         {
-            var taskId = model.TaskId;
-            var comment = model.Comment;
-            var instance = GetInstance(taskId);
+            var instance = GetInstance(model.InstanceGuid);
 
             try
             {
@@ -209,7 +201,7 @@ namespace Workflow.Api
                 instance = process.CancelWorkflow(
                     instance,
                     Utility.GetCurrentUser().Id,
-                    comment
+                    model.Comment
                 );
 
                 return Json(new
@@ -249,11 +241,11 @@ namespace Workflow.Api
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="taskId"></param>
+        /// <param name="instanceGuid"></param>
         /// <returns></returns>
-        private static WorkflowInstancePoco GetInstance(int taskId)
+        private static WorkflowInstancePoco GetInstance(Guid instanceGuid)
         {
-            var instance = Pr.InstanceByTaskId(taskId);
+            var instance = Pr.InstanceByGuid(instanceGuid);
             instance.SetScheduledDate();
 
             // TODO -> fix this

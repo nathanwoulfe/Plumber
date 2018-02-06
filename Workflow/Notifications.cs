@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
+using System.Web;
 using log4net;
+using Workflow.Helpers;
 using Workflow.Models;
 
-namespace Workflow.Helpers
+namespace Workflow
 {
     public class Notifications
     {
@@ -15,10 +17,10 @@ namespace Workflow.Helpers
         /// <summary>
         /// TODO: these should come from a config file rather than static strings...
         /// </summary>
-        private const string EmailApprovalRequestString = "Dear {0},<br/><br/>Please review the following page for {5} approval: <a href=\"{1}\">{2}</a> *<br/><br/>Comment: {3}<br/><br/>Thanks,<br/>{4}";
-        private const string EmailApprovedString = "Dear {0},<br/>The following document's workflow has been approved and the document {3}: <a href=\"{1}\">{2}</a> *<br/>";
-        private const string EmailRejectedString = "Dear {0},<br/>The {5} workflow was rejected by {4}: <a href=\"{1}\">{2}</a> *<br/>Comment: {3}";
-        private const string EmailCancelledString = "Dear {0},<br/>{1} workflow has been cancelled for the following page: <a href=\"{2}\">{3}</a> * by {4}.<br/> Reason: {5}.";
+        private const string EmailApprovalRequestString = "Dear {0},<br/><br/>Please review the following page for {5} approval: <a href=\"{1}\">{2}</a><br/><br/>Comment: {3}<br/><br/>Thanks,<br/>{4}";
+        private const string EmailApprovedString = "Dear {0},<br/>The following document's workflow has been approved and the document {3}: <a href=\"{1}\">{2}</a><br/>";
+        private const string EmailRejectedString = "Dear {0},<br/>The {5} workflow was rejected by {4}: <a href=\"{1}\">{2}</a><br/>Comment: {3}";
+        private const string EmailCancelledString = "Dear {0},<br/>{1} workflow has been cancelled for the following page: <a href=\"{2}\">{3}</a> by {4}.<br/> Reason: {5}.";
 
         /// <summary>
         /// Sends an email notification out for the workflow process
@@ -92,7 +94,7 @@ namespace Workflow.Helpers
                                    instance.AuthorUser.Name, docUrl, docTitle,
                                    instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
 
-                        body += Utility.BuildProcessSummary(instance);
+                        body += BuildProcessSummary(instance);
 
                         break;
 
@@ -106,7 +108,7 @@ namespace Workflow.Helpers
                                    instance.AuthorUser.Name, docUrl, docTitle,
                                    instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
 
-                        body += Utility.BuildProcessSummary(instance);
+                        body += BuildProcessSummary(instance);
 
                         break;
 
@@ -129,12 +131,9 @@ namespace Workflow.Helpers
 
                 if (!to.Any()) return;
 
-                // Add a footer with information about having to login to umbraco first and listing the compatible browsers.
-                var head = "<head><title>" + subject + "</title></head >";
-                var html = "<!DOCTYPE HTML SYSTEM><html>" + head + "<body><font face=\"verdana\" size=\"2\">" + body +
-                           "</font></body></html>";
+                var html = $"<!DOCTYPE HTML SYSTEM><html><head><title>{subject}</title></head><body><font face=\"verdana\" size=\"2\">{body}</font></body></html>";
 
-                subject = Utility.BuildEmailSubject(emailType, instance);
+                subject = BuildEmailSubject(emailType, instance);
 
                 var client = new SmtpClient();
                 var msg = new MailMessage();
@@ -143,10 +142,12 @@ namespace Workflow.Helpers
                 {
                     msg.From = new MailAddress(email);
                 }
+
                 foreach (var address in to)
                 {
                     msg.To.Add(address);
                 }
+
                 msg.Subject = subject;
                 msg.Body = html;
                 msg.IsBodyHtml = true;
@@ -157,6 +158,80 @@ namespace Workflow.Helpers
             {
                 Log.Error("Error sending notifications", e);
             }
+        }
+
+        /// <summary>
+        /// Builds workflow instance details markup.
+        /// </summary>
+        /// <returns>HTML tr inner html definition</returns>
+        private static string BuildProcessSummary(WorkflowInstancePoco instance)
+        {
+            string result = $"{instance.TypeDescription} requested by {instance.AuthorUser.Name} on {instance.CreatedDate.ToString("dd/MM/yy")} - {instance.StatusName}<br/>";
+
+            if (!string.IsNullOrEmpty(instance.AuthorComment))
+            {
+                result += $"&nbsp;&nbsp;Comment: <i>{instance.AuthorComment}</i>";
+            }
+            result += "<br/>";
+
+            var index = 1;
+
+            foreach (var taskInstance in instance.TaskInstances)
+            {
+                result += BuildTaskSummary(taskInstance, index) + "<br/>";
+                index += 1;
+            }
+
+            return result + "<br/>";
+        }
+
+        /// <summary>
+        /// Create simple html markup for an inactive workflow task.
+        /// </summary>
+        /// <param name="taskInstance">The task instance.</param>
+        /// <param name="index"></param>
+        /// <returns>HTML markup describing an active task instance.</returns>
+        private static string BuildTaskSummary(WorkflowTaskInstancePoco taskInstance, int index)
+        {
+            var result = "";
+
+            switch (taskInstance.Status)
+            {
+                case (int)TaskStatus.Approved:
+                case (int)TaskStatus.Rejected:
+                case (int)TaskStatus.Cancelled:
+
+                    if (taskInstance.CompletedDate != null)
+                    {
+                        result += $"Stage {index}: {taskInstance.StatusName} by {taskInstance.ActionedByUser.Name} on {taskInstance.CompletedDate.Value.ToString("dd/MM/yy")}";
+                    }
+
+                    if (!string.IsNullOrEmpty(taskInstance.Comment))
+                    {
+                        result += $"<br/>&nbsp;&nbsp;Comment: <i>{taskInstance.Comment}</i>";
+                    }
+
+                    break;
+
+                case (int)TaskStatus.NotRequired:
+
+                    result += $"Stage {index}: Not required";
+
+                    break;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="emailType"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        private static string BuildEmailSubject(EmailType emailType, WorkflowInstancePoco instance)
+        {
+            return $"{WorkflowInstancePoco.EmailTypeName(emailType)} - {instance.Node.Name} ({instance.TypeDescription})";
         }
     }
 }

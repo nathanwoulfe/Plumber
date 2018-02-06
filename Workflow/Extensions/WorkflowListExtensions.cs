@@ -7,48 +7,51 @@ namespace Workflow.Extensions
 {
     public static class WorkflowListExtensions
     {
-        private static List<UserGroupPermissionsPoco> perms = new List<UserGroupPermissionsPoco>();
-        private static PocoRepository _pr = new PocoRepository();
+        private static List<UserGroupPermissionsPoco> _perms = new List<UserGroupPermissionsPoco>();
+        private static readonly PocoRepository Pr = new PocoRepository();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskInstances"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
         public static List<WorkflowTask> ToWorkflowTaskList(this List<WorkflowTaskInstancePoco> taskInstances, WorkflowInstancePoco instance = null)
         {
             List<WorkflowTask> workflowItems = new List<WorkflowTask>();
 
-            if (taskInstances != null && taskInstances.Count > 0)
+            if (!taskInstances.Any()) return workflowItems.OrderByDescending(x => x.CurrentStep).ToList();
+
+            bool useInstanceFromTask = instance == null;
+
+            foreach (WorkflowTaskInstancePoco taskInstance in taskInstances)
             {
-                foreach (var taskInstance in taskInstances)
+                instance = useInstanceFromTask ? taskInstance.WorkflowInstance : instance;
+ 
+                GetPermissionsForNode(instance.Node);
+
+                string instanceNodeName = instance.Node?.Name ?? "NODE NO LONGER EXISTS";
+                string typeDescription = instance.TypeDescription;
+
+                var item = new WorkflowTask
                 {
-                    WorkflowInstancePoco useThisInstance = taskInstance.WorkflowInstance != null ? taskInstance.WorkflowInstance : instance;
+                    Status = taskInstance.StatusName,
+                    CssStatus = taskInstance.StatusName.ToLower().Split(' ')[0],
+                    Type = typeDescription,
+                    NodeId = instance.NodeId,
+                    InstanceGuid = instance.Guid,
+                    ApprovalGroupId = taskInstance.UserGroup.GroupId,
+                    NodeName = instanceNodeName,
+                    RequestedBy = instance.AuthorUser.Name,
+                    RequestedOn = taskInstance.CreatedDate.ToString(),
+                    ApprovalGroup = taskInstance.UserGroup.Name,
+                    Comments = useInstanceFromTask ? instance.AuthorComment : taskInstance.Comment,
+                    ActiveTask = taskInstance.StatusName,
+                    Permissions = _perms,
+                    CurrentStep = taskInstance.ApprovalStep
+                };
 
-                    var instanceNodeName = "NODE NO LONGER EXISTS";
-                    var typeDescription = "";
-                    if (useThisInstance.Node != null)
-                    {
-                        GetPermissionsForNode(useThisInstance.Node);
-                        instanceNodeName = useThisInstance.Node.Name;
-                        typeDescription = useThisInstance.TypeDescription;
-                    }
-
-                    var item = new WorkflowTask
-                    {
-                        Status = taskInstance.StatusName,
-                        CssStatus = taskInstance.StatusName.ToLower().Split(' ')[0],
-                        Type = typeDescription,
-                        NodeId = useThisInstance.NodeId,
-                        TaskId = useThisInstance.Id,
-                        ApprovalGroupId = taskInstance.UserGroup.GroupId,
-                        NodeName = instanceNodeName,
-                        RequestedBy = useThisInstance.AuthorUser.Name,
-                        RequestedOn = taskInstance.CreatedDate.ToString(),
-                        ApprovalGroup = taskInstance.UserGroup.Name,
-                        Comments = taskInstance.Comment != null ? taskInstance.Comment : useThisInstance.AuthorComment != null ? useThisInstance.AuthorComment : string.Empty,
-                        ActiveTask = useThisInstance.StatusName,
-                        Permissions = perms,
-                        CurrentStep = taskInstance.ApprovalStep
-                    };
-
-                    workflowItems.Add(item);
-                }
+                workflowItems.Add(item);
             }
 
             return workflowItems.OrderByDescending(x => x.CurrentStep).ToList();            
@@ -57,7 +60,7 @@ namespace Workflow.Extensions
         /// <summary>
         /// Helper method for compiling WorkflowItem response object
         /// </summary>
-        /// <param name="taskInstances"></param>
+        /// <param name="instances"></param>
         /// <returns></returns>
         public static List<WorkflowInstance> ToWorkflowInstanceList(this List<WorkflowInstancePoco> instances)
         {
@@ -93,10 +96,10 @@ namespace Workflow.Extensions
         private static void GetPermissionsForNode(IPublishedContent node)
         {
             // check the node for set permissions
-            perms = _pr.PermissionsForNode(node.Id, 0);
+            _perms = Pr.PermissionsForNode(node.Id, 0);
 
             // return them if they exist, otherwise check the parent
-            if (!perms.Any())
+            if (!_perms.Any())
             {
                 if (node.Level != 1)
                 {
@@ -105,7 +108,7 @@ namespace Workflow.Extensions
                 else
                 {
                     // check for content-type permissions
-                    perms = _pr.PermissionsForNode(0, node.ContentType.Id);
+                    _perms = Pr.PermissionsForNode(0, node.ContentType.Id);
                 }
             }
         }

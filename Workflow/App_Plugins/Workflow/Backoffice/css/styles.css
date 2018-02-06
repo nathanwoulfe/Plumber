@@ -150,12 +150,10 @@
 .workflow .dropdown-menu .danger {
   color: #ee5f5b; }
 
-.workflow .workflow-nested {
-  margin: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #d9d9d9;
-  display: flex;
-  position: relative; }
+.workflow .table-row-outer .umb-table-row:not(:first-child) {
+  border-top: none; }
+  .workflow .table-row-outer .umb-table-row:not(:first-child) i {
+    opacity: 0; }
 
 .workflow .umb-table__input[type=checkbox] {
   opacity: 0;

@@ -1,4 +1,6 @@
-﻿namespace Workflow.Models
+﻿using System;
+
+namespace Workflow.Models
 {
     public class InitiateWorkflowModel
     {
@@ -18,5 +20,6 @@
     {
         public string Comment { get; set; }
         public int TaskId { get; set; }
+        public Guid InstanceGuid { get; set; }
     }
 }
