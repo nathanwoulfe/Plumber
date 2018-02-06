@@ -48,7 +48,7 @@ namespace Workflow.Helpers
 
             if (editUrl == null) return string.Empty;
 
-            var baseUrl = new Uri(editUrl);
+            var baseUrl = new Uri(editUrl.StartsWith("http") ? editUrl : $"http://{editUrl}");
             return (new Uri(baseUrl, partialUrl)).ToString();
         }
 
