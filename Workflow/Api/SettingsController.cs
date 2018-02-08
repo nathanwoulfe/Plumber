@@ -59,6 +59,23 @@ namespace Workflow.Api
             }
         }
 
+        [Route("docs")]
+        public IHttpActionResult GetDocs()
+        {
+            try
+            {
+                var client = new WebClient();
+                client.Headers.Add("media-type", MagicStrings.MdMediaType);
+
+                var response = client.DownloadString(MagicStrings.DocsUrl);
+                return Json(response, ViewHelpers.CamelCase);
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>

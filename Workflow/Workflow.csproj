@@ -101,6 +101,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.css" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\modules\exporting.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\lib\showdown\showdown.js" />	
     <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historyinstance.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historytask.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\umbEditorFooterContentRight.html" />
