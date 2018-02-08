@@ -108,11 +108,11 @@
             }
 
             &::before, &::after, .marker, .tooltip::after {
-                background: $success;
+                background: $umbGreen;
             }
 
             .tooltip {
-                border-color: $success;
+                border-color: $umbGreen;
             }
         }
 
@@ -122,19 +122,19 @@
             }
 
             .marker, .tooltip::after {
-                background: $pending;
+                background: $umbPurple;
             }
 
             &::before {
-                background: linear-gradient(90deg, $success, $pending);
+                background: linear-gradient(90deg, $umbGreen, $umbPurple);
             }
 
             &::after {
-                background: linear-gradient(90deg, $pending, #d9d9d9);
+                background: linear-gradient(90deg, $umbPurple, #d9d9d9);
             }
 
             .tooltip {
-                border-color: $pending;
+                border-color: $umbPurple;
             }
         }
     }
@@ -327,6 +327,10 @@
     .dash-inner-area {
         margin: 10px 0px;
         padding: 10px;
+
+        .btn {
+            text-decoration:none;
+        }
     }
 
     .intro-text {

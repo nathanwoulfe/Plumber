@@ -99,19 +99,19 @@
   .workflow .progress-step.done .tooltip-done {
     display: block; }
   .workflow .progress-step.done::before, .workflow .progress-step.done::after, .workflow .progress-step.done .marker, .workflow .progress-step.done .tooltip::after {
-    background: #53a93f; }
+    background: #00aea2; }
   .workflow .progress-step.done .tooltip {
-    border-color: #53a93f; }
+    border-color: #00aea2; }
   .workflow .progress-step.current .tooltip-current {
     display: block; }
   .workflow .progress-step.current .marker, .workflow .progress-step.current .tooltip::after {
-    background: #2e8aea; }
+    background: #413659; }
   .workflow .progress-step.current::before {
-    background: linear-gradient(90deg, #53a93f, #2e8aea); }
+    background: linear-gradient(90deg, #00aea2, #413659); }
   .workflow .progress-step.current::after {
-    background: linear-gradient(90deg, #2e8aea, #d9d9d9); }
+    background: linear-gradient(90deg, #413659, #d9d9d9); }
   .workflow .progress-step.current .tooltip {
-    border-color: #2e8aea; }
+    border-color: #413659; }
 
 .workflow .marker {
   display: block;
@@ -250,6 +250,8 @@
 .workflow .dash-inner-area {
   margin: 10px 0px;
   padding: 10px; }
+  .workflow .dash-inner-area .btn {
+    text-decoration: none; }
 
 .workflow .intro-text {
   font-size: 18px;
