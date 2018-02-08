@@ -7,10 +7,7 @@
 *.suo
 *.user
 *.sln.docstates
-**/App_Data/Logs/*
-**/App_Data/Temp/*
-**/App_Data/cache/*
-**/App_Data/preview/*
+**/App_Data/**/*
 *umbraco.config
 Workflow.Site/App_Plugins/Workflow/**
 Workflow/pkg
