@@ -4,7 +4,7 @@
             <umb-editor-container>
                 <div class="dash-inner-area">
                     <h1 class="title">Plumber - the workflow solution for Umbraco.</h1>
-                    <div class="intro-text">Sometimes more complex content or more complicated organistaions need more control in their approach to content management. Plumber integrates with the Umbraco backoffice to add multi-stage approval processes for content changes.</div>
+                    <div class="intro-text">Larger sites with multiple editors need a more controlled approach to content management. Plumber integrates with the Umbraco backoffice to add multi-stage approval processes for content changes.</div>
                     <div class="intro-text">
                         <a class="btn btn-info" href="https://github.com/nathanwoulfe/Plumber" target="_blank">
                             <svg width="30" height="30" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M896 128q209 0 385.5 103t279.5 279.5 103 385.5q0 251-146.5 451.5t-378.5 277.5q-27 5-40-7t-13-30q0-3 .5-76.5t.5-134.5q0-97-52-142 57-6 102.5-18t94-39 81-66.5 53-105 20.5-150.5q0-119-79-206 37-91-8-204-28-9-81 11t-92 44l-38 24q-93-26-192-26t-192 26q-16-11-42.5-27t-83.5-38.5-85-13.5q-45 113-8 204-79 87-79 206 0 85 20.5 150t52.5 105 80.5 67 94 39 102.5 18q-39 36-49 103-21 10-45 15t-57 5-65.5-21.5-55.5-62.5q-19-32-48.5-52t-49.5-24l-20-3q-21 0-29 4.5t-5 11.5 9 14 13 12l7 5q22 10 43.5 38t31.5 51l10 23q13 38 44 61.5t67 30 69.5 7 55.5-3.5l23-4q0 38 .5 88.5t.5 54.5q0 18-13 30t-40 7q-232-77-378.5-277.5t-146.5-451.5q0-209 103-385.5t279.5-279.5 385.5-103zm-477 1103q3-7-7-12-10-3-13 2-3 7 7 12 9 6 13-2zm31 34q7-5-2-16-10-9-16-3-7 5 2 16 10 10 16 3zm30 45q9-7 0-19-8-13-17-6-9 5 0 18t17 7zm42 42q8-8-4-19-12-12-20-3-9 8 4 19 12 12 20 3zm57 25q3-11-13-16-15-4-19 7t13 15q15 6 19-6zm63 5q0-13-17-11-16 0-16 11 0 13 17 11 16 0 16-11zm58-10q-2-11-18-9-16 3-14 15t18 8 14-14z" fill="#fff"/></svg>
@@ -12,13 +12,16 @@
                         </a>
                     </div>
                 </div>
-                <div class="dash-inner-area">
+                <!--<div class="dash-inner-area">
                     <p>Workflows can be managed at the node level, by document type or by tree inheritance. Workflows are administered from a dashboard view or on individual nodes.</p>
                     <p>Workflow roles are managed by approval groups specific to Plumber, keeping this tool separate from the rest of your Umbraco installation.</p>
                     <p>Plumber adds a new section to the Backoffice, called 'Workflow' (super creative!). The workflow section contains three options - settings, history and approval groups. </p>
                     <p>The default dashboard in the workflow section displays a visualisation of workflow activity in the previous 28 days (range is editable), summarising the task/instance statuses over that period (approved, cancelled, rejected, pending).</p>
-                </div>
-                <umb-tabs-nav model="vm.tabs"></umb-tabs-nav>
+                </div>-->
+
+                <div ng-bind-html="vm.docs"></div>
+
+                <!--<umb-tabs-nav model="vm.tabs"></umb-tabs-nav>
                 <umb-tabs-content view="true">
                     <umb-tab id="tab{{tab.id}}" ng-repeat="tab in vm.tabs" rel="{{tab.id}}">
                         <div class="dash-inner-area" ng-if="tab.alias === 'tab101'">
@@ -49,7 +52,7 @@
                         <div class="dash-inner-area" ng-if="tab.alias === 'tab104'">
                             <p>Plumber adds a pair of new options to the content tree context/actions menu:</p>
                             <ul>
-                                  <li><strong>Workflow history:</strong> launches an overlay displaying the workflow history for the current node.</li>
+                                <li><strong>Workflow history:</strong> launches an overlay displaying the workflow history for the current node.</li>
                                 <li><strong>Workflow configuration:</strong> only displays for users with access to the workflow section. This dialog displays all approval flows applied to the current node - explicit, inherited and/or content-type. Setting the explicit flow is as simple as selecting a sequence of approval groups from a dropdown, then hitting the OK button. Flows are applied in this order: explixit, content-type, inherited.</li>
                             </ul>
                         </div>
@@ -62,9 +65,10 @@
                             <p>The regular save and publish button is replaced with a custom view for nodes in a workflow - users with permission to action the current approval task are presented a similar button set to the user dashboard, while all users with access to the workflow section are presented the option to cancel the workflow.</p>
                         </div>
                     </umb-tab>
-                </umb-tabs-content>
+                </umb-tabs-content>-->
             </umb-editor-container>
         </umb-editor-view>
     </div>
+    <umb-load-indicator ng-if="!vm.loaded"></umb-load-indicator>
 </div>
 

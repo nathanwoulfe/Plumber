@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.Caching;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using Umbraco.Core;
@@ -21,6 +24,9 @@ namespace Workflow.Api
         private static readonly Database Db = ApplicationContext.Current.DatabaseContext.Database;
         private static readonly PocoRepository Pr = new PocoRepository();
 
+        private const string VersionKey = "plumberVersion";
+        private const string DocsKey = "plumberDocs";
+
         /// <summary>
         /// Get an object with info about the installed version and latest release from GitHub
         /// </summary>
@@ -30,6 +36,12 @@ namespace Workflow.Api
         {
             try
             {
+                var cache = MemoryCache.Default;
+                if (cache[VersionKey] != null)
+                {
+                    return Json((PackageVersion)cache.Get(VersionKey), ViewHelpers.CamelCase);
+                }
+
                 Assembly assembly = Assembly.GetExecutingAssembly();
                 Version version = assembly.GetName().Version;
 
@@ -42,7 +54,7 @@ namespace Workflow.Api
                 var currentVersion = $"v{version.Major}.{version.Minor}.{version.Build}";
                 var latestVersion = content["tag_name"].ToString();
 
-                return Json(new PackageVersion
+                var packageVersion = new PackageVersion
                 {
                     CurrentVersion = currentVersion,
                     LatestVersion = latestVersion,
@@ -50,8 +62,16 @@ namespace Workflow.Api
                     ReleaseNotes = content["body"].ToString(),
                     PackageUrl = content["assets"][0]["browser_download_url"].ToString(),
                     PackageName = content["assets"][0]["name"].ToString(),
-                    OutOfDate = !string.Equals(currentVersion, latestVersion, StringComparison.InvariantCultureIgnoreCase)
-                }, ViewHelpers.CamelCase);
+                    OutOfDate = !string.Equals(currentVersion, latestVersion,
+                        StringComparison.InvariantCultureIgnoreCase)
+                };
+
+
+                // Store data in the cache    
+                cache.Add(VersionKey, packageVersion,
+                    new CacheItemPolicy {AbsoluteExpiration = DateTime.Now.AddHours(6)});
+
+                return Json(packageVersion, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
@@ -59,20 +79,55 @@ namespace Workflow.Api
             }
         }
 
+        /// <summary>
+        /// Get the documentation from GitHub
+        /// </summary>
+        /// <returns></returns>
         [Route("docs")]
-        public IHttpActionResult GetDocs()
+        public HttpResponseMessage GetDocs()
         {
             try
             {
-                var client = new WebClient();
-                client.Headers.Add("media-type", MagicStrings.MdMediaType);
+                string docs;
+                bool fromCache = false;
 
-                var response = client.DownloadString(MagicStrings.DocsUrl);
-                return Json(response, ViewHelpers.CamelCase);
+                var cache = MemoryCache.Default;
+                if (cache[VersionKey] != null)
+                {
+                    docs = (string)cache.Get(DocsKey);
+                    fromCache = true;
+                }
+                else
+                {
+                    var client = new WebClient();
+                    client.Headers.Add("user-agent", MagicStrings.Name);
+                    client.Headers.Add("accept", MagicStrings.MdMediaType);
+
+                    docs = client.DownloadString(MagicStrings.DocsUrl);
+                }
+
+                var response = new HttpResponseMessage
+                {
+                    Content = new StringContent(docs)
+                };
+
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+
+                if (!fromCache)
+                {
+                    // Store data in the cache    
+                    cache.Add(DocsKey, docs,
+                        new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddHours(6) });
+                }
+
+                return response;
             }
             catch (Exception ex)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
+                return new HttpResponseMessage
+                {
+                    Content = new StringContent("Documentation unavailable")
+                };
             }
         }
 

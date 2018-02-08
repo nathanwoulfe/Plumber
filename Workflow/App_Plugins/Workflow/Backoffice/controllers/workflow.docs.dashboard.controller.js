@@ -1,8 +1,14 @@
 ﻿(function () {
     'use strict';
 
-    function dashboardController() {
+    function dashboardController(workflowResource) {
         var vm = this;
+
+        workflowResource.getDocs()
+            .then(function(docs) {
+                vm.docs = docs;
+                vm.loaded = true;
+            });
 
         angular.extend(vm, {
             tabs: [{

@@ -83,6 +83,9 @@
             getVersion: function() {
                 return this.request('GET', this.settingsUrl + 'version');
             },
+            getDocs: function () {
+                return this.request('GET', this.settingsUrl + 'docs');
+            },
 
             /*** SAVE PERMISSIONS ***/
             saveConfig: function (p) {

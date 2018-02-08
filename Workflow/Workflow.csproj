@@ -101,7 +101,6 @@
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.css" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\modules\exporting.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\lib\showdown\showdown.js" />	
     <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historyinstance.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historytask.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\umbEditorFooterContentRight.html" />
@@ -151,6 +150,7 @@
     </None>
     <Compile Include="Migrations\VersionZeroThreeZero.cs" />
     <Compile Include="Migrations\VersionZeroFourZero.cs" />
+    <None Include="DOCS.md" />
     <None Include="package.json" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -263,6 +263,7 @@
     <Reference Include="System.Net.Http.Formatting">
       <HintPath>..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Threading.Tasks.Dataflow, Version=4.6.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Dataflow.4.7.0\lib\portable-net45+win8+wpa81\System.Threading.Tasks.Dataflow.dll</HintPath>
       <Private>True</Private>

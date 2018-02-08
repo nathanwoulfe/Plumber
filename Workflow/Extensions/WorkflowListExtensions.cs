@@ -96,6 +96,8 @@ namespace Workflow.Extensions
         private static void GetPermissionsForNode(IPublishedContent node)
         {
             // check the node for set permissions
+            if (node == null) return;
+
             _perms = Pr.PermissionsForNode(node.Id, 0);
 
             // return them if they exist, otherwise check the parent

@@ -6,7 +6,7 @@
         public const string Name = "Plumber";
 
         public const string LatestVersionUrl = "https://api.github.com/repos/nathanwoulfe/plumber/releases/latest";
-        public const string DocsUrl = "https://api.github.com/repos/nathanwoulfe/plumber/contents/workflow/docs.md";
-        public const string MdMediaType = "application/vnd.github.VERSION.html";
+        public const string DocsUrl = "https://api.github.com/repos/nathanwoulfe/plumber/contents/Workflow/DOCS.md";
+        public const string MdMediaType = "application/vnd.github.v3.html";
     }
 }
