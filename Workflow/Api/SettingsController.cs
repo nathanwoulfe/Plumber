@@ -88,7 +88,7 @@ namespace Workflow.Api
         {
             try
             {
-                string docs;
+                string docs = "";
                 bool fromCache = false;
 
                 var cache = MemoryCache.Default;
@@ -116,8 +116,7 @@ namespace Workflow.Api
                 if (!fromCache)
                 {
                     // Store data in the cache    
-                    cache.Add(DocsKey, docs,
-                        new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddHours(6) });
+                    cache.Add(DocsKey, docs, new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddHours(6) });
                 }
 
                 return response;
