@@ -80,6 +80,10 @@
                 return this.request('POST', this.settingsUrl + 'save', settings);
             },
 
+            getVersion: function() {
+                return this.request('GET', this.settingsUrl + 'version');
+            },
+
             /*** SAVE PERMISSIONS ***/
             saveConfig: function (p) {
                 return this.request('POST', urlBase + 'config/saveconfig', p);              

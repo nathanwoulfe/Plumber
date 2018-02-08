@@ -9,7 +9,7 @@
 		<AppVeyorUmbracoPath>$(MSBuildProjectDirectory)\Tools\AppVeyorUmbraco</AppVeyorUmbracoPath>
 	</PropertyGroup>
 
-	<Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
+  <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
 	<Import Project="$(MSBuildUmbracoTasksPath)\MSBuild.Umbraco.Tasks.Targets" />
 	<Import Project="$(MSBuildNugetTasksPath)\MSBuild.NuGet.Tasks.Targets" />
 	<Import Project="$(AppVeyorUmbracoPath)\AppVeyorUmbraco.Targets" />

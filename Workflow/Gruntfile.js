@@ -45,8 +45,7 @@
                   '<%= basePath %>/backoffice/controllers/*.js',
                   '<%= basePath %>/backoffice/directives/*.js',
                   '<%= basePath %>/backoffice/interceptors/*.js',
-                  '<%= basePath %>/backoffice/resources/*.js',
-                  '<%= basePath %>/backoffice/*.js',				  
+                  '<%= basePath %>/backoffice/resources/*.js'
                 ],
                 dest: '<%= dest %>/<%= basePath %>/backoffice/js/workflow.js',
                 nonull: true,

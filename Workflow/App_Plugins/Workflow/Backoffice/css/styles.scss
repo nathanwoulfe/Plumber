@@ -228,6 +228,15 @@
         color: $danger;
     }
 
+    .upgrade {
+        margin:0 15px 30px;
+        text-align:center;
+
+        .btn {
+            margin-bottom:15px;
+        }
+    }
+
     .chart-header {
         list-style-type: none;
         margin: 0;
@@ -328,5 +337,18 @@
         margin-left: auto;
         margin-right: auto;
         line-height: 1.6em;
+
+        + .intro-text {
+            margin-top:15px;
+        }
+
+        .btn {
+            padding-left:7px;
+        }
+
+        svg {
+            vertical-align:middle;
+            margin-right:5px;
+        }
     }
 }

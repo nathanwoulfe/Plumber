@@ -175,6 +175,12 @@
 .workflow .cancelled {
   color: #ee5f5b; }
 
+.workflow .upgrade {
+  margin: 0 15px 30px;
+  text-align: center; }
+  .workflow .upgrade .btn {
+    margin-bottom: 15px; }
+
 .workflow .chart-header {
   list-style-type: none;
   margin: 0;
@@ -253,4 +259,11 @@
   margin-left: auto;
   margin-right: auto;
   line-height: 1.6em; }
+  .workflow .intro-text + .intro-text {
+    margin-top: 15px; }
+  .workflow .intro-text .btn {
+    padding-left: 7px; }
+  .workflow .intro-text svg {
+    vertical-align: middle;
+    margin-right: 5px; }
 

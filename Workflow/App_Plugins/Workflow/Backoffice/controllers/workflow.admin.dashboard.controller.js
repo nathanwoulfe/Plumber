@@ -4,6 +4,7 @@
     function dashboardController(workflowResource) {
 
         var vm = this,
+            storeKey = 'plumberUpdatePrompt',
             msPerDay = 1000 * 60 * 60 * 24,
             now = new moment();
 
@@ -24,7 +25,7 @@
                 data: defaultData(),
                 pointStart: then,
                 pointInterval: msPerDay,
-                colorIndex: 5,
+                colorIndex: 3,
                 lineWidth: 4,
                 marker: {
                     enabled: false
@@ -47,8 +48,8 @@
                         seriesNames.push(statusName);
                     }
 
-                    s = series.filter(function (s) {
-                        return s.name === statusName;
+                    s = series.filter(function (ss) {
+                        return ss.name === statusName;
                     })[0];
 
                     s.data[vm.range - now.diff(moment(isTask ? v.completedDate : v.completedOn), 'days')] += 1;
@@ -113,6 +114,21 @@
             }
         }
 
+        // check the current installed version against the remote on GitHub, only if the 
+        // alert has never been dismissed, or was dismissed more than 7 days ago
+        var pesterDate = localStorage.getItem(storeKey);
+
+        if (!pesterDate || moment(pesterDate).isBefore(now)) {
+            workflowResource.getVersion()
+                .then(function(resp) {
+                    vm.version = resp;
+                });
+        }
+
+        function updateAlertHidden() {
+            localStorage.setItem(storeKey, now.add(7, 'days'));
+        }
+
         // kick it off with a four-week span
         angular.extend(vm, {
             range: 28,
@@ -123,7 +139,8 @@
             totalPending: 0,
             totalRejected: 0,
 
-            getForRange: getForRange
+            getForRange: getForRange,
+            updateAlertHidden: updateAlertHidden
         });
 
         getForRange();
