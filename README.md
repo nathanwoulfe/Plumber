@@ -16,7 +16,7 @@ Grab the latest release from AppVeyor:
 =========
 https://ci.appveyor.com/project/nathanwoulfe/umbracoworkflow/build/artifacts
 
-On install via Nuget:
+Or install via Nuget:
 =========
 ```Install-Package Workflow.Umbraco```
 
