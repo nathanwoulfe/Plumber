@@ -1,0 +1,73 @@
+﻿@import "_variables";
+
+// listview for history views
+.umb-table-cell {
+    ul {
+        margin: 0;
+    }
+
+    &.show-overflow, &.show-overflow > * {
+        overflow: visible;
+    }
+}
+
+.controls {
+    h5 {
+        margin-top: 0;
+    }
+}
+
+.control-panel {
+    padding: 10px 0;
+    margin: 10px 0;
+}
+
+
+.dropdown-menu {
+    .warning {
+        color: $warning;
+    }
+
+    .danger {
+        color: $danger;
+    }
+}
+
+.table-row-outer {
+    .umb-table-row {
+        &:not(:first-child) {
+            border-top: none;
+
+            i {
+                opacity: 0;
+            }
+        }
+    }
+}
+
+.umb-table__input[type=checkbox] {
+    opacity: 0;
+    cursor: default;
+}
+
+.umb-table-body__icon.soft {
+    opacity: .25;
+}
+
+.pending {
+    color: $pending;
+    background: rgba($pending, .05);
+
+    .umb-table-body__icon {
+        color: $pending;
+        background: 0, 0;
+    }
+}
+
+.approved {
+    color: $success;
+}
+
+.cancelled {
+    color: $danger;
+}

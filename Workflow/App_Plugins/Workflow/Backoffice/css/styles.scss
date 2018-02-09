@@ -1,5 +1,4 @@
 ﻿@import "_variables";
-@import "highcharts";
 
 .workflow {
 
@@ -29,11 +28,6 @@
         }
     }
 
-    &.umb-panel .umb-nav-tabs {
-        margin: 15px auto;
-        position: relative;
-    }
-
     .flow-select {
         margin-bottom: 0;
     }
@@ -51,308 +45,33 @@
             padding-left: 5px;
         }
     }
-    // listview
-    .umb-table-cell {
-        ul {
-            margin: 0;
-        }
-
-        &.show-overflow, &.show-overflow > * {
-            overflow: visible;
-        }
-    }
-
-    .controls {
-        h5 {
-            margin-top: 0;
-        }
-    }
-
-    .control-panel {
-        padding: 10px 0;
-        margin: 10px 0;
-    }
-    // progress bar
-    .workflow-progress {
-        margin: 0 10px 10px;
-        padding-top: 10px;
-        border-top: 1px solid #d9d9d9;
-        display: flex;
-        position: relative;
-    }
-
-    .progress-step {
-        text-align: center;
-        position: relative;
-
-        &::before, &::after {
-            content: '';
-            width: 50%;
-            height: 1px;
-            position: absolute;
-            top: 6px;
-            background: #d9d9d9;
-        }
-
-        &::before {
-            left: 0;
-        }
-
-        &::after {
-            right: 0;
-        }
-
-        &.done {
-            .tooltip-done {
-                display: block;
-            }
-
-            &::before, &::after, .marker, .tooltip::after {
-                background: $umbGreen;
-            }
-
-            .tooltip {
-                border-color: $umbGreen;
-            }
-        }
-
-        &.current {
-            .tooltip-current {
-                display: block;
-            }
-
-            .marker, .tooltip::after {
-                background: $umbPurple;
-            }
-
-            &::before {
-                background: linear-gradient(90deg, $umbGreen, $umbPurple);
-            }
-
-            &::after {
-                background: linear-gradient(90deg, $umbPurple, #d9d9d9);
-            }
-
-            .tooltip {
-                border-color: $umbPurple;
-            }
-        }
-    }
-
-    .marker {
-        display: block;
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-        margin: 0 auto;
-        background: #d9d9d9;
-        position: relative;
-        cursor: pointer;
-
-        &:hover + .tooltip {
-            display: block;
-            bottom: calc(100% + 5px);
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 1;
-        }
-
-        + .tooltip {
-            display: none;
-            background: #f8f8f8;
-            padding: 5px;
-            border: 1px solid #d9d9d9;
-
-            &::after {
-                content: '';
-                width: 1px;
-                height: 10px;
-                background: #d9d9d9;
-                position: absolute;
-                top: 100%;
-                left: calc(50% - 1px);
-            }
-
-            span {
-                display: none;
-            }
-        }
-    }
-
-    .dropdown-menu {
-        .warning {
-            color: $warning;
-        }
-
-        .danger {
-            color: $danger;
-        }
-    }
-
-    .table-row-outer {
-        .umb-table-row {
-            &:not(:first-child) {
-                border-top:none;
-
-                i {
-                    opacity:0;
-                }
-            }
-        }
-    }
-
-    .umb-table__input[type=checkbox] {
-        opacity: 0;
-        cursor: default;
-    }
-
-    .umb-table-body__icon.soft {
-        opacity: .25;
-    }
-
-    .pending {
-        color: $pending;
-        background: rgba($pending, .05);
-
-        .umb-table-body__icon {
-            color: $pending;
-            background: 0, 0;
-        }
-    }
-
-    .approved {
-        color: $success;
-    }
-
-    .cancelled {
-        color: $danger;
-    }
+    
 
     .upgrade {
-        margin:0 15px 30px;
-        text-align:center;
+        margin: 0 15px 30px;
+        text-align: center;
 
         .btn {
-            margin-bottom:15px;
+            margin-bottom: 15px;
+            line-height: 30px;
+            padding-left: 7px;
+
+            i {
+                font-size: 30px;
+                vertical-align: middle;
+            }
         }
-    }
-
-    .chart-header {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        text-transform:uppercase;
-
-        li {
-            flex-basis:25%;
-            max-width:25%;
-            flex: 1 0 auto;
-            flex-wrap: wrap;
-            flex-direction: column;
-            background: #f3f3f5;
-            border-radius: 3px;
-            padding: 15px 10px;
-            text-align: center;
-            border: 2px solid transparent;
-            height: 100%;
-            margin:0 15px 30px;
-            line-height:1;
-        }
-
-        span {
-            font-weight: bold;
-            display: block;
-            font-size:3rem;
-        }
-    }
-
-    .chart-controls {
-        display: flex;
-        justify-content:center;
-        margin-bottom:30px;
-
-        label {
-            width: 100px;
-        }
-
-        .umb-property {
-            flex: 0;
-            margin:0 15px;
-            display:flex;
-        }
-
-        .umb-el-wrap {            
-            display:flex;
-            flex:1;
-            height:100%;
-            align-items:center;
-        }
-
-        .control-group {
-            padding:15px;
-            border:1px solid #f3f3f3;
-            margin:0!important;
-        }
-
-        input, label, select {
-            margin-bottom:0;
-        }
-
-        .controls-row {
-            margin-left: 0;
-            padding:0;
-        }
-    }
-
+    }    
 
     .active-banner {
         display: inline-block;
         margin-right: 10px;
         color: $warning;
     }
-    // docs dashboard - mimic Umbraco get started content
-    h1.title {
-        font-size: 30px;
-        color: #363636;
-        line-height: 1.3em;
-        text-align: center;
-        max-width: 750px;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 10px;
-        font-weight: bold;
-    }
 
-    .dash-inner-area {
-        margin: 10px 0px;
-        padding: 10px;
-
-        .btn {
-            text-decoration:none;
-        }
-    }
-
-    .intro-text {
-        font-size: 18px;
-        color: #666666;
-        text-align: center;
-        max-width: 750px;
-        margin-left: auto;
-        margin-right: auto;
-        line-height: 1.6em;
-
-        + .intro-text {
-            margin-top:15px;
-        }
-
-        .btn {
-            padding-left:7px;
-        }
-
-        svg {
-            vertical-align:middle;
-            margin-right:5px;
-        }
-    }
+    // import scss partials
+    @import "highcharts";
+    @import "listview";
+    @import "workflow-progress";
+    @import "docs-dashboard";
 }

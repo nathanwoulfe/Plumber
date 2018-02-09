@@ -1,43 +1,109 @@
 ﻿@import "_variables";
 
-.workflow {
-    .highcharts-root {
-        width:100%;
+.highcharts-root {
+    width: 100%;
+}
+
+.highcharts-container {
+    font-family: Lato,Helvetica Neue,Helvetica,Arial,sans-serif; // umbraco defaults
+}
+
+.highcharts-color-0 {
+    fill: $success;
+    color: $success;
+}
+
+.highcharts-color-1 {
+    fill: $danger;
+    color: $danger;
+}
+
+.highcharts-color-2 {
+    fill: $pending;
+    color: $pending;
+    stroke: $pending;
+}
+
+.highcharts-color-3 {
+    fill: $warning;
+    color: $warning;
+}
+
+.highcharts-legend-item {
+    text {
+        font-weight: normal;
+    }
+}
+
+.chart-loading {
+    opacity: .5;
+    transition: all ease-in-out .3s;
+}
+
+.chart-header {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    text-transform: uppercase;
+
+    li {
+        flex-basis: 25%;
+        max-width: 25%;
+        flex: 1 0 auto;
+        flex-wrap: wrap;
+        flex-direction: column;
+        background: #f3f3f5;
+        border-radius: 3px;
+        padding: 15px 10px;
+        text-align: center;
+        border: 2px solid transparent;
+        height: 100%;
+        margin: 0 15px 30px;
+        line-height: 1;
     }
 
-    .highcharts-container {
-        font-family: Lato,Helvetica Neue,Helvetica,Arial,sans-serif; // umbraco defaults
+    span {
+        font-weight: bold;
+        display: block;
+        font-size: 3rem;
+    }
+}
+
+.chart-controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+
+    label {
+        width: 100px;
     }
 
-    .highcharts-color-0 {
-        fill:$success;
-        color:$success;
+    .umb-property {
+        flex: 0;
+        margin: 0 15px;
+        display: flex;
     }
 
-    .highcharts-color-1 {
-        fill:$danger;
-        color:$danger;
+    .umb-el-wrap {
+        display: flex;
+        flex: 1;
+        height: 100%;
+        align-items: center;
     }
 
-    .highcharts-color-2 {
-        fill:$pending;
-        color:$pending;
-        stroke:$pending;
+    .control-group {
+        padding: 15px;
+        border: 1px solid #f3f3f3;
+        margin: 0 !important;
     }
 
-    .highcharts-color-3 {
-        fill:$warning;
-        color:$warning;
+    input, label, select {
+        margin-bottom: 0;
     }
 
-    .highcharts-legend-item {
-        text {
-            font-weight:normal;
-        }
-    }
-
-    .chart-loading {
-        opacity:.5;
-        transition:all ease-in-out .3s;
+    .controls-row {
+        margin-left: 0;
+        padding: 0;
     }
 }

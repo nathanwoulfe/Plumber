@@ -1,0 +1,108 @@
+﻿@import "_variables";
+
+// progress bar for the tasks dashboard
+.workflow-progress {
+    margin: 0 10px 10px;
+    padding-top: 10px;
+    border-top: 1px solid #d9d9d9;
+    display: flex;
+    position: relative;
+}
+
+.progress-step {
+    text-align: center;
+    position: relative;
+
+    &::before, &::after {
+        content: '';
+        width: 50%;
+        height: 1px;
+        position: absolute;
+        top: 6px;
+        background: #d9d9d9;
+    }
+
+    &::before {
+        left: 0;
+    }
+
+    &::after {
+        right: 0;
+    }
+
+    &.done {
+        .tooltip-done {
+            display: block;
+        }
+
+        &::before, &::after, .marker, .tooltip::after {
+            background: $umbGreen;
+        }
+
+        .tooltip {
+            border-color: $umbGreen;
+        }
+    }
+
+    &.current {
+        .tooltip-current {
+            display: block;
+        }
+
+        .marker, .tooltip::after {
+            background: $umbPurple;
+        }
+
+        &::before {
+            background: linear-gradient(90deg, $umbGreen, $umbPurple);
+        }
+
+        &::after {
+            background: linear-gradient(90deg, $umbPurple, #d9d9d9);
+        }
+
+        .tooltip {
+            border-color: $umbPurple;
+        }
+    }
+}
+
+.marker {
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background: #d9d9d9;
+    position: relative;
+    cursor: pointer;
+
+    &:hover + .tooltip {
+        display: block;
+        bottom: calc(100% + 5px);
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 1;
+    }
+
+    + .tooltip {
+        display: none;
+        background: #f8f8f8;
+        padding: 5px;
+        border: 1px solid #d9d9d9;
+
+        &::after {
+            content: '';
+            width: 1px;
+            height: 10px;
+            background: #d9d9d9;
+            position: absolute;
+            top: 100%;
+            left: calc(50% - 1px);
+        }
+
+        span {
+            display: none;
+        }
+    }
+}

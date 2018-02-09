@@ -141,6 +141,9 @@
       <DependentUpon>styles.css</DependentUpon>
     </None>
     <None Include="App_Plugins\Workflow\Backoffice\css\styles.scss" />
+	<None Include="App_Plugins\Workflow\Backoffice\css\docs-dashboard.scss" />
+	<None Include="App_Plugins\Workflow\Backoffice\css\listview.scss" />	
+	<None Include="App_Plugins\Workflow\Backoffice\css\workflow-progress.scss" />	
     <None Include="App_Plugins\Workflow\Backoffice\css\_variables.scss" />
     <None Include="App_Plugins\Workflow\dist.manifest" />
     <None Include="App_Plugins\Workflow\package.manifest" />

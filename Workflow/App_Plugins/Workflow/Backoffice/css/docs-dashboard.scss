@@ -1,0 +1,62 @@
+﻿// docs dashboard - mimic Umbraco get started content
+h1.title {
+    font-size: 30px;
+    color: #363636;
+    line-height: 1.3em;
+    text-align: center;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.dash-inner-area {
+    margin: 10px 0px;
+    padding: 10px;
+
+    .btn {
+        text-decoration: none;
+    }
+}
+
+.intro-text {
+    font-size: 18px;
+    color: #666666;
+    text-align: center;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6em;
+
+    + .intro-text {
+        margin-top: 15px;
+    }
+
+    .btn {
+        padding-left: 7px;
+    }
+
+    svg {
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+}
+
+&-docs {
+    .umb-editor-sub-header {
+        margin: 0;
+    }
+
+    .umb-healthcheck-group__details-check-description {
+        font-size: 15px;
+
+        > :last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.umb-healthcheck {
+    justify-content: center;
+}
