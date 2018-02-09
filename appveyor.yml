@@ -1,5 +1,5 @@
 # version format
-version: 0.5.3.{build}
+version: 0.6.0.{build}
 
 image: Visual Studio 2017
 
@@ -42,9 +42,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v0.5.3
-    release: Release 0.5.3
-    description: 'Improvements to notifications, general refactoring/tidying'
+    tag: v0.6.0
+    release: Release 0.6.0
+    description: 'Overhaul Workflow section dashboard - documentation is now dynamic and can be updated without a release. Adds check for new releases, tidies CSS, fixes a few bugs.'
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
