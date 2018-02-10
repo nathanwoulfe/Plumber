@@ -1,7 +1,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/ap94da7169wk0g0v?svg=true)](https://ci.appveyor.com/project/nathanwoulfe/umbracoworkflow)
 
-Plumber
-=========
+## Plumber
+
 A workflow solution for Umbraco. Plumber adds a heap of useful bits and pieces to Umbraco, to allow multi-staged workflow approval for publish/unpublish actions. 
 
 This is still in beta and probably not suitable for production use, unless you like to live dangerously. Not because it doesn't work (it does), but due to the high chance of breaking changes as the package approaches a release build. There's plenty of room for improvement.
@@ -12,18 +12,31 @@ In the backoffice, the new Workflow section has a documentation tab, which offer
 
 The workflow model is derived from the workflow solution developed by myself and the web team at [USC](http://www.usc.edu.au), but re-visions that basic three-step workflow into something much more flexible.
 
-Grab the latest release from AppVeyor:
-=========
+## Get started
+
+### Grab the latest release from AppVeyor:
+
 https://ci.appveyor.com/project/nathanwoulfe/umbracoworkflow/build/artifacts
 
-Or install via Nuget:
-=========
+### Or install via Nuget:
+
 ```Install-Package Workflow.Umbraco```
 
-Workflow.Site
-=========
+## Workflow.Site
+
 Login for the test site:
 
-**Username**: test@mail.com<br/>
+**Username**: test@mail.com<br />
 **Password**: password
+
+## Like it? Love it? 
+
+Maintaining an open source product takes time and effort, which could be otherwise spent on paid work.
+
+Since we live in the future, feel free to buy me a beer (or moon-lambo, depending on current prices) via a donation to one of the wallets below:
+
+- NANO: xrb_1dig7t3qjnwdtq53zrs9wc5mi9ry8doctdjwrgacs1oumqeykod9kdhxfpdu
+- ETH/ERC20: 0x8cbD3b158F604E9273Ac4887F90DaDCb254E9656
+
+If you're not familiar with Nano, [check it out](https://nano.org/en) - it's everything Bitcoin wanted to be. Instant, free and environmentally friendly.
 

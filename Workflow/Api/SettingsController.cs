@@ -125,7 +125,7 @@ namespace Workflow.Api
             {
                 return new HttpResponseMessage
                 {
-                    Content = new StringContent("Documentation unavailable")
+                    Content = new StringContent($"Documentation unavailable: {ex.Message}")
                 };
             }
         }
