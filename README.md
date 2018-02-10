@@ -35,8 +35,8 @@ Maintaining an open source product takes time and effort, which could be otherwi
 
 Since we live in the future, feel free to buy me a beer (or moon-lambo, depending on current prices) via a donation to one of the wallets below:
 
-- NANO: xrb_1dig7t3qjnwdtq53zrs9wc5mi9ry8doctdjwrgacs1oumqeykod9kdhxfpdu
-- ETH/ERC20: 0x8cbD3b158F604E9273Ac4887F90DaDCb254E9656
+- NANO<br />**xrb_1dig7t3qjnwdtq53zrs9wc5mi9ry8doctdjwrgacs1oumqeykod9kdhxfpdu**
+- ETH/ERC20<br />**0x8cbD3b158F604E9273Ac4887F90DaDCb254E9656**
 
 If you're not familiar with Nano, [check it out](https://nano.org/en) - it's everything Bitcoin wanted to be. Instant, free and environmentally friendly.
 
