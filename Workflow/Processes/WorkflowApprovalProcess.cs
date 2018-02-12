@@ -33,7 +33,7 @@ namespace Workflow.Processes
         public WorkflowInstancePoco InitiateWorkflow(int nodeId, int authorUserId, string authorComment)
         {
             // use the guid to associate tasks to a workflow instance
-            var g = Guid.NewGuid();
+            Guid g = Guid.NewGuid();
 
             // create and persist the new workflow instance
             Instance = new WorkflowInstancePoco(nodeId, authorUserId, authorComment, Type);
@@ -43,17 +43,24 @@ namespace Workflow.Processes
             GetDb().Insert(Instance);
 
             // create the first task in the workflow
-            var taskInstance = CreateApprovalTask(nodeId, out bool complete);
+            WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(nodeId);
 
             if (taskInstance.UserGroup == null)
             {
-                var errorMessage = "No approval flow set for document " + nodeId + " or any of its parent documents. Unable to initiate approval task.";
+                string errorMessage = $"No approval flow set for document {nodeId} or any of its parent documents. Unable to initiate approval task.";
                 Log.Error(errorMessage);
                 throw new WorkflowException(errorMessage);
             }
 
-            ApproveOrContinue(taskInstance, authorUserId);
-
+            if (StepApprovalRequired(taskInstance))
+            {
+                SetPendingTask(taskInstance);
+            }
+            else
+            {
+                SetNotRequiredTask(taskInstance, authorUserId, authorComment);
+                ActionWorkflow(Instance, WorkflowAction.Approve, authorUserId, taskInstance.Comment);
+            }
             return Instance;
         }
 
@@ -71,9 +78,9 @@ namespace Workflow.Processes
             {
                 Instance = instance;
 
-                if (Instance.Status == (int)WorkflowStatus.PendingApproval) 
+                if (Instance.Status == (int)WorkflowStatus.PendingApproval)
                 {
-                    // if pending, update to approved
+                    // if pending, update to approved or rejected
                     ProcessApprovalAction(action, userId, comment);
 
                     if (action == WorkflowAction.Approve)
@@ -82,22 +89,27 @@ namespace Workflow.Processes
                         if (Instance.TotalSteps > Instance.TaskInstances.Count)
                         {
                             // create the next task, then check if it should be approved
-                            var taskInstance = CreateApprovalTask(Instance.NodeId, out bool approvalRequired);
+                            // if it needs approval, 
+                            var taskInstance = CreateApprovalTask(Instance.NodeId);
 
-                            if (approvalRequired)
+                            if (StepApprovalRequired(taskInstance))
                             {
-                                ApproveOrContinue(taskInstance, userId);
+                                SetPendingTask(taskInstance);
                             }
                             else
                             {
-                                CompleteTask(taskInstance, userId);
-                                CompleteWorkflow();
+                                SetNotRequiredTask(taskInstance, userId);
+                                ActionWorkflow(Instance, WorkflowAction.Approve, userId, $"APPROVAL AT STAGE {Instance.TaskInstances.Count} NOT REQUIRED");
                             }
                         }
                         else
                         {
                             CompleteWorkflow();
                         }
+                    }
+                    else if (action == WorkflowAction.Reject)
+                    {
+                        // TODO: reject...
                     }
                 }
                 else
@@ -160,38 +172,11 @@ namespace Workflow.Processes
             return Instance;
         }
 
-        public abstract void CompleteWorkflow();
+        protected abstract void CompleteWorkflow();
 
         #endregion
 
         #region private methods
-        /// <summary>
-        /// Process task - approval is not required if current user is a member of the approving group
-        /// </summary>
-        /// <param name="taskInstance"></param>
-        /// <param name="userId"></param>
-        private void ApproveOrContinue(WorkflowTaskInstancePoco taskInstance, int userId)
-        {
-            if (IsStepApprovalRequired(taskInstance))
-            {
-                taskInstance.Status = (int)TaskStatus.PendingApproval;
-                Instance.Status = (int)WorkflowStatus.PendingApproval;
-
-                Notifications.Send(Instance, EmailType.ApprovalRequest);
-
-                GetDb().Update(taskInstance);
-            }
-            else
-            {
-                Instance.Status = (int)WorkflowStatus.PendingApproval;
-                taskInstance.Status = (int)TaskStatus.NotRequired;
-                taskInstance.Comment = taskInstance.Comment + " (APPROVAL AT STAGE " + (taskInstance.ApprovalStep + 1) + " NOT REQUIRED)";
-                GetDb().Update(taskInstance);
-                GetDb().Update(Instance);
-
-                ActionWorkflow(Instance, WorkflowAction.Approve, userId, string.Empty);
-            }
-        }
 
         /// <summary>
         /// Update the workflow task status to approve or reject
@@ -203,7 +188,7 @@ namespace Workflow.Processes
         /// <param name="comment"></param>
         private void ProcessApprovalAction(WorkflowAction action, int userId, string comment)
         {
-            var taskInstance = Instance.TaskInstances.FirstOrDefault(ti => ti.TaskStatus == TaskStatus.PendingApproval || ti.TaskStatus == TaskStatus.NotRequired );
+            var taskInstance = Instance.TaskInstances.FirstOrDefault(ti => ti.TaskStatus == TaskStatus.PendingApproval || ti.TaskStatus == TaskStatus.NotRequired);
             if (taskInstance == null) return;
 
             EmailType? emailType = null;
@@ -212,13 +197,13 @@ namespace Workflow.Processes
             switch (action)
             {
                 case WorkflowAction.Approve:
-                    taskInstance.Status = (int) TaskStatus.Approved;
+                    taskInstance.Status = taskInstance.Status == (int)TaskStatus.NotRequired ? (int)TaskStatus.NotRequired : (int)TaskStatus.Approved;
                     break;
 
                 case WorkflowAction.Reject:
-                    Instance.Status = (int) WorkflowStatus.Rejected;
+                    Instance.Status = (int)WorkflowStatus.Rejected;
                     Instance.CompletedDate = DateTime.Now;
-                    taskInstance.Status = (int) TaskStatus.Rejected;
+                    taskInstance.Status = (int)TaskStatus.Rejected;
                     emailRequired = true;
                     emailType = EmailType.ApprovalRejection;
 
@@ -245,7 +230,7 @@ namespace Workflow.Processes
         /// <param name="comment"></param>
         /// <param name="approvalRequired"></param>
         /// <returns></returns>
-        private WorkflowTaskInstancePoco CreateApprovalTask(int nodeId, out bool approvalRequired)
+        private WorkflowTaskInstancePoco CreateApprovalTask(int nodeId)
         {
             var taskInstance =
                 new WorkflowTaskInstancePoco(TaskType.Approve)
@@ -257,9 +242,7 @@ namespace Workflow.Processes
             Instance.TaskInstances.Add(taskInstance);
             SetApprovalGroup(taskInstance, nodeId);
 
-            approvalRequired = IsStepApprovalRequired(taskInstance);
-
-            GetDb().Insert(taskInstance);            
+            GetDb().Insert(taskInstance);
 
             return taskInstance;
         }
@@ -315,16 +298,14 @@ namespace Workflow.Processes
 
         /// <summary>
         /// Determines whether approval is required by checking if the Author is in the current task group.
+        /// TODO: review this. FlowType is probably redundant, and can be better framed as a setting to determine
+        /// TODO  if the change author being a member of subsequent groups counts as implicit approval. Setting can 
+        /// TODO  be call 'Approve own work' or something similar. Easier to understand than the flow-type options.
         /// </summary>
         /// <returns>true if approval required, false otherwise</returns>
-        private bool IsStepApprovalRequired(WorkflowTaskInstancePoco taskInstance)
+        private bool StepApprovalRequired(WorkflowTaskInstancePoco taskInstance)
         {
-            WorkflowSettingsPoco settings = Utility.GetSettings();
-
-            return settings.FlowType == (int)FlowType.All || // if type is all, approval always required
-                   settings.FlowType == (int)FlowType.Exclude || // if type is exclude, approval required, but no notification sent
-                   settings.FlowType == (int)FlowType.Other && !taskInstance.UserGroup.IsMember(Instance.AuthorUserId); // approval required if other and author not in current group
-
+            return !taskInstance.UserGroup.IsMember(Instance.AuthorUserId);
         }
 
         /// <summary>
@@ -345,12 +326,26 @@ namespace Workflow.Processes
         /// </summary>
         /// <param name="taskInstance"></param>
         /// <param name="userId"></param>
-        private void CompleteTask(WorkflowTaskInstancePoco taskInstance, int userId)
-        {            
-            taskInstance.Status = (int)TaskStatus.Approved;
+        private static void SetNotRequiredTask(WorkflowTaskInstancePoco taskInstance, int userId, string comment = "")
+        {
+            taskInstance.Status = (int)TaskStatus.NotRequired;
             taskInstance.CompletedDate = DateTime.Now;
-            taskInstance.Comment = taskInstance.Comment + " (APPROVAL AT STAGE " + (taskInstance.ApprovalStep + 1) + " NOT REQUIRED)";
+            taskInstance.Comment = $"{comment}{(string.IsNullOrEmpty(comment) ? "" : " ")}(APPROVAL AT STAGE {taskInstance.ApprovalStep + 1} NOT REQUIRED)";
             taskInstance.ActionedByUserId = userId;
+
+            GetDb().Update(taskInstance);
+        }
+
+        /// <summary>
+        /// Set the task to pending, notify appropriate groups
+        /// </summary>
+        /// <param name="taskInstance"></param>
+        private void SetPendingTask(WorkflowTaskInstancePoco taskInstance)
+        {
+            taskInstance.Status = (int)TaskStatus.PendingApproval;
+            Instance.Status = (int)WorkflowStatus.PendingApproval;
+
+            Notifications.Send(Instance, EmailType.ApprovalRequest);
 
             GetDb().Update(taskInstance);
         }

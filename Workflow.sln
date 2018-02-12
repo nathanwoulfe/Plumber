@@ -1,11 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workflow", "Workflow\Workflow.csproj", "{C16349CB-04C0-4319-AA8F-14C43548E57D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workflow.Site", "Workflow.Site\Workflow.Site.csproj", "{000940BB-7FCA-4770-ADAD-3F2EF2A5FB24}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02C2A51F-CDF0-4C5A-8AA1-6A9FD4D3DE6E}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +31,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6B84242F-4CE0-4F5A-8D2D-5095C2DFD825}
 	EndGlobalSection
 EndGlobal
