@@ -51,6 +51,9 @@
 .workflow .highcharts-color-3 {
   fill: #df7f48;
   color: #df7f48; }
+.workflow .highcharts-color-4 {
+  fill: #8085e9;
+  color: #8085e9; }
 .workflow .highcharts-legend-item text {
   font-weight: normal; }
 .workflow .chart-loading {
@@ -63,9 +66,8 @@
   display: flex;
   text-transform: uppercase; }
   .workflow .chart-header li {
-    flex-basis: 25%;
-    max-width: 25%;
-    flex: 1 0 auto;
+    flex-basis: 20%;
+    flex: 1;
     flex-wrap: wrap;
     flex-direction: column;
     background: #f3f3f5;
@@ -127,11 +129,9 @@
 .workflow .umb-table-body__icon.soft {
   opacity: .25; }
 .workflow .pending {
-  color: #2e8aea;
-  background: rgba(46, 138, 234, 0.05); }
+  color: #2e8aea; }
   .workflow .pending .umb-table-body__icon {
-    color: #2e8aea;
-    background: 0, 0; }
+    color: #2e8aea; }
 .workflow .approved {
   color: #53a93f; }
 .workflow .cancelled {

@@ -56,11 +56,9 @@
 
 .pending {
     color: $pending;
-    background: rgba($pending, .05);
 
     .umb-table-body__icon {
         color: $pending;
-        background: 0, 0;
     }
 }
 

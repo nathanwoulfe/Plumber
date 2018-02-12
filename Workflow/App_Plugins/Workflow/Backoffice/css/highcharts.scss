@@ -10,12 +10,12 @@
 
 .highcharts-color-0 {
     fill: $success;
-    color: $success;
+    color: $success; 
 }
 
 .highcharts-color-1 {
-    fill: $danger;
-    color: $danger;
+    fill: $danger; 
+    color: $danger; 
 }
 
 .highcharts-color-2 {
@@ -27,6 +27,11 @@
 .highcharts-color-3 {
     fill: $warning;
     color: $warning;
+}
+
+.highcharts-color-4 {
+    fill: #8085e9;
+    color: #8085e9;
 }
 
 .highcharts-legend-item {
@@ -48,9 +53,8 @@
     text-transform: uppercase;
 
     li {
-        flex-basis: 25%;
-        max-width: 25%;
-        flex: 1 0 auto;
+        flex-basis: 20%;
+        flex: 1;
         flex-wrap: wrap;
         flex-direction: column;
         background: #f3f3f5;
