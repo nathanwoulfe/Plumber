@@ -51,6 +51,9 @@
             getAllTasksForGroup: function (groupId, count, page) {
                 return this.request('GET', this.tasksUrl + 'group/' + groupId + '/' + count + '/' + page);
             },
+            getAllTasksByGuid: function (guid) {
+                return this.request('GET', this.tasksUrl + 'tasksbyguid/' + guid);
+            },
             getNodeTasks: function(id, count, page) {
                 return this.request('GET', this.tasksUrl + 'node/' + id  + '/' + count + '/' + page);
             },

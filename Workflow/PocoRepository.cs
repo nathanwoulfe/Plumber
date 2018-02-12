@@ -61,6 +61,18 @@ namespace Workflow
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="status"></param>
+        /// <param name="count"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public List<WorkflowTaskInstancePoco> GetAllPendingTasks(int status)
+        {
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, status).ToList();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="groupId"></param>
         /// <param name="count"></param>
         /// <param name="page"></param>

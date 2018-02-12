@@ -13,6 +13,7 @@
                     subtitle: 'Document: ' + item.nodeName,
                     comment: item.comments,
                     approvalComment: '',
+                    guid: item.instanceGuid,
                     requestedBy: item.requestedBy,
                     requestedOn: item.requestedOn,
                     submit: function (model) {

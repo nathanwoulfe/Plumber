@@ -1,6 +1,15 @@
 ﻿<div class="workflow" ng-controller="Workflow.Action.Controller">
     <p>Edited by {{ model.requestedBy }} on {{ model.requestedOn }}</p>
     <p><i>{{ model.comment }}</i></p>
+    
+    <ul ng-if="tasks.length">
+        <li ng-repeat="t in tasks">
+            <span ng-if="t.status !== 4">{{ t.actionedByUser.name }}</span>
+            <span>{{ t.completedDate }}</span>
+            <span>{{ t.comment }}</span>
+        </li>
+    </ul>
+
     <wf-comments limit="limit"
                  label-text="'Comments'"
                  comment="model.approvalComment"

@@ -172,15 +172,19 @@ namespace Workflow.Api
         {
             try
             {
-                var excludeOwn = Utility.GetSettings().FlowType != (int)FlowType.All;
-                var taskInstances = type == 0 ? Pr.TasksForUser(userId, (int)TaskStatus.PendingApproval) : Pr.SubmissionsForUser(userId, (int)TaskStatus.PendingApproval);
+                List<WorkflowTaskInstancePoco> taskInstances = type == 0 ? Pr.GetAllPendingTasks((int)TaskStatus.PendingApproval) : Pr.SubmissionsForUser(userId, (int)TaskStatus.PendingApproval);
 
-                if (excludeOwn && type == 0)
+                if (type == 0)
                 {
-                    taskInstances = taskInstances.Where(t => t.WorkflowInstance.AuthorUserId != Utility.GetCurrentUser().Id).ToList();
+                    foreach (WorkflowTaskInstancePoco taskInstance in taskInstances)
+                    {
+                        taskInstance.UserGroup = Pr.PopulatedUserGroup(taskInstance.UserGroup.GroupId).First();
+                    }
+
+                    taskInstances = taskInstances.Where(x => x.UserGroup.IsMember(userId)).ToList();
                 }
 
-                var workflowItems = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
+                List<WorkflowTask> workflowItems = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
                 return Json(new
                 {
                     items = workflowItems,
@@ -215,6 +219,30 @@ namespace Workflow.Api
                     total = Pr.CountGroupTasks(groupId),
                     page,
                     count
+                }, ViewHelpers.CamelCase);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+            }
+        }
+
+        /// <summary>
+        /// For a given guid, returns a set of workflow tasks, regardless of task status
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("tasksbyguid/{guid:Guid}")]
+        public IHttpActionResult GetTasksByInstanceGuid(Guid guid)
+        {
+            try
+            {
+                List<WorkflowTaskInstancePoco> tasks = Pr.TasksAndGroupByInstanceId(guid);
+
+                return Json(new
+                {
+                    items = tasks
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception e)

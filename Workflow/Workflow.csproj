@@ -108,12 +108,6 @@
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowHistoryTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowLineChart.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowTasksTemplate.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\css\styles.css">
-      <DependentUpon>styles.scss</DependentUpon>
-    </Content>
-    <Content Include="App_Plugins\Workflow\Backoffice\css\styles.min.css">
-      <DependentUpon>styles.css</DependentUpon>
-    </Content>
     <Content Include="App_Plugins\Workflow\Backoffice\resources\actions.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\workflow\edit-group.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.dashboard.controller.js" />
@@ -137,9 +131,6 @@
     <Content Include="Gruntfile.js" />
     <None Include="app.config" />
     <None Include="App_Plugins\Workflow\Backoffice\css\highcharts.scss" />
-    <None Include="App_Plugins\Workflow\Backoffice\css\styles.css.map">
-      <DependentUpon>styles.css</DependentUpon>
-    </None>
     <None Include="App_Plugins\Workflow\Backoffice\css\styles.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\docs-dashboard.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\listview.scss" />
@@ -147,10 +138,6 @@
     <None Include="App_Plugins\Workflow\Backoffice\css\_variables.scss" />
     <None Include="App_Plugins\Workflow\dist.manifest" />
     <None Include="App_Plugins\Workflow\package.manifest" />
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
     <Compile Include="Migrations\VersionZeroThreeZero.cs" />
     <Compile Include="Migrations\VersionZeroFourZero.cs" />
     <None Include="DOCS.md" />
