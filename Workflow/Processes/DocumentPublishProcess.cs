@@ -21,7 +21,7 @@ namespace Workflow.Processes
         /// <summary>
         /// Performs workflow completion tasks on completion of the approval processing.
         /// </summary>
-        public override void CompleteWorkflow()
+        protected override void CompleteWorkflow()
         {
             // Handle Publish At (Release At)
             if (Instance.ScheduledDate != null && Instance.ScheduledDate > DateTime.Now)

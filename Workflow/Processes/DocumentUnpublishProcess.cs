@@ -22,7 +22,7 @@ namespace Workflow.Processes
         /// <summary>
         /// Performs workflow completion tasks on completion of the approval processing.
         /// </summary>
-        public override void CompleteWorkflow()
+        protected override void CompleteWorkflow()
         {
             _nodeName = Instance.Node.Name;
 
