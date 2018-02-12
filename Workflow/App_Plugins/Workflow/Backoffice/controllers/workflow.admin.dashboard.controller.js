@@ -63,13 +63,17 @@
                         vm.totalRejected += 1;
                         s.colorIndex = 2;
                     }
+                    else if (statusName === 'Not Required') {
+                        vm.totalNotRequired += 1;
+                        s.colorIndex = 4;
+                    }
                     else {
                         vm.totalCancelled += 1;
                         s.colorIndex = 1;
                     }
 
                 } else {
-                    var index = vm.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn));
+                    var index = vm.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn), 'days');
                     created.data[index < 0 ? 0 : index] += 1;
                     vm.totalPending += 1;
                 }
@@ -138,6 +142,7 @@
             totalCancelled: 0,
             totalPending: 0,
             totalRejected: 0,
+            totalNotRequired: 0,
 
             getForRange: getForRange,
             updateAlertHidden: updateAlertHidden
