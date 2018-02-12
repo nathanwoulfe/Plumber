@@ -82,8 +82,12 @@
         },
 
         watch: {
-            options: {
-                atBegin: true
+            dev: {
+                files: ['<%= basePath %>/**/*.scss', '<%= basePath %>/**/*.js'],
+                tasks: ['sass:dist', 'copy:css', 'copy:js'],
+                options: {
+                    livereload: true
+                }
             },
 
             css: {
@@ -101,9 +105,9 @@
                 tasks: ['copy:views']
             },
             
-            workflow: {
-                files: ['<%= basePath %>/backoffice/workflow/**/*.html'],
-                tasks: ['copy:workflow']
+            approvalGroups: {
+                files: ['<%= basePath %>/backoffice/approval-groups/**/*.html'],
+                tasks: ['copy:approval-groups']
             },
             
             partials: {
@@ -139,6 +143,18 @@
                 dest: '<%= dest %>/<%= basePath %>/package.manifest',
             },
 
+            css: {
+                src: '<%= basePath %>/backoffice/css/styles.css',
+                dest: '../workflow.site/<%= basePath %>/backoffice/css/styles.min.css', // yes, it's not minified, but the build task will overwrite it later
+            },
+
+            js: {
+                expand: true,
+                cwd: '<%= basePath %>/backoffice/',
+                src: '**/*.js',
+                dest: '../workflow.site/<%= basePath %>/backoffice/',
+            },
+
             lang: {
                 expand: true,
                 cwd: '<%= basePath %>/lang/',
@@ -160,11 +176,11 @@
                 dest: '<%= dest %>/<%= basePath %>/backoffice/views/'
             },
 
-            workflow: {
+            approvalGroups: {
                 expand: true,
-                cwd: '<%= basePath %>/backoffice/workflow/',
+                cwd: '<%= basePath %>/backoffice/approval-groups/',
                 src: '**',
-                dest: '<%= dest %>/<%= basePath %>/backoffice/workflow/'
+                dest: '<%= dest %>/<%= basePath %>/backoffice/approval-groups/'
             },
 
             partials: {
@@ -285,14 +301,12 @@
                     eqeqeq: false,
                     immed: true,
                     latedef: false,
-                    newcap: true,
+                    newcap: false,
                     noarg: true,
                     sub: true,
                     boss: true,
                     eqnull: true,
                     validthis: true,
-                    //NOTE: we need to use eval sometimes so ignore it
-                    evil: true,
                     //NOTE: we need to check for strings such as "javascript:" so don't throw errors regarding those
                     scripturl: true,
                     //NOTE: we ignore tabs vs spaces because enforcing that causes lots of errors depending on the text editor being used
@@ -305,9 +319,11 @@
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:groups', 'copy:views', 'copy:workflow', 'copy:partials', 'copy:dialogs', 'copy:lib', 'copy:lang']);
+    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:groups', 'copy:views', 'copy:approvalGroups', 'copy:partials', 'copy:dialogs', 'copy:lib', 'copy:lang']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
+
+    grunt.registerTask('dev', ['watch:dev']);
 
     grunt.registerTask('test', 'Clean, copy test assets, test', function () {
         var assetsDir = grunt.config.get('dest');
@@ -321,4 +337,5 @@
             grunt.log.errorlns('Tests assets not found, skipping tests');
         }
     });
+
 };
