@@ -83,8 +83,8 @@
 
         watch: {
             dev: {
-                files: ['<%= basePath %>/**/*.scss', '<%= basePath %>/**/*.js'],
-                tasks: ['sass:dist', 'copy:css', 'copy:js'],
+                files: ['<%= basePath %>/**/*.scss', '<%= basePath %>/**/*.js', '<%= basePath %>/**/*.html'],
+                tasks: ['sass:dist', 'copy:css', 'copy:js', 'copy:html'],
                 options: {
                     livereload: true
                 }
@@ -152,6 +152,13 @@
                 expand: true,
                 cwd: '<%= basePath %>/backoffice/',
                 src: '**/*.js',
+                dest: '../workflow.site/<%= basePath %>/backoffice/',
+            },
+
+            html: {
+                expand: true,
+                cwd: '<%= basePath %>/backoffice/',
+                src: '**/*.html',
                 dest: '../workflow.site/<%= basePath %>/backoffice/',
             },
 

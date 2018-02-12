@@ -9,6 +9,7 @@
                 var workflowOverlay = {
                     view: '../app_plugins/workflow/backoffice/dialogs/workflow.action.dialog.html',
                     show: true,
+                    typeForText: approve ? 'an approval' : 'a rejection',
                     title: (approve ? 'Approve' : 'Reject') + ' workflow process',
                     subtitle: 'Document: ' + item.nodeName,
                     comment: item.comments,

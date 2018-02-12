@@ -13,6 +13,7 @@
 
     wf-comments label {
         width: auto;
+        float:none;
     }
 
     textarea, input {
@@ -67,6 +68,31 @@
         display: inline-block;
         margin-right: 10px;
         color: $warning;
+    }
+
+    .action-dialog {
+
+        textarea, label {
+            width:100%;
+        }
+
+        &--task-list {
+            list-style-type:none;
+            margin:0;
+        }
+
+        &--task-list-item {
+            margin-bottom:10px;
+            display:flex;
+
+            &:last-child {
+                margin-bottom:0;
+            }
+
+            > div {
+                padding-left:5px;
+            }
+        }        
     }
 
     // import scss partials

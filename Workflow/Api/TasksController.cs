@@ -239,10 +239,12 @@ namespace Workflow.Api
             try
             {
                 List<WorkflowTaskInstancePoco> tasks = Pr.TasksAndGroupByInstanceId(guid);
+                WorkflowInstancePoco instance = Pr.InstanceByGuid(guid);
 
                 return Json(new
                 {
-                    items = tasks
+                    items = tasks,
+                    totalSteps = instance.TotalSteps
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception e)

@@ -1,17 +1,34 @@
-﻿<div class="workflow" ng-controller="Workflow.Action.Controller">
-    <p>Edited by {{ model.requestedBy }} on {{ model.requestedOn }}</p>
+﻿<div class="workflow action-dialog" ng-controller="Workflow.Action.Controller">
+    
+    <p>Content modified by {{ model.requestedBy }}<br />
+        Approval requested on {{ requestedOn }}</p>
+    <h5>Change description</h5>
     <p><i>{{ model.comment }}</i></p>
     
-    <ul ng-if="tasks.length">
-        <li ng-repeat="t in tasks">
-            <span ng-if="t.status !== 4">{{ t.actionedByUser.name }}</span>
-            <span>{{ t.completedDate }}</span>
-            <span>{{ t.comment }}</span>
-        </li>
-    </ul>
+    <div ng-if="tasks.length">
+        
+        <hr />
+        <h5>Workflow history</h5>
+
+        <ul class="action-dialog--task-list">
+            <li class="action-dialog--task-list-item" ng-repeat="t in tasks">
+                <i class="icon icon-{{ t.status !== 4 ? 'check' : 'next' }} {{ t.statusName | lowercase }}"></i>
+                <div ng-if="t.status !== 4">
+                    <span class="{{ t.statusName | lowercase }}" ng-bind="t.statusName"></span> by <strong ng-bind="t.actionedByUser.name"></strong> on {{ getRequestedOn(t.completedDate) }} <br/>
+                    Comment: {{ t.comment }}
+                </div>
+                <div ng-if="t.status === 4">
+                    {{ t.comment }}
+                </div>
+            </li>
+        </ul>
+    </div>
+    
+    <hr />
+    <h5>Please provide {{ model.typeForText }} comment (Workflow stage {{ tasks.length + 1 }} of {{ totalSteps }})</h5>
 
     <wf-comments limit="limit"
-                 label-text="'Comments'"
+                 label-text="'Comment'"
                  comment="model.approvalComment"
                  is-final-approval="model.isFinalApproval"
                  disabled="disabled">

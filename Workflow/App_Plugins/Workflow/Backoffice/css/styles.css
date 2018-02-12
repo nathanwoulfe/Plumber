@@ -4,7 +4,8 @@
   float: left;
   width: 160px; }
 .workflow wf-comments label {
-  width: auto; }
+  width: auto;
+  float: none; }
 .workflow textarea, .workflow input {
   border: 1px solid #ccc; }
 .workflow textarea {
@@ -34,6 +35,18 @@
   display: inline-block;
   margin-right: 10px;
   color: #df7f48; }
+.workflow .action-dialog textarea, .workflow .action-dialog label {
+  width: 100%; }
+.workflow .action-dialog--task-list {
+  list-style-type: none;
+  margin: 0; }
+.workflow .action-dialog--task-list-item {
+  margin-bottom: 10px;
+  display: flex; }
+  .workflow .action-dialog--task-list-item:last-child {
+    margin-bottom: 0; }
+  .workflow .action-dialog--task-list-item > div {
+    padding-left: 5px; }
 .workflow .highcharts-root {
   width: 100%; }
 .workflow .highcharts-container {
