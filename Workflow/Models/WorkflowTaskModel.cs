@@ -27,13 +27,15 @@ namespace Workflow.Models
     /// </summary>
     public class WorkflowTask
     {
-        public string Type { get; set; }
-        public string Status { get; set; }
-        public string CssStatus { get; set; }
         public int NodeId { get; set; }
         public int TaskId { get; set; }
         public int ApprovalGroupId { get; set; }
         public int CurrentStep { get; set; }
+        public int RequestedById { get; set; }
+
+        public string Type { get; set; }
+        public string Status { get; set; }
+        public string CssStatus { get; set; }
         public string NodeName { get; set; }
         public string RequestedBy { get; set; }
         public string RequestedOn { get; set; }
@@ -43,7 +45,9 @@ namespace Workflow.Models
         public string ApprovalComment { get; set; }
         public string ApprovalGroup { get; set; }
         public string ActiveTask { get; set; }
+
         public List<UserGroupPermissionsPoco> Permissions { get; set; }
+
         public Guid InstanceGuid { get; set; }
     }
 }

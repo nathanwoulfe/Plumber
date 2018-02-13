@@ -43,6 +43,7 @@ namespace Workflow.Extensions
                     ApprovalGroupId = taskInstance.UserGroup.GroupId,
                     NodeName = instanceNodeName,
                     RequestedBy = instance.AuthorUser.Name,
+                    RequestedById = instance.AuthorUser.Id,
                     RequestedOn = taskInstance.CreatedDate.ToString(),
                     ApprovalGroup = taskInstance.UserGroup.Name,
                     Comments = useInstanceFromTask ? instance.AuthorComment : taskInstance.Comment,
