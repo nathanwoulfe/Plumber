@@ -54,6 +54,7 @@
     opacity: .25;
 }
 
+/* colours will be available for all elements in the .workspace namespace */
 .pending {
     color: $pending;
 
@@ -68,4 +69,21 @@
 
 .cancelled {
     color: $danger;
+}
+
+.rejected, .resubmitted {
+    color: $warning;
+
+    i, a {
+        color: $warning;
+    }
+}
+
+.action-dialog {
+    .not-required {
+        color:$pending;
+    }
+    .rejected {
+        color: $danger;
+    }
 }

@@ -21,9 +21,9 @@
                 );
             },
 
-            getStatus: function (id) {
-                return this.request('GET', this.tasksUrl + 'status/' + id);
-            },
+            //getStatus: function (id) {
+            //    return this.request('GET', this.tasksUrl + 'status/' + id);
+            //},
 
             getContentTypes: function() {
                 return this.request('GET', this.settingsUrl + 'getcontenttypes');
@@ -71,6 +71,9 @@
             rejectWorkflowTask: function (instanceGuid, comment) {
                 return this.request('POST', this.actionsUrl + 'reject', { instanceGuid: instanceGuid, comment: comment });
             },
+            resubmitWorkflowTask: function (instanceGuid, comment) {
+                return this.request('POST', this.actionsUrl + 'resubmit', { instanceGuid: instanceGuid, comment: comment });
+            },
             cancelWorkflowTask: function (instanceGuid, comment) {
                 return this.request('POST', this.actionsUrl + 'cancel', { instanceGuid: instanceGuid, comment: comment });
             },
@@ -97,30 +100,7 @@
 
             saveDocTypeConfig: function (p) {
               return this.request('POST', urlBase + 'config/savedoctypeconfig', p);
-            },
-
-            /**
-             *  Helper for generating node path for setting active state in tree
-             * @param {} node 
-             * @param {} path 
-             * @returns {} 
-             */
-            buildPath: function(node, path) {
-              path.push(node.id);
-
-              if (node.id === '-1') {
-                return path.reverse();
-              }
-
-              var parent = node.parent();
-
-              if (parent === undefined) {
-                return path;
-              }
-
-              return service.buildPath(parent, path);
             }
-
         };
 
         return service;

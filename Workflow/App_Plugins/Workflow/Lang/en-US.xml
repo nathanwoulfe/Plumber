@@ -14,6 +14,7 @@
     <key alias="publishButton">Request publish</key>
     <key alias="resubmitButton">Resubmit changes</key>
     <key alias="unpublishButton">Request unpublish</key>
+    <key alias="detailButton">Workflow detail</key>
     <key alias="dateRange">Date range (days)</key>
     <key alias="viewType">View type</key>
     <key alias="flowType">Flow type</key>

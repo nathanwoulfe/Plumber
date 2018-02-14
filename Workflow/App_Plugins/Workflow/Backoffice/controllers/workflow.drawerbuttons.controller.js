@@ -8,6 +8,8 @@
         var vm = this,
             user;
 
+        var dashboardClick = editorState.current === null;
+
         // are there common elements between two arrays?
         function common(arr1, arr2) {
             return arr1.some(function(el) {
@@ -26,7 +28,6 @@
                     }
                 }
             });
-
 
         var defaultButtons = contentEditingHelper.configureContentEditorButtons({
             create: $routeParams.create,
@@ -53,7 +54,14 @@
                                 notificationsService.warning('WORKFLOW INSTALLED BUT NOT CONFIGURED', msg);
                             } else if (resp.items && resp.items.length) {
                                 vm.active = true;
-                                checkUserAccess(resp.items[0]);
+
+                                // if the workflow status is rejected, the original author should be able to edit and resubmit
+                                var currentTask = resp.items[resp.items.length - 1];
+                                vm.rejected = currentTask.cssStatus === 'rejected';
+                                vm.instanceGuid = currentTask.instanceGuid;
+                                vm.userCanEdit = vm.rejected && currentTask.requestedById === user.id;
+
+                                checkUserAccess(currentTask);
                             } else {
                                 vm.active = false;
                                 setButtons();
@@ -82,26 +90,37 @@
             vm.buttonGroup.state = data;
         });
 
-        // if editorState.current is null, it's a dashboard click
         var buttons = {
             approveButton: {
                 labelKey: 'workflow_approveButtonLong',
                 handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.action(item, true, editorState.current === null);
+                    vm.workflowOverlay = workflowActionsService.action(item, 'Approve', dashboardClick);
                 }
             },
             cancelButton: {
                 labelKey: 'workflow_cancelButtonLong',
                 cssClass: 'danger',
                 handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.cancel(item, editorState.current === null);
+                    vm.workflowOverlay = workflowActionsService.cancel(item, dashboardClick);
                 }
             },
             rejectButton: {
                 labelKey: 'workflow_rejectButton',
                 cssClass: 'warning',
                 handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.action(item, false, editorState.current === null);
+                    vm.workflowOverlay = workflowActionsService.action(item, 'Reject', dashboardClick);
+                }
+            },
+            resubmitButton: {
+                labelKey: 'workflow_resubmitButton',
+                handler: function (item) {
+                    vm.workflowOverlay = workflowActionsService.action(item, 'Resubmit', dashboardClick);
+                }
+            },
+            detailButton: {
+                labelKey: 'workflow_detailButton',
+                handler: function (item) {
+                    vm.workflowOverlay = workflowActionsService.detail(item);
                 }
             },
             saveButton: {
@@ -147,8 +166,8 @@
             }
             if (vm.active) {
                 vm.buttonGroup = {
-                    defaultButton: vm.canAction ? buttons.approveButton : vm.adminUser ? buttons.cancelButton : null,
-                    subButtons: vm.canAction ? [buttons.rejectButton, buttons.cancelButton] : []
+                    defaultButton: vm.canAction ? buttons.approveButton : buttons.detailButton,
+                    subButtons: vm.canAction ? [buttons.rejectButton, buttons.cancelButton] : vm.userCanEdit || vm.adminUser ? [buttons.cancelButton] : []
                 };
             }
         }
@@ -158,8 +177,9 @@
             if (defaultButtons.defaultButton !== null) {
                 var subButtons = saveAndPublish ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] : [buttons.unpublishButton, buttons.saveButton];
 
+                // if the content is dirty, show save. if it's saved and the last changes were rejected, show resubmit, otherwise show request approval
                 vm.buttonGroup = {
-                    defaultButton: $scope.dirty ? buttons.saveButton : buttons.publishButton,
+                    defaultButton: $scope.dirty ? buttons.saveButton : vm.userCanEdit ? buttons.resubmitButton : buttons.publishButton,
                     subButtons: $scope.dirty ? (saveAndPublish ? [defaultButtons.defaultButton] : []) : subButtons
                 };
             }

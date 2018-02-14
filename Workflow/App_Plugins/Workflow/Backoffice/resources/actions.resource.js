@@ -5,12 +5,14 @@
 
         var service = {
 
-            action: function (item, approve, fromDash) {
+            dialogPath: '../app_plugins/workflow/backoffice/dialogs/',
+
+            action: function (item, type, fromDash) {
+
                 var workflowOverlay = {
-                    view: '../app_plugins/workflow/backoffice/dialogs/workflow.action.dialog.html',
+                    view: this.dialogPath + 'workflow.action.dialog.html',
                     show: true,
-                    typeForText: approve ? 'an approval' : 'a rejection',
-                    title: (approve ? 'Approve' : 'Reject') + ' workflow process',
+                    title: type + ' workflow process',
                     subtitle: 'Document: ' + item.nodeName,
                     comment: item.comments,
                     approvalComment: '',
@@ -20,18 +22,14 @@
                     submit: function (model) {
 
                         buttonState('busy');
-                        if (approve) {
-                            workflowResource.approveWorkflowTask(item.instanceGuid, model.approvalComment)
-                                .then(function (resp) {
-                                    notify(resp, fromDash);
-                                });
-                        }
-                        else {
-                            workflowResource.rejectWorkflowTask(item.instanceGuid, model.approvalComment)
-                                .then(function (resp) {
-                                    notify(resp, fromDash);
-                                });
-                        }
+
+                        // build the function name and access it via index rather than property - saves duplication
+                        var functionName = type.toLowerCase() + 'WorkflowTask';
+                        workflowResource[functionName](item.instanceGuid, model.approvalComment)
+                            .then(function (resp) {
+                                notify(resp, fromDash);
+                            });
+                       
                         workflowOverlay.close();
                     },
                     close: function () {
@@ -45,7 +43,7 @@
 
             initiate: function (name, id, dirty, publish) {
                 var workflowOverlay = {
-                    view: '../app_plugins/workflow/backoffice/dialogs/workflow.submit.dialog.html',
+                    view: this.dialogPath + 'workflow.submit.dialog.html',
                     show: true,
                     title: 'Send for ' + (publish ? 'publish' : 'unpublish') + ' approval',
                     subtitle: 'Document: ' + name,
@@ -57,7 +55,7 @@
                         buttonState('busy');
 
                         workflowResource.initiateWorkflow(id, model.comment, publish)
-                            .then(function (resp) {
+                            .then(function(resp) {
                                 notify(resp);
                             });
 
@@ -73,7 +71,7 @@
 
             cancel: function (item, fromDash) {
                 var workflowOverlay = {
-                    view: '../app_plugins/workflow/backoffice/dialogs/workflow.cancel.dialog.html',
+                    view: this.dialogPath + 'workflow.cancel.dialog.html',
                     show: true,
                     title: 'Cancel workflow process',
                     subtitle: 'Document: ' + item.nodeName,
@@ -97,7 +95,29 @@
                 };
 
                 return workflowOverlay;
-            }
+            },
+
+            detail: function (item) {
+
+                var workflowOverlay = {
+                    view: this.dialogPath + 'workflow.action.dialog.html',
+                    show: true,
+                    title: 'Workflow detail',
+                    subtitle: 'Document: ' + item.nodeName,
+                    comment: item.comments,
+                    guid: item.instanceGuid,
+                    requestedBy: item.requestedBy,
+                    requestedOn: item.requestedOn,
+                    detail: true,
+                    
+                    close: function () {
+                        workflowOverlay.show = false;
+                        workflowOverlay = null;
+                    }
+                };
+
+                return workflowOverlay;
+            },
         };
 
         // UI feedback for button directive

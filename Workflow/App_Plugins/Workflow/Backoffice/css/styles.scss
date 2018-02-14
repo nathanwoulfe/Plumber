@@ -7,13 +7,13 @@
     }
 
     label {
-        float: left; 
-        width: 160px; 
+        float: left;
+        width: 160px;
     }
 
     wf-comments label {
         width: auto;
-        float:none;
+        float: none;
     }
 
     textarea, input {
@@ -46,7 +46,7 @@
             padding-left: 5px;
         }
     }
-    
+
 
     .upgrade {
         margin: 0 15px 30px;
@@ -62,7 +62,7 @@
                 vertical-align: middle;
             }
         }
-    }    
+    }
 
     .active-banner {
         display: inline-block;
@@ -73,28 +73,68 @@
     .action-dialog {
 
         textarea, label {
-            width:100%;
+            width: 100%;
         }
 
         &--task-list {
-            list-style-type:none;
-            margin:0;
+            list-style-type: none;
+            margin: 0;
         }
 
         &--task-list-item {
-            margin-bottom:10px;
-            display:flex;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
 
             &:last-child {
-                margin-bottom:0;
+                margin-bottom: 0;
             }
+        }
+
+        .history-tasks {
+            padding-left: 7px;
+            position: relative;
+
+            &::before {
+                content: '';
+                position: absolute;
+                width: 2px;
+                background: #999;
+                height: 100%;
+                top: 0;
+                left: 0;
+            }
+        }
+
+        .history-task {
+            display: flex;
 
             > div {
-                padding-left:5px;
+                padding-left: 5px;
             }
-        }        
+
+            &-number {
+                span {
+                    font-weight: bold;
+                }
+            }
+        }
     }
 
+    .task-detail-btn {
+        padding: 0;
+        background: 0 0;
+        margin-right:10px;
+
+        &:hover { 
+            background: #fff;
+        }
+
+        svg {
+            width: 25px;
+            vertical-align: sub;
+        }
+    }
     // import scss partials
     @import "highcharts";
     @import "listview";

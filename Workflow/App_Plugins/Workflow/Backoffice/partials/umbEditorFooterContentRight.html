@@ -1,7 +1,11 @@
 ﻿<div ng-controller="Workflow.DrawerButtons.Controller as vm" class="workflow">
 
-    <div class="active-banner" ng-if="vm.active">
+    <div class="active-banner" ng-if="vm.active && !vm.userCanEdit">
         <p>Document is currently in a workflow</p>
+    </div>
+
+    <div class="active-banner" ng-if="vm.active && vm.userCanEdit">
+        <p>Previous changes were rejected</p>
     </div>
 
     <umb-button ng-if="page.listViewPath"
@@ -24,17 +28,16 @@
                 state="page.buttonGroupState"
                 label="Save">
     </umb-button>
-    
-    <umb-button-group
-        ng-if="defaultButton && vm.excludeNode"
-        default-button="defaultButton"
-        sub-buttons="subButtons"
-        state="page.buttonGroupState"
-        direction="up"
-        float="right">
+
+    <umb-button-group ng-if="defaultButton && vm.excludeNode"
+                      default-button="defaultButton"
+                      sub-buttons="subButtons"
+                      state="page.buttonGroupState"
+                      direction="up"
+                      float="right">
     </umb-button-group>
 
-    <workflow-button-group ng-if="!page.isNew && !vm.excludeNode && (!vm.active || vm.active && vm.canAction)"
+    <workflow-button-group ng-if="!page.isNew && !vm.excludeNode"
                            default-button="vm.buttonGroup.defaultButton"
                            sub-buttons="vm.buttonGroup.subButtons"
                            direction="up"

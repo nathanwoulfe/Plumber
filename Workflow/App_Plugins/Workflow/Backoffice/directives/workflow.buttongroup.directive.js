@@ -1,25 +1,30 @@
 ﻿(function () {
     'use strict';
 
-    function ButtonGroupDirective() {
+    function buttonGroupDirective(workflowActionsService) {
 
         var directive = {
             restrict: 'E',
             replace: true,
             templateUrl: '../app_plugins/workflow/backoffice/partials/workflowButtonGroup.html',
             scope: {
-                defaultButton: "=",
-                subButtons: "=",
-                state: "=?",
-                item: "=",
-                direction: "@?",
-                float: "@?"
+                defaultButton: '=',
+                subButtons: '=',
+                state: '=?',
+                item: '=',
+                direction: '@?',
+                float: '@?'
+            }, 
+            link: function(scope) {
+                scope.detail = function (item) {
+                    scope.workflowOverlay = workflowActionsService.detail(item);
+                }
             }
         };
 
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('workflowButtonGroup', ButtonGroupDirective);
+    angular.module('umbraco.directives').directive('workflowButtonGroup', buttonGroupDirective);
 
 }());

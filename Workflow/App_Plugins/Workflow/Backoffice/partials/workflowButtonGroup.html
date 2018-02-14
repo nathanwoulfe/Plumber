@@ -1,23 +1,37 @@
-﻿<div class="btn-group umb-button-group" ng-show="defaultButton != null" ng-class="{'dropup': direction === 'up'}">        
-    <umb-button type="button"
-                action="defaultButton.handler(item)"
-                button-style="success"
-                state="state"
-                label="{{ defaultButton.labelKey }}"
-                label-key="{{ defaultButton.labelKey }}"
-                shortcut="{{ defaultButton.hotKey }}"
-                shortcut-when-hidden="{{ defaultButton.hotKeyWhenHidden }}">
-    </umb-button>
+﻿<div>
+    <button class="btn btn-default task-detail-btn" ng-click="detail(item)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path class="tasks-icon" d="M208 132h288c8.8 0 16-7.2 16-16V76c0-8.8-7.2-16-16-16H208c-8.8 0-16 7.2-16 16v40c0 8.8 7.2 16 16 16zm0 160h288c8.8 0 16-7.2 16-16v-40c0-8.8-7.2-16-16-16H208c-8.8 0-16 7.2-16 16v40c0 8.8 7.2 16 16 16zm0 160h288c8.8 0 16-7.2 16-16v-40c0-8.8-7.2-16-16-16H208c-8.8 0-16 7.2-16 16v40c0 8.8 7.2 16 16 16zM64 368c-26.5 0-48.6 21.5-48.6 48s22.1 48 48.6 48 48-21.5 48-48-21.5-48-48-48zm92.5-299l-72.2 72.2-15.6 15.6c-4.7 4.7-12.9 4.7-17.6 0L3.5 109.4c-4.7-4.7-4.7-12.3 0-17l15.7-15.7c4.7-4.7 12.3-4.7 17 0l22.7 22.1 63.7-63.3c4.7-4.7 12.3-4.7 17 0l17 16.5c4.6 4.7 4.6 12.3-.1 17zm0 159.6l-72.2 72.2-15.7 15.7c-4.7 4.7-12.9 4.7-17.6 0L3.5 269c-4.7-4.7-4.7-12.3 0-17l15.7-15.7c4.7-4.7 12.3-4.7 17 0l22.7 22.1 63.7-63.7c4.7-4.7 12.3-4.7 17 0l17 17c4.6 4.6 4.6 12.2-.1 16.9z"></path>
+        </svg>
+    </button>
 
-    <a class="btn btn-success dropdown-toggle umb-button-group__toggle" data-toggle="dropdown" ng-if="subButtons.length > 0">
-        <span class="caret"></span>
-    </a>
+    <div class="btn-group umb-button-group" ng-show="defaultButton != null" ng-class="{'dropup': direction === 'up'}">
+        <umb-button type="button"
+                    action="defaultButton.handler(item)"
+                    button-style="success"
+                    state="state"
+                    label="{{ defaultButton.labelKey }}"
+                    label-key="{{ defaultButton.labelKey }}"
+                    shortcut="{{ defaultButton.hotKey }}"
+                    shortcut-when-hidden="{{ defaultButton.hotKeyWhenHidden }}">
+        </umb-button>
 
-    <ul aria-labelledby="dLabel" class="dropdown-menu bottom-up umb-button-group__sub-buttons" ng-if="subButtons.length > 0" role="menu" ng-class="{'-align-right': float === 'right'}">
-        <li ng-repeat="subButton in subButtons">
-            <a ng-href="{{ subButton.href ? subButton.href + item.nodeId : '#' }}" ng-click="subButton.handler(item)" hotkey="{{ subButton.hotKey }}" hotkey-when-hidden="{{ subButton.hotKeyWhenHidden }}" class="{{ subButton.cssClass }}" prevent-default="{{ !subButton.href }}">
-                <localize key="{{ subButton.labelKey }}">{{ subButton.labelKey }}</localize>
-            </a>
-        </li>
-    </ul>
+        <a class="btn btn-success dropdown-toggle umb-button-group__toggle" data-toggle="dropdown" ng-if="subButtons.length > 0">
+            <span class="caret"></span>
+        </a>
+
+        <ul aria-labelledby="dLabel" class="dropdown-menu bottom-up umb-button-group__sub-buttons" ng-if="subButtons.length > 0" role="menu" ng-class="{'-align-right': float === 'right'}">
+            <li ng-repeat="subButton in subButtons">
+                <a ng-href="{{ subButton.href ? subButton.href + item.nodeId : '#' }}" ng-click="subButton.handler(item)" hotkey="{{ subButton.hotKey }}" hotkey-when-hidden="{{ subButton.hotKeyWhenHidden }}" class="{{ subButton.cssClass }}" prevent-default="{{ !subButton.href }}">
+                    <localize key="{{ subButton.labelKey }}">{{ subButton.labelKey }}</localize>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <umb-overlay ng-if="workflowOverlay.show"
+                 model="workflowOverlay"
+                 view="workflowOverlay.view"
+                 position="right">
+    </umb-overlay>
 </div>

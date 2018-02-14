@@ -2,8 +2,7 @@
 
 // progress bar for the tasks dashboard
 .workflow-progress {
-    margin: 0 10px 10px;
-    padding-top: 10px;
+    padding: 10px;
     border-top: 1px solid #d9d9d9;
     display: flex;
     position: relative;
@@ -41,6 +40,7 @@
 
         .tooltip {
             border-color: $umbGreen;
+            color:$umbGreen;
         }
     }
 
@@ -63,6 +63,34 @@
 
         .tooltip {
             border-color: $umbPurple;
+            color: $umbPurple;
+        }
+    }
+
+    &.rejected {
+        .tooltip-current {
+            display: none;
+        }
+
+        .tooltip-rejected {
+            display: block;
+        }
+
+        .marker, .tooltip::after {
+            background: $warning;
+        }
+
+        &::before {
+            background: linear-gradient(90deg, $umbGreen, $warning);
+        }
+
+        &::after {
+            background: linear-gradient(90deg, $warning, #d9d9d9);
+        }
+
+        .tooltip {
+            border-color: $warning;
+            color:$warning;
         }
     }
 }
@@ -89,6 +117,7 @@
         display: none;
         background: #f8f8f8;
         padding: 5px;
+        color: #817f85;
         border: 1px solid #d9d9d9;
 
         &::after {
