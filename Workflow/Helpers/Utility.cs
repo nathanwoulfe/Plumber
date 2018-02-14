@@ -40,10 +40,6 @@ namespace Workflow.Helpers
             return c != null ? c.Name : MagicStrings.NoNode;
         }
 
-        public static bool GetNodeStatus(int id)
-        {
-            return Pr.InstancesByNodeAndStatus(id, new List<int> { (int)WorkflowStatus.PendingApproval }).Any();
-        }
 
         public static IUser GetUser(int id)
         {
@@ -58,11 +54,6 @@ namespace Workflow.Helpers
         public static IUser GetCurrentUser()
         {
             return UmbracoContext.Current.Security.CurrentUser;
-        }
-
-        public static bool IsTypeOfAdmin(string utAlias)
-        {
-            return utAlias == "admin" || utAlias == "siteadmin";
         }
 
         public static string PascalCaseToTitleCase(string str)
