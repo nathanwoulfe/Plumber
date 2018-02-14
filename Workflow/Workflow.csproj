@@ -35,6 +35,7 @@
     <Compile Include="Api\ActionsController.cs" />
     <Compile Include="Api\DodgyTestsController.cs" />
     <Compile Include="Api\InstancesController.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\WorkflowListExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
     <Compile Include="Helpers\Installer.cs" />
