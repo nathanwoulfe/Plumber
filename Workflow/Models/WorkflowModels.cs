@@ -10,7 +10,8 @@
         PendingApproval = 3,
         NotRequired = 4,
         Cancelled = 5,
-        Errored = 6
+        Errored = 6,
+        Resubmitted = 7
     }
 
     /// <summary>
@@ -19,7 +20,7 @@
     public enum TaskType
     {
         Approve = 1,
-        Publish = 2
+        Resubmit = 2
     }
 
     /// <summary>
@@ -42,7 +43,8 @@
         PendingApproval = 3,
         NotRequired = 4,
         Cancelled = 5,
-        Errored = 6
+        Errored = 6,
+        Resubmitted = 7
     }
 
     /// <summary>

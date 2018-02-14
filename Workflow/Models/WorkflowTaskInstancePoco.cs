@@ -49,7 +49,7 @@ namespace Workflow.Models
         [Column("Status")]
         [NullSetting(NullSetting = NullSettings.Null)]
         public int Status { get; set; }
-        
+
         [Column("Comment")]
         [NullSetting(NullSetting = NullSettings.Null)]
         public string Comment { get; set; }
@@ -92,7 +92,7 @@ namespace Workflow.Models
 
         [ResultColumn]
         public virtual WorkflowInstancePoco WorkflowInstance { get; set; }
-        
+
         [ResultColumn]
         public virtual double CompletedDateTicks => CompletedDate?.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds ?? 0;
     }
