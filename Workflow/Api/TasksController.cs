@@ -1,5 +1,6 @@
 ﻿using log4net;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -33,8 +34,8 @@ namespace Workflow.Api
         {
             try
             {
-                var taskInstances = Pr.GetPendingTasks((int)TaskStatus.PendingApproval, count, page);
-                var workflowItems = taskInstances.ToWorkflowTaskList();
+                List<WorkflowTaskInstancePoco> taskInstances = Pr.GetPendingTasks(new List<int> { (int)TaskStatus.PendingApproval, (int)TaskStatus.Rejected }, count, page);
+                List<WorkflowTask> workflowItems = taskInstances.ToWorkflowTaskList();
                 return Json(new
                 {
                     items = workflowItems,
@@ -124,11 +125,19 @@ namespace Workflow.Api
                     }, ViewHelpers.CamelCase);
                 }
 
-                var taskInstances = Pr.TasksByNode(id).Where(t => t.Status == (int)TaskStatus.PendingApproval).ToList();
-                var workflowItems = taskInstances.ToWorkflowTaskList();
+                var taskInstances = Pr.TasksByNode(id);
+                if (taskInstances.Last().TaskStatus == TaskStatus.Cancelled)
+                {
+                    return Json(new
+                    {
+                        total = 0
+                    }, ViewHelpers.CamelCase);
+                }
+                   
+                taskInstances = taskInstances.Where(t => t.TaskStatus.In(TaskStatus.PendingApproval, TaskStatus.Rejected)).ToList();
                 return Json(new
                 {
-                    items = workflowItems,
+                    items = taskInstances.Any() ? taskInstances.ToWorkflowTaskList() : new List<WorkflowTask>(),
                     total = taskInstances.Count
                 }, ViewHelpers.CamelCase);
             }
@@ -143,6 +152,7 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="id">The node to check</param>
         /// <returns>A bool indicating the workflow status (true -> workflow active)</returns>
+        [Obsolete]
         [HttpGet]
         [Route("status/{id:int}")]
         public IHttpActionResult GetStatus(int id)
@@ -172,7 +182,9 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> taskInstances = type == 0 ? Pr.GetAllPendingTasks((int)TaskStatus.PendingApproval) : Pr.SubmissionsForUser(userId, (int)TaskStatus.PendingApproval);
+                List<WorkflowTaskInstancePoco> taskInstances = type == 0 
+                    ? Pr.GetAllPendingTasks( new List<int> { (int)TaskStatus.PendingApproval }) 
+                    : Pr.SubmissionsForUser(userId, new List<int> { (int)TaskStatus.PendingApproval, (int)TaskStatus.Rejected });
 
                 if (type == 0)
                 {
@@ -244,6 +256,7 @@ namespace Workflow.Api
                 return Json(new
                 {
                     items = tasks,
+                    currentStep = tasks.Count(x => x.TaskStatus.In(TaskStatus.Approved, TaskStatus.NotRequired)) + 1, // value is for dispplay, so zero-index isn't friendly
                     totalSteps = instance.TotalSteps
                 }, ViewHelpers.CamelCase);
             }

@@ -80,7 +80,7 @@ namespace Workflow.Api
 
 
         /// <summary>
-        /// Processes the workflow task for the given task id
+        /// Processes the workflow task for the given taskdata
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -218,6 +218,46 @@ namespace Workflow.Api
                 {
                     status = 500,
                     message = msg
+                }, ViewHelpers.CamelCase);
+            }
+        }
+
+        /// <summary>
+        /// Endpoint for resubmitting a workflow when the previous task was rejected
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("resubmit")]
+        public IHttpActionResult ResubmitWorkflowTask(TaskData model)
+        {
+            WorkflowInstancePoco instance = GetInstance(model.InstanceGuid);
+
+            try
+            {
+                WorkflowApprovalProcess process = GetProcess(instance.Type);
+
+                instance = process.ResubmitWorkflow(
+                    instance,
+                    Utility.GetCurrentUser().Id,
+                    model.Comment
+                );
+
+                return Json(new
+                {
+                    message = "Changes resubmitted successfully. Page will be " + instance.TypeDescriptionPastTense.ToLower() + " following workflow completion.",
+                    status = 200
+                }, ViewHelpers.CamelCase);
+            }
+            catch (Exception ex)
+            {
+                string msg = "An error occurred processing the approval: " + ex.Message + ex.StackTrace;
+                Log.Error(msg + " for workflow " + instance.Id, ex);
+
+                return Json(new
+                {
+                    message = msg,
+                    status = 500
                 }, ViewHelpers.CamelCase);
             }
         }

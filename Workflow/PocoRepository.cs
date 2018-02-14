@@ -52,9 +52,9 @@ namespace Workflow
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public List<WorkflowTaskInstancePoco> GetPendingTasks(int status, int count, int page)
+        public List<WorkflowTaskInstancePoco> GetPendingTasks(IEnumerable<int> status, int count, int page)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, status)
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, new { statusInts = status.Select(s => s.ToString()).ToArray() })
                 .Skip((page - 1) * count).Take(count).ToList();
         }
 
@@ -62,12 +62,10 @@ namespace Workflow
         /// 
         /// </summary>
         /// <param name="status"></param>
-        /// <param name="count"></param>
-        /// <param name="page"></param>
         /// <returns></returns>
-        public List<WorkflowTaskInstancePoco> GetAllPendingTasks(int status)
+        public List<WorkflowTaskInstancePoco> GetAllPendingTasks(IEnumerable<int> status)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, status).ToList();
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, new { statusInts = status.Select(s => s.ToString()).ToArray() }).ToList();
         }
 
         /// <summary>
@@ -140,9 +138,9 @@ namespace Workflow
         /// <param name="id"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        public List<WorkflowTaskInstancePoco> SubmissionsForUser(int id, int status)
+        public List<WorkflowTaskInstancePoco> SubmissionsForUser(int id, IEnumerable<int> status)
         {
-            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.SubmissionsForUser, id, status);
+            return GetDb().Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.SubmissionsForUser, new { id, statusInts = status.Select(s => s.ToString()).ToArray() });
         }
 
         /// <summary>

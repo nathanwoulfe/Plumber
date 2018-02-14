@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
+using Workflow.Extensions;
 using Workflow.Helpers;
 using Workflow.Models;
 
@@ -52,15 +53,61 @@ namespace Workflow.Processes
                 throw new WorkflowException(errorMessage);
             }
 
-            if (StepApprovalRequired(taskInstance))
+            ApproveOrContinue(taskInstance);
+
+            return Instance;
+        }
+
+        /// <summary>
+        /// Manage resubmitting previously rejected workflow task
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <param name="userId"></param>
+        /// <param name="comment"></param>
+        /// <returns></returns>
+        public WorkflowInstancePoco ResubmitWorkflow(WorkflowInstancePoco instance, int userId, string comment)
+        {
+            if (instance != null)
             {
-                SetPendingTask(taskInstance);
+                Instance = instance;
+
+                if (Instance.WorkflowStatus != WorkflowStatus.Rejected) return Instance;
+
+                // create a task to store the resubmission comment - this is the equivalent of the author comment on the instance
+                var resubmitTask = new WorkflowTaskInstancePoco(TaskType.Resubmit)
+                {
+                    ActionedByUserId = userId,
+                    ApprovalStep = Instance.TaskInstances.Last(x => x.TaskStatus == TaskStatus.Rejected).ApprovalStep,
+                    Comment = comment,
+                    CompletedDate = DateTime.Now,
+                    Status = (int) TaskStatus.Resubmitted,
+                    WorkflowInstanceGuid = Instance.Guid
+                };
+
+                GetDb().Insert(resubmitTask);
+
+                // when approving a task for a rejected workflow, create the new task with the same approval step as the rejected task
+                // update the rejected task status to resubmitted
+
+                WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(Instance.NodeId);
+                ApproveOrContinue(taskInstance, userId);
+
+                WorkflowTaskInstancePoco rejectedTask = Instance.TaskInstances.Last(x => x.TaskStatus == TaskStatus.Rejected);
+                rejectedTask.Status = (int) TaskStatus.Resubmitted;
+
+                GetDb().Update(rejectedTask);
             }
             else
             {
-                SetNotRequiredTask(taskInstance, authorUserId, authorComment);
-                ActionWorkflow(Instance, WorkflowAction.Approve, authorUserId, taskInstance.Comment);
+                if (Instance != null)
+                {
+                    throw new WorkflowException("Workflow instance " + Instance.Id + " is not found.");
+                }
+                throw new WorkflowException("Workflow instance is not found.");
             }
+
+            GetDb().Update(Instance);
+
             return Instance;
         }
 
@@ -78,7 +125,7 @@ namespace Workflow.Processes
             {
                 Instance = instance;
 
-                if (Instance.Status == (int)WorkflowStatus.PendingApproval)
+                if (Instance.WorkflowStatus == WorkflowStatus.PendingApproval)
                 {
                     // if pending, update to approved or rejected
                     ProcessApprovalAction(action, userId, comment);
@@ -86,21 +133,13 @@ namespace Workflow.Processes
                     if (action == WorkflowAction.Approve)
                     {
                         // only progress if there are pending approval tasks, otherwise the flow is complete and the workflow should exit
-                        if (Instance.TotalSteps > Instance.TaskInstances.Count)
+                        int currentSteps = Instance.TaskInstances.Count(x => x.TaskStatus.In(TaskStatus.Approved, TaskStatus.NotRequired));
+                        if (Instance.TotalSteps > currentSteps)
                         {
                             // create the next task, then check if it should be approved
                             // if it needs approval, 
-                            var taskInstance = CreateApprovalTask(Instance.NodeId);
-
-                            if (StepApprovalRequired(taskInstance))
-                            {
-                                SetPendingTask(taskInstance);
-                            }
-                            else
-                            {
-                                SetNotRequiredTask(taskInstance, userId);
-                                ActionWorkflow(Instance, WorkflowAction.Approve, userId, $"APPROVAL AT STAGE {Instance.TaskInstances.Count} NOT REQUIRED");
-                            }
+                            WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(Instance.NodeId);
+                            ApproveOrContinue(taskInstance, userId);
                         }
                         else
                         {
@@ -109,7 +148,10 @@ namespace Workflow.Processes
                     }
                     else if (action == WorkflowAction.Reject)
                     {
-                        // TODO: reject...
+                        Instance.Status = (int)WorkflowStatus.Rejected;
+
+                        // do not complete workflow - this would publish the rejected changes.
+                        // document is not rolled back, but must be resubmitted for publishing.
                     }
                 }
                 else
@@ -144,7 +186,7 @@ namespace Workflow.Processes
                 Instance.CompletedDate = DateTime.Now;
                 Instance.Status = (int)WorkflowStatus.Cancelled;
 
-                var taskInstance = Instance.TaskInstances.FirstOrDefault(ti => ti.TaskStatus == TaskStatus.PendingApproval);
+                var taskInstance = Instance.TaskInstances.Last();
                 if (taskInstance != null)
                 {
                     // Cancel the task and workflow instances
@@ -179,6 +221,24 @@ namespace Workflow.Processes
         #region private methods
 
         /// <summary>
+        /// Check if the task requires approval
+        /// If so, update the task and send notifications
+        /// Otherwise, update the task to notrequired, resolve it and create the next step in ActionWorkflow
+        /// </summary>
+        private void ApproveOrContinue(WorkflowTaskInstancePoco taskInstance, int? userId = null, string comment = "APPROVAL NOT REQUIRED")
+        {
+            if (!taskInstance.UserGroup.IsMember(Instance.AuthorUserId))
+            {
+                SetPendingTask(taskInstance);
+            }
+            else
+            {
+                taskInstance.Status = (int)TaskStatus.NotRequired;
+                ActionWorkflow(Instance, WorkflowAction.Approve, userId ?? Instance.AuthorUserId, comment);
+            }
+        }
+
+        /// <summary>
         /// Update the workflow task status to approve or reject
         /// Sets flag to send email notification if required
         /// Persists all cahanges to the task (stats, completed date, actioned by and comment)
@@ -188,7 +248,8 @@ namespace Workflow.Processes
         /// <param name="comment"></param>
         private void ProcessApprovalAction(WorkflowAction action, int userId, string comment)
         {
-            var taskInstance = Instance.TaskInstances.FirstOrDefault(ti => ti.TaskStatus == TaskStatus.PendingApproval || ti.TaskStatus == TaskStatus.NotRequired);
+            var taskInstance = Instance.TaskInstances.Last(x => x.TaskStatus != TaskStatus.Approved);
+
             if (taskInstance == null) return;
 
             EmailType? emailType = null;
@@ -197,12 +258,13 @@ namespace Workflow.Processes
             switch (action)
             {
                 case WorkflowAction.Approve:
-                    taskInstance.Status = taskInstance.Status == (int)TaskStatus.NotRequired ? (int)TaskStatus.NotRequired : (int)TaskStatus.Approved;
+                    if (taskInstance.TaskStatus != TaskStatus.NotRequired)
+                    {
+                        taskInstance.Status = (int) TaskStatus.Approved;
+                    }
                     break;
 
                 case WorkflowAction.Reject:
-                    Instance.Status = (int)WorkflowStatus.Rejected;
-                    Instance.CompletedDate = DateTime.Now;
                     taskInstance.Status = (int)TaskStatus.Rejected;
                     emailRequired = true;
                     emailType = EmailType.ApprovalRejection;
@@ -235,7 +297,7 @@ namespace Workflow.Processes
             var taskInstance =
                 new WorkflowTaskInstancePoco(TaskType.Approve)
                 {
-                    ApprovalStep = Instance.TaskInstances.Count,
+                    ApprovalStep = Instance.TaskInstances.Count(x => x.TaskStatus.In(TaskStatus.Approved, TaskStatus.NotRequired)),
                     WorkflowInstanceGuid = Instance.Guid
                 };
 
@@ -303,6 +365,7 @@ namespace Workflow.Processes
         /// TODO  be call 'Approve own work' or something similar. Easier to understand than the flow-type options.
         /// </summary>
         /// <returns>true if approval required, false otherwise</returns>
+        [Obsolete]
         private bool StepApprovalRequired(WorkflowTaskInstancePoco taskInstance)
         {
             return !taskInstance.UserGroup.IsMember(Instance.AuthorUserId);
@@ -314,27 +377,12 @@ namespace Workflow.Processes
         /// <param name="stepCount">The number of approval groups in the current flow (explicit, inherited or content type)</param>
         private void SetInstanceTotalSteps(int stepCount)
         {
-            if (Instance.TotalSteps != stepCount)
-            {
-                Instance.TotalSteps = stepCount;
-                GetDb().Update(Instance);
-            }
+            if (Instance.TotalSteps == stepCount) return;
+
+            Instance.TotalSteps = stepCount;
+            GetDb().Update(Instance);
         }
 
-        /// <summary>
-        /// Terminates a task, setting it to approved and updating the comment to indicate automatic approval
-        /// </summary>
-        /// <param name="taskInstance"></param>
-        /// <param name="userId"></param>
-        private static void SetNotRequiredTask(WorkflowTaskInstancePoco taskInstance, int userId, string comment = "")
-        {
-            taskInstance.Status = (int)TaskStatus.NotRequired;
-            taskInstance.CompletedDate = DateTime.Now;
-            taskInstance.Comment = $"{comment}{(string.IsNullOrEmpty(comment) ? "" : " ")}(APPROVAL AT STAGE {taskInstance.ApprovalStep + 1} NOT REQUIRED)";
-            taskInstance.ActionedByUserId = userId;
-
-            GetDb().Update(taskInstance);
-        }
 
         /// <summary>
         /// Set the task to pending, notify appropriate groups
