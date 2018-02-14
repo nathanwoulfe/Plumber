@@ -3,7 +3,7 @@ using System.Web;
 
 namespace Workflow.Helpers
 {
-    public class UrlHelpers
+    public static class UrlHelpers
     {
         private const string ContentEditUrlFormat = "/umbraco#/content/content/edit/{0}";
 
