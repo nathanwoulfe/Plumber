@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,9 +8,7 @@ using System.Reflection;
 using System.Runtime.Caching;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
-using Umbraco.Core;
 using Umbraco.Core.Models;
-using Umbraco.Core.Persistence;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
@@ -21,11 +18,7 @@ namespace Workflow.Api
     [RoutePrefix("umbraco/backoffice/api/workflow/settings")]
     public class SettingsController : UmbracoAuthorizedApiController
     {
-        private static readonly Database Db = ApplicationContext.Current.DatabaseContext.Database;
         private static readonly PocoRepository Pr = new PocoRepository();
-
-        private const string VersionKey = "plumberVersion";
-        private const string DocsKey = "plumberDocs";
 
         /// <summary>
         /// Get an object with info about the installed version and latest release from GitHub
@@ -36,10 +29,10 @@ namespace Workflow.Api
         {
             try
             {
-                var cache = MemoryCache.Default;
-                if (cache[VersionKey] != null)
+                MemoryCache cache = MemoryCache.Default;
+                if (cache[MagicStrings.VersionKey] != null)
                 {
-                    return Json((PackageVersion)cache.Get(VersionKey), ViewHelpers.CamelCase);
+                    return Json((PackageVersion)cache.Get(MagicStrings.VersionKey), ViewHelpers.CamelCase);
                 }
 
                 Assembly assembly = Assembly.GetExecutingAssembly();
@@ -48,11 +41,11 @@ namespace Workflow.Api
                 var client = new WebClient();
                 client.Headers.Add("user-agent", MagicStrings.Name);
 
-                var response = client.DownloadString(MagicStrings.LatestVersionUrl);
-                var content = JObject.Parse(response);
+                string response = client.DownloadString(MagicStrings.LatestVersionUrl);
+                JObject content = JObject.Parse(response);
 
-                var currentVersion = $"v{version.Major}.{version.Minor}.{version.Build}";
-                var latestVersion = content["tag_name"].ToString();
+                string currentVersion = $"v{version.Major}.{version.Minor}.{version.Build}";
+                string latestVersion = content["tag_name"].ToString();
 
                 var packageVersion = new PackageVersion
                 {
@@ -65,10 +58,10 @@ namespace Workflow.Api
                     OutOfDate = !string.Equals(currentVersion, latestVersion,
                         StringComparison.InvariantCultureIgnoreCase)
                 };
-
+                
 
                 // Store data in the cache    
-                cache.Add(VersionKey, packageVersion,
+                cache.Add(MagicStrings.VersionKey, packageVersion,
                     new CacheItemPolicy {AbsoluteExpiration = DateTime.Now.AddHours(6)});
 
                 return Json(packageVersion, ViewHelpers.CamelCase);
@@ -88,13 +81,13 @@ namespace Workflow.Api
         {
             try
             {
-                string docs = "";
-                bool fromCache = false;
+                string docs;
+                var fromCache = false;
 
-                var cache = MemoryCache.Default;
-                if (cache[VersionKey] != null)
+                MemoryCache cache = MemoryCache.Default;
+                if (cache[MagicStrings.VersionKey] != null)
                 {
-                    docs = (string)cache.Get(DocsKey);
+                    docs = (string)cache.Get(MagicStrings.DocsKey);
                     fromCache = true;
                 }
                 else
@@ -116,7 +109,7 @@ namespace Workflow.Api
                 if (!fromCache)
                 {
                     // Store data in the cache    
-                    cache.Add(DocsKey, docs, new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddHours(6) });
+                    cache.Add(MagicStrings.DocsKey, docs, new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddHours(6) });
                 }
 
                 return response;
@@ -157,7 +150,7 @@ namespace Workflow.Api
         {
             try
             {
-                Db.Update(model);
+                DatabaseContext.Database.Update(model);
                 return Ok("Settings updated");
             }
             catch (Exception ex)
@@ -175,7 +168,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<IContentType> contentTypes = ApplicationContext.Current.Services.ContentTypeService.GetAllContentTypes().ToList();
+                List<IContentType> contentTypes = Services.ContentTypeService.GetAllContentTypes().ToList();
                 return Json(contentTypes, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
