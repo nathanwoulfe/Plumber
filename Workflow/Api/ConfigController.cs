@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
-using Umbraco.Core;
 using Umbraco.Core.Persistence;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
@@ -14,9 +13,6 @@ namespace Workflow.Api
     [RoutePrefix("umbraco/backoffice/api/workflow/config")]
     public class ConfigController : UmbracoAuthorizedApiController
     {
-        private readonly Database _db = ApplicationContext.Current.DatabaseContext.Database;
-
-
         /// <summary>
         /// Persist the workflow approval config for single node
         /// </summary>
@@ -28,22 +24,23 @@ namespace Workflow.Api
         {
             try
             {
+                UmbracoDatabase db = DatabaseContext.Database;
                 if (null != model && model.Any())
                 {
                     KeyValuePair<int, List<UserGroupPermissionsPoco>> permission = model.First();
 
-                    _db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE NodeId = @0", permission.Key);
+                    db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE NodeId = @0", permission.Key);
 
                     if (permission.Value.Any())
                     {
-                        _db.BulkInsertRecords(permission.Value, DatabaseContext.SqlSyntax);
+                        db.BulkInsertRecords(permission.Value, DatabaseContext.SqlSyntax);
                     }
                     
                 }
             }
             catch (Exception ex)
             {
-                var msg = "Error saving config. " + ex.Message;
+                string msg = $"Error saving config. {ex.Message}";
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
 
@@ -63,16 +60,18 @@ namespace Workflow.Api
             {
                 if (null != model)
                 {
+                    UmbracoDatabase db = DatabaseContext.Database;
+
                     // set defaults for doctype - delete all previous if any model data exists
-                    _db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE ContentTypeId != 0");
+                    db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE ContentTypeId != 0");
 
                     if (model.Any())
                     {
-                        foreach (var permission in model)
+                        foreach (KeyValuePair<int, List<UserGroupPermissionsPoco>> permission in model)
                         {
                             if (permission.Value.Any())
                             {
-                                _db.BulkInsertRecords(permission.Value, DatabaseContext.SqlSyntax);
+                                db.BulkInsertRecords(permission.Value, DatabaseContext.SqlSyntax);
                             }
                         }
                     }
@@ -80,7 +79,7 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                var msg = "Error saving config. " + ex.Message;
+                string msg = $"Error saving config. {ex.Message}";
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
 
