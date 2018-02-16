@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using Umbraco.Core;
@@ -23,20 +21,20 @@ namespace Workflow.Helpers
 
         public static IPublishedContent GetNode(int id)
         {
-            var n = Helper.TypedContent(id);
+            IPublishedContent n = Helper.TypedContent(id);
             if (n != null) return n;
 
-            var c = Cs.GetById(id);
+            IContent c = Cs.GetById(id);
 
             return c?.ToPublishedContent();
         }
 
         public static string GetNodeName(int id)
         {
-            var n = Helper.TypedContent(id);
+            IPublishedContent n = Helper.TypedContent(id);
             if (n != null) return n.Name;
 
-            var c = Cs.GetById(id);
+            IContent c = Cs.GetById(id);
             return c != null ? c.Name : MagicStrings.NoNode;
         }
 
