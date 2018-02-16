@@ -74,9 +74,7 @@ namespace Workflow.Models
 
         public void SetScheduledDate()
         {
-            IContentService _cs = ApplicationContext.Current.Services.ContentService;
-
-            IContent content = _cs.GetById(NodeId);
+            IContent content = ApplicationContext.Current.Services.ContentService.GetById(NodeId);
             switch (Type)
             {
                 case (int)WorkflowType.Publish when content.ReleaseDate.HasValue:
