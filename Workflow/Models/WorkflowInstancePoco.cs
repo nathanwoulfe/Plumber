@@ -5,7 +5,6 @@ using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
-using Umbraco.Core.Services;
 using Workflow.Helpers;
 
 namespace Workflow.Models
@@ -17,17 +16,17 @@ namespace Workflow.Models
     {
         private IPublishedContent _node;
         private IUser _authorUser;
-        private readonly IContentService _cs = ApplicationContext.Current.Services.ContentService;
 
-        public WorkflowInstancePoco()
+        public WorkflowInstancePoco(int id)
         {
+            Id = id;
             TaskInstances = new HashSet<WorkflowTaskInstancePoco>();
             Status = (int)WorkflowStatus.PendingApproval;
             CreatedDate = DateTime.Now;
             CompletedDate = null;
         }
 
-        public WorkflowInstancePoco(int nodeId, int authorUserId, string authorComment, WorkflowType type) : this()
+        public WorkflowInstancePoco(int nodeId, int authorUserId, string authorComment, WorkflowType type, int id) : this(id)
         {
             NodeId = nodeId;
             AuthorUserId = authorUserId;
@@ -37,28 +36,28 @@ namespace Workflow.Models
 
         [Column("Id")]
         [PrimaryKeyColumn(AutoIncrement = true)]
-        public int Id { get; set; }
+        public int Id { get; }
 
         [Column("Guid")]
         public Guid Guid { get; set; }
 
         [Column("NodeId")]
-        public int NodeId { get; set; }
+        public int NodeId { get; }
 
         [Column("Type")]
-        public int Type { get; set; }
+        public int Type { get; }
 
         [Column("TotalSteps")]
         public int TotalSteps { get; set; }
 
         [Column("AuthorUserId")]
-        public int AuthorUserId { get; set; }
+        public int AuthorUserId { get; }
 
         [Column("Status")]
         public int Status { get; set; }
 
         [Column("CreatedDate")]
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; }
 
         [Column("CompletedDate")]
         [NullSetting(NullSetting = NullSettings.Null)]
@@ -75,18 +74,19 @@ namespace Workflow.Models
 
         public void SetScheduledDate()
         {
-            var content = _cs.GetById(NodeId);
-            if (Type ==  (int)WorkflowType.Publish && content.ReleaseDate.HasValue)
+            IContent content = ApplicationContext.Current.Services.ContentService.GetById(NodeId);
+
+            switch (Type)
             {
-                ScheduledDate = content.ReleaseDate;
-            }
-            else if (Type == (int)WorkflowType.Unpublish && content.ExpireDate.HasValue)
-            {
-                ScheduledDate = content.ExpireDate;
-            }
-            else
-            {
-                ScheduledDate = null;
+                case (int)WorkflowType.Publish when content.ReleaseDate.HasValue:
+                    ScheduledDate = content.ReleaseDate;
+                    break;
+                case (int)WorkflowType.Unpublish when content.ExpireDate.HasValue:
+                    ScheduledDate = content.ExpireDate;
+                    break;
+                default:
+                    ScheduledDate = null;
+                    break;
             }
         }
 
@@ -120,13 +120,13 @@ namespace Workflow.Models
         /// <summary>
         /// Title case text name for the workflow status.
         /// </summary>
-        [ResultColumn]       
+        [ResultColumn]
         public string StatusName => Utility.PascalCaseToTitleCase(WorkflowStatus.ToString());
 
         /// <summary>
         /// Indicates whether the workflow instance is currently active.
         /// </summary>
-        [ResultColumn]        
+        [ResultColumn]
         public bool Active => WorkflowStatus != WorkflowStatus.Cancelled && WorkflowStatus != WorkflowStatus.Rejected;
 
         [ResultColumn]
@@ -135,7 +135,7 @@ namespace Workflow.Models
         [ResultColumn]
         public ICollection<WorkflowTaskInstancePoco> TaskInstances { get; set; }
 
-        public static string WorkflowTypeDescription(WorkflowType type, DateTime? scheduledDate)
+        private static string WorkflowTypeDescription(WorkflowType type, DateTime? scheduledDate)
         {
             if (scheduledDate.HasValue)
             {
@@ -145,7 +145,7 @@ namespace Workflow.Models
             return WorkflowTypeName(type);
         }
 
-        public static string WorkflowTypeName(WorkflowType type)
+        private static string WorkflowTypeName(WorkflowType type)
         {
             return Utility.PascalCaseToTitleCase(type.ToString());
         }
