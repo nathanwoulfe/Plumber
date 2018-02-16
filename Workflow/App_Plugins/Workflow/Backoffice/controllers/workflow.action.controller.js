@@ -30,7 +30,7 @@
          * @returns {} 
          */
         $scope.getStatusName = function (task) {
-            if (task.type === 1 && task.status === 7) {
+            if ((task.type === 1 || task.type === 3) && task.status === 7) {
                 task.cssName = 'rejected';
                 return 'Rejected';
             }
@@ -45,7 +45,7 @@
          */ 
         $scope.getIconName = function (task) {
             //rejected
-            if (task.type === 1 && task.status === 7 || task.status === 2) {
+            if ((task.type === 1 || task.type === 3) && task.status === 7 || task.status === 2) {
                 return 'delete';
             }
             // resubmitted or approved

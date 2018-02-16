@@ -85,22 +85,40 @@
     width: 100%; }
   .workflow .highcharts-container {
     font-family: Lato,Helvetica Neue,Helvetica,Arial,sans-serif; }
-  .workflow .highcharts-color-0 {
+  .workflow .wf-highcharts-color-approved {
     fill: #53a93f;
     color: #53a93f; }
-  .workflow .highcharts-color-1 {
+    .workflow .wf-highcharts-color-approved .highcharts-point {
+      fill: #53a93f;
+      color: #53a93f; }
+  .workflow .wf-highcharts-color-cancelled {
     fill: #ee5f5b;
     color: #ee5f5b; }
-  .workflow .highcharts-color-2 {
+    .workflow .wf-highcharts-color-cancelled .highcharts-point {
+      fill: #ee5f5b;
+      color: #ee5f5b; }
+  .workflow .wf-highcharts-color-resubmitted {
     fill: #2e8aea;
-    color: #2e8aea;
-    stroke: #2e8aea; }
-  .workflow .highcharts-color-3 {
+    color: #2e8aea; }
+    .workflow .wf-highcharts-color-resubmitted .highcharts-point {
+      fill: #2e8aea;
+      color: #2e8aea; }
+  .workflow .wf-highcharts-color-rejected {
     fill: #df7f48;
     color: #df7f48; }
-  .workflow .highcharts-color-4 {
+    .workflow .wf-highcharts-color-rejected .highcharts-point {
+      fill: #df7f48;
+      color: #df7f48; }
+  .workflow .wf-highcharts-color-notreq {
     fill: #8085e9;
     color: #8085e9; }
+    .workflow .wf-highcharts-color-notreq .highcharts-point {
+      fill: #8085e9;
+      color: #8085e9; }
+  .workflow .wf-highcharts-color-total {
+    stroke: #666; }
+    .workflow .wf-highcharts-color-total .highcharts-point {
+      stroke: #666; }
   .workflow .highcharts-legend-item text {
     font-weight: normal; }
   .workflow .chart-loading {

@@ -20,7 +20,8 @@
     public enum TaskType
     {
         Approve = 1,
-        Resubmit = 2
+        Resubmit = 2,
+        Rejected = 3
     }
 
     /// <summary>

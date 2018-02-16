@@ -98,6 +98,7 @@ namespace Workflow.Processes
 
                 WorkflowTaskInstancePoco rejectedTask = Instance.TaskInstances.Last(x => x.TaskStatus == TaskStatus.Rejected);
                 rejectedTask.Status = (int) TaskStatus.Resubmitted;
+                rejectedTask.Type = (int) TaskType.Rejected;
 
                 GetDb().Update(rejectedTask);
             }

@@ -25,7 +25,7 @@
                 data: defaultData(),
                 pointStart: then,
                 pointInterval: msPerDay,
-                colorIndex: 3,
+                className: 'wf-highcharts-color-total',
                 lineWidth: 4,
                 marker: {
                     enabled: false
@@ -35,7 +35,22 @@
             items.forEach(function (v) {
                 var statusName = isTask ? v.statusName : v.status;
 
+                // bit messy, but need to modify some returned name values
+                // type 1|3 status 7 -> rejected
+                // type 2 status 7 -> resubmit
+                // status 3 -> pending
+                // status 1 -> approved
+                // status 4 -> not required
+
+                if (v.type !== 2 && v.status === 7) {
+                    statusName = v.statusName = 'Rejected';
+                }
+                else if (v.type === 2 && v.status === 7) {
+                    statusName = v.statusName = 'Resubmitted';
+                }
+
                 if (statusName !== 'Pending Approval') {
+
                     if (seriesNames.indexOf(statusName) === -1) {
                         o = {
                             name: statusName,
@@ -57,19 +72,23 @@
 
                     if (statusName === 'Approved') {
                         vm.totalApproved += 1;
-                        s.colorIndex = 0;
+                        s.className = 'wf-highcharts-color-approved';
                     }
                     else if (statusName === 'Rejected') {
                         vm.totalRejected += 1;
-                        s.colorIndex = 2;
+                        s.className = 'wf-highcharts-color-rejected';
+                    }
+                    else if (statusName === 'Resubmitted') {
+                        vm.totalResubmitted += 1;
+                        s.className = 'wf-highcharts-color-resubmitted';
                     }
                     else if (statusName === 'Not Required') {
                         vm.totalNotRequired += 1;
-                        s.colorIndex = 4;
+                        s.className = 'wf-highcharts-color-notreq';
                     }
                     else {
                         vm.totalCancelled += 1;
-                        s.colorIndex = 1;
+                        s.className = 'wf-highcharts-color-cancelled';
                     }
 
                 } else {
@@ -86,6 +105,7 @@
             });
             series.push(created);
 
+            console.log(series);
             vm.series = series.sort(function (a, b) { return a.name > b.name; });
 
             vm.title = 'Workflow ' + vm.type.toLowerCase() + ' activity';
@@ -142,6 +162,7 @@
             totalCancelled: 0,
             totalPending: 0,
             totalRejected: 0,
+            totalResubmitted: 0,
             totalNotRequired: 0,
 
             getForRange: getForRange,

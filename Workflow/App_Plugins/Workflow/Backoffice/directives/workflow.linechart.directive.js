@@ -12,7 +12,7 @@
             },
             link: function (scope, element) {
                 var el = element[0].querySelector('.chart-container div');
-               
+
                 scope.$watch('ready', function (newVal) {
                     if (newVal === true) {
                         var options = {
