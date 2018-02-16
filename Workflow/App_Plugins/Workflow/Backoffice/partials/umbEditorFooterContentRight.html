@@ -1,4 +1,4 @@
-﻿<div ng-controller="Workflow.DrawerButtons.Controller as vm" class="workflow">
+﻿<div ng-controller="Workflow.DrawerButtons.Controller as vm" class="workflow workflow-button-drawer">
 
     <div class="active-banner" ng-if="vm.active && !vm.userCanEdit">
         <p>Document is currently in a workflow</p>
@@ -43,6 +43,7 @@
                            direction="up"
                            state="vm.buttonGroup.state || 'init'"
                            item="vm.task"
+                           drawer="true"
                            float="right">
     </workflow-button-group>
 

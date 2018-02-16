@@ -68,6 +68,10 @@
         display: inline-block;
         margin-right: 10px;
         color: $warning;
+
+        p {
+            margin:0;
+        }
     }
 
     .action-dialog {
@@ -135,6 +139,16 @@
             vertical-align: sub;
         }
     }
+
+    &.workflow-button-drawer {
+        display:flex;
+        align-items:center;
+
+        > div {
+            margin-left:5px;
+        }
+    }
+
     // import scss partials
     @import "highcharts";
     @import "listview";

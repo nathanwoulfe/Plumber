@@ -13,9 +13,10 @@
                 state: '=?',
                 item: '=',
                 direction: '@?',
-                float: '@?'
+                float: '@?',
+                drawer: '@?'
             }, 
-            link: function(scope) {
+            link: function (scope) {
                 scope.detail = function (item) {
                     scope.workflowOverlay = workflowActionsService.detail(item);
                 }

@@ -37,6 +37,8 @@
     display: inline-block;
     margin-right: 10px;
     color: #df7f48; }
+    .workflow .active-banner p {
+      margin: 0; }
   .workflow .action-dialog textarea, .workflow .action-dialog label {
     width: 100%; }
   .workflow .action-dialog--task-list {
@@ -74,6 +76,11 @@
     .workflow .task-detail-btn svg {
       width: 25px;
       vertical-align: sub; }
+  .workflow.workflow-button-drawer {
+    display: flex;
+    align-items: center; }
+    .workflow.workflow-button-drawer > div {
+      margin-left: 5px; }
   .workflow .highcharts-root {
     width: 100%; }
   .workflow .highcharts-container {

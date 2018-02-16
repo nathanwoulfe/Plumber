@@ -1,21 +1,25 @@
 ﻿using log4net;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Umbraco.Core;
+using Umbraco.Core.Models;
 using Umbraco.Core.Persistence;
 using Workflow.Extensions;
 using Workflow.Helpers;
 using Workflow.Models;
+using TaskType = Workflow.Models.TaskType;
 
 namespace Workflow.Processes
 {
-    public abstract class WorkflowApprovalProcess : IWorkflowProcess
+    public abstract class WorkflowApprovalProcess
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly PocoRepository Pr = new PocoRepository();
 
-        protected WorkflowType Type { get; set; }
+        protected WorkflowType Type { private get; set; }
+
         protected WorkflowInstancePoco Instance;
 
         private static Database GetDb()
@@ -186,7 +190,7 @@ namespace Workflow.Processes
                 Instance.CompletedDate = DateTime.Now;
                 Instance.Status = (int)WorkflowStatus.Cancelled;
 
-                var taskInstance = Instance.TaskInstances.Last();
+                WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.Last();
                 if (taskInstance != null)
                 {
                     // Cancel the task and workflow instances
@@ -248,7 +252,7 @@ namespace Workflow.Processes
         /// <param name="comment"></param>
         private void ProcessApprovalAction(WorkflowAction action, int userId, string comment)
         {
-            var taskInstance = Instance.TaskInstances.Last(x => x.TaskStatus != TaskStatus.Approved);
+            WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.Last(x => x.TaskStatus != TaskStatus.Approved);
 
             if (taskInstance == null) return;
 
@@ -289,8 +293,6 @@ namespace Workflow.Processes
         /// Generate the next approval flow task, returning the new task and a bool indicating whether the publish action should becompleted (ie, this is the end of the flow)
         /// </summary>
         /// <param name="nodeId"></param>
-        /// <param name="comment"></param>
-        /// <param name="approvalRequired"></param>
         /// <returns></returns>
         private WorkflowTaskInstancePoco CreateApprovalTask(int nodeId)
         {
@@ -316,7 +318,7 @@ namespace Workflow.Processes
         /// <param name="nodeId"></param>
         private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId)
         {
-            var approvalGroup = Pr.PermissionsForNode(nodeId, 0);
+            List<UserGroupPermissionsPoco> approvalGroup = Pr.PermissionsForNode(nodeId, 0);
             UserGroupPermissionsPoco group = null;
 
             if (approvalGroup.Any())
@@ -329,14 +331,14 @@ namespace Workflow.Processes
             else
             {
                 // Recurse up the tree until we find something
-                var node = Utility.GetNode(nodeId);
+                IPublishedContent node = Utility.GetNode(nodeId);
                 if (node.Level != 1)
                 {
                     SetApprovalGroup(taskInstance, node.Parent.Id);
                 }
                 else // no group set, check for content-type approval then fallback to default approver
                 {
-                    var contentTypeApproval = Pr.PermissionsForNode(nodeId, Instance.Node.ContentType.Id).Where(g => g.ContentTypeId != 0).ToList();
+                    List<UserGroupPermissionsPoco> contentTypeApproval = Pr.PermissionsForNode(nodeId, Instance.Node.ContentType.Id).Where(g => g.ContentTypeId != 0).ToList();
                     if (contentTypeApproval.Any())
                     {
                         group = contentTypeApproval.First(g => g.Permission == taskInstance.ApprovalStep);
@@ -351,25 +353,12 @@ namespace Workflow.Processes
             }
 
             // group will not be null
-            if (group != null)
-            {
-                taskInstance.GroupId = group.GroupId;
-                taskInstance.UserGroup = group.UserGroup;
-            }
+            if (group == null) return;
+
+            taskInstance.GroupId = group.GroupId;
+            taskInstance.UserGroup = group.UserGroup;
         }
 
-        /// <summary>
-        /// Determines whether approval is required by checking if the Author is in the current task group.
-        /// TODO: review this. FlowType is probably redundant, and can be better framed as a setting to determine
-        /// TODO  if the change author being a member of subsequent groups counts as implicit approval. Setting can 
-        /// TODO  be call 'Approve own work' or something similar. Easier to understand than the flow-type options.
-        /// </summary>
-        /// <returns>true if approval required, false otherwise</returns>
-        [Obsolete]
-        private bool StepApprovalRequired(WorkflowTaskInstancePoco taskInstance)
-        {
-            return !taskInstance.UserGroup.IsMember(Instance.AuthorUserId);
-        }
 
         /// <summary>
         /// set the total steps property for a workflow instance
