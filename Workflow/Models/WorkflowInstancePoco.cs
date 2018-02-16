@@ -5,6 +5,7 @@ using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
+using Umbraco.Core.Services;
 using Workflow.Helpers;
 
 namespace Workflow.Models
@@ -17,16 +18,15 @@ namespace Workflow.Models
         private IPublishedContent _node;
         private IUser _authorUser;
 
-        public WorkflowInstancePoco(int id)
+        public WorkflowInstancePoco()
         {
-            Id = id;
             TaskInstances = new HashSet<WorkflowTaskInstancePoco>();
             Status = (int)WorkflowStatus.PendingApproval;
             CreatedDate = DateTime.Now;
             CompletedDate = null;
         }
 
-        public WorkflowInstancePoco(int nodeId, int authorUserId, string authorComment, WorkflowType type, int id) : this(id)
+        public WorkflowInstancePoco(int nodeId, int authorUserId, string authorComment, WorkflowType type) : this()
         {
             NodeId = nodeId;
             AuthorUserId = authorUserId;
@@ -36,28 +36,28 @@ namespace Workflow.Models
 
         [Column("Id")]
         [PrimaryKeyColumn(AutoIncrement = true)]
-        public int Id { get; }
+        public int Id { get; set; }
 
         [Column("Guid")]
         public Guid Guid { get; set; }
 
         [Column("NodeId")]
-        public int NodeId { get; }
+        public int NodeId { get; set; }
 
         [Column("Type")]
-        public int Type { get; }
+        public int Type { get; set; }
 
         [Column("TotalSteps")]
         public int TotalSteps { get; set; }
 
         [Column("AuthorUserId")]
-        public int AuthorUserId { get; }
+        public int AuthorUserId { get; set; }
 
         [Column("Status")]
         public int Status { get; set; }
 
         [Column("CreatedDate")]
-        public DateTime CreatedDate { get; }
+        public DateTime CreatedDate { get; set; }
 
         [Column("CompletedDate")]
         [NullSetting(NullSetting = NullSettings.Null)]
@@ -74,8 +74,9 @@ namespace Workflow.Models
 
         public void SetScheduledDate()
         {
-            IContent content = ApplicationContext.Current.Services.ContentService.GetById(NodeId);
+            IContentService _cs = ApplicationContext.Current.Services.ContentService;
 
+            IContent content = _cs.GetById(NodeId);
             switch (Type)
             {
                 case (int)WorkflowType.Publish when content.ReleaseDate.HasValue:
