@@ -60,6 +60,7 @@
                                 vm.rejected = currentTask.cssStatus === 'rejected';
                                 vm.instanceGuid = currentTask.instanceGuid;
                                 vm.userCanEdit = vm.rejected && currentTask.requestedById === user.id;
+                                vm.isChangeAuthor = currentTask.requestedById === user.id;
 
                                 checkUserAccess(currentTask);
                             } else {
@@ -84,10 +85,6 @@
 
         $rootScope.$on('workflowActioned', function () {
             getNodeTasks();
-        });
-
-        $rootScope.$on('buttonStateChanged', function (event, data) {
-            vm.buttonGroup.state = data;
         });
 
         var buttons = {
@@ -127,15 +124,15 @@
                 labelKey: 'workflow_saveButton',
                 cssClass: 'success',
                 handler: function () {
-                    vm.buttonGroup.state = 'busy';
+                    workflowActionsService.buttonState('busy', editorState.current.id);
                     contentEditingHelper.contentEditorPerformSave({
                         statusMessage: 'Saving...',
                         saveMethod: contentResource.save,
                         scope: $scope,
                         content: editorState.current
-                    }).then(function(resp) {
-                        vm.buttonGroup.state = resp.notifications && resp.notifications[0].type === '3' ? 'success' : 'error';
-                        $scope.$parent.$parent.$parent.contentForm.$setPristine();
+                    }).then(function (resp) {
+                        workflowActionsService.buttonState(
+                            resp.notifications && resp.notifications[0].type === 3 ? 'success' : 'error', editorState.current.id);
                     });
                 }
             },
@@ -167,7 +164,7 @@
             if (vm.active) {
                 vm.buttonGroup = {
                     defaultButton: vm.canAction ? buttons.approveButton : buttons.detailButton,
-                    subButtons: vm.canAction ? [buttons.rejectButton, buttons.cancelButton] : vm.userCanEdit || vm.adminUser ? [buttons.cancelButton] : []
+                    subButtons: vm.canAction ? [buttons.rejectButton, buttons.cancelButton] : vm.userCanEdit || vm.adminUser || vm.isChangeAuthor ? [buttons.cancelButton] : []
                 };
             }
         }
@@ -176,7 +173,6 @@
             // default button will be null when the current user has browse-only permission
             if (defaultButtons.defaultButton !== null) {
                 var subButtons = saveAndPublish ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] : [buttons.unpublishButton, buttons.saveButton];
-
                 // if the content is dirty, show save. if it's saved and the last changes were rejected, show resubmit, otherwise show request approval
                 vm.buttonGroup = {
                     defaultButton: $scope.dirty ? buttons.saveButton : vm.userCanEdit ? buttons.resubmitButton : buttons.publishButton,
@@ -204,6 +200,7 @@
         angular.extend(vm, {
             active: false,
             excludeNode: false,
+            buttonGroupState: 'init',
             preview: preview
         });
     }

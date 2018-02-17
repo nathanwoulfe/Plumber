@@ -21,13 +21,13 @@
                     requestedOn: item.requestedOn,
                     submit: function (model) {
 
-                        buttonState('busy');
+                        buttonState('busy', item.nodeId);
 
                         // build the function name and access it via index rather than property - saves duplication
                         var functionName = type.toLowerCase() + 'WorkflowTask';
                         workflowResource[functionName](item.instanceGuid, model.approvalComment)
                             .then(function (resp) {
-                                notify(resp, fromDash);
+                                notify(resp, fromDash, item.nodeId);
                             });
                        
                         workflowOverlay.close();
@@ -52,11 +52,11 @@
                     nodeId: id,
                     submit: function (model) {
 
-                        buttonState('busy');
+                        buttonState('busy', id);
 
                         workflowResource.initiateWorkflow(id, model.comment, publish)
                             .then(function(resp) {
-                                notify(resp);
+                                notify(resp, false, id);
                             });
 
                         workflowOverlay.close();
@@ -79,11 +79,11 @@
                     isFinalApproval: item.activeTask === 'Pending Final Approval',
                     submit: function (model) {
 
-                        buttonState('busy');
+                        buttonState('busy', item.nodeId);
 
                         workflowResource.cancelWorkflowTask(item.instanceGuid, model.comment)
                             .then(function (resp) {
-                                notify(resp, fromDash);
+                                notify(resp, fromDash, item.nodeId);
                             });
 
                         workflowOverlay.close();
@@ -118,28 +118,32 @@
 
                 return workflowOverlay;
             },
+
+            buttonState: function(state, id) {
+                buttonState(state, id);
+            }
         };
 
         // UI feedback for button directive
-        function buttonState(state) {
-            $rootScope.$emit('buttonStateChanged', state);
+        function buttonState(state, id) {
+            $rootScope.$emit('buttonStateChanged', { state: state, id: id });
         }
 
         // display notification after actioning workflow task
-        function notify(d, fromDash) {
+        function notify(d, fromDash, id) {
             if (d.status === 200) {
 
-                notificationsService.success('SUCCESS!', d.message);
+                notificationsService.success('SUCCESS', d.message);
 
                 if (fromDash) {
                     $rootScope.$emit('refreshWorkflowDash');
                 }
                 $rootScope.$emit('workflowActioned');
-                $rootScope.$emit('buttonStateChanged', 'success');
+                buttonState('success', id);
             }
             else {
-                notificationsService.error('OH SNAP!', d.message);
-                $rootScope.$emit('buttonStateChanged', 'error');
+                notificationsService.error('OH SNAP', d.message);
+                buttonState('error', id);
             }
         }
 

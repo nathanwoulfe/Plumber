@@ -108,6 +108,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowButtonGroup.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowHistoryTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowLineChart.html" />
+	<Content Include="App_Plugins\Workflow\Backoffice\partials\workflowCommentsTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowTasksTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\actions.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\workflow\edit-group.html" />
