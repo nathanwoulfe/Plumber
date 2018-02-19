@@ -158,7 +158,7 @@ namespace Workflow
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
-        public  List<WorkflowTaskInstancePoco> TasksAndGroupByInstanceId(Guid guid)
+        public List<WorkflowTaskInstancePoco> TasksAndGroupByInstanceId(Guid guid)
         {
             return GetDb().Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TasksAndGroupByInstanceId, guid);
         }
@@ -169,9 +169,18 @@ namespace Workflow
         /// <param name="node"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        public List<WorkflowInstancePoco> InstancesByNodeAndStatus(int node, List<int> status)
-        {            
-            var statusStr = string.Concat("Status = ", string.Join(" OR Status = ", status));
+        public List<WorkflowInstancePoco> InstancesByNodeAndStatus(int node, List<int> status = null)
+        {
+            if (status == null || !status.Any())
+                return GetDb().Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByNodeStr, node);
+
+
+            string statusStr = string.Concat("Status = ", string.Join(" OR Status = ", status));
+            if (!string.IsNullOrEmpty(statusStr))
+            {
+                statusStr = " AND " + statusStr;
+            }
+
             return GetDb().Fetch<WorkflowInstancePoco>(string.Concat(SqlHelpers.InstanceByNodeStr, statusStr), node);
         }
 

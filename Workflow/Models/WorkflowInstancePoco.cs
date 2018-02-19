@@ -126,7 +126,9 @@ namespace Workflow.Models
         /// Indicates whether the workflow instance is currently active.
         /// </summary>
         [ResultColumn]
-        public bool Active => WorkflowStatus != WorkflowStatus.Cancelled && WorkflowStatus != WorkflowStatus.Rejected;
+        public bool Active => WorkflowStatus != WorkflowStatus.Cancelled 
+                              && WorkflowStatus != WorkflowStatus.Errored 
+                              && WorkflowStatus != WorkflowStatus.Approved;
 
         [ResultColumn]
         public DateTime? ScheduledDate { get; set; }

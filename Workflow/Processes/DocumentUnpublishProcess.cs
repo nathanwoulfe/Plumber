@@ -1,6 +1,8 @@
 ﻿using log4net;
 using System;
 using Umbraco.Core;
+using Umbraco.Core.Models;
+using Umbraco.Core.Services;
 using Workflow.Helpers;
 using Workflow.Models;
 
@@ -41,11 +43,11 @@ namespace Workflow.Processes
         /// <summary>
         /// Removes the document from the live site.
         /// </summary>
-        public void HandleUnpublishNow()
+        private void HandleUnpublishNow()
         {
             bool success;
             var errorText = "";
-            var originalWfStatus = Instance.WorkflowStatus;
+            int workflowStatus = Instance.Status;
 
             try
             {
@@ -55,8 +57,8 @@ namespace Workflow.Processes
                 ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
 
                 // Perform the unpublish
-                var cs = ApplicationContext.Current.Services.ContentService;
-                var node = cs.GetById(Instance.NodeId);
+                IContentService cs = ApplicationContext.Current.Services.ContentService;
+                IContent node = cs.GetById(Instance.NodeId);
                 success = cs.UnPublish(node);
             }
             catch (Exception e)
@@ -64,18 +66,18 @@ namespace Workflow.Processes
                 try
                 {
                     // rollback the process completion.
-                    Instance.Status = (int)originalWfStatus;
+                    Instance.Status = workflowStatus;
                     Instance.CompletedDate = null;
                     ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
                 }
                 catch (Exception ex)
                 {
-                    errorText = "Unable to unpublish document " + _nodeName + ": " + ex.Message;
+                    errorText = $"Unable to unpublish document {_nodeName}: {ex.Message}";
                     Log.Error(errorText);
                 }
 
                 success = false;
-                errorText = "Unable to unpublish document " + _nodeName + ": " + e.Message;
+                errorText = $"Unable to unpublish document {_nodeName}: {e.Message}";
                 Log.Error(errorText);
             }
 
@@ -95,35 +97,21 @@ namespace Workflow.Processes
         /// </summary>
         private void HandleUnpublishAt()
         {
-            // There is a remove date set so just complete the workflow. The internal scheduler will unpublish this at the required time.
-            var success = false;
-            var errorText = "";
-
             try
             {
                 // Just complete the workflow
                 Instance.Status = (int)WorkflowStatus.Approved;
                 Instance.CompletedDate = DateTime.Now;
                 ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
-                success = true;
 
+                Notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
                 // Unpublish will occur via scheduler.
             }
             catch (Exception ex)
             {
-                errorText = "Error completing workflow for " + _nodeName + ": " + ex.Message;
+                string errorText = $"Error completing workflow for {_nodeName}: {ex.Message}";
                 Log.Error(errorText);
-            }
 
-            if (success)
-            {
-                Notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
-                var notificationText = "The document '" + _nodeName + "' has been approved for removal and is " + Instance.TypeDescriptionPastTense;
-
-                Log.Info(notificationText);
-            }
-            else
-            {
                 throw new WorkflowException(errorText);
             }
         }
