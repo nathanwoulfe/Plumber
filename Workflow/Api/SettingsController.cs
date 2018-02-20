@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.Caching;
 using System.Web.Http;
+using log4net;
 using Newtonsoft.Json.Linq;
 using Umbraco.Core.Models;
 using Umbraco.Web.WebApi;
@@ -18,6 +19,7 @@ namespace Workflow.Api
     [RoutePrefix("umbraco/backoffice/api/workflow/settings")]
     public class SettingsController : UmbracoAuthorizedApiController
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly PocoRepository Pr = new PocoRepository();
 
         /// <summary>
@@ -68,7 +70,9 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
+                const string error = "Error getting version information";
+                Log.Error(error, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
             }
         }
 
@@ -116,9 +120,12 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
+                const string error = "Documentation unavailable";
+                Log.Error(error, ex);
+
                 return new HttpResponseMessage
                 {
-                    Content = new StringContent($"Documentation unavailable: {ex.Message}")
+                    Content = new StringContent(error)
                 };
             }
         }
@@ -136,7 +143,9 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
+                string error = $"Could not get settings'. {ex.Message}";
+                Log.Error(error, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
             }
         }
 
@@ -155,7 +164,9 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
+                const string error = "Could not save settings";
+                Log.Error(error, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
             }
         }
 
@@ -173,8 +184,9 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
-
+                const string error = "Could not get content types";
+                Log.Error(error, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
             }
         }
     }

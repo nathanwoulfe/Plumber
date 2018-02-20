@@ -43,9 +43,11 @@ namespace Workflow.Api
                     count
                 }, ViewHelpers.CamelCase);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+                const string msg = "Error getting pending tasks";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -59,16 +61,18 @@ namespace Workflow.Api
         {
             try
             {
-                var taskInstances = Pr.GetAllTasksForDateRange(DateTime.Now.AddDays(days * -1));
+                List<WorkflowTaskInstancePoco> taskInstances = Pr.GetAllTasksForDateRange(DateTime.Now.AddDays(days * -1));
                 return Json(new
                 {
                     items = taskInstances,
                     total = taskInstances.Count
                 }, ViewHelpers.CamelCase);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+                const string msg = "Error getting tasks for date range";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -85,8 +89,8 @@ namespace Workflow.Api
         {
             try
             {
-                var taskInstances = Pr.TasksByNode(id);
-                var workflowItems = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
+                List<WorkflowTaskInstancePoco> taskInstances = Pr.TasksByNode(id);
+                List<WorkflowTask> workflowItems = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
                 return Json(new
                 {
                     items = workflowItems,
@@ -95,9 +99,11 @@ namespace Workflow.Api
                     count
                 }, ViewHelpers.CamelCase);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+                string msg = $"Error getting tasks for node {id}";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -112,8 +118,8 @@ namespace Workflow.Api
         {
             try
             {
-                var settings = Pr.GetSettings();
-                var hasFlow = Pr.HasFlow(id);
+                WorkflowSettingsPoco settings = Pr.GetSettings();
+                bool hasFlow = Pr.HasFlow(id);
 
                 if (null == settings || !hasFlow)
                 {
@@ -124,7 +130,7 @@ namespace Workflow.Api
                     }, ViewHelpers.CamelCase);
                 }
 
-                var taskInstances = Pr.TasksByNode(id);
+                List<WorkflowTaskInstancePoco> taskInstances = Pr.TasksByNode(id);
                 if (taskInstances.Last().TaskStatus == TaskStatus.Cancelled)
                 {
                     return Json(new
@@ -140,9 +146,11 @@ namespace Workflow.Api
                     total = taskInstances.Count
                 }, ViewHelpers.CamelCase);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+                string msg = $"Error getting pending tasks for node {id}";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -158,12 +166,14 @@ namespace Workflow.Api
         {
             try
             {
-                var instances = Pr.InstancesByNodeAndStatus(id, new List<int> { (int)WorkflowStatus.PendingApproval });
+                List<WorkflowInstancePoco> instances = Pr.InstancesByNodeAndStatus(id, new List<int> { (int)WorkflowStatus.PendingApproval });
                 return Ok(instances.Any());
             }
             catch (Exception ex)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
+                string msg = $"Error getting status for node {id}";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -206,9 +216,9 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                const string s = "Error trying to build user workflow tasks list for user ";
-                Log.Error(string.Concat(s + Utility.GetUser(userId).Name, ex));
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, s));
+                string msg = $"Error trying to build user workflow tasks list for user {userId}";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -222,8 +232,8 @@ namespace Workflow.Api
         {
             try
             {
-                var taskInstances = Pr.GetAllGroupTasks(groupId, count, page);
-                var workflowItems = taskInstances.ToWorkflowTaskList();
+                List<WorkflowTaskInstancePoco> taskInstances = Pr.GetAllGroupTasks(groupId, count, page);
+                List<WorkflowTask> workflowItems = taskInstances.ToWorkflowTaskList();
                 return Json(new
                 {
                     items = workflowItems,
@@ -232,9 +242,11 @@ namespace Workflow.Api
                     count
                 }, ViewHelpers.CamelCase);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+                string msg = $"Error getting all tasks for group {groupId}";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -259,9 +271,11 @@ namespace Workflow.Api
                     totalSteps = instance.TotalSteps
                 }, ViewHelpers.CamelCase);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+                string msg = $"Error getting tasks by instance guid {guid}";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 

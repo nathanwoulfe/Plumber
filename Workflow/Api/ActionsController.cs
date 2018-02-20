@@ -1,6 +1,8 @@
 ﻿using log4net;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Web.Http;
 using Umbraco.Web.WebApi;
@@ -41,9 +43,9 @@ namespace Workflow.Api
                     process = new DocumentUnpublishProcess();
                 }
 
-                var instance = process.InitiateWorkflow(int.Parse(model.NodeId), Utility.GetCurrentUser().Id, model.Comment);
+                WorkflowInstancePoco instance = process.InitiateWorkflow(int.Parse(model.NodeId), Utility.GetCurrentUser().Id, model.Comment);
 
-                var msg = string.Empty;
+                string msg = string.Empty;
 
                 switch (instance.WorkflowStatus)
                 {
@@ -70,11 +72,10 @@ namespace Workflow.Api
             }
             catch (Exception e)
             {
-                return Json(new
-                {
-                    message = ViewHelpers.ApiException(e),
-                    status = 500
-                }, ViewHelpers.CamelCase);
+                const string msg = "An error occurred initiating the workflow";
+                Log.Error(msg, e);
+
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e, msg));
             }
         }
 
@@ -88,7 +89,7 @@ namespace Workflow.Api
         [Route("approve")]
         public IHttpActionResult ApproveWorkflowTask(TaskData model)
         {
-            var instance = GetInstance(model.InstanceGuid);
+            WorkflowInstancePoco instance = GetInstance(model.InstanceGuid);
 
             try
             {
@@ -101,7 +102,7 @@ namespace Workflow.Api
                     model.Comment
                 );
 
-                var msg = string.Empty;
+                string msg = string.Empty;
 
                 switch (instance.WorkflowStatus)
                 {
@@ -130,13 +131,10 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                var msg = "An error occurred processing the approval: " + ex.Message + ex.StackTrace;
-                Log.Error(msg + " for workflow " + instance.Id, ex);
-                return Json(new
-                {
-                    message = msg,
-                    status = 500
-                }, ViewHelpers.CamelCase);
+                const string msg = "An error occurred processing the approval";
+                Log.Error(msg, ex);
+
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -150,7 +148,7 @@ namespace Workflow.Api
         [Route("reject")]
         public IHttpActionResult RejectWorkflowTask(TaskData model)
         {
-            var instance = GetInstance(model.InstanceGuid);
+            WorkflowInstancePoco instance = GetInstance(model.InstanceGuid);
 
             try
             {
@@ -171,14 +169,10 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                var msg = "An error occurred rejecting the workflow: " + ex.Message + ex.StackTrace;
-                Log.Error(msg + " for workflow " + instance.Id, ex);
+                const string msg = "An error occurred rejecting the workflow";
+                Log.Error(msg, ex);
 
-                return Json(new
-                {
-                    message = msg,
-                    status = 500
-                }, ViewHelpers.CamelCase);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -192,7 +186,7 @@ namespace Workflow.Api
         [Route("cancel")]
         public IHttpActionResult CancelWorkflowTask(TaskData model)
         {
-            var instance = GetInstance(model.InstanceGuid);
+            WorkflowInstancePoco instance = GetInstance(model.InstanceGuid);
 
             try
             {
@@ -212,13 +206,10 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                var msg = "An error occurred cancelling the workflow: " + ex.Message + ex.StackTrace;
-                Log.Error(msg + " for workflow " + instance.Id, ex);
-                return Json(new
-                {
-                    status = 500,
-                    message = msg
-                }, ViewHelpers.CamelCase);
+                const string msg = "An error occurred cancelling the workflow";
+                Log.Error(msg, ex);
+
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -251,14 +242,10 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                string msg = "An error occurred processing the approval: " + ex.Message + ex.StackTrace;
-                Log.Error(msg + " for workflow " + instance.Id, ex);
+                const string msg = "An error occurred processing the approval";
+                Log.Error(msg, ex);
 
-                return Json(new
-                {
-                    message = msg,
-                    status = 500
-                }, ViewHelpers.CamelCase);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
 
@@ -285,11 +272,11 @@ namespace Workflow.Api
         /// <returns></returns>
         private static WorkflowInstancePoco GetInstance(Guid instanceGuid)
         {
-            var instance = Pr.InstanceByGuid(instanceGuid);
+            WorkflowInstancePoco instance = Pr.InstanceByGuid(instanceGuid);
             instance.SetScheduledDate();
 
             // TODO -> fix this
-            var tasks = Pr.TasksAndGroupByInstanceId(instance.Guid);
+            List<WorkflowTaskInstancePoco> tasks = Pr.TasksAndGroupByInstanceId(instance.Guid);
 
             if (tasks.Any())
             {

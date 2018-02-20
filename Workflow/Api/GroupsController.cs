@@ -46,7 +46,10 @@ namespace Workflow.Api
             }
             catch (Exception e)
             {
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e));
+                string error = $"Error getting group by id {id}";
+                Log.Error(error, e);
+                // if we are here, something isn't right...
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e, error));
             }
         }
 
@@ -79,7 +82,7 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                string error = $"Error creating user group '{name}'. {ex.Message}";
+                string error = $"Error creating user group '{name}'";
                 Log.Error(error, ex);
                 // if we are here, something isn't right...
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
@@ -140,8 +143,10 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                Log.Error(ex);
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex));
+                const string msg = "An error occurred updating the user group";
+                Log.Error(msg, ex);
+
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
 
             // feedback to the browser
@@ -167,8 +172,9 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                Log.Error($"Error deleting user group. {ex.Message}", ex);
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, "Error deleting user group"));
+                const string msg = "Error deleting user group";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
 
             // gone.

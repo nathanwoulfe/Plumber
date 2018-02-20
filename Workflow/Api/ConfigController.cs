@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Web.Http;
+using log4net;
 using Umbraco.Core.Persistence;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
@@ -13,6 +15,8 @@ namespace Workflow.Api
     [RoutePrefix("umbraco/backoffice/api/workflow/config")]
     public class ConfigController : UmbracoAuthorizedApiController
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Persist the workflow approval config for single node
         /// </summary>
@@ -40,7 +44,9 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                string msg = $"Error saving config. {ex.Message}";
+                const string msg = "Error saving config";
+                Log.Error(msg, ex);
+
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
 
@@ -79,7 +85,9 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                string msg = $"Error saving config. {ex.Message}";
+                const string msg = "Error saving doctype config";
+                Log.Error(msg, ex);
+
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
 

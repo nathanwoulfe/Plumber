@@ -42,6 +42,7 @@
     <Compile Include="Helpers\MagicStrings.cs" />
     <Compile Include="Helpers\Uninstaller.cs" />
     <Compile Include="Migrations\VersionZeroFiveZero.cs" />
+    <Compile Include="Migrations\VersionZeroSevenZero.cs" />
     <Compile Include="Models\SectionTreeNodeModel.cs" />
     <Compile Include="Relators\UserToGroupForPermissionsRelator.cs" />
     <Compile Include="EventHandlers\Migration.cs" />

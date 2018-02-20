@@ -28,7 +28,7 @@ namespace Workflow.EventHandlers
                 currentVersion = latest.Version;
             }
 
-            var targetVersion = new SemVersion(0, 5);
+            var targetVersion = new SemVersion(0, 7);
             if (targetVersion == currentVersion)
             {
                 return;
