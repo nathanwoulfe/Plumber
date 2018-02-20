@@ -1,0 +1,101 @@
+﻿@import "_variables";
+
+.workflow {
+    &-log {
+        margin-top: 30px;
+        padding:0 15px;
+
+        pre {
+            max-height:500px;
+        }
+
+        .button-row {
+            margin-bottom: 5px;
+            text-align:center;
+        }
+
+        .button-group {
+            display: inline-block;
+            font-size: 0;
+            vertical-align: bottom;
+
+            .error {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            .debug, .info {
+                border-radius: 0;
+            }
+
+            .all {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+        }
+
+        .btn-pad {
+            padding-top: 8px;
+            padding-bottom: 6px;
+        }
+
+        &.basic {
+            .log {
+                &-thread, &-class, &-detail {
+                    display: none;
+                }
+            }
+        }
+
+        .log {
+            &-row {
+                display: block;
+                margin-top: 5px;
+
+                &:first-child {
+                    margin: 0;
+                }
+            }
+
+            &-type {
+                font-weight: bold;
+            }
+
+            &-detail {
+                padding-left: 15px;
+                display: block;
+
+                + .log-detail {
+                    padding-left: 30px;
+                }
+            }
+        }
+
+        /* error state */
+        .error .log-type {
+            color: $danger;
+        }
+
+        &.error .log-row:not(.error) {
+            display: none;
+        }
+
+        /* info state */
+        .info .log-type {
+            color: $pending;
+        }
+
+        &.info .log-row:not(.info) {
+            display: none;
+        }
+
+        /* debug state */
+        .debug .log-type {
+            color: $warning;
+        }
+
+        &.debug .log-row:not(.debug) {
+            display: none;
+        }
+    }
+}

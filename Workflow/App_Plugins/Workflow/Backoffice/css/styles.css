@@ -109,16 +109,22 @@
     .workflow .wf-highcharts-color-rejected .highcharts-point {
       fill: #df7f48;
       color: #df7f48; }
-  .workflow .wf-highcharts-color-notreq {
+  .workflow .wf-highcharts-color-notreq,
+  .workflow .wf-highcharts-color-not-required {
     fill: #8085e9;
     color: #8085e9; }
-    .workflow .wf-highcharts-color-notreq .highcharts-point {
+    .workflow .wf-highcharts-color-notreq .highcharts-point,
+    .workflow .wf-highcharts-color-not-required .highcharts-point {
       fill: #8085e9;
       color: #8085e9; }
+  .workflow .highcharts-color-5,
   .workflow .wf-highcharts-color-total {
-    stroke: #666; }
+    stroke: #666;
+    fill: #666; }
+    .workflow .highcharts-color-5 .highcharts-point,
     .workflow .wf-highcharts-color-total .highcharts-point {
-      stroke: #666; }
+      stroke: #666;
+      fill: #666; }
   .workflow .highcharts-legend-item text {
     font-weight: normal; }
   .workflow .chart-loading {
@@ -328,5 +334,57 @@
       margin-bottom: 0; }
   .workflow .umb-healthcheck {
     justify-content: center; }
+  .workflow .workflow-log {
+    margin-top: 30px;
+    padding: 0 15px;
+    /* error state */
+    /* info state */
+    /* debug state */ }
+    .workflow .workflow-log pre {
+      max-height: 500px; }
+    .workflow .workflow-log .button-row {
+      margin-bottom: 5px;
+      text-align: center; }
+    .workflow .workflow-log .button-group {
+      display: inline-block;
+      font-size: 0;
+      vertical-align: bottom; }
+      .workflow .workflow-log .button-group .error {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0; }
+      .workflow .workflow-log .button-group .debug, .workflow .workflow-log .button-group .info {
+        border-radius: 0; }
+      .workflow .workflow-log .button-group .all {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0; }
+    .workflow .workflow-log .btn-pad {
+      padding-top: 8px;
+      padding-bottom: 6px; }
+    .workflow .workflow-log.basic .log-thread, .workflow .workflow-log.basic .log-class, .workflow .workflow-log.basic .log-detail {
+      display: none; }
+    .workflow .workflow-log .log-row {
+      display: block;
+      margin-top: 5px; }
+      .workflow .workflow-log .log-row:first-child {
+        margin: 0; }
+    .workflow .workflow-log .log-type {
+      font-weight: bold; }
+    .workflow .workflow-log .log-detail {
+      padding-left: 15px;
+      display: block; }
+      .workflow .workflow-log .log-detail + .log-detail {
+        padding-left: 30px; }
+    .workflow .workflow-log .error .log-type {
+      color: #ee5f5b; }
+    .workflow .workflow-log.error .log-row:not(.error) {
+      display: none; }
+    .workflow .workflow-log .info .log-type {
+      color: #2e8aea; }
+    .workflow .workflow-log.info .log-row:not(.info) {
+      display: none; }
+    .workflow .workflow-log .debug .log-type {
+      color: #df7f48; }
+    .workflow .workflow-log.debug .log-row:not(.debug) {
+      display: none; }
 
 /*# sourceMappingURL=styles.css.map */

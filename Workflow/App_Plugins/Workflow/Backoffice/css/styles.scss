@@ -70,7 +70,7 @@
         color: $warning;
 
         p {
-            margin:0;
+            margin: 0;
         }
     }
 
@@ -128,9 +128,9 @@
     .task-detail-btn {
         padding: 0;
         background: 0 0;
-        margin-right:10px;
+        margin-right: 10px;
 
-        &:hover { 
+        &:hover {
             background: #fff;
         }
 
@@ -141,11 +141,11 @@
     }
 
     &.workflow-button-drawer {
-        display:flex;
-        align-items:center;
+        display: flex;
+        align-items: center;
 
         > div {
-            margin-left:5px;
+            margin-left: 5px;
         }
     }
 
@@ -154,4 +154,5 @@
     @import "listview";
     @import "workflow-progress";
     @import "docs-dashboard";
+    @import "log";
 }

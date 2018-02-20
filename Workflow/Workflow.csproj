@@ -90,6 +90,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.drawerbuttons.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.admin.dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.log.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.userpicker.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.history.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.userpicker.overlay.html" />
@@ -135,6 +136,7 @@
     <Content Include="Gruntfile.js" />
     <None Include="app.config" />
     <None Include="App_Plugins\Workflow\Backoffice\css\highcharts.scss" />
+    <None Include="App_Plugins\Workflow\Backoffice\css\log.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\styles.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\docs-dashboard.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\listview.scss" />

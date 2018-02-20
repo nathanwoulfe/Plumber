@@ -1,10 +1,12 @@
 ﻿using log4net;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web.Http;
+using Umbraco.Core.Models.Membership;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 using Workflow.Helpers;
@@ -50,18 +52,20 @@ namespace Workflow.Api
                 switch (instance.WorkflowStatus)
                 {
                     case WorkflowStatus.PendingApproval:
-                        msg = "Page submitted for " + (model.Publish ? "publish" : "unpublish") + " approval.";
+                        msg = $"Page submitted for {(model.Publish ? "publish" : "unpublish")} approval.";
                         break;
                     case WorkflowStatus.Approved:
                         msg = (model.Publish ? "Publish" : "Unpublish") + " workflow complete.";
 
                         if (instance.ScheduledDate.HasValue)
                         {
-                            msg += " Page scheduled for publishing at " + instance.ScheduledDate.ToString();
+                            msg += $" Page scheduled for publishing at {instance.ScheduledDate.Value.ToString("dd MMM YYYY", CultureInfo.CurrentCulture)}";
                         }
 
                         break;
                 }
+
+                Log.Info(msg);
 
                 return Json(new
                 {
@@ -94,34 +98,42 @@ namespace Workflow.Api
             try
             {
                 WorkflowApprovalProcess process = GetProcess(instance.Type);
+                IUser currentUser = Utility.GetCurrentUser();
 
                 instance = process.ActionWorkflow(
                     instance,
                     WorkflowAction.Approve,
-                    Utility.GetCurrentUser().Id,
+                    currentUser.Id,
                     model.Comment
                 );
 
                 string msg = string.Empty;
-
+                string logMsg = string.Empty;
+                   
                 switch (instance.WorkflowStatus)
                 {
                     case WorkflowStatus.PendingApproval:
-                        msg = "Approval completed successfully. Page will be " + instance.TypeDescriptionPastTense.ToLower() + " following workflow completion.";
+                        msg = $"Approval completed successfully. Page will be {instance.TypeDescriptionPastTense.ToLower()} following workflow completion.";
+                        logMsg = $"Workflow {instance.TypeDescription} task on {instance.Node.Name} [{instance.NodeId}] approved by {currentUser.Name}";
                         break;
                     case WorkflowStatus.Approved:
                         msg = "Workflow approved successfully.";
+                        logMsg = $"Workflow approved by {currentUser.Name} on {instance.Node.Name} [{instance.NodeId}]";
 
                         if (instance.ScheduledDate.HasValue)
                         {
-                            msg += " Page scheduled for " + instance.TypeDescription + " at " + instance.ScheduledDate.ToString();
+                            string scheduled = $" Page scheduled for {instance.TypeDescription} at {instance.ScheduledDate.Value.ToString("dd MMM YYYY", CultureInfo.CurrentCulture)}";
+                            msg += scheduled;
+                            logMsg += scheduled;
                         }
                         else
                         {
-                            msg += " Page has been " + instance.TypeDescriptionPastTense.ToLower();
+                            msg += $" Page has been {instance.TypeDescriptionPastTense.ToLower()}";
                         }
                         break;
                 }
+
+                Log.Info(logMsg);
 
                 return Json(new
                 {
@@ -131,7 +143,7 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                const string msg = "An error occurred processing the approval";
+                string msg = $"An error occurred processing the approval on {instance.Node.Name} [{instance.Node.Id}]";
                 Log.Error(msg, ex);
 
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
@@ -153,13 +165,16 @@ namespace Workflow.Api
             try
             {
                 WorkflowApprovalProcess process = GetProcess(instance.Type);
+                IUser currentUser = Utility.GetCurrentUser();
 
                 instance = process.ActionWorkflow(
                     instance,
                     WorkflowAction.Reject,
-                    Utility.GetCurrentUser().Id,
+                    currentUser.Id,
                     model.Comment
                 );
+
+                Log.Info($"{instance.TypeDescription} request for {instance.Node.Name} [{instance.NodeId}] was rejected by {currentUser.Name}");
 
                 return Json(new
                 {
@@ -169,7 +184,7 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                const string msg = "An error occurred rejecting the workflow";
+                string msg = $"An error occurred rejecting the workflow on {instance.Node.Name} [{instance.NodeId}]";
                 Log.Error(msg, ex);
 
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
@@ -191,12 +206,15 @@ namespace Workflow.Api
             try
             {
                 WorkflowApprovalProcess process = GetProcess(instance.Type);
+                IUser currentUser = Utility.GetCurrentUser();
 
                 instance = process.CancelWorkflow(
                     instance,
-                    Utility.GetCurrentUser().Id,
+                    currentUser.Id,
                     model.Comment
                 );
+
+                Log.Info($"{instance.TypeDescription} request for {instance.Node.Name} [{instance.NodeId}] was cancelled by {currentUser.Name}");
 
                 return Json(new
                 {
@@ -206,7 +224,7 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                const string msg = "An error occurred cancelling the workflow";
+                string msg = $"An error occurred cancelling the workflow on {instance.Node.Name} [{instance.NodeId}]";
                 Log.Error(msg, ex);
 
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
@@ -227,22 +245,25 @@ namespace Workflow.Api
             try
             {
                 WorkflowApprovalProcess process = GetProcess(instance.Type);
+                IUser currentUser = Utility.GetCurrentUser();
 
                 instance = process.ResubmitWorkflow(
                     instance,
-                    Utility.GetCurrentUser().Id,
+                    currentUser.Id,
                     model.Comment
                 );
 
+                Log.Info($"{instance.TypeDescription} request for {instance.Node.Name} [{instance.NodeId}] was resubmitted by {currentUser.Name}");
+
                 return Json(new
                 {
-                    message = "Changes resubmitted successfully. Page will be " + instance.TypeDescriptionPastTense.ToLower() + " following workflow completion.",
+                    message = $"Changes resubmitted successfully. Page will be {instance.TypeDescriptionPastTense.ToLower()} following workflow completion.",
                     status = 200
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
-                const string msg = "An error occurred processing the approval";
+                string msg = $"An error occurred processing the approval on {instance.Node.Name} [{instance.NodeId}]";
                 Log.Error(msg, ex);
 
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));

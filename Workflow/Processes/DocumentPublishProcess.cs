@@ -86,6 +86,7 @@ namespace Workflow.Processes
                 ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
 
                 Notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
+
                 // Publish will occur via scheduler.
             }
             catch (Exception ex)

@@ -92,6 +92,9 @@
             getDocs: function () {
                 return this.request('GET', this.settingsUrl + 'docs');
             },
+            getLog: function () {
+                return this.request('GET', this.settingsUrl + 'log');
+            },
 
             /*** SAVE PERMISSIONS ***/
             saveConfig: function (p) {

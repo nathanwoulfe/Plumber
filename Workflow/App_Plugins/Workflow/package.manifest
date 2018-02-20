@@ -11,6 +11,7 @@
     "~/App_Plugins/workflow/backoffice/controllers/workflow.docs.dashboard.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.drawerbuttons.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.history.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.log.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.settings.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.submit.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.user.dashboard.controller.js",

@@ -33,22 +33,21 @@
                                 formatter: function() {
                                     var r = this.points.filter(function(p) {
                                             return p.y > 0;
-                                        }).length >
-                                        0;
+                                        }).length > 0;
 
                                     if (!r) {
                                         return false;
                                     }
 
                                     var s = '<span>' + new Date(this.x).toDateString() + '</span><br />';
-                                    this.points.forEach(function(p) {
-                                        s += '<span class="highcharts-color-' +
-                                            p.colorIndex +
-                                            '">\u25CF</span> ' +
-                                            p.series.name +
-                                            ': <b>' +
-                                            p.y +
-                                            '</b><br/>';
+                                    this.points.forEach(function (p) {
+                                        if (p.y > 0) {
+                                            s += '<span class="wf-highcharts-color-' + p.series.name.toLowerCase().replace(' ', '-') +'">\u25CF</span> ' +
+                                                p.series.name +
+                                                ': <b>' +
+                                                p.y +
+                                                '</b><br/>';
+                                        }
                                     });
 
                                     return s;

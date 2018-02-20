@@ -48,7 +48,8 @@
     }
 }
 
-.wf-highcharts-color-notreq {
+.wf-highcharts-color-notreq,
+.wf-highcharts-color-not-required {
     fill: #8085e9;
     color: #8085e9;
 
@@ -58,11 +59,14 @@
     }
 }
 
+.highcharts-color-5,
 .wf-highcharts-color-total {
     stroke: #666;
+    fill:#666;
 
     .highcharts-point {
         stroke: #666;
+        fill:#666;
     }
 }
 

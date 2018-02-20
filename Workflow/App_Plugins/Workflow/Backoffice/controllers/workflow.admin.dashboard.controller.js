@@ -28,7 +28,9 @@
                 className: 'wf-highcharts-color-total',
                 lineWidth: 4,
                 marker: {
-                    enabled: false
+                    enabled: false,
+                    fillColor: null,
+                    lineColor: null
                 }
             };
 
@@ -105,7 +107,6 @@
             });
             series.push(created);
 
-            console.log(series);
             vm.series = series.sort(function (a, b) { return a.name > b.name; });
 
             vm.title = 'Workflow ' + vm.type.toLowerCase() + ' activity';
@@ -122,6 +123,14 @@
 
         function getForRange() {
             if (vm.range > 0) {
+
+                vm.totalApproved = 0;
+                vm.totalCancelled = 0;
+                vm.totalPending = 0;
+                vm.totalRejected = 0;
+                vm.totalResubmitted = 0;
+                vm.totalNotRequired = 0;
+
                 vm.loaded = false;
                 vm.totalApproved = vm.totalCancelled = vm.totalPending = vm.totalRejected = 0;
                 if (vm.type === 'Task') {
