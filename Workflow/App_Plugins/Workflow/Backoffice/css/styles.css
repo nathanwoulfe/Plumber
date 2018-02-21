@@ -334,57 +334,59 @@
       margin-bottom: 0; }
   .workflow .umb-healthcheck {
     justify-content: center; }
-  .workflow .workflow-log {
-    margin-top: 30px;
-    padding: 0 15px;
-    /* error state */
-    /* info state */
-    /* debug state */ }
-    .workflow .workflow-log pre {
+  .workflow-log {
+    padding: 0 15px; }
+    .workflow-log pre {
       max-height: 500px; }
-    .workflow .workflow-log .button-row {
+    .workflow-log .datepicker {
+      margin-bottom: 0;
+      margin-right: 10px; }
+    .workflow-log .button-row {
       margin-bottom: 5px;
       text-align: center; }
-    .workflow .workflow-log .button-group {
+    .workflow-log .button-group {
       display: inline-block;
       font-size: 0;
       vertical-align: bottom; }
-      .workflow .workflow-log .button-group .error {
+      .workflow-log .button-group .error {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0; }
-      .workflow .workflow-log .button-group .debug, .workflow .workflow-log .button-group .info {
+      .workflow-log .button-group .debug, .workflow-log .button-group .info {
         border-radius: 0; }
-      .workflow .workflow-log .button-group .all {
+      .workflow-log .button-group .all {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0; }
-    .workflow .workflow-log .btn-pad {
+    .workflow-log .btn-pad {
       padding-top: 8px;
       padding-bottom: 6px; }
-    .workflow .workflow-log.basic .log-thread, .workflow .workflow-log.basic .log-class, .workflow .workflow-log.basic .log-detail {
+    .workflow-log.basic .log-thread, .workflow-log.basic .log-class, .workflow-log.basic .log-detail {
       display: none; }
-    .workflow .workflow-log .log-row {
+    .workflow-log .log-row {
       display: block;
       margin-top: 5px; }
-      .workflow .workflow-log .log-row:first-child {
+      .workflow-log .log-row:first-child {
         margin: 0; }
-    .workflow .workflow-log .log-type {
+    .workflow-log .log-type {
       font-weight: bold; }
-    .workflow .workflow-log .log-detail {
+    .workflow-log .log-detail {
       padding-left: 15px;
       display: block; }
-      .workflow .workflow-log .log-detail + .log-detail {
+      .workflow-log .log-detail + .log-detail {
         padding-left: 30px; }
-    .workflow .workflow-log .error .log-type {
+    .workflow-log .error.log-type {
       color: #ee5f5b; }
-    .workflow .workflow-log.error .log-row:not(.error) {
+    .workflow-log.error .log-row:not(.error),
+    .workflow-log.error .log-detail:not(.error) {
       display: none; }
-    .workflow .workflow-log .info .log-type {
+    .workflow-log .info.log-type {
       color: #2e8aea; }
-    .workflow .workflow-log.info .log-row:not(.info) {
+    .workflow-log.info .log-row:not(.info),
+    .workflow-log.info .log-detail:not(.info) {
       display: none; }
-    .workflow .workflow-log .debug .log-type {
+    .workflow-log .debug.log-type {
       color: #df7f48; }
-    .workflow .workflow-log.debug .log-row:not(.debug) {
+    .workflow-log.debug .log-row:not(.debug),
+    .workflow-log.debug .log-detail:not(.debug) {
       display: none; }
 
 /*# sourceMappingURL=styles.css.map */

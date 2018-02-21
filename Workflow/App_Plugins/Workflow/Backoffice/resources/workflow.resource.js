@@ -6,11 +6,11 @@
         var urlBase = '/umbraco/backoffice/api/workflow/';
 
         var service = {
-
             settingsUrl: urlBase + 'settings/',
             tasksUrl: urlBase + 'tasks/',
             instancesUrl: urlBase + 'instances/',
             actionsUrl: urlBase + 'actions/',
+            logsUrl: urlBase + 'logs/',
 
             request: function (method, url, data) {
                 return umbRequestHelper.resourcePromise(
@@ -21,11 +21,7 @@
                 );
             },
 
-            //getStatus: function (id) {
-            //    return this.request('GET', this.tasksUrl + 'status/' + id);
-            //},
-
-            getContentTypes: function() {
+            getContentTypes: function () {
                 return this.request('GET', this.settingsUrl + 'getcontenttypes');
             },
 
@@ -54,10 +50,10 @@
             getAllTasksByGuid: function (guid) {
                 return this.request('GET', this.tasksUrl + 'tasksbyguid/' + guid);
             },
-            getNodeTasks: function(id, count, page) {
-                return this.request('GET', this.tasksUrl + 'node/' + id  + '/' + count + '/' + page);
+            getNodeTasks: function (id, count, page) {
+                return this.request('GET', this.tasksUrl + 'node/' + id + '/' + count + '/' + page);
             },
-            getNodePendingTasks: function(id) {
+            getNodePendingTasks: function (id) {
                 return this.request('GET', this.tasksUrl + 'node/pending/' + id);
             },
 
@@ -86,23 +82,26 @@
                 return this.request('POST', this.settingsUrl + 'save', settings);
             },
 
-            getVersion: function() {
+            getVersion: function () {
                 return this.request('GET', this.settingsUrl + 'version');
             },
             getDocs: function () {
                 return this.request('GET', this.settingsUrl + 'docs');
             },
-            getLog: function () {
-                return this.request('GET', this.settingsUrl + 'log');
+            getLog: function (date) {
+                return this.request('GET', this.logsUrl + 'get/' + (date || ''));
+            },
+            getLogDates: function () {
+                return this.request('GET', this.logsUrl + 'datelist');
             },
 
             /*** SAVE PERMISSIONS ***/
             saveConfig: function (p) {
-                return this.request('POST', urlBase + 'config/saveconfig', p);              
+                return this.request('POST', urlBase + 'config/saveconfig', p);
             },
 
             saveDocTypeConfig: function (p) {
-              return this.request('POST', urlBase + 'config/savedoctypeconfig', p);
+                return this.request('POST', urlBase + 'config/savedoctypeconfig', p);
             }
         };
 

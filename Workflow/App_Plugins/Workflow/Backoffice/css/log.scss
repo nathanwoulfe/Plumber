@@ -1,101 +1,95 @@
 ﻿@import "_variables";
 
-.workflow {
-    &-log {
-        margin-top: 30px;
-        padding:0 15px;
+&-log {
+    padding: 0 15px;
 
-        pre {
-            max-height:500px;
+    pre {
+        max-height: 500px;
+    }
+
+    .datepicker {
+        margin-bottom: 0;
+        margin-right: 10px;
+    }
+
+    .button-row {
+        margin-bottom: 5px;
+        text-align: center;
+    }
+
+    .button-group {
+        display: inline-block;
+        font-size: 0;
+        vertical-align: bottom;
+
+        .error {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
         }
 
-        .button-row {
-            margin-bottom: 5px;
-            text-align:center;
+        .debug, .info {
+            border-radius: 0;
         }
 
-        .button-group {
-            display: inline-block;
-            font-size: 0;
-            vertical-align: bottom;
-
-            .error {
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 0;
-            }
-
-            .debug, .info {
-                border-radius: 0;
-            }
-
-            .all {
-                border-top-left-radius: 0;
-                border-bottom-left-radius: 0;
-            }
+        .all {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
         }
+    }
 
-        .btn-pad {
-            padding-top: 8px;
-            padding-bottom: 6px;
-        }
+    .btn-pad {
+        padding-top: 8px;
+        padding-bottom: 6px;
+    }
 
-        &.basic {
-            .log {
-                &-thread, &-class, &-detail {
-                    display: none;
-                }
-            }
-        }
-
+    &.basic {
         .log {
-            &-row {
-                display: block;
-                margin-top: 5px;
-
-                &:first-child {
-                    margin: 0;
-                }
+            &-thread, &-class, &-detail {
+                display: none;
             }
+        }
+    }
 
-            &-type {
-                font-weight: bold;
-            }
+    .log {
+        &-row {
+            display: block;
+            margin-top: 5px;
 
-            &-detail {
-                padding-left: 15px;
-                display: block;
-
-                + .log-detail {
-                    padding-left: 30px;
-                }
+            &:first-child {
+                margin: 0;
             }
         }
 
-        /* error state */
-        .error .log-type {
-            color: $danger;
+        &-type {
+            font-weight: bold;
         }
 
-        &.error .log-row:not(.error) {
-            display: none;
+        &-detail {
+            padding-left: 15px;
+            display: block;
+
+            + .log-detail {
+                padding-left: 30px;
+            }
+        }
+    }
+
+    $states: 'error', 'info', 'debug';
+    $colors: $danger, $pending, $warning;
+
+    @for $i from 1 through 3 {
+        $s: nth($states, $i);
+        $c: nth($colors, $i);
+
+        .#{$s}.log-type {
+            color: $c;
         }
 
-        /* info state */
-        .info .log-type {
-            color: $pending;
-        }
-
-        &.info .log-row:not(.info) {
-            display: none;
-        }
-
-        /* debug state */
-        .debug .log-type {
-            color: $warning;
-        }
-
-        &.debug .log-row:not(.debug) {
-            display: none;
+        &.#{$s} {
+            .log-row:not(.#{$s}),
+            .log-detail:not(.#{$s}) {
+                display: none;
+            }
         }
     }
 }

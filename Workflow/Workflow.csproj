@@ -35,6 +35,7 @@
     <Compile Include="Api\ActionsController.cs" />
     <Compile Include="Api\DodgyTestsController.cs" />
     <Compile Include="Api\InstancesController.cs" />
+    <Compile Include="Api\LogsController.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\WorkflowListExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
@@ -86,11 +87,11 @@
     <Compile Include="Trees\WorkflowTree.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.docs.dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\docs.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.drawerbuttons.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.history.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.admin.dashboard.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.log.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\admin.dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\log.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.userpicker.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.history.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.userpicker.overlay.html" />
@@ -114,13 +115,14 @@
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowCommentsTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowTasksTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\actions.resource.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.logsdashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\workflow\edit-group.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\groups.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.config.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\workflow.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.action.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.cancel.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.user.dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\user.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.submit.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.settings.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.admindashboard.html" />

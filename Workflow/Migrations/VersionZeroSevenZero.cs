@@ -1,7 +1,5 @@
-﻿using System.Reflection;
-using System.Web.Hosting;
+﻿using System.Web.Hosting;
 using System.Xml;
-using log4net;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Persistence.Migrations;
 using Umbraco.Core.Persistence.SqlSyntax;
@@ -23,25 +21,8 @@ namespace Workflow.Migrations
 
         public override void Up()
         {
-            // add custom logger config
-
-            const string configPath = "~/config/log4net.config";
-
-            //Path to the file resolved
-            string configFilePath = HostingEnvironment.MapPath(configPath);
-            if (configFilePath == null) return;
-
-
-            //Load log4net.config XML file
-            var configXml = new XmlDocument();
-            configXml.Load(configFilePath);
-
-            XmlNode root = configXml.SelectSingleNode("./log4net");
-
-            if (root == null) return;
-
-            //Let's add the xml
-            const string newAppender =
+            // define the new elements to add
+            const string appender =
                 "<appender name=\"WorkflowLogAppender\" type=\"Umbraco.Core.Logging.AsynchronousRollingFileAppender, Umbraco.Core\">" +
                 "  <file value=\"App_Data\\Logs\\WorkflowLog.txt\" />" +
                 "  <lockingModel type=\"log4net.Appender.FileAppender+MinimalLock\" />" +
@@ -53,39 +34,59 @@ namespace Workflow.Migrations
                 "  </layout>" +
                 "</appender>";
 
-            const string newLogger = 
+            const string logger =
                 "<logger name=\"Workflow\">" +
-                "  <level value =\"DEBUG\" />" +
+                "  <level value=\"DEBUG\" />" +
                 "  <appender-ref ref=\"WorkflowLogAppender\" />" +
                 "</logger>";
 
-            //Load in the appender XML string above
-            var appenderNodeToAdd = new XmlDocument();
-            appenderNodeToAdd.LoadXml(newAppender);
+            const string dashboard =
+                "<tab caption=\"Log viewer\">" +
+                "  <control>/app_plugins/workflow/backoffice/views/workflow.logsdashboard.html</control>" +
+                "</tab>";
 
-            XmlNode appenderXmlNode = appenderNodeToAdd.SelectSingleNode("*");
+            // update the respective config files
+            UpdateConfigFile("~/config/log4net.config", "./log4net", logger);
+            UpdateConfigFile("~/config/log4net.config", "./log4net", appender);
+            UpdateConfigFile("~/config/Dashboard.config", "//section [@alias='WorkflowDashboardSection']", dashboard);
+        }
 
-            //Append the appender above to the root node
-            if (appenderXmlNode != null && root.OwnerDocument != null)
+        /// <summary>
+        /// Helper for updating xml config files
+        /// </summary>
+        /// <param name="configPath">The path to the config file</param>
+        /// <param name="rootNode">Parent node for the new content</param>
+        /// <param name="xmlToAdd">XML-like string to add</param>
+        private static void UpdateConfigFile(string configPath, string rootNode, string xmlToAdd)
+        {
+            //Path to the file resolved
+            string configFilePath = HostingEnvironment.MapPath(configPath);
+            if (configFilePath == null) return;
+
+            //Load config XML file
+            var configXml = new XmlDocument();
+            configXml.Load(configFilePath);
+
+            // parent Node
+            XmlNode parent = configXml.SelectSingleNode(rootNode);
+
+            if (parent == null) return;
+ 
+            //Load in the XML string
+            var xmlNodeToAdd = new XmlDocument();
+            xmlNodeToAdd.LoadXml(xmlToAdd);
+
+            XmlNode toAdd = xmlNodeToAdd.SelectSingleNode("*");
+
+            //Append the xml to the root node
+            if (toAdd != null && parent.OwnerDocument != null)
             {
-                root.AppendChild(root.OwnerDocument.ImportNode(appenderXmlNode, true));
-            }
-
-            // repeat for the logger
-            //Load in the XML string above
-            var loggerNodeToAdd = new XmlDocument();
-            loggerNodeToAdd.LoadXml(newLogger);
-
-            XmlNode loggerXmlNode = loggerNodeToAdd.SelectSingleNode("*");
-
-            //Append the appender above to the root node
-            if (loggerXmlNode != null && root.OwnerDocument != null)
-            {
-                root.AppendChild(root.OwnerDocument.ImportNode(loggerXmlNode, true));
+                parent.AppendChild(parent.OwnerDocument.ImportNode(toAdd, true));
             }
 
             //Save the XML file
             configXml.Save(configFilePath);
+            
         }
     }
 }

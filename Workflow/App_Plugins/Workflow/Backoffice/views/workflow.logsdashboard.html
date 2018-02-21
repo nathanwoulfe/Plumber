@@ -1,0 +1,20 @@
+﻿<div class="workflow-log {{ !log.simple ? 'detailed' : 'basic' }} {{ log.filter }}" ng-show="log.html" ng-controller="Workflow.Log.Controller as log">
+    <div class="button-row">
+        
+        <umb-date-time-picker
+            options="log.datePickerConfig"
+            on-change="log.datePickerChange(event)"
+            on-error="log.datePickerError(event)">
+        </umb-date-time-picker>
+
+        <div class="button-group">
+            <button class="btn btn-default btn-pad error" ng-class="{'active' : log.filter === 'error'}" ng-click="log.filter = 'error'">Error</button>
+            <button class="btn btn-default btn-pad debug" ng-class="{'active' : log.filter === 'debug'}" ng-click="log.filter = 'debug'">Debug</button>
+            <button class="btn btn-default btn-pad info" ng-class="{'active' : log.filter === 'info'}" ng-click="log.filter = 'info'">Info</button>
+            <button class="btn btn-default btn-pad all" ng-class="{'active' : log.filter === 'all'}" ng-click="log.filter = 'all'">All</button>
+        </div>
+        <button class="btn btn-default btn-pad" ng-click="log.simple = !log.simple">{{ log.simple ? 'Detailed' : 'Basic' }}</button>
+        <button class="btn btn-default" ng-click="log.refresh()"><i class="icon icon-refresh"></i> Refresh</button>
+    </div>
+    <pre ng-bind-html="log.html"></pre>
+</div>
