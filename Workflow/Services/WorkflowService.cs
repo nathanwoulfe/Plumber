@@ -26,6 +26,16 @@ namespace Workflow.Services
             this.repo = repo;
         }
 
+        public Task<UserGroupPoco> CreateUserGroupAsync(string name)
+        {
+            var existing = repo.UserGroupsByName(name).Any();
+
+            if (existing)
+                return null;
+
+            return Task.FromResult(repo.InsertUserGroup(name, name.Replace(" ", "-"), false));
+        }
+
         public Task<UserGroupPoco> GetUserGroupAsync(int id)
         {
             List<UserGroupPoco> result = repo.PopulatedUserGroup(id);

@@ -29,5 +29,6 @@ namespace Workflow
         List<UserGroupPoco> UserGroupsByAlias(string value);
         List<UserGroupPoco> UserGroupsById(int value);
         List<UserGroupPoco> UserGroupsByName(string value);
+        UserGroupPoco InsertUserGroup(string name, string alias, bool deleted);
     }
 }

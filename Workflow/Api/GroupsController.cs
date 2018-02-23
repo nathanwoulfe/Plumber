@@ -1,6 +1,5 @@
 ﻿using log4net;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -66,25 +65,25 @@ namespace Workflow.Api
         /// <returns></returns>
         [HttpPost]
         [Route("add")]
-        public IHttpActionResult Post([FromBody]Model model)
+        public async Task<IHttpActionResult> Post([FromBody]Model model)
         {
             string name = model.Data;
 
             try
             {
+                var poco = await workflowService.CreateUserGroupAsync(name);
+
                 // check that it doesn't already exist
-                if (Pr.UserGroupsByName(name).Any())
+                if (poco == null)
                 {
                     return Ok(new { status = 500, msg = "Group name already exists" });
                 }
 
-                // doesnt exist so create it with the given name. The alias will be generated from the name.
-                DatabaseContext.Database.Insert(new UserGroupPoco
-                {
-                    Name = name,
-                    Alias = name.ToLower().Replace(" ", "-"),
-                    Deleted = false
-                });
+                string msg = $"Successfully created new user group '{name}'.";
+                Log.Debug(msg);
+
+                // return the id of the new group, to update the front-end route to display the edit view
+                return Ok(new { status = 200, msg, poco.GroupId });
             }
             catch (Exception ex)
             {
@@ -93,14 +92,6 @@ namespace Workflow.Api
                 // if we are here, something isn't right...
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
             }
-
-            int id = Pr.NewestGroup().GroupId;
-
-            string msg = $"Successfully created new user group '{name}'.";
-            Log.Debug(msg);
-
-            // return the id of the new group, to update the front-end route to display the edit view
-            return Ok(new { status = 200, msg, id });
         }
 
 

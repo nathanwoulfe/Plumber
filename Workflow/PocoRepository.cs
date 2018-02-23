@@ -256,5 +256,18 @@ namespace Workflow
             var homepageNodeId = ApplicationContext.Current.Services.ContentService.GetById(nodeId).Path.Split(',')[1];
             return GetDb().Fetch<int>("SELECT * FROM WorkflowUserGroupPermissions WHERE NodeId = @0", homepageNodeId).Any();
         }
+
+        public UserGroupPoco InsertUserGroup(string name, string alias, bool deleted)
+        {
+            var poco = new UserGroupPoco
+            {
+                Name = name,
+                Alias = alias,
+                Deleted = deleted
+            };
+
+            database.Save(poco);
+            return poco;
+        }
     }
 }
