@@ -18,12 +18,12 @@ namespace Workflow.Api
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly PocoRepository Pr;
-        private readonly IWorkflowService workflowService;
+        private readonly IGroupService workflowService;
 
         public GroupsController()
         {
             Pr = new PocoRepository(DatabaseContext.Database);
-            workflowService = new WorkflowService();
+            workflowService = new GroupService();
         }
 
         /// <summary>

@@ -7,12 +7,12 @@ using Workflow.Models;
 
 namespace Workflow.Services
 {
-    public class WorkflowService : IWorkflowService
+    public class GroupService : IGroupService
     {
         private readonly ILogger log;
         private readonly IPocoRepository repo;
 
-        public WorkflowService()
+        public GroupService()
             : this(
                   ApplicationContext.Current.ProfilingLogger.Logger,
                   new PocoRepository(ApplicationContext.Current.DatabaseContext.Database)
@@ -20,7 +20,7 @@ namespace Workflow.Services
         {
         }
 
-        public WorkflowService(ILogger log, IPocoRepository repo)
+        public GroupService(ILogger log, IPocoRepository repo)
         {
             this.log = log;
             this.repo = repo;

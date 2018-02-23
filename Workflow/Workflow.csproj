@@ -42,13 +42,15 @@
     <Compile Include="Helpers\Installer.cs" />
     <Compile Include="Helpers\MagicStrings.cs" />
     <Compile Include="Helpers\Uninstaller.cs" />
+    <Compile Include="IPocoRepository.cs" />
     <Compile Include="Migrations\VersionZeroFiveZero.cs" />
     <Compile Include="Migrations\VersionZeroSevenZero.cs" />
     <Compile Include="Models\SectionTreeNodeModel.cs" />
     <Compile Include="Relators\UserToGroupForPermissionsRelator.cs" />
     <Compile Include="EventHandlers\Migration.cs" />
     <Compile Include="EventHandlers\BeforePublish.cs" />
-    <Compile Include="Services\WorkflowService.cs" />
+    <Compile Include="Services\IGroupService.cs" />
+    <Compile Include="Services\GroupService.cs" />
     <Compile Include="Startup\CreateTables.cs" />
     <Compile Include="Startup\StringConstraint.cs" />
     <Compile Include="Startup\UmbracoStartup.cs" />
