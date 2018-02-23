@@ -14,6 +14,11 @@ namespace Workflow
     {
         private readonly UmbracoDatabase database;
 
+        public PocoRepository()
+            : this(ApplicationContext.Current.DatabaseContext.Database)
+        {
+        }
+
         public PocoRepository(UmbracoDatabase database)
         {
             this.database = database;
