@@ -10,12 +10,19 @@ using Workflow.Relators;
 
 namespace Workflow
 {
-    class PocoRepository
+    public class PocoRepository : IPocoRepository
     {
+        private readonly UmbracoDatabase database;
+
+        public PocoRepository(UmbracoDatabase database)
+        {
+            this.database = database;
+        }
+
         /// ensure GetDb() connection exists
         private Database GetDb()
         {
-            return ApplicationContext.Current.DatabaseContext.Database;
+            return database;
         }
 
         /// <summary>
@@ -195,7 +202,12 @@ namespace Workflow
 
         public List<UserGroupPoco> PopulatedUserGroup(int id)
         {
-            return GetDb().Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(new GroupsRelator().MapIt, SqlHelpers.UserGroupDetailed, id);
+            return GetDb()
+                .Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(
+                    new GroupsRelator().MapIt,
+                    SqlHelpers.UserGroupDetailed,
+                    id
+                );
         }
 
         public List<UserGroupPoco> UserGroupsByName(string value)

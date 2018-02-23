@@ -9,6 +9,8 @@ using Umbraco.Core.Persistence;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 using Workflow.Helpers;
+using Workflow.Services;
+using System.Threading.Tasks;
 
 namespace Workflow.Api
 {
@@ -16,30 +18,34 @@ namespace Workflow.Api
     public class GroupsController : UmbracoAuthorizedApiController
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static readonly PocoRepository Pr = new PocoRepository();
+        private readonly PocoRepository Pr;
+        private readonly IWorkflowService workflowService;
+
+        public GroupsController()
+        {
+            Pr = new PocoRepository(DatabaseContext.Database);
+            workflowService = new WorkflowService();
+        }
 
         /// <summary>
         /// Get group and associated users and permissions by id
         /// </summary>
         /// <param name="id">Optional, returns all groups if omitted</param>
-        /// <returns></returns>       
+        /// <returns></returns>
         [Route("get/{id:int?}")]
-        public IHttpActionResult Get(int? id = null)
+        public async Task<IHttpActionResult> Get(int? id = null)
         {
-            try {
+            try
+            {
                 if (id.HasValue)
                 {
-                    List<UserGroupPoco> result = Pr.PopulatedUserGroup(id.Value);
-
-                    if (result.Any(r => !r.Deleted))
-                    {
-                        return Json(result.First(), ViewHelpers.CamelCase);
-                    }
+                    var result = await workflowService.GetUserGroupAsync(id.Value);
+                    if (result != null)
+                        return Json(result, ViewHelpers.CamelCase);
                 }
                 else
                 {
-                    List<UserGroupPoco> groups = Pr.UserGroups();
-                    return Json(groups.Where(g => !g.Deleted), ViewHelpers.CamelCase);
+                    return Json(await workflowService.GetUserGroupsAsync(), ViewHelpers.CamelCase);
                 }
 
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -58,14 +64,14 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost]  
-        [Route("add")]      
+        [HttpPost]
+        [Route("add")]
         public IHttpActionResult Post([FromBody]Model model)
         {
             string name = model.Data;
 
             try
-            {                
+            {
                 // check that it doesn't already exist
                 if (Pr.UserGroupsByName(name).Any())
                 {
@@ -74,11 +80,11 @@ namespace Workflow.Api
 
                 // doesnt exist so create it with the given name. The alias will be generated from the name.
                 DatabaseContext.Database.Insert(new UserGroupPoco
-                    {
-                        Name = name,
-                        Alias = name.ToLower().Replace(" ", "-"),
-                        Deleted = false
-                    });
+                {
+                    Name = name,
+                    Alias = name.ToLower().Replace(" ", "-"),
+                    Deleted = false
+                });
             }
             catch (Exception ex)
             {

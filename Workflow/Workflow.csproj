@@ -48,6 +48,7 @@
     <Compile Include="Relators\UserToGroupForPermissionsRelator.cs" />
     <Compile Include="EventHandlers\Migration.cs" />
     <Compile Include="EventHandlers\BeforePublish.cs" />
+    <Compile Include="Services\WorkflowService.cs" />
     <Compile Include="Startup\CreateTables.cs" />
     <Compile Include="Startup\StringConstraint.cs" />
     <Compile Include="Startup\UmbracoStartup.cs" />
