@@ -1,6 +1,8 @@
-﻿using System.Web.Configuration;
+﻿using System.Configuration;
+using System.Web.Configuration;
 using umbraco.cms.businesslogic.packager;
 using Umbraco.Core;
+using Umbraco.Core.Models.Membership;
 using Workflow.Helpers;
 
 namespace Workflow.Startup
@@ -12,7 +14,7 @@ namespace Workflow.Startup
         protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext context)
         {
             //Check to see if appSetting AnalyticsStartupInstalled is true or even present
-            var installAppSetting = WebConfigurationManager.AppSettings[AppSettingKey];
+            string installAppSetting = WebConfigurationManager.AppSettings[AppSettingKey];
 
             if (string.IsNullOrEmpty(installAppSetting) || installAppSetting != true.ToString())
             {
@@ -27,9 +29,15 @@ namespace Workflow.Startup
                 //Add Content dashboard XML
                 install.AddContentSectionDashboard();
 
+                // Grant the admin group access to the worfklow section
+                //since the app is starting, we don't have a current user. Safest assumption is the installer was an admin
+                IUserGroup adminGroup = context.Services.UserService.GetUserGroupByAlias("admin");
+                adminGroup.AddAllowedSection("workflow");
+                context.Services.UserService.Save(adminGroup, null, false);
+
                 //All done installing our custom stuff
                 //As we only want this to run once - not every startup of Umbraco
-                var webConfig = WebConfigurationManager.OpenWebConfiguration("/");
+                Configuration webConfig = WebConfigurationManager.OpenWebConfiguration("/");
                 webConfig.AppSettings.Settings.Add(AppSettingKey, true.ToString());
                 webConfig.Save();
 
@@ -47,7 +55,7 @@ namespace Workflow.Startup
         private static void InstalledPackage_BeforeDelete(InstalledPackage sender, System.EventArgs e)
         {
             //Check which package is being uninstalled
-            if (sender.Data.Name != "Plumber") return;
+            if (sender.Data.Name != MagicStrings.Name) return;
 
             var uninstall = new Uninstaller();
 
@@ -56,7 +64,7 @@ namespace Workflow.Startup
             uninstall.RemoveSectionDashboard();
 
             //Remove AppSetting key when all done
-            var webConfig = WebConfigurationManager.OpenWebConfiguration("/");
+            Configuration webConfig = WebConfigurationManager.OpenWebConfiguration("/");
             webConfig.AppSettings.Settings.Remove(AppSettingKey);
             webConfig.Save();
         }

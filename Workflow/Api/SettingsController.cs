@@ -45,6 +45,8 @@ namespace Workflow.Api
                 Assembly assembly = Assembly.GetExecutingAssembly();
                 Version version = assembly.GetName().Version;
 
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
                 var client = new WebClient();
                 client.Headers.Add("user-agent", MagicStrings.Name);
 
@@ -101,6 +103,8 @@ namespace Workflow.Api
                 }
                 else
                 {
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
                     var client = new WebClient();
                     client.Headers.Add("user-agent", MagicStrings.Name);
                     client.Headers.Add("accept", MagicStrings.MdMediaType);

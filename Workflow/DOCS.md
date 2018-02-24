@@ -4,6 +4,8 @@ If you're reading this, you've successfully installed the latest version of Plum
 
 The installation process created a new backoffice section (you're in it), and added a suite of new features to your Umbraco website.
 
+The installer grants access to the new section for all users in the Administrators group. You may wish to modify this according to best suit your site and requirements.
+
 Check in on the Workflow section dashboard to stay up-to-date with the latest release - when the installed version is superceded, Plumber will prompt you to upgrade.
 
 ### Settings

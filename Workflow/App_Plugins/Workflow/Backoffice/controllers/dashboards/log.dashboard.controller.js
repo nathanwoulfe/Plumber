@@ -7,23 +7,19 @@
 
         function refresh() {
             workflowResource.getLog()
-                .then(function(resp) {
+                .then(function (resp) {
                     log.html = resp;
                 });
 
             workflowResource.getLogDates()
                 .then(function (resp) {
-                    log.dates = resp;
-                    if (log.dates.length > 1) {
-                        log.datePickerConfig.minDate = moment(log.dates[log.dates.length - 1]);
-                    } else {
-                        log.datePicker.Config.minDate = moment();
-                    }
+                    // resp is an array of log dates, where [0] is 'txt', for the current date as the source file is undated
+                    log.datePicker.Config.minDate = resp.length > 1 ? moment(resp[1]) : moment();
                 });
         }
 
         function datePickerChange(event) {
-            // handle change
+            // handle change for a valid date - fetch corresponding log file if date is ok
             if (event.date && event.date.isValid() && event.oldDate.isValid()) {
                 var date = event.date.format('YYYY-MM-DD');
                 workflowResource.getLog(date === moment().format('YYYY-MM-DD') ? '' : date)

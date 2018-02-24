@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workflow", "Workflow\Workflow.csproj", "{C16349CB-04C0-4319-AA8F-14C43548E57D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workflow.Site", "Workflow.Site\Workflow.Site.csproj", "{000940BB-7FCA-4770-ADAD-3F2EF2A5FB24}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C16349CB-04C0-4319-AA8F-14C43548E57D} = {C16349CB-04C0-4319-AA8F-14C43548E57D}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02C2A51F-CDF0-4C5A-8AA1-6A9FD4D3DE6E}"
 	ProjectSection(SolutionItems) = preProject
