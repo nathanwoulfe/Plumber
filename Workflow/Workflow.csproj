@@ -36,6 +36,7 @@
     <Compile Include="Api\DodgyTestsController.cs" />
     <Compile Include="Api\InstancesController.cs" />
     <Compile Include="Api\LogsController.cs" />
+    <Compile Include="EventHandlers\Args\OnGroupCreatedEventArgs.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\WorkflowListExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
@@ -47,8 +48,8 @@
     <Compile Include="Migrations\VersionZeroSevenZero.cs" />
     <Compile Include="Models\SectionTreeNodeModel.cs" />
     <Compile Include="Relators\UserToGroupForPermissionsRelator.cs" />
-    <Compile Include="EventHandlers\Migration.cs" />
-    <Compile Include="EventHandlers\BeforePublish.cs" />
+    <Compile Include="EventHandlers\Handlers\Migration.cs" />
+    <Compile Include="EventHandlers\Handlers\BeforePublish.cs" />
     <Compile Include="Services\IGroupService.cs" />
     <Compile Include="Services\GroupService.cs" />
     <Compile Include="Startup\CreateTables.cs" />

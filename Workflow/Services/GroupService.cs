@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
+using Workflow.EventHandlers.Args;
+using Workflow.Helpers;
 using Workflow.Models;
 
 namespace Workflow.Services
@@ -11,6 +14,12 @@ namespace Workflow.Services
     {
         private readonly ILogger log;
         private readonly IPocoRepository repo;
+
+        public static event EventHandler GroupCreated;
+        protected virtual void OnGroupCreated(EventArgs e)
+        {
+            GroupCreated?.Invoke(this, e);
+        }
 
         public GroupService()
             : this(
@@ -28,12 +37,21 @@ namespace Workflow.Services
 
         public Task<UserGroupPoco> CreateUserGroupAsync(string name)
         {
-            var existing = repo.UserGroupsByName(name).Any();
+            bool existing = repo.UserGroupsByName(name).Any();
 
             if (existing)
                 return null;
 
-            return Task.FromResult(repo.InsertUserGroup(name, name.Replace(" ", "-"), false));
+            UserGroupPoco group = repo.InsertUserGroup(name, name.Replace(" ", "-"), false);
+
+            // emit event
+            OnGroupCreated(new OnGroupCreatedEventArgs
+            {
+                Group = group,
+                CreatedBy = Utility.GetCurrentUser()
+            });
+
+            return Task.FromResult(group);
         }
 
         public Task<UserGroupPoco> GetUserGroupAsync(int id)

@@ -17,13 +17,13 @@ namespace Workflow.Api
     public class GroupsController : UmbracoAuthorizedApiController
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly PocoRepository Pr;
-        private readonly IGroupService workflowService;
+        private readonly PocoRepository _pr;
+        private readonly IGroupService _groupService;
 
         public GroupsController()
         {
-            Pr = new PocoRepository(DatabaseContext.Database);
-            workflowService = new GroupService();
+            _pr = new PocoRepository(DatabaseContext.Database);
+            _groupService = new GroupService();
         }
 
         /// <summary>
@@ -38,13 +38,13 @@ namespace Workflow.Api
             {
                 if (id.HasValue)
                 {
-                    var result = await workflowService.GetUserGroupAsync(id.Value);
+                    var result = await _groupService.GetUserGroupAsync(id.Value);
                     if (result != null)
                         return Json(result, ViewHelpers.CamelCase);
                 }
                 else
                 {
-                    return Json(await workflowService.GetUserGroupsAsync(), ViewHelpers.CamelCase);
+                    return Json(await _groupService.GetUserGroupsAsync(), ViewHelpers.CamelCase);
                 }
 
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -71,7 +71,7 @@ namespace Workflow.Api
 
             try
             {
-                var poco = await workflowService.CreateUserGroupAsync(name);
+                var poco = await _groupService.CreateUserGroupAsync(name);
 
                 // check that it doesn't already exist
                 if (poco == null)
@@ -83,11 +83,11 @@ namespace Workflow.Api
                 Log.Debug(msg);
 
                 // return the id of the new group, to update the front-end route to display the edit view
-                return Ok(new { status = 200, msg, poco.GroupId });
+                return Ok(new { status = 200, msg, id = poco.GroupId });
             }
             catch (Exception ex)
             {
-                string error = $"Error creating user group '{name}'";
+                string error = $"Error creating user group '{name}' - group has likely been deleted. Group names cannot be reused.";
                 Log.Error(error, ex);
                 // if we are here, something isn't right...
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
@@ -104,12 +104,12 @@ namespace Workflow.Api
         [Route("save")]
         public IHttpActionResult Put(UserGroupPoco group)
         {
-            bool nameExists = Pr.UserGroupsByName(group.Name).Any();
-            bool aliasExists = Pr.UserGroupsByAlias(group.Alias).Any();
+            bool nameExists = _pr.UserGroupsByName(group.Name).Any();
+            bool aliasExists = _pr.UserGroupsByAlias(group.Alias).Any();
 
             try
             {
-                UserGroupPoco userGroup = Pr.UserGroupsById(group.GroupId).First();
+                UserGroupPoco userGroup = _pr.UserGroupsById(group.GroupId).First();
 
                 // need to check the new name/alias isn't already in use
                 if (userGroup.Name != group.Name && nameExists)
