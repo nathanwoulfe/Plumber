@@ -10,12 +10,24 @@ using Workflow.Relators;
 
 namespace Workflow
 {
-    class PocoRepository
+    public class PocoRepository : IPocoRepository
     {
+        private readonly UmbracoDatabase database;
+
+        public PocoRepository()
+            : this(ApplicationContext.Current.DatabaseContext.Database)
+        {
+        }
+
+        public PocoRepository(UmbracoDatabase database)
+        {
+            this.database = database;
+        }
+
         /// ensure GetDb() connection exists
         private Database GetDb()
         {
-            return ApplicationContext.Current.DatabaseContext.Database;
+            return database;
         }
 
         /// <summary>
@@ -195,7 +207,12 @@ namespace Workflow
 
         public List<UserGroupPoco> PopulatedUserGroup(int id)
         {
-            return GetDb().Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(new GroupsRelator().MapIt, SqlHelpers.UserGroupDetailed, id);
+            return GetDb()
+                .Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(
+                    new GroupsRelator().MapIt,
+                    SqlHelpers.UserGroupDetailed,
+                    id
+                );
         }
 
         public List<UserGroupPoco> UserGroupsByName(string value)
@@ -243,6 +260,19 @@ namespace Workflow
         {
             var homepageNodeId = ApplicationContext.Current.Services.ContentService.GetById(nodeId).Path.Split(',')[1];
             return GetDb().Fetch<int>("SELECT * FROM WorkflowUserGroupPermissions WHERE NodeId = @0", homepageNodeId).Any();
+        }
+
+        public UserGroupPoco InsertUserGroup(string name, string alias, bool deleted)
+        {
+            var poco = new UserGroupPoco
+            {
+                Name = name,
+                Alias = alias,
+                Deleted = deleted
+            };
+
+            database.Save(poco);
+            return poco;
         }
     }
 }

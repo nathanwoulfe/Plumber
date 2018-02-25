@@ -1,6 +1,5 @@
 ﻿using log4net;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -9,6 +8,8 @@ using Umbraco.Core.Persistence;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 using Workflow.Helpers;
+using Workflow.Services;
+using System.Threading.Tasks;
 
 namespace Workflow.Api
 {
@@ -16,30 +17,34 @@ namespace Workflow.Api
     public class GroupsController : UmbracoAuthorizedApiController
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static readonly PocoRepository Pr = new PocoRepository();
+        private readonly PocoRepository Pr;
+        private readonly IGroupService workflowService;
+
+        public GroupsController()
+        {
+            Pr = new PocoRepository(DatabaseContext.Database);
+            workflowService = new GroupService();
+        }
 
         /// <summary>
         /// Get group and associated users and permissions by id
         /// </summary>
         /// <param name="id">Optional, returns all groups if omitted</param>
-        /// <returns></returns>       
+        /// <returns></returns>
         [Route("get/{id:int?}")]
-        public IHttpActionResult Get(int? id = null)
+        public async Task<IHttpActionResult> Get(int? id = null)
         {
-            try {
+            try
+            {
                 if (id.HasValue)
                 {
-                    List<UserGroupPoco> result = Pr.PopulatedUserGroup(id.Value);
-
-                    if (result.Any(r => !r.Deleted))
-                    {
-                        return Json(result.First(), ViewHelpers.CamelCase);
-                    }
+                    var result = await workflowService.GetUserGroupAsync(id.Value);
+                    if (result != null)
+                        return Json(result, ViewHelpers.CamelCase);
                 }
                 else
                 {
-                    List<UserGroupPoco> groups = Pr.UserGroups();
-                    return Json(groups.Where(g => !g.Deleted), ViewHelpers.CamelCase);
+                    return Json(await workflowService.GetUserGroupsAsync(), ViewHelpers.CamelCase);
                 }
 
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -58,27 +63,27 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost]  
-        [Route("add")]      
-        public IHttpActionResult Post([FromBody]Model model)
+        [HttpPost]
+        [Route("add")]
+        public async Task<IHttpActionResult> Post([FromBody]Model model)
         {
             string name = model.Data;
 
             try
-            {                
+            {
+                var poco = await workflowService.CreateUserGroupAsync(name);
+
                 // check that it doesn't already exist
-                if (Pr.UserGroupsByName(name).Any())
+                if (poco == null)
                 {
                     return Ok(new { status = 500, msg = "Group name already exists" });
                 }
 
-                // doesnt exist so create it with the given name. The alias will be generated from the name.
-                DatabaseContext.Database.Insert(new UserGroupPoco
-                    {
-                        Name = name,
-                        Alias = name.ToLower().Replace(" ", "-"),
-                        Deleted = false
-                    });
+                string msg = $"Successfully created new user group '{name}'.";
+                Log.Debug(msg);
+
+                // return the id of the new group, to update the front-end route to display the edit view
+                return Ok(new { status = 200, msg, poco.GroupId });
             }
             catch (Exception ex)
             {
@@ -87,14 +92,6 @@ namespace Workflow.Api
                 // if we are here, something isn't right...
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
             }
-
-            int id = Pr.NewestGroup().GroupId;
-
-            string msg = $"Successfully created new user group '{name}'.";
-            Log.Debug(msg);
-
-            // return the id of the new group, to update the front-end route to display the edit view
-            return Ok(new { status = 200, msg, id });
         }
 
 
