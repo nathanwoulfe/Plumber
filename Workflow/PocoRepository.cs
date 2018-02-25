@@ -274,5 +274,25 @@ namespace Workflow
             database.Save(poco);
             return poco;
         }
+
+        public void DeleteUsersFromGroup(int groupId)
+        {
+            database.Execute("DELETE FROM WorkflowUser2UserGroup WHERE GroupId = @0", groupId);
+        }
+
+        public void AddUserToGroup(User2UserGroupPoco user)
+        {
+            database.Insert(user);
+        }
+
+        public void UpdateUserGroup(UserGroupPoco poco)
+        {
+            database.Update(poco);
+        }
+
+        public void DeleteUserGroup(int groupId)
+        {
+            database.Execute("UPDATE WorkflowUserGroups SET Deleted = 1 WHERE GroupId = @0", groupId);
+        }
     }
 }

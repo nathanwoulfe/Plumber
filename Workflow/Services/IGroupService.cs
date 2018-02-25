@@ -9,5 +9,7 @@ namespace Workflow.Services
         Task<UserGroupPoco> GetUserGroupAsync(int id);
         Task<IEnumerable<UserGroupPoco>> GetUserGroupsAsync();
         Task<UserGroupPoco> CreateUserGroupAsync(string name);
+        Task<UserGroupPoco> UpdateUserGroupAsync(UserGroupPoco poco);
+        Task DeleteUserGroupAsync(int groupId);
     }
 }
