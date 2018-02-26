@@ -1,10 +1,8 @@
 ﻿using log4net;
 using System;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web.Http;
-using Umbraco.Core.Persistence;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 using Workflow.Helpers;
@@ -18,12 +16,12 @@ namespace Workflow.Api
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly PocoRepository Pr;
-        private readonly IGroupService workflowService;
+        private readonly IGroupService groupService;
 
         public GroupsController()
         {
             Pr = new PocoRepository(DatabaseContext.Database);
-            workflowService = new GroupService();
+            groupService = new GroupService();
         }
 
         /// <summary>
@@ -38,13 +36,13 @@ namespace Workflow.Api
             {
                 if (id.HasValue)
                 {
-                    var result = await workflowService.GetUserGroupAsync(id.Value);
+                    var result = await groupService.GetUserGroupAsync(id.Value);
                     if (result != null)
                         return Json(result, ViewHelpers.CamelCase);
                 }
                 else
                 {
-                    return Json(await workflowService.GetUserGroupsAsync(), ViewHelpers.CamelCase);
+                    return Json(await groupService.GetUserGroupsAsync(), ViewHelpers.CamelCase);
                 }
 
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -71,7 +69,7 @@ namespace Workflow.Api
 
             try
             {
-                var poco = await workflowService.CreateUserGroupAsync(name);
+                var poco = await groupService.CreateUserGroupAsync(name);
 
                 // check that it doesn't already exist
                 if (poco == null)
@@ -102,40 +100,17 @@ namespace Workflow.Api
         /// <returns></returns>
         [HttpPut]
         [Route("save")]
-        public IHttpActionResult Put(UserGroupPoco group)
+        public async Task<IHttpActionResult> Put(UserGroupPoco group)
         {
-            bool nameExists = Pr.UserGroupsByName(group.Name).Any();
-            bool aliasExists = Pr.UserGroupsByAlias(group.Alias).Any();
-
             try
             {
-                UserGroupPoco userGroup = Pr.UserGroupsById(group.GroupId).First();
+                var result = await groupService.UpdateUserGroupAsync(group);
 
                 // need to check the new name/alias isn't already in use
-                if (userGroup.Name != group.Name && nameExists)
+                if (result == null)
                 {
                     return Content(HttpStatusCode.OK, new { status = 500, msg = "Group name already exists" });
                 }
-
-                if (userGroup.Alias != group.Alias && aliasExists)
-                {
-                    return Content(HttpStatusCode.OK, new { status = 500, msg = "Group alias already exists" });
-                }
-
-                // Update the Members - TODO - should find a more efficient way to do this...
-                Database db = DatabaseContext.Database;
-
-                db.Execute("DELETE FROM WorkflowUser2UserGroup WHERE GroupId = @0", userGroup.GroupId);
-
-                if (group.Users.Count > 0)
-                {
-                    foreach (User2UserGroupPoco user in group.Users)
-                    {
-                        db.Insert(user);
-                    }
-                }
-
-                db.Update(group);
 
             }
             catch (Exception ex)
@@ -160,12 +135,12 @@ namespace Workflow.Api
         /// <returns></returns>
         [HttpDelete]
         [Route("delete/{id:int}")]
-        public IHttpActionResult Delete(int id)
+        public async Task<IHttpActionResult> Delete(int id)
         {
             // existing workflow processes are left as is, and need to be managed by a human person
             try
             {
-                DatabaseContext.Database.Execute("UPDATE WorkflowUserGroups SET Deleted = 1 WHERE GroupId = @0", id);
+                await groupService.DeleteUserGroupAsync(id);
             }
             catch (Exception ex)
             {
