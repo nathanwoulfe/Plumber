@@ -76,9 +76,9 @@ namespace Workflow.Services
             if (poco.Name != existingPoco.Name && nameExists)
                 return Task.FromResult((UserGroupPoco)null);
 
-            repo.DeleteUsersFromGroup(poco.GroupId);
+            repo.DeleteUsersFromGroup(existingPoco.GroupId);
 
-            foreach (var user in existingPoco.Users)
+            foreach (var user in poco.Users)
                 repo.AddUserToGroup(user);
 
             repo.UpdateUserGroup(poco);
