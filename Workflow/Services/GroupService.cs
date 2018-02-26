@@ -67,5 +67,28 @@ namespace Workflow.Services
 
             return Task.FromResult(result.Where(r => !r.Deleted));
         }
+
+        public Task<UserGroupPoco> UpdateUserGroupAsync(UserGroupPoco poco)
+        {
+            var nameExists = repo.UserGroupsByName(poco.Name).Any();
+            var existingPoco = repo.UserGroupsById(poco.GroupId).First();
+
+            if (poco.Name != existingPoco.Name && nameExists)
+                return Task.FromResult((UserGroupPoco)null);
+
+            repo.DeleteUsersFromGroup(poco.GroupId);
+
+            foreach (var user in existingPoco.Users)
+                repo.AddUserToGroup(user);
+
+            repo.UpdateUserGroup(poco);
+
+            return Task.FromResult(poco);
+        }
+
+        public Task DeleteUserGroupAsync(int groupId)
+        {
+            return Task.Run(() => repo.DeleteUserGroup(groupId));
+        }
     }
 }

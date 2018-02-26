@@ -30,5 +30,9 @@ namespace Workflow
         List<UserGroupPoco> UserGroupsById(int value);
         List<UserGroupPoco> UserGroupsByName(string value);
         UserGroupPoco InsertUserGroup(string name, string alias, bool deleted);
+        void DeleteUsersFromGroup(int groupId);
+        void AddUserToGroup(User2UserGroupPoco user);
+        void UpdateUserGroup(UserGroupPoco poco);
+        void DeleteUserGroup(int groupId);
     }
 }
