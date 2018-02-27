@@ -5,6 +5,7 @@ using Umbraco.Core.Persistence.Migrations;
 using Umbraco.Core.Persistence.SqlSyntax;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Repositories;
 
 namespace Workflow.Migrations
 {

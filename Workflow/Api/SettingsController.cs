@@ -7,16 +7,15 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.Caching;
-using System.Text.RegularExpressions;
 using System.Web.Http;
 using log4net;
 using log4net.Appender;
 using Newtonsoft.Json.Linq;
-using Umbraco.Core.Logging;
 using Umbraco.Core.Models;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Repositories;
 using Logger = log4net.Repository.Hierarchy.Logger;
 
 namespace Workflow.Api
@@ -197,111 +196,6 @@ namespace Workflow.Api
                 Log.Error(error, ex);
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
             }
-        }
-
-        private static string[] ReverseLog(string[] log)
-        {
-            List<string> resp = new List<string>();
-
-            while (log.Length != 0)
-            {
-                int index = Array.FindLastIndex(log, x => char.IsDigit(x[0]));
-                for (int i = index; i < log.Length; i += 1)
-                {
-                    resp.Add(log[i]);
-                }
-
-                log = log.Take(index).ToArray();
-            }
-
-            return resp.ToArray();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [Route("log")]
-        public HttpResponseMessage GetLog()
-        {
-            var response = new HttpResponseMessage();
-
-            try
-            {
-                // read the contents of the log file
-                ILog log = LogManager.GetLogger("Workflow");
-                var logger = (Logger)log.Logger;
-                var appender = (FileAppender)logger.GetAppender("WorkflowLogAppender");
-                string filename = appender.File;
-                string logText = System.IO.File.ReadAllText(filename);
-
-                if (!string.IsNullOrEmpty(logText))
-                {
-                    string[] splitLog = logText.Split(new[] { Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
-
-                    splitLog = ReverseLog(splitLog);
-
-                    var html = "";
-
-                    foreach (string line in splitLog)
-                    {
-                        // really naive parsing of log string into basic html
-                        // we know the structure based on the logger patten, so can split relatively confidently
-                        string lineClass = char.IsDigit(line[0]) ? "row" : "detail";
-                        string[] splitLine = line.Split(' ');
-
-                        html += $"<span class=\"log-{lineClass} {(lineClass == "row" ? splitLine[3].ToLower() : "")}\">";
-
-                        if (lineClass == "row")
-                        {
-                            // date/time
-                            DateTime date = DateTime.ParseExact($"{splitLine[0]} {splitLine[1]}", "yyyy-MM-dd HH:mm:ss,fff", CultureInfo.CurrentCulture);
-                            html += $"<span class=\"log-date\">{date.ToString("MMM dd yyyy, h:mmtt: ", CultureInfo.CurrentCulture)}</span> ";
-
-                            // thread
-                            html += $"<span class=\"log-thread\">{splitLine[2]}</span> ";
-
-                            // type
-                            html += $"<span class=\"log-type {splitLine[3].ToLower()}\">{splitLine[3]}</span> ";
-
-                            // class
-                            html += $"<span class=\"log-class\">{splitLine[4]}</span> {splitLine[5]} ";
-
-                            // class
-                            html += $"<span class=\"log-message\">{line.Substring(line.IndexOf("- ") + 2)}</span> ";
-                        }
-                        else
-                        {
-                            // class
-                            html += $"<span class=\"log-message\">{line}</span> ";
-                        }
-
-                        // close it all
-                        html += "</span>";
-
-                    }
-
-                    logText = html;
-                }
-                else
-                {
-                    logText = "*** Log file is currently empty ***";
-                }
-
-                response.Content = new StringContent(logText);
-
-            }
-            catch (Exception ex)
-            {
-                const string error = "Could not get workflow log";
-                Log.Error(error, ex);
-                response.Content = new StringContent(error);
-
-            }
-
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
-            return response;
-
         }
     }
 }

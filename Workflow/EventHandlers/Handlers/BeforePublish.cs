@@ -13,6 +13,7 @@ using Umbraco.Web;
 using Umbraco.Web.Routing;
 using Umbraco.Web.Security;
 using Workflow.Models;
+using Workflow.Repositories;
 
 namespace Workflow.EventHandlers.Handlers
 {

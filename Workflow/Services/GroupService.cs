@@ -7,6 +7,7 @@ using Umbraco.Core.Logging;
 using Workflow.EventHandlers.Args;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Repositories;
 
 namespace Workflow.Services
 {

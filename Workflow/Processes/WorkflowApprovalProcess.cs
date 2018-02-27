@@ -9,6 +9,7 @@ using Umbraco.Core.Persistence;
 using Workflow.Extensions;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Repositories;
 using TaskType = Workflow.Models.TaskType;
 
 namespace Workflow.Processes

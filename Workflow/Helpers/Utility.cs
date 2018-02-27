@@ -8,6 +8,7 @@ using Umbraco.Core.Services;
 using Umbraco.Web;
 using Workflow.Extensions;
 using Workflow.Models;
+using Workflow.Repositories;
 
 namespace Workflow.Helpers
 {

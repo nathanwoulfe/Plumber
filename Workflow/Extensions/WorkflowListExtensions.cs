@@ -2,6 +2,7 @@
 using System.Linq;
 using Umbraco.Core.Models;
 using Workflow.Models;
+using Workflow.Repositories;
 
 namespace Workflow.Extensions
 {
