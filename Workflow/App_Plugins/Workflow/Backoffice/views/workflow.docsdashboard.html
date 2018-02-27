@@ -12,16 +12,20 @@
                         </a>
                     </div>
                 </div>
+                
+                <div ng-if="!vm.docs">
+                    Documentation unavailable.
+                </div>
 
-                <div class="umb-healthcheck" ng-if="vm.viewState === 'list'">
+                <div class="umb-healthcheck" ng-if="vm.docs && vm.viewState === 'list'">
                     <div class="umb-air" ng-repeat="doc in vm.docs" ng-click="vm.openDoc(doc)">
                         <div class="umb-healthcheck-group">
                             <div class="umb-healthcheck-title" ng-bind="doc.name"></div>
                         </div>
                     </div>
-                </div>
+                </div> 
 
-                <div class="workflow-docs" ng-if="vm.viewState === 'details'">
+                <div class="workflow-docs" ng-if="vm.docs && vm.viewState === 'details'">
 
                     <umb-editor-sub-header>
                         <umb-editor-sub-header-content-left>

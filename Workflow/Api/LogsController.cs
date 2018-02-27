@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Web;
 using System.Web.Http;
 using log4net;
 using log4net.Appender;
@@ -103,7 +104,7 @@ namespace Workflow.Api
                     filename += "." + logdate;
                 }
 
-                string logText = File.ReadAllText(filename);
+                string logText = HttpUtility.HtmlEncode(File.ReadAllText(filename));
 
                 if (!string.IsNullOrEmpty(logText))
                 {

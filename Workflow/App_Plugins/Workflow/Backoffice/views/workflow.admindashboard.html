@@ -14,9 +14,9 @@
                 <ul class="chart-header">
                     <li><span ng-bind="vm.totalApproved" class="wf-highcharts-color-approved"></span>approved</li>
                     <li ng-show="vm.type === 'Task'"><span ng-bind="vm.totalNotRequired" class="wf-highcharts-color-notreq"></span>not required</li>
-                    <li><span ng-bind="vm.totalCancelled" class="wf-highcharts-color-cancelled"></span>cancelled</li>
-                    <li ng-show="vm.type === 'Task'"><span ng-bind="vm.totalRejected" class="wf-highcharts-color-rejected"></span>rejected</li>
                     <li ng-show="vm.type === 'Task'"><span ng-bind="vm.totalResubmitted" class="wf-highcharts-color-resubmitted"></span>resubmitted</li>
+                    <li ng-show="vm.type === 'Task'"><span ng-bind="vm.totalRejected" class="wf-highcharts-color-rejected"></span>rejected</li>
+                    <li><span ng-bind="vm.totalCancelled" class="wf-highcharts-color-cancelled"></span>cancelled</li>
                     <li><span ng-bind="vm.totalPending" class="wf-highcharts-color-pending"></span>pending</li>
                 </ul>
 

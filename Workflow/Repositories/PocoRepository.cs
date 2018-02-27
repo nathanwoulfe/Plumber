@@ -353,6 +353,41 @@ namespace Workflow.Repositories
         }
 
         /// <summary>
+        /// Delete all existing config for the given node id
+        /// </summary>
+        /// <param name="nodeId">The node id</param>
+        public void DeleteNodeConfig(int nodeId)
+        {
+            _database.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE NodeId = @0", nodeId);
+        }
+
+        /// <summary>
+        /// Delete config for all content types
+        /// </summary>
+        public void DeleteContentTypeConfig()
+        {
+            _database.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE ContentTypeId != 0");
+        }
+
+        /// <summary>
+        /// Add permission for node
+        /// </summary>
+        /// <param name="perm">Permission object of type <see cref="UserGroupPermissionsPoco"/></param>
+        public void AddPermissionForNode(UserGroupPermissionsPoco perm)
+        {
+            _database.Insert(perm);
+        }
+
+        /// <summary>
+        /// Add permission for content type
+        /// </summary>
+        /// <param name="perm">Permission object of type <see cref="UserGroupPermissionsPoco"/></param>
+        public void AddPermissionForContentType(UserGroupPermissionsPoco perm)
+        {
+            _database.Insert(perm);
+        }
+
+        /// <summary>
         /// Export the settings as an importable model
         /// </summary>
         /// <returns>Object of type <see cref="WorkflowSettingsExport"/></returns>

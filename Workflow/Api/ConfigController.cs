@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web.Http;
 using log4net;
 using Umbraco.Core.Persistence;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Services;
 
 namespace Workflow.Api
 {
@@ -16,6 +18,12 @@ namespace Workflow.Api
     public class ConfigController : UmbracoAuthorizedApiController
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly IConfigService _configService;
+
+        public ConfigController()
+        {
+            _configService = new ConfigService();
+        }
 
         /// <summary>
         /// Persist the workflow approval config for single node
@@ -24,23 +32,12 @@ namespace Workflow.Api
         /// <returns></returns>
         [HttpPost]
         [Route("saveconfig")]
-        public IHttpActionResult SaveConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model)
+        public async Task<IHttpActionResult> SaveConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model)
         {
             try
             {
-                UmbracoDatabase db = DatabaseContext.Database;
-                if (null != model && model.Any())
-                {
-                    KeyValuePair<int, List<UserGroupPermissionsPoco>> permission = model.First();
-
-                    db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE NodeId = @0", permission.Key);
-
-                    if (permission.Value.Any())
-                    {
-                        db.BulkInsertRecords(permission.Value, DatabaseContext.SqlSyntax);
-                    }
-                    
-                }
+                bool success = await _configService.UpdateNodeConfigAsync(model);
+                return Ok(success);
             }
             catch (Exception ex)
             {
@@ -50,7 +47,6 @@ namespace Workflow.Api
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
 
-            return Ok();
         }
 
         /// <summary>
@@ -60,28 +56,12 @@ namespace Workflow.Api
         /// <returns></returns>
         [HttpPost]
         [Route("savedoctypeconfig")]
-        public IHttpActionResult SaveDocTypeConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model)
+        public async Task<IHttpActionResult> SaveDocTypeConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model)
         {
             try
             {
-                if (null != model)
-                {
-                    UmbracoDatabase db = DatabaseContext.Database;
-
-                    // set defaults for doctype - delete all previous if any model data exists
-                    db.Execute("DELETE FROM WorkflowUserGroupPermissions WHERE ContentTypeId != 0");
-
-                    if (model.Any())
-                    {
-                        foreach (KeyValuePair<int, List<UserGroupPermissionsPoco>> permission in model)
-                        {
-                            if (permission.Value.Any())
-                            {
-                                db.BulkInsertRecords(permission.Value, DatabaseContext.SqlSyntax);
-                            }
-                        }
-                    }
-                }
+                bool success = await _configService.UpdateContentTypeConfigAsync(model);
+                return Ok(success);
             }
             catch (Exception ex)
             {
@@ -90,8 +70,6 @@ namespace Workflow.Api
 
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
-
-            return Ok();
         }
     }
 }

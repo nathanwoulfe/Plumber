@@ -14,7 +14,7 @@
             workflowResource.getLogDates()
                 .then(function (resp) {
                     // resp is an array of log dates, where [0] is 'txt', for the current date as the source file is undated
-                    log.datePicker.Config.minDate = resp.length > 1 ? moment(resp[1]) : moment();
+                    log.datePickerConfig.minDate = resp.length > 1 ? moment(resp[1]) : moment();
                 });
         }
 

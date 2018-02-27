@@ -1,4 +1,5 @@
 .workflow {
+  /* recolor */
   /* colours will be available for all elements in the .workspace namespace */ }
   .workflow hr {
     clear: both; }
@@ -177,6 +178,49 @@
     .workflow .chart-controls .controls-row {
       margin-left: 0;
       padding: 0; }
+  .workflow .wf-highcharts-color-approved {
+    fill: #00aea2;
+    color: #00aea2; }
+    .workflow .wf-highcharts-color-approved .highcharts-point {
+      fill: #00aea2;
+      color: #00aea2; }
+  .workflow .wf-highcharts-color-cancelled {
+    fill: #434d67;
+    color: #434d67; }
+    .workflow .wf-highcharts-color-cancelled .highcharts-point {
+      fill: #434d67;
+      color: #434d67; }
+  .workflow .wf-highcharts-color-resubmitted {
+    fill: #3c7d84;
+    color: #3c7d84; }
+    .workflow .wf-highcharts-color-resubmitted .highcharts-point {
+      fill: #3c7d84;
+      color: #3c7d84; }
+  .workflow .wf-highcharts-color-rejected {
+    fill: #426576;
+    color: #426576; }
+    .workflow .wf-highcharts-color-rejected .highcharts-point {
+      fill: #426576;
+      color: #426576; }
+  .workflow .wf-highcharts-color-notreq,
+  .workflow .wf-highcharts-color-not-required {
+    fill: #2e9593;
+    color: #2e9593; }
+    .workflow .wf-highcharts-color-notreq .highcharts-point,
+    .workflow .wf-highcharts-color-not-required .highcharts-point {
+      fill: #2e9593;
+      color: #2e9593; }
+  .workflow .highcharts-color-5,
+  .workflow .wf-highcharts-color-pending,
+  .workflow .wf-highcharts-color-total {
+    stroke: #413659;
+    fill: #413659;
+    color: #413659; }
+    .workflow .highcharts-color-5 .highcharts-point,
+    .workflow .wf-highcharts-color-pending .highcharts-point,
+    .workflow .wf-highcharts-color-total .highcharts-point {
+      stroke: #413659;
+      fill: #413659; }
   .workflow .umb-table-cell ul {
     margin: 0; }
   .workflow .umb-table-cell.show-overflow, .workflow .umb-table-cell.show-overflow > * {

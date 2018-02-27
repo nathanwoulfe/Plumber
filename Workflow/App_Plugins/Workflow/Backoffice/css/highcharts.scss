@@ -147,3 +147,68 @@
         padding: 0;
     }
 }
+
+/* recolor */
+.wf-highcharts-color-approved {
+    fill: $step1;
+    color: $step1;
+
+    .highcharts-point {
+        fill: $step1;
+        color: $step1;
+    }
+}
+
+.wf-highcharts-color-cancelled {
+    fill: $step5;
+    color: $step5;
+
+    .highcharts-point {
+        fill: $step5;
+        color: $step5;
+    }
+}
+
+.wf-highcharts-color-resubmitted {
+    fill: $step3;
+    color: $step3;
+
+    .highcharts-point {
+        fill: $step3;
+        color: $step3;
+    }
+}
+
+.wf-highcharts-color-rejected {
+    fill: $step4;
+    color: $step4;
+
+    .highcharts-point {
+        fill: $step4;
+        color: $step4;
+    }
+}
+
+.wf-highcharts-color-notreq, 
+.wf-highcharts-color-not-required {
+    fill: $step2;
+    color: $step2;
+
+    .highcharts-point {
+        fill: $step2;
+        color: $step2;
+    } 
+}
+
+.highcharts-color-5,
+.wf-highcharts-color-pending,
+.wf-highcharts-color-total {
+    stroke: $step6;
+    fill: $step6;
+    color: $step6;
+
+    .highcharts-point {
+        stroke: $step6;
+        fill: $step6;
+    }
+}

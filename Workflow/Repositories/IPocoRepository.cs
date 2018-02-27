@@ -43,5 +43,9 @@ namespace Workflow.Repositories
         void AddUserToGroup(User2UserGroupPoco user);
         void UpdateUserGroup(UserGroupPoco poco);
         void DeleteUserGroup(int groupId);
+        void DeleteNodeConfig(int nodeId);
+        void DeleteContentTypeConfig();
+        void AddPermissionForContentType(UserGroupPermissionsPoco perm);
+        void AddPermissionForNode(UserGroupPermissionsPoco perm);
     }
 }

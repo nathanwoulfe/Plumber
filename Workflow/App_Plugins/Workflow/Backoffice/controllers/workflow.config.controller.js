@@ -68,10 +68,9 @@
             var response = {};
             response[nodeIdInt] = [];
 
+            // convert the approvalPath array into something resembling the expected model
+            // Dictionary<int, List<UserGroupPermissionsPoco>
             angular.forEach(vm.approvalPath, function (v, i) {
-                //response[nodeIdInt].push(v.permissions.filter(function (p) {
-                //    return +p.nodeId === nodeIdInt && p.permission === i;
-                //})[0]);
                 response[nodeIdInt].push({
                     nodeId: nodeId,
                     permission: i,
@@ -81,6 +80,7 @@
 
             workflowResource.saveConfig(response)
                 .then(function () {
+                    debugger;
                     navigationService.hideNavigation();
                     notificationsService.success('SUCCESS', 'Workflow configuration updated');
                     init();

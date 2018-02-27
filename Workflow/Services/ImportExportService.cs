@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Workflow.Models;
@@ -48,7 +49,8 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="model">A model representing the end-to-end workflow configuration</param>
         /// <returns></returns>
-        public Task Import(ImportExportModel model)
+        [HttpPost]
+        public Task Import([FromBody]ImportExportModel model)
         {
             throw new NotImplementedException();
         }
