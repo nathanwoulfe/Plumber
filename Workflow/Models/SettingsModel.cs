@@ -1,4 +1,6 @@
-﻿namespace Workflow.Models
+﻿using System;
+
+namespace Workflow.Models
 {
     public class SettingsModel
     {
@@ -16,6 +18,7 @@
     /// All -> all groups 
     /// Exclude -> all groups, but don't notify the orignal author for approval requests
     /// </summary>
+    [Obsolete("This is being revised and will be removed before v1")]
     public enum FlowType
     {
         Other = 0,

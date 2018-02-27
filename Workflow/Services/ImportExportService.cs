@@ -49,10 +49,29 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="model">A model representing the end-to-end workflow configuration</param>
         /// <returns></returns>
-        [HttpPost]
-        public Task Import([FromBody]ImportExportModel model)
+        public Task<bool> Import(ImportExportModel model)
         {
-            throw new NotImplementedException();
+            if (model.Settings != null)
+            {
+                repo.ImportSettings(model.Settings);
+            }
+
+            if (model.UserGroups != null)
+            {
+                repo.ImportUserGroups(model.UserGroups);
+            }
+
+            if (model.User2UserGroup != null)
+            {
+                repo.ImportUser2UserGroups(model.User2UserGroup);
+            }
+
+            if (model.UserGroupPermissions != null)
+            {
+                repo.ImportUserGroupPermissions(model.UserGroupPermissions);
+            }
+
+            return Task.FromResult(true);
         }
     }
 }

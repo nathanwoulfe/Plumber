@@ -6,6 +6,6 @@ namespace Workflow.Services
     public interface IImportExportService
     {
         Task<ImportExportModel> Export();
-        Task Import(ImportExportModel model);
+        Task<bool> Import(ImportExportModel model);
     }
 }

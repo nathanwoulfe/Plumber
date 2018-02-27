@@ -386,41 +386,5 @@ namespace Workflow.Repositories
         {
             _database.Insert(perm);
         }
-
-        /// <summary>
-        /// Export the settings as an importable model
-        /// </summary>
-        /// <returns>Object of type <see cref="WorkflowSettingsExport"/></returns>
-        public WorkflowSettingsExport ExportSettings()
-        {
-            return _database.Fetch<WorkflowSettingsExport>("SELECT * FROM WorkflowSettings").First();
-        }
-
-        /// <summary>
-        /// Export the user2usergroup objects as an importable model
-        /// </summary>
-        /// <returns>Object of type <see cref="User2UserGroupExport"/></returns>
-        public IEnumerable<User2UserGroupExport> ExportUser2UserGroups()
-        {
-            return _database.Fetch<User2UserGroupExport>("SELECT * FROM WorkflowUser2UserGroups");
-        }
-
-        /// <summary>
-        /// Export the settings as an importable model
-        /// </summary>
-        /// <returns>Object of type <see cref="WorkflowSettingsExport"/></returns>
-        public IEnumerable<UserGroupExport> ExportUserGroups()
-        {
-            return _database.Fetch<UserGroupExport>("SELECT * FROM WorkflowUserGroups");
-        }
-
-        /// <summary>
-        /// Export the user group permissions as an importable model
-        /// </summary>
-        /// <returns>Object of type <see cref="UserGroupPermissionsExport"/></returns>
-        public IEnumerable<UserGroupPermissionsExport> ExportUserGroupPermissions()
-        {
-            return _database.Fetch<UserGroupPermissionsExport>("SELECT * FROM WorkflowUserGroupPermissions");
-        }
     }
 }

@@ -19,8 +19,8 @@ namespace Workflow.Models
         public string Email { get; set; }
         public string EditUrl { get; set; }
         public string SiteUrl { get; set; }
-        public int? FlowType { get; set; }
-        public bool? SendNotifications { get; set; }
+        public int FlowType { get; set; }
+        public bool SendNotifications { get; set; }
         public string ExcludeNodes { get; set; }
     }
 
@@ -52,8 +52,8 @@ namespace Workflow.Models
     public class UserGroupPermissionsExport
     {
         public int GroupId { get; set; }
-        public int? NodeId { get; set; }
-        public int? ContentTypeId { get; set; }
-        public int? Permission { get; set; }
+        public int NodeId { get; set; }
+        public int ContentTypeId { get; set; }
+        public int Permission { get; set; }
     }
 }

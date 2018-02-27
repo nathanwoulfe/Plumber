@@ -34,6 +34,7 @@
   <ItemGroup>
     <Compile Include="Api\ActionsController.cs" />
     <Compile Include="Api\DodgyTestsController.cs" />
+    <Compile Include="Api\ImportController.cs" />
     <Compile Include="Api\InstancesController.cs" />
     <Compile Include="Api\LogsController.cs" />
     <Compile Include="Api\ExportController.cs" />
