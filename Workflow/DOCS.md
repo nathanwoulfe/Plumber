@@ -85,7 +85,7 @@ In cases where the content is already in a workflow, a notification is displayed
 
 For nodes where the workflow has been disabled, the default Umbraco options are displayed.
 
-### Deployment tools<a name="deploy_section"></a>
+### Deployment tools (v0.7+)<a name="deploy_section"></a>
 
 **Scheduled for inclusion in v0.7.0**
 

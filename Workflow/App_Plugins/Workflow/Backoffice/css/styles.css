@@ -377,6 +377,12 @@
     font-size: 15px; }
     .workflow-docs .umb-healthcheck-group__details-check-description > :last-child {
       margin-bottom: 0; }
+  .workflow .footnote {
+    font-size: 12px;
+    text-align: center;
+    max-width: 400px;
+    margin: 15px auto;
+    line-height: 1; }
   .workflow .umb-healthcheck {
     justify-content: center; }
   .workflow-log {
