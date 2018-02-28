@@ -137,7 +137,7 @@ namespace Workflow.Api
                 }
 
                 List<WorkflowTaskInstancePoco> taskInstances = Pr.TasksByNode(id);
-                if (taskInstances.Last().TaskStatus == TaskStatus.Cancelled)
+                if (!taskInstances.Any() || taskInstances.Last().TaskStatus == TaskStatus.Cancelled)
                 {
                     return Json(new
                     {

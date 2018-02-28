@@ -13,10 +13,6 @@
                     </div>
                 </div>
                 
-                <div ng-if="!vm.docs">
-                    Documentation unavailable.
-                </div>
-
                 <div class="umb-healthcheck" ng-if="vm.docs && vm.viewState === 'list'">
                     <div class="umb-air" ng-repeat="doc in vm.docs" ng-click="vm.openDoc(doc)">
                         <div class="umb-healthcheck-group">
