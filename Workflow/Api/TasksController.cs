@@ -20,7 +20,12 @@ namespace Workflow.Api
     public class TasksController : UmbracoAuthorizedApiController
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static readonly PocoRepository Pr = new PocoRepository();
+        private readonly PocoRepository Pr;
+
+        public TasksController()
+        {
+            Pr = new PocoRepository(DatabaseContext.Database);
+        }
 
         #region Public methods
 
@@ -192,8 +197,8 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> taskInstances = type == 0 
-                    ? Pr.GetAllPendingTasks( new List<int> { (int)TaskStatus.PendingApproval }) 
+                List<WorkflowTaskInstancePoco> taskInstances = type == 0
+                    ? Pr.GetAllPendingTasks(new List<int> { (int)TaskStatus.PendingApproval })
                     : Pr.SubmissionsForUser(userId, new List<int> { (int)TaskStatus.PendingApproval, (int)TaskStatus.Rejected });
 
                 if (type == 0)

@@ -30,7 +30,22 @@ namespace Workflow.Repositories
         /// <returns>Object of type <see cref="WorkflowSettingsExport"/></returns>
         public WorkflowSettingsExport ExportSettings()
         {
-            return _database.Fetch<WorkflowSettingsExport>("SELECT * FROM WorkflowSettings").First();
+            var poco = _database.FirstOrDefault<WorkflowSettingsPoco>("SELECT * FROM WorkflowSettings");
+            if (poco != null)
+            {
+                return new WorkflowSettingsExport
+                {
+                    DefaultApprover = poco.DefaultApprover,
+                    EditUrl = poco.EditUrl,
+                    Email = poco.Email,
+                    ExcludeNodes = poco.ExcludeNodes,
+                    FlowType = poco.FlowType,
+                    SendNotifications = poco.SendNotifications,
+                    SiteUrl = poco.SiteUrl
+                };
+            }
+
+            return new WorkflowSettingsExport();
         }
 
         /// <summary>

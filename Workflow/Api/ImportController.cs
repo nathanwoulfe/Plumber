@@ -41,7 +41,7 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                const string error = "Error exporting workflow configuration";
+                const string error = "Error importing workflow configuration";
                 Log.Error(error, ex);
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
             }

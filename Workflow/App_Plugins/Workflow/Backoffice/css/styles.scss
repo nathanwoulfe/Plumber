@@ -51,6 +51,7 @@
     .upgrade {
         margin: 0 15px 30px;
         text-align: center;
+        border-radius:3px;
 
         .btn {
             margin-bottom: 15px;
@@ -155,4 +156,5 @@
     @import "workflow-progress";
     @import "docs-dashboard";
     @import "log";
-}
+    @import "importexport";
+} 

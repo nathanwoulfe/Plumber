@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Workflow.Models;
@@ -33,13 +32,19 @@ namespace Workflow.Services
         /// <returns></returns>
         public Task<ImportExportModel> Export()
         {
-            var model = new ImportExportModel
+            var model = new ImportExportModel();
+
+            try
             {
-                Settings = repo.ExportSettings(),
-                UserGroups = repo.ExportUserGroups(),
-                User2UserGroup = repo.ExportUser2UserGroups(),
-                UserGroupPermissions = repo.ExportUserGroupPermissions()
-            };
+                model.Settings = repo.ExportSettings();
+                model.UserGroups = repo.ExportUserGroups();
+                model.User2UserGroup = repo.ExportUser2UserGroups();
+                model.UserGroupPermissions = repo.ExportUserGroupPermissions();
+            }
+            catch (Exception e)
+            {
+                log.Error(GetType(), e.Message, e);
+            }
 
             return Task.FromResult(model);
         }

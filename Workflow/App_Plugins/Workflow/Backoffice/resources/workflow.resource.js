@@ -95,6 +95,14 @@
                 return this.request('GET', this.logsUrl + 'datelist');
             },
 
+            doImport: function(model) {
+                return this.request('POST', urlBase + 'import', model);
+            },
+
+            doExport: function () {
+                return this.request('GET', urlBase + 'export');
+            },
+
             /*** SAVE PERMISSIONS ***/
             saveConfig: function (p) {
                 return this.request('POST', urlBase + 'config/saveconfig', p);

@@ -1,0 +1,74 @@
+﻿@import "_variables";
+
+$lightDanger: rgba($danger, .25);
+$lightSuccess: rgba($success, .25);
+
+&-importexport {
+
+    .btn {
+        padding-left: 7px;
+
+        &-doimport {
+            padding: 15px 17px 13px 15px;
+        }
+    }
+
+    .btn-import, .btn-doimport {
+        background: $danger;
+    }
+
+    .btn-export {
+        background: $success;
+    }
+
+    svg {
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+
+    .importexport {
+        &-pane {
+            text-align: center;
+            padding: 60px 60px 45px;
+            margin-bottom: 30px;
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-size: 30px 30px;
+            animation-iteration-count: infinite;
+            animation-fill-mode: forwards;
+
+            &:hover {
+                animation: slide 60s linear;
+            }
+
+            .btn, textarea {
+                margin-bottom: 15px;
+            }
+
+            textarea {
+                width: 500px;
+                min-height: 300px;
+            }
+        }
+    }
+
+    .exporter {
+        background-image: linear-gradient(45deg, $lightSuccess 25%, transparent 25%, transparent 50%, $lightSuccess 50%, $lightSuccess 75%, transparent 75%, transparent);
+    }
+
+    .importer {
+        background-image: linear-gradient(45deg, $lightDanger 25%, transparent 25%, transparent 50%, $lightDanger 50%, $lightDanger 75%, transparent 75%, transparent);
+    }
+}
+
+@keyframes slide {
+    0% {
+        background-position: 0% 0;
+    }
+
+    100% {
+        background-position: 100% 0;
+    }
+}

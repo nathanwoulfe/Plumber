@@ -38,6 +38,8 @@
     <Compile Include="Api\InstancesController.cs" />
     <Compile Include="Api\LogsController.cs" />
     <Compile Include="Api\ExportController.cs" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\importexport.dashboard.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.importexportdashboard.html" />
     <Compile Include="EventHandlers\Args\OnConfigUpdatedEventArgs.cs" />
     <Compile Include="EventHandlers\Args\OnGroupCreatedEventArgs.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
@@ -152,6 +154,7 @@
     <Content Include="Gruntfile.js" />
     <None Include="app.config" />
     <None Include="App_Plugins\Workflow\Backoffice\css\highcharts.scss" />
+    <None Include="App_Plugins\Workflow\Backoffice\css\importexport.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\log.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\styles.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\docs-dashboard.scss" />

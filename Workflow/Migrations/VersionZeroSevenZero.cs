@@ -40,15 +40,21 @@ namespace Workflow.Migrations
                 "  <appender-ref ref=\"WorkflowLogAppender\" />" +
                 "</logger>";
 
-            const string dashboard =
+            const string logDashboard =
                 "<tab caption=\"Log viewer\">" +
                 "  <control>/app_plugins/workflow/backoffice/views/workflow.logsdashboard.html</control>" +
+                "</tab>";
+
+            const string importExportDashboard =
+                "<tab caption=\"Deployment\">" +
+                "  <control>/app_plugins/workflow/backoffice/views/workflow.importexportdashboard.html</control>" +
                 "</tab>";
 
             // update the respective config files
             UpdateConfigFile("~/config/log4net.config", "./log4net", logger);
             UpdateConfigFile("~/config/log4net.config", "./log4net", appender);
-            UpdateConfigFile("~/config/Dashboard.config", "//section [@alias='WorkflowDashboardSection']", dashboard);
+            UpdateConfigFile("~/config/Dashboard.config", "//section [@alias='WorkflowDashboardSection']", logDashboard);
+            UpdateConfigFile("~/config/Dashboard.config", "//section [@alias='WorkflowDashboardSection']", importExportDashboard);
         }
 
         /// <summary>

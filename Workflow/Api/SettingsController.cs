@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,14 +8,12 @@ using System.Reflection;
 using System.Runtime.Caching;
 using System.Web.Http;
 using log4net;
-using log4net.Appender;
 using Newtonsoft.Json.Linq;
 using Umbraco.Core.Models;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Repositories;
-using Logger = log4net.Repository.Hierarchy.Logger;
 
 namespace Workflow.Api
 {
@@ -24,7 +21,12 @@ namespace Workflow.Api
     public class SettingsController : UmbracoAuthorizedApiController
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static readonly PocoRepository Pr = new PocoRepository();
+        private readonly PocoRepository Pr;
+
+        public SettingsController()
+        {
+            Pr = new PocoRepository(DatabaseContext.Database);
+        }
 
         /// <summary>
         /// Get an object with info about the installed version and latest release from GitHub

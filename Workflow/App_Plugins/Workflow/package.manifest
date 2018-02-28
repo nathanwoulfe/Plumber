@@ -3,6 +3,7 @@
     "~/App_Plugins/workflow/backoffice/controllers/dashboards/admin.dashboard.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/dashboards/docs.dashboard.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/dashboards/groups.dashboard.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/dashboards/importexport.dashboard.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/dashboards/log.dashboard.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/dashboards/user.dashboard.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/groups.add.controller.js",

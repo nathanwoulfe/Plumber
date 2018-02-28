@@ -73,7 +73,11 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
         public List<WorkflowTaskInstancePoco> GetAllPendingTasks(IEnumerable<int> status)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, new { statusInts = status.Select(s => s.ToString()).ToArray() }).ToList();
+
+            return _database
+                    .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks,
+                        new {statusInts = status.Select(s => s.ToString()).ToArray()}).ToList();
+
         }
 
         /// <summary>
