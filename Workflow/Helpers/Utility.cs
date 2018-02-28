@@ -52,7 +52,7 @@ namespace Workflow.Helpers
 
         public static IUser GetCurrentUser()
         {
-            return UmbracoContext.Current.Security.CurrentUser;
+            return UmbracoContext.Current == null ? Us.GetUserById(0) : UmbracoContext.Current.Security.CurrentUser;
         }
 
         public static string PascalCaseToTitleCase(string str)
