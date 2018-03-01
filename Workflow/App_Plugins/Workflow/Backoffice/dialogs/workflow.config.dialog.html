@@ -10,21 +10,37 @@
             <div ng-show="vm.approvalPath.length">
                 <h6>Current flow</h6>
                 <ul class="current-flow">
-                    <li ng-class="{'last': $last}" ng-repeat="u in vm.approvalPath track by $index" ng-click="vm.remove($event, $index)" title="Remove approval role for {{u.name}}">{{u.name}}</li>
+                    <li class="umb-node-preview" ng-repeat="u in vm.approvalPath track by $index">
+                        <div class="umb-node-preview__content">Stage {{ $index + 1 }}: {{ u.name }}</div>
+                        <div class="umb-node-preview__actions">
+                            <a class="umb-node-preview__action" ng-href="/umbraco/#/workflow/workflow/edit-group/{{ u.groupId }}">Edit group</a>
+                            <span class="umb-node-preview__action" ng-click="vm.remove($event, $index)">Remove</span>
+                        </div>
+                    </li>
                 </ul>
             </div>
             <hr />
             <h5>Content type approval flow ({{ vm.contentTypeName }})</h5>
             <p>Flows set on the content type take priority over inherited flows.</p>
             <ul class="current-flow" ng-if="vm.contentTypeApprovalPath.length">
-                <li ng-class="{'last': $last}" ng-repeat="u in vm.contentTypeApprovalPath"><a ng-href="/umbraco/#/workflow/workflow/edit-group/{{ u.groupId }}">{{ u.name }}</a></li>
+                <li class="umb-node-preview" ng-repeat="u in vm.contentTypeApprovalPath track by $index">
+                    <div class="umb-node-preview__content">Stage {{ $index + 1 }}: {{ u.name }}</div>
+                    <div class="umb-node-preview__actions">
+                        <a class="umb-node-preview__action" ng-href="/umbraco/#/workflow/workflow/edit-group/{{ u.groupId }}">Edit group</a>
+                    </div>
+                </li>
             </ul>
             <p ng-if="!vm.contentTypeApprovalPath.length"><i>No content type flow set for {{ vm.contentTypeName }}</i></p>
             <hr />
             <h5>Inherited approval flow <span ng-if="vm.inherited.length">({{ vm.inherited[0].nodeName}})</span></h5>
-            <p>Workflow configuration is inherited from ancestor nodes unless set by content type or on the current node.</p> 
+            <p>Workflow configuration is inherited from ancestor nodes unless set by content type or on the current node.</p>
             <ul class="current-flow" ng-if="vm.inherited.length">
-                <li ng-class="{'last': $last}" ng-repeat="u in vm.inherited"><a ng-href="/umbraco/#/workflow/workflow/edit-group/{{ u.groupId }}">{{ u.name }}</a></li>
+                <li class="umb-node-preview" ng-repeat="u in vm.inherited track by $index">
+                    <div class="umb-node-preview__content">Stage {{ $index + 1 }}: {{ u.name }}</div>
+                    <div class="umb-node-preview__actions">
+                        <a class="umb-node-preview__action" ng-href="/umbraco/#/workflow/workflow/edit-group/{{ u.groupId }}">Edit group</a>
+                    </div>
+                </li>
             </ul>
             <p ng-if="!vm.inherited.length">
                 <i>No inherited approval flow available for this document</i>
