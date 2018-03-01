@@ -39,7 +39,7 @@ namespace Workflow.Trees
                 menu.Items.Add(menuItem);
                 menu.Items.Add<ActionRefresh>("Reload nodes", true);
             }
-            else if (int.TryParse(id, out int parsedId))
+            else if (int.TryParse(id, out int _))
             {
                 var menuItem = new MenuItem
                 {

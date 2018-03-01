@@ -65,6 +65,7 @@ namespace Workflow.Api
                 string logDir = Path.GetDirectoryName(filePath);
                 string fileName = Path.GetFileName(filePath);
 
+                if (logDir == null) return Json(dates, ViewHelpers.CamelCase);
                 string[] logFiles = Directory.GetFiles(logDir, $"{fileName}.*");
 
                 if (logFiles.Any())
@@ -142,7 +143,7 @@ namespace Workflow.Api
                             html += $"<span class=\"log-class\">{splitLine[4]}</span> {splitLine[5]} ";
 
                             // class
-                            html += $"<span class=\"log-message\">{line.Substring(line.IndexOf("- ") + 2)}</span> ";
+                            html += $"<span class=\"log-message\">{line.Substring(line.IndexOf("- ", StringComparison.Ordinal) + 2)}</span> ";
                         }
                         else
                         {

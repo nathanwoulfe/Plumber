@@ -20,11 +20,11 @@ namespace Workflow.Api
     public class TasksController : UmbracoAuthorizedApiController
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly PocoRepository Pr;
+        private readonly PocoRepository _pr;
 
         public TasksController()
         {
-            Pr = new PocoRepository(DatabaseContext.Database);
+            _pr = new PocoRepository(DatabaseContext.Database);
         }
 
         #region Public methods
@@ -39,12 +39,12 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> taskInstances = Pr.GetPendingTasks(new List<int> { (int)TaskStatus.PendingApproval, (int)TaskStatus.Rejected }, count, page);
+                List<WorkflowTaskInstancePoco> taskInstances = _pr.GetPendingTasks(new List<int> { (int)TaskStatus.PendingApproval, (int)TaskStatus.Rejected }, count, page);
                 List<WorkflowTask> workflowItems = taskInstances.ToWorkflowTaskList();
                 return Json(new
                 {
                     items = workflowItems,
-                    total = Pr.CountPendingTasks(),
+                    total = _pr.CountPendingTasks(),
                     page,
                     count
                 }, ViewHelpers.CamelCase);
@@ -67,7 +67,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> taskInstances = Pr.GetAllTasksForDateRange(DateTime.Now.AddDays(days * -1));
+                List<WorkflowTaskInstancePoco> taskInstances = _pr.GetAllTasksForDateRange(DateTime.Now.AddDays(days * -1));
                 return Json(new
                 {
                     items = taskInstances,
@@ -95,7 +95,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> taskInstances = Pr.TasksByNode(id);
+                List<WorkflowTaskInstancePoco> taskInstances = _pr.TasksByNode(id);
                 List<WorkflowTask> workflowItems = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
                 return Json(new
                 {
@@ -124,8 +124,8 @@ namespace Workflow.Api
         {
             try
             {
-                WorkflowSettingsPoco settings = Pr.GetSettings();
-                bool hasFlow = Pr.HasFlow(id);
+                WorkflowSettingsPoco settings = _pr.GetSettings();
+                bool hasFlow = _pr.HasFlow(id);
 
                 if (null == settings || !hasFlow)
                 {
@@ -136,7 +136,7 @@ namespace Workflow.Api
                     }, ViewHelpers.CamelCase);
                 }
 
-                List<WorkflowTaskInstancePoco> taskInstances = Pr.TasksByNode(id);
+                List<WorkflowTaskInstancePoco> taskInstances = _pr.TasksByNode(id);
                 if (!taskInstances.Any() || taskInstances.Last().TaskStatus == TaskStatus.Cancelled)
                 {
                     return Json(new
@@ -172,7 +172,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowInstancePoco> instances = Pr.InstancesByNodeAndStatus(id, new List<int> { (int)WorkflowStatus.PendingApproval });
+                List<WorkflowInstancePoco> instances = _pr.InstancesByNodeAndStatus(id, new List<int> { (int)WorkflowStatus.PendingApproval });
                 return Ok(instances.Any());
             }
             catch (Exception ex)
@@ -198,14 +198,14 @@ namespace Workflow.Api
             try
             {
                 List<WorkflowTaskInstancePoco> taskInstances = type == 0
-                    ? Pr.GetAllPendingTasks(new List<int> { (int)TaskStatus.PendingApproval })
-                    : Pr.SubmissionsForUser(userId, new List<int> { (int)TaskStatus.PendingApproval, (int)TaskStatus.Rejected });
+                    ? _pr.GetAllPendingTasks(new List<int> { (int)TaskStatus.PendingApproval })
+                    : _pr.SubmissionsForUser(userId, new List<int> { (int)TaskStatus.PendingApproval, (int)TaskStatus.Rejected });
 
                 if (type == 0)
                 {
                     foreach (WorkflowTaskInstancePoco taskInstance in taskInstances)
                     {
-                        taskInstance.UserGroup = Pr.PopulatedUserGroup(taskInstance.UserGroup.GroupId).First();
+                        taskInstance.UserGroup = _pr.PopulatedUserGroup(taskInstance.UserGroup.GroupId).First();
                     }
 
                     taskInstances = taskInstances.Where(x => x.UserGroup.IsMember(userId)).ToList();
@@ -238,12 +238,12 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> taskInstances = Pr.GetAllGroupTasks(groupId, count, page);
+                List<WorkflowTaskInstancePoco> taskInstances = _pr.GetAllGroupTasks(groupId, count, page);
                 List<WorkflowTask> workflowItems = taskInstances.ToWorkflowTaskList();
                 return Json(new
                 {
                     items = workflowItems,
-                    total = Pr.CountGroupTasks(groupId),
+                    total = _pr.CountGroupTasks(groupId),
                     page,
                     count
                 }, ViewHelpers.CamelCase);
@@ -267,8 +267,8 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> tasks = Pr.TasksAndGroupByInstanceId(guid);
-                WorkflowInstancePoco instance = Pr.InstanceByGuid(guid);
+                List<WorkflowTaskInstancePoco> tasks = _pr.TasksAndGroupByInstanceId(guid);
+                WorkflowInstancePoco instance = _pr.InstanceByGuid(guid);
 
                 return Json(new
                 {

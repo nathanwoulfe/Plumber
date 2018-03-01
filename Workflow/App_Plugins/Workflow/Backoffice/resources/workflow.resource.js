@@ -2,7 +2,7 @@
     'use strict';
 
     // create service
-    function WorkflowResource($http, $q, umbRequestHelper) {
+    function workflowResource($http, $q, umbRequestHelper) {
         var urlBase = '/umbraco/backoffice/api/workflow/';
 
         var service = {
@@ -117,6 +117,6 @@
     }
 
     // register service
-    angular.module('umbraco.services').factory('workflowResource', WorkflowResource);
+    angular.module('umbraco.services').factory('workflowResource', workflowResource);
 
 }());

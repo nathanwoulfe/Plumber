@@ -8,7 +8,6 @@ using Workflow.Models;
 using Workflow.Helpers;
 using Workflow.Services;
 using System.Threading.Tasks;
-using Workflow.Repositories;
 
 namespace Workflow.Api
 {
@@ -16,13 +15,11 @@ namespace Workflow.Api
     public class GroupsController : UmbracoAuthorizedApiController
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly PocoRepository Pr;
-        private readonly IGroupService groupService;
+        private readonly IGroupService _groupService;
 
         public GroupsController()
         {
-            Pr = new PocoRepository(DatabaseContext.Database);
-            groupService = new GroupService();
+            _groupService = new GroupService();
         }
 
         /// <summary>
@@ -37,13 +34,13 @@ namespace Workflow.Api
             {
                 if (id.HasValue)
                 {
-                    var result = await groupService.GetUserGroupAsync(id.Value);
+                    UserGroupPoco result = await _groupService.GetUserGroupAsync(id.Value);
                     if (result != null)
                         return Json(result, ViewHelpers.CamelCase);
                 }
                 else
                 {
-                    return Json(await groupService.GetUserGroupsAsync(), ViewHelpers.CamelCase);
+                    return Json(await _groupService.GetUserGroupsAsync(), ViewHelpers.CamelCase);
                 }
 
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -70,7 +67,7 @@ namespace Workflow.Api
 
             try
             {
-                var poco = await groupService.CreateUserGroupAsync(name);
+                UserGroupPoco poco = await _groupService.CreateUserGroupAsync(name);
 
                 // check that it doesn't already exist
                 if (poco == null)
@@ -105,7 +102,7 @@ namespace Workflow.Api
         {
             try
             {
-                var result = await groupService.UpdateUserGroupAsync(group);
+                UserGroupPoco result = await _groupService.UpdateUserGroupAsync(group);
 
                 // need to check the new name/alias isn't already in use
                 if (result == null)
@@ -141,7 +138,7 @@ namespace Workflow.Api
             // existing workflow processes are left as is, and need to be managed by a human person
             try
             {
-                await groupService.DeleteUserGroupAsync(id);
+                await _groupService.DeleteUserGroupAsync(id);
             }
             catch (Exception ex)
             {

@@ -1,7 +1,7 @@
 ﻿(function () {
   'use strict';
 
-  function editController($scope, $routeParams, $location, $timeout, workflowGroupsResource, workflowResource, dialogService, entityResource, notificationsService, contentResource, navigationService, eventsService) {
+  function editController($scope, $routeParams, $location, workflowGroupsResource, workflowResource, notificationsService, contentResource, navigationService) {
 
     var vm = this;
 
@@ -88,11 +88,11 @@
     }
 
     function editDocTypePermission() {
-      $location.path('/workflow/tree/view/settings');
+      $location.path('/workflow/workflow/settings/info');
     }
 
     // todo -> Would be sweet to open the config dialog from here, rather than just navigating to the node...
-    function editContentPermission(id, path) {
+    function editContentPermission(id) {
       navigationService.changeSection('content');
       $location.path('/content/content/edit/' + id);
     }
@@ -156,14 +156,14 @@
 
       tabs: [{
         id: 0,
-        label: "Group detail",
-        alias: "tab0",
+        label: 'Group detail',
+        alias: 'tab0',
         active: true
       },
       {
         id: 1,
-        label: "Activity history",
-        alias: "tab1",
+        label: 'Activity history',
+        alias: 'tab1',
         active: false
       }],
       pagination: {

@@ -21,11 +21,11 @@ namespace Workflow.Api
     public class SettingsController : UmbracoAuthorizedApiController
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly PocoRepository Pr;
+        private readonly PocoRepository _pr;
 
         public SettingsController()
         {
-            Pr = new PocoRepository(DatabaseContext.Database);
+            _pr = new PocoRepository(DatabaseContext.Database);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Workflow.Api
         {
             try
             {
-                return Json(Pr.GetSettings(), ViewHelpers.CamelCase);
+                return Json(_pr.GetSettings(), ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {

@@ -17,14 +17,14 @@
             <h5>Content type approval flow ({{ vm.contentTypeName }})</h5>
             <p>Flows set on the content type take priority over inherited flows.</p>
             <ul class="current-flow" ng-if="vm.contentTypeApprovalPath.length">
-                <li ng-class="{'last': $last}" ng-repeat="u in vm.contentTypeApprovalPath"><a href="/umbraco/#/workflow/tree/edit/{{ u.groupId }}">{{ u.name }}</a></li>
+                <li ng-class="{'last': $last}" ng-repeat="u in vm.contentTypeApprovalPath"><a ng-href="/umbraco/#/workflow/workflow/edit-group/{{ u.groupId }}">{{ u.name }}</a></li>
             </ul>
             <p ng-if="!vm.contentTypeApprovalPath.length"><i>No content type flow set for {{ vm.contentTypeName }}</i></p>
             <hr />
             <h5>Inherited approval flow <span ng-if="vm.inherited.length">({{ vm.inherited[0].nodeName}})</span></h5>
-            <p>Workflow configuration is inherited from ancestor nodes unless set by content type or on the current node.</p>
+            <p>Workflow configuration is inherited from ancestor nodes unless set by content type or on the current node.</p> 
             <ul class="current-flow" ng-if="vm.inherited.length">
-                <li ng-class="{'last': $last}" ng-repeat="u in vm.inherited"><a href="/umbraco/#/workflow/tree/edit/{{ u.groupId }}">{{ u.name }}</a></li>
+                <li ng-class="{'last': $last}" ng-repeat="u in vm.inherited"><a ng-href="/umbraco/#/workflow/workflow/edit-group/{{ u.groupId }}">{{ u.name }}</a></li>
             </ul>
             <p ng-if="!vm.inherited.length">
                 <i>No inherited approval flow available for this document</i>
@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="umb-dialog-footer btn-toolbar umb-btn-toolbar">
-        <a href="" class="btn btn-link" ng-click="nav.hideDialog()"><localize key="general_cancel">Cancel</localize></a>
-        <a href="" class="btn btn-primary" ng-click="vm.save()"><localize key="general_ok">OK</localize></a>
+        <button class="btn btn-link" ng-click="nav.hideDialog()"><localize key="general_cancel">Cancel</localize></button>
+        <button class="btn btn-primary" ng-click="vm.save()"><localize key="general_ok">OK</localize></button>
     </div>
 </div>

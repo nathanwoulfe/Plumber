@@ -1,6 +1,6 @@
 ﻿// this is almost identical to the Umbraco default, only the id property on the user object is changed to userId
 (function () {
-    "use strict";
+    'use strict';
 
     function userPickerController($scope, usersResource, localizationService) {
 
@@ -22,7 +22,7 @@
 
             // set default title
             if (!$scope.model.title) {
-                $scope.model.title = localizationService.localize("defaultdialogs_selectUsers");
+                $scope.model.title = localizationService.localize('defaultdialogs_selectUsers');
             }
 
             // make sure we can push to something
@@ -105,6 +105,6 @@
 
     }
 
-    angular.module("umbraco").controller("Workflow.UserPicker.Controller", userPickerController);
+    angular.module('umbraco').controller('Workflow.UserPicker.Controller', userPickerController);
 
 })();

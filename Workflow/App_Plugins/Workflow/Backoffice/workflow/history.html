@@ -20,7 +20,7 @@
                 </umb-editor-sub-header-left>
                 <umb-editor-sub-header-right>
                     <label for="per-page">Items per page</label>
-                    <select name="per-page" ng-model="vm.pagination.perPage" ng-options="n for n in vm.perPage()" ng-change="vm.pagination.goToPage(1)"></select>
+                    <select id="per-page" ng-model="vm.pagination.perPage" ng-options="n for n in vm.perPage()" ng-change="vm.pagination.goToPage(1)"></select>
                 </umb-editor-sub-header-right>
             </umb-editor-sub-header>
             <div>

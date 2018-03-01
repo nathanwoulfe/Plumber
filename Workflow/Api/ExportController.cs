@@ -8,7 +8,6 @@ using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Services;
-using Logger = log4net.Repository.Hierarchy.Logger;
 
 namespace Workflow.Api
 {
