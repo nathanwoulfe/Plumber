@@ -91,6 +91,10 @@
             
         }
 
+        function updateSortOrder() {
+            debugger;
+        }
+
         function add() {
             vm.selectedApprovalGroup.permissions.push({
                 nodeId: nodeId,
@@ -119,6 +123,15 @@
             inherited: [],
             approvalPath: [],
             contentTypeApprovalPath: [],
+
+            sortOptions: {
+                axis: 'y',
+                cursor: 'move',
+                handle: '.sort-handle',
+                stop: function () {
+                    updateSortOrder();
+                }
+            },
 
             save: save,
             add: add,

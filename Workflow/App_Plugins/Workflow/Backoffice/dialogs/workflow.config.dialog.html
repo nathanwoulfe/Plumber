@@ -1,26 +1,27 @@
 ﻿<div class="umb-pane workflow" ng-controller="Workflow.Config.Controller as vm">
     <div class="umb-dialog-body with-footer">
         <div class="umb-pane">
-            <h5>Workflow approval flow</h5>
+            <h4>Content approval flow</h4>
             <p>Flows set on the current node take priority over content-type and inherited flows.</p>
             <select class="flow-select" ng-model="vm.selectedApprovalGroup" ng-options="g as g.name for g in vm.groups">
                 <option selected disabled>--- Add ---</option>
             </select>
             <button class="btn btn-default" ng-click="vm.add()">Add</button>
             <div ng-show="vm.approvalPath.length">
-                <h6>Current flow</h6>
-                <ul class="current-flow">
+                <h5>Current flow</h5>
+                <ul class="current-flow" ui-sortable="vm.sortOptions" ng-model="vm.approvalPath">
                     <li class="umb-node-preview" ng-repeat="u in vm.approvalPath track by $index">
                         <div class="umb-node-preview__content">Stage {{ $index + 1 }}: {{ u.name }}</div>
                         <div class="umb-node-preview__actions">
                             <a class="umb-node-preview__action" ng-href="/umbraco/#/workflow/workflow/edit-group/{{ u.groupId }}">Edit group</a>
-                            <span class="umb-node-preview__action" ng-click="vm.remove($event, $index)">Remove</span>
+                            <span class="umb-node-preview__action sort-handle" ng-click="vm.remove($event, $index)"><i class="icon icon-navigation-vertical"></i></span>
+                            <span class="umb-node-preview__action" ng-click="vm.remove($event, $index)"><i class="icon icon-delete"></i></span> 
                         </div>
                     </li>
                 </ul>
             </div>
             <hr />
-            <h5>Content type approval flow ({{ vm.contentTypeName }})</h5>
+            <h4>Content type approval flow ({{ vm.contentTypeName }})</h4>
             <p>Flows set on the content type take priority over inherited flows.</p>
             <ul class="current-flow" ng-if="vm.contentTypeApprovalPath.length">
                 <li class="umb-node-preview" ng-repeat="u in vm.contentTypeApprovalPath track by $index">
@@ -32,7 +33,7 @@
             </ul>
             <p ng-if="!vm.contentTypeApprovalPath.length"><i>No content type flow set for {{ vm.contentTypeName }}</i></p>
             <hr />
-            <h5>Inherited approval flow <span ng-if="vm.inherited.length">({{ vm.inherited[0].nodeName}})</span></h5>
+            <h4>Inherited approval flow <span ng-if="vm.inherited.length">({{ vm.inherited[0].nodeName}})</span></h4>
             <p>Workflow configuration is inherited from ancestor nodes unless set by content type or on the current node.</p>
             <ul class="current-flow" ng-if="vm.inherited.length">
                 <li class="umb-node-preview" ng-repeat="u in vm.inherited track by $index">
