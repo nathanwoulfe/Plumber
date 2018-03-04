@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web;
+using log4net;
 using Umbraco.Core;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Events;
@@ -13,9 +15,9 @@ using Umbraco.Web;
 using Umbraco.Web.Routing;
 using Umbraco.Web.Security;
 using Workflow.Models;
-using Workflow.Repositories;
+using Workflow.Services;
 
-namespace Workflow.EventHandlers.Handlers
+namespace Workflow.Events.Handlers
 {
     public class BeforePublish : ApplicationEventHandler
     {
@@ -24,9 +26,10 @@ namespace Workflow.EventHandlers.Handlers
             ContentService.Publishing += ContentService_Publishing;
         }
 
-        private static void ContentService_Publishing(IPublishingStrategy sender, PublishEventArgs<IContent> e)
+        private static async void ContentService_Publishing(IPublishingStrategy sender, PublishEventArgs<IContent> e)
         {
             IContent doc = e.PublishedEntities.First();
+            ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
             // we might want to cancel the publish event if it came from a scheduled publish
             // we can check if the node has an active workflow, in which case it should not publish, and it's likely from the scheduler
@@ -52,26 +55,28 @@ namespace Workflow.EventHandlers.Handlers
                     UrlProviderResolver.Current.Providers,
                     false);
 
-                var pr = new PocoRepository();
-                List<WorkflowInstancePoco> instances = pr.InstancesByNodeAndStatus(doc.Id, new List<int>
+                var instancesService = new InstancesService();
+                List<WorkflowInstancePoco> instances = await instancesService.GetInstancesForNodeByStatusAsync(doc.Id, new List<int>
                     {
                         (int)WorkflowStatus.PendingApproval,
                         (int)WorkflowStatus.Rejected,
                         (int)WorkflowStatus.Resubmitted
-                    })
-                    .OrderByDescending(i => i.CompletedDate).ToList();
+                    });
+                    
+                 List<WorkflowInstancePoco> orderedInstances = instances.OrderByDescending(i => i.CompletedDate).ToList();
 
                 // if any incomplete workflows exists, cancel the publish
                 // this will clear the release date, which is ok as it has passed
                 // and the change will be released when the workflow completes
-                if (instances.Any())
-                {
-                    e.Cancel = true;
-                }
+                if (!orderedInstances.Any()) return;
+
+                e.Cancel = true;
+
+                log.Info($"Scheduled publish for {doc.Name} cancelled due to active workflow");
             }
             catch (Exception ex)
             {
-                string msg = ex.Message;
+                log.Error($"Error in scheduled publish validation for {doc.Name}", ex);
             }
         }
     }

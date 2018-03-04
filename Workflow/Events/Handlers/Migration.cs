@@ -7,7 +7,7 @@ using Umbraco.Core.Persistence.Migrations;
 using Umbraco.Web;
 using Workflow.Helpers;
 
-namespace Workflow.EventHandlers.Handlers
+namespace Workflow.Events.Handlers
 {
     public class Migration : ApplicationEventHandler
     {
