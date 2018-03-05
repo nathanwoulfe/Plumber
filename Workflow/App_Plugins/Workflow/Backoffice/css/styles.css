@@ -225,6 +225,8 @@
     .workflow .wf-highcharts-color-total .highcharts-point {
       stroke: #413659;
       fill: #413659; }
+  .workflow .umb-table {
+    border-radius: 3px; }
   .workflow .umb-table-cell ul {
     margin: 0; }
   .workflow .umb-table-cell.show-overflow, .workflow .umb-table-cell.show-overflow > * {
@@ -265,9 +267,12 @@
     color: #ee5f5b; }
   .workflow .workflow-progress {
     padding: 10px;
-    border-top: 1px solid #d9d9d9;
+    border-top: 1px solid rgba(217, 217, 217, 0.25);
     display: flex;
     position: relative; }
+  .workflow .umb-table-row:hover ~ .workflow-progress {
+    background: #f3f3f5;
+    border-top-color: #f3f3f5; }
   .workflow .progress-step {
     text-align: center;
     position: relative; }

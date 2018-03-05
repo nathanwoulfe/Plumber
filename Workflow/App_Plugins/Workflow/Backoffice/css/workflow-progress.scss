@@ -3,9 +3,14 @@
 // progress bar for the tasks dashboard
 .workflow-progress {
     padding: 10px;
-    border-top: 1px solid #d9d9d9;
+    border-top: 1px solid rgba(#d9d9d9, .25);
     display: flex;
     position: relative;
+}
+
+.umb-table-row:hover ~ .workflow-progress {
+    background:#f3f3f5;
+    border-top-color:#f3f3f5;
 }
 
 .progress-step {
