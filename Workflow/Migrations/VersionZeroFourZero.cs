@@ -5,15 +5,15 @@ using Umbraco.Core.Persistence.Migrations;
 using Umbraco.Core.Persistence.SqlSyntax;
 using Workflow.Helpers;
 using Workflow.Models;
-using Workflow.Repositories;
+using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Migrations
 {
 	[Migration("0.4.0", 1, MagicStrings.Name)]
     public class VersionZeroFourZero : MigrationBase
     {
-
-        private static readonly PocoRepository Pr = new PocoRepository();
+        private static readonly IInstancesService InstancesService = new InstancesService();
 
         public VersionZeroFourZero(ISqlSyntaxProvider sqlSyntax, ILogger logger) : base(sqlSyntax, logger)
         {
@@ -36,7 +36,7 @@ namespace Workflow.Migrations
             // once the column has been added, check for any instances where status is not active, find the last task, and set complete date to match
             // this only impacts on charting, but allows more complete history as instances didn't previously store a completion date
 
-            var instances = Pr.GetAllInstances()
+            var instances = InstancesService.GetAll()
                 .OrderByDescending(x => x.CreatedDate)
                 .Where(x => x.Status != (int)WorkflowStatus.PendingApproval && x.Status != (int)WorkflowStatus.NotRequired)
                 .ToList();

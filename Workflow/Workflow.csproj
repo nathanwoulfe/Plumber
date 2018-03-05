@@ -40,30 +40,44 @@
     <Compile Include="Api\ExportController.cs" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\importexport.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.importexportdashboard.html" />
-    <Compile Include="EventHandlers\Args\OnConfigUpdatedEventArgs.cs" />
-    <Compile Include="EventHandlers\Args\OnGroupCreatedEventArgs.cs" />
+    <Compile Include="Events\Args\OnConfigUpdatedEventArgs.cs" />
+    <Compile Include="Events\Args\OnGroupCreatedEventArgs.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\WorkflowListExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
     <Compile Include="Helpers\Installer.cs" />
     <Compile Include="Helpers\MagicStrings.cs" />
     <Compile Include="Helpers\Uninstaller.cs" />
-    <Compile Include="Repositories\IImportExportRepository.cs" />
-    <Compile Include="Repositories\IPocoRepository.cs" />
+    <Compile Include="Repositories\InstancesRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IInstancesRepository.cs" />
+    <Compile Include="Repositories\Interfaces\ITasksRepository.cs" />
+    <Compile Include="Repositories\TasksRepository.cs" />
+    <Compile Include="UnitOfWork\IUnitOfWork.cs" />
+    <Compile Include="UnitOfWork\IUnitOfWorkProvider.cs" />
+    <Compile Include="UnitOfWork\PetaPocoUnitOfWork.cs" />
+    <Compile Include="UnitOfWork\PetaPocoUnitOfWorkProvider.cs" />
+    <Compile Include="Repositories\Interfaces\IImportExportRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IPocoRepository.cs" />
     <Compile Include="Migrations\VersionZeroFiveZero.cs" />
     <Compile Include="Migrations\VersionZeroSevenZero.cs" />
     <Compile Include="Models\ImportExportModel.cs" />
     <Compile Include="Models\SectionTreeNodeModel.cs" />
     <Compile Include="Relators\UserToGroupForPermissionsRelator.cs" />
-    <Compile Include="EventHandlers\Handlers\Migration.cs" />
-    <Compile Include="EventHandlers\Handlers\BeforePublish.cs" />
+    <Compile Include="Events\Handlers\Migration.cs" />
+    <Compile Include="Events\Handlers\BeforePublish.cs" />
     <Compile Include="Repositories\ImportExportRepository.cs" />
     <Compile Include="Services\ConfigService.cs" />
-    <Compile Include="Services\IConfigService.cs" />
-    <Compile Include="Services\IImportExportService.cs" />
+    <Compile Include="Services\Interfaces\IConfigService.cs" />
+    <Compile Include="Services\Interfaces\IImportExportService.cs" />
+    <Compile Include="Services\Interfaces\IInstancesService.cs" />
     <Compile Include="Services\ImportExportService.cs" />
-    <Compile Include="Services\IGroupService.cs" />
+    <Compile Include="Services\Interfaces\IGroupService.cs" />
     <Compile Include="Services\GroupService.cs" />
+    <Compile Include="Services\InstancesService.cs" />
+    <Compile Include="Services\Interfaces\ISettingsService.cs" />
+    <Compile Include="Services\Interfaces\ITasksService.cs" />
+    <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="Services\TasksService.cs" />
     <Compile Include="Startup\CreateTables.cs" />
     <Compile Include="Startup\StringConstraint.cs" />
     <Compile Include="Startup\UmbracoStartup.cs" />
@@ -266,6 +280,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.1, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\UmbracoCms.Core.7.7.1\lib\net45\System.Data.SqlServerCe.dll</HintPath>
       <Private>True</Private>

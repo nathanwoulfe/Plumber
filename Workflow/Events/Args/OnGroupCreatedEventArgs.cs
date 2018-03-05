@@ -2,7 +2,7 @@
 using Umbraco.Core.Models.Membership;
 using Workflow.Models;
 
-namespace Workflow.EventHandlers.Args
+namespace Workflow.Events.Args
 {
     public class OnGroupCreatedEventArgs : EventArgs
     {

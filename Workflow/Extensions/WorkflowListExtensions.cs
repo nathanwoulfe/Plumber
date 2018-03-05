@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Umbraco.Core.Models;
 using Workflow.Models;
-using Workflow.Repositories;
+using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Extensions
 {
     public static class WorkflowListExtensions
     {
-        private static List<UserGroupPermissionsPoco> _perms = new List<UserGroupPermissionsPoco>();
-        private static readonly PocoRepository Pr = new PocoRepository();
+        private static readonly IConfigService ConfigService = new ConfigService();
 
         /// <summary>
         /// 
@@ -29,8 +28,6 @@ namespace Workflow.Extensions
             {
                 instance = useInstanceFromTask ? taskInstance.WorkflowInstance : instance;
  
-                GetPermissionsForNode(instance.Node);
-
                 string instanceNodeName = instance.Node?.Name ?? "NODE NO LONGER EXISTS";
                 string typeDescription = instance.TypeDescription;
 
@@ -49,7 +46,7 @@ namespace Workflow.Extensions
                     ApprovalGroup = taskInstance.UserGroup.Name,
                     Comments = useInstanceFromTask ? instance.AuthorComment : taskInstance.Comment,
                     ActiveTask = taskInstance.StatusName,
-                    Permissions = _perms,
+                    Permissions = ConfigService.GetRecursivePermissionsForNode(instance.Node),
                     CurrentStep = taskInstance.ApprovalStep
                 };
 
@@ -90,31 +87,6 @@ namespace Workflow.Extensions
             }
 
             return workflowInstances.OrderByDescending(x => x.RequestedOn).ToList();
-        }
-
-        /// <summary>
-        /// Get the explicit or implied approval flow for a given node
-        /// </summary>
-        private static void GetPermissionsForNode(IPublishedContent node)
-        {
-            // check the node for set permissions
-            if (node == null) return;
-
-            _perms = Pr.PermissionsForNode(node.Id, 0);
-
-            // return them if they exist, otherwise check the parent
-            if (!_perms.Any())
-            {
-                if (node.Level != 1)
-                {
-                    GetPermissionsForNode(node.Parent);
-                }
-                else
-                {
-                    // check for content-type permissions
-                    _perms = Pr.PermissionsForNode(0, node.ContentType.Id);
-                }
-            }
         }
     }
 }

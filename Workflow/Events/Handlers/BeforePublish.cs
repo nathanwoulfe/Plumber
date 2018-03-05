@@ -26,7 +26,7 @@ namespace Workflow.Events.Handlers
             ContentService.Publishing += ContentService_Publishing;
         }
 
-        private static async void ContentService_Publishing(IPublishingStrategy sender, PublishEventArgs<IContent> e)
+        private static void ContentService_Publishing(IPublishingStrategy sender, PublishEventArgs<IContent> e)
         {
             IContent doc = e.PublishedEntities.First();
             ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -56,7 +56,7 @@ namespace Workflow.Events.Handlers
                     false);
 
                 var instancesService = new InstancesService();
-                List<WorkflowInstancePoco> instances = await instancesService.GetInstancesForNodeByStatusAsync(doc.Id, new List<int>
+                IEnumerable<WorkflowInstancePoco> instances = instancesService.GetForNodeByStatus(doc.Id, new List<int>
                     {
                         (int)WorkflowStatus.PendingApproval,
                         (int)WorkflowStatus.Rejected,

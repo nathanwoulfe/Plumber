@@ -57,7 +57,7 @@ namespace Workflow
                 {
                     taskIndex += 1;
 
-                    var group = Pr.PopulatedUserGroup(task.GroupId).First();
+                    var group = Pr.GetPopulatedUserGroup(task.GroupId);
                     if (group != null)
                     {
                         emailsForAllTaskUsers.AddRange(group.PreferredEmailAddresses(userIdToExclude));

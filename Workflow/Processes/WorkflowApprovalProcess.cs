@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Umbraco.Core;
 using Umbraco.Core.Models;
-using Umbraco.Core.Persistence;
 using Workflow.Extensions;
 using Workflow.Helpers;
 using Workflow.Models;
-using Workflow.Repositories;
+using Workflow.Services;
+using Workflow.Services.Interfaces;
+using TaskStatus = Workflow.Models.TaskStatus;
 using TaskType = Workflow.Models.TaskType;
 
 namespace Workflow.Processes
@@ -17,15 +17,23 @@ namespace Workflow.Processes
     public abstract class WorkflowApprovalProcess
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static readonly PocoRepository Pr = new PocoRepository();
+
+        private readonly IConfigService _configService;
+        private readonly IGroupService _groupService;
+        private readonly IInstancesService _instancesService;
+        private readonly ISettingsService _settingsService;
+        private readonly ITasksService _tasksService;
 
         protected WorkflowType Type { private get; set; }
-
         protected WorkflowInstancePoco Instance;
 
-        private static Database GetDb()
+        protected WorkflowApprovalProcess()
         {
-            return ApplicationContext.Current.DatabaseContext.Database;
+            _configService = new ConfigService();
+            _groupService = new GroupService();
+            _instancesService = new InstancesService();
+            _settingsService = new SettingsService();
+            _tasksService = new TasksService();
         }
 
         # region Public methods
@@ -46,7 +54,7 @@ namespace Workflow.Processes
             Instance.SetScheduledDate();
             Instance.Guid = g;
 
-            GetDb().Insert(Instance);
+            _instancesService.InsertInstance(Instance);
 
             // create the first task in the workflow
             WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(nodeId);
@@ -89,7 +97,7 @@ namespace Workflow.Processes
                     WorkflowInstanceGuid = Instance.Guid
                 };
 
-                GetDb().Insert(resubmitTask);
+                _tasksService.InsertTask(resubmitTask);
 
                 // when approving a task for a rejected workflow, create the new task with the same approval step as the rejected task
                 // update the rejected task status to resubmitted
@@ -101,7 +109,7 @@ namespace Workflow.Processes
                 rejectedTask.Status = (int) TaskStatus.Resubmitted;
                 rejectedTask.Type = (int) TaskType.Rejected;
 
-                GetDb().Update(rejectedTask);
+                _tasksService.UpdateTask(rejectedTask);
             }
             else
             {
@@ -112,7 +120,7 @@ namespace Workflow.Processes
                 throw new WorkflowException("Workflow instance is not found.");
             }
 
-            GetDb().Update(Instance);
+            _instancesService.UpdateInstance(Instance);
 
             return Instance;
         }
@@ -164,7 +172,8 @@ namespace Workflow.Processes
                 {
                     throw new WorkflowException("Workflow instance " + Instance.Id + " is not pending any action.");
                 }
-                GetDb().Update(Instance);
+
+                _instancesService.UpdateInstance(Instance);
             }
             else
             {
@@ -174,6 +183,7 @@ namespace Workflow.Processes
                 }
                 throw new WorkflowException("Workflow instance is not found.");
             }
+
             return Instance;
         }
 
@@ -201,11 +211,11 @@ namespace Workflow.Processes
                     taskInstance.Comment = reason;
                     taskInstance.CompletedDate = Instance.CompletedDate;
 
-                    GetDb().Update(taskInstance);
+                    _tasksService.UpdateTask(taskInstance);
                 }
 
                 // Send the notification
-                GetDb().Update(Instance);
+                _instancesService.UpdateInstance(Instance);
                 Notifications.Send(Instance, EmailType.WorkflowCancelled);
             }
             else
@@ -288,7 +298,7 @@ namespace Workflow.Processes
                 Notifications.Send(Instance, emailType.Value);
             }
 
-            GetDb().Update(taskInstance);
+            _tasksService.UpdateTask(taskInstance);
         }
 
         /// <summary>
@@ -306,9 +316,12 @@ namespace Workflow.Processes
                 };
 
             Instance.TaskInstances.Add(taskInstance);
-            SetApprovalGroup(taskInstance, nodeId);
 
-            GetDb().Insert(taskInstance);
+            WorkflowSettingsPoco settings = _settingsService.GetSettings();
+
+            SetApprovalGroup(taskInstance, nodeId, settings);
+
+            _tasksService.InsertTask(taskInstance);
 
             return taskInstance;
         }
@@ -318,9 +331,10 @@ namespace Workflow.Processes
         /// </summary>
         /// <param name="taskInstance"></param>
         /// <param name="nodeId"></param>
-        private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId)
+        /// <param name="settings"></param>
+        private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId, WorkflowSettingsPoco settings)
         {
-            List<UserGroupPermissionsPoco> approvalGroup = Pr.PermissionsForNode(nodeId, 0);
+            List<UserGroupPermissionsPoco> approvalGroup = _configService.GetPermissionsForNode(nodeId, 0);
             UserGroupPermissionsPoco group = null;
 
             if (approvalGroup.Any())
@@ -336,19 +350,19 @@ namespace Workflow.Processes
                 IPublishedContent node = Utility.GetNode(nodeId);
                 if (node.Level != 1)
                 {
-                    SetApprovalGroup(taskInstance, node.Parent.Id);
+                    SetApprovalGroup(taskInstance, node.Parent.Id, settings);
                 }
                 else // no group set, check for content-type approval then fallback to default approver
                 {
-                    List<UserGroupPermissionsPoco> contentTypeApproval = Pr.PermissionsForNode(nodeId, Instance.Node.ContentType.Id).Where(g => g.ContentTypeId != 0).ToList();
-                    if (contentTypeApproval.Any())
+                    List<UserGroupPermissionsPoco> contentTypeApproval = _configService.GetPermissionsForNode(nodeId, Instance.Node.ContentType.Id);
+                    if (contentTypeApproval.Any(g => g.ContentTypeId != 0))
                     {
                         group = contentTypeApproval.First(g => g.Permission == taskInstance.ApprovalStep);
                         SetInstanceTotalSteps(approvalGroup.Count);
                     }
                     else
                     {
-                        group = GetDb().Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupBasic, Pr.GetSettings().DefaultApprover).First();
+                        group = _groupService.GetDefaultUserGroupPermissions(settings.DefaultApprover);
                         SetInstanceTotalSteps(1);
                     }
                 }
@@ -371,7 +385,7 @@ namespace Workflow.Processes
             if (Instance.TotalSteps == stepCount) return;
 
             Instance.TotalSteps = stepCount;
-            GetDb().Update(Instance);
+            _instancesService.UpdateInstance(Instance);
         }
 
 
@@ -386,7 +400,7 @@ namespace Workflow.Processes
 
             Notifications.Send(Instance, EmailType.ApprovalRequest);
 
-            GetDb().Update(taskInstance);
+            _tasksService.UpdateTask(taskInstance);
         }
 
         #endregion

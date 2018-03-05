@@ -1,5 +1,6 @@
 ﻿using Umbraco.Core;
 using Umbraco.Core.Models;
+using Umbraco.Core.Models.Membership;
 using Umbraco.Web;
 using Workflow.Helpers;
 
@@ -16,14 +17,14 @@ namespace Workflow.Startup
         {
             if (sender.TreeAlias != "content" || string.CompareOrdinal(e.NodeId, "-1") == 0) return;
 
-            var menuLength = e.Menu.Items.Count;
-            var nodeName = Utility.GetNode(int.Parse(e.NodeId)).Name;
-            var currentUser = UmbracoContext.Current.Security.CurrentUser;
+            int menuLength = e.Menu.Items.Count;
+            string nodeName = Utility.GetNode(int.Parse(e.NodeId)).Name;
+            IUser currentUser = UmbracoContext.Current.Security.CurrentUser;
             var items = new Umbraco.Web.Models.Trees.MenuItemList();
 
             var i = new Umbraco.Web.Models.Trees.MenuItem("workflowHistory", "Workflow history");
             i.LaunchDialogView("/App_Plugins/workflow/Backoffice/dialogs/workflow.history.dialog.html", "Workflow history: " + nodeName);
-            i.AdditionalData.Add("width", "700px");
+            i.AdditionalData.Add("width", "800px");
             i.SeperatorBefore = true;
             i.Icon = "directions-alt";
 
