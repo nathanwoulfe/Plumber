@@ -3,16 +3,29 @@
 
     function addController($scope, workflowGroupsResource, navigationService, notificationsService, treeService) {
 
+        $scope.$watch('name',
+            function() {
+                $scope.failed = false;
+            });
+
         $scope.add = function (name) {
           workflowGroupsResource.add(name)
-                .then(function (resp) {
+              .then(function (resp) {
                     if (resp.status === 200) {
-                        treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'workflow' })
-                            .then(function () {
-                                window.location = '/umbraco/#/workflow/workflow/edit-group/' + resp.id;
-                                navigationService.hideNavigation();
-                            });
-                        notificationsService.success('SUCCESS', resp.msg);
+                        if (resp.success === true) {
+                            treeService.loadNodeChildren({
+                                    node: $scope.$parent.currentNode.parent(),
+                                    section: 'workflow'
+                                })
+                                .then(function() {
+                                    window.location = '/umbraco/#/workflow/workflow/edit-group/' + resp.id;
+                                    navigationService.hideNavigation();
+                                });
+                            notificationsService.success('SUCCESS', resp.msg);
+                        } else {
+                            $scope.failed = true;
+                            $scope.msg = resp.msg;
+                        }
                     } else {
                         notificationsService.error('ERROR', resp.msg);
                     }
