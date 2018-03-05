@@ -57,7 +57,13 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<WorkflowTask> GetPendingTasks(IEnumerable<int> status, int count, int page)
         {
-            List<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetPendingTasks(status, count, page);
+            List<WorkflowTaskInstancePoco> taskInstances = new List<WorkflowTaskInstancePoco>();
+
+            using (IUnitOfWork uow = _uow.GetUnitOfWork())
+            {
+                taskInstances = _tasksRepo.GetPendingTasks(uow, status, count, page);
+            }
+
             List<WorkflowTask> tasks = taskInstances.ToWorkflowTaskList();
 
             return tasks;
