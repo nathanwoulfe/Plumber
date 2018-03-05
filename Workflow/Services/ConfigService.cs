@@ -138,25 +138,27 @@ namespace Workflow.Services
         /// </summary>
         private List<UserGroupPermissionsPoco> GetPermissionsForNode(IPublishedContent node)
         {
-            // check the node for set permissions
             if (node == null) return null;
 
-            List<UserGroupPermissionsPoco> permissions = _repo.PermissionsForNode(node.Id, 0);
-
-            // return them if they exist, otherwise check the parent
-            if (permissions.Any()) return permissions;
-
-            if (node.Level != 1)
+            while (true)
             {
-                GetPermissionsForNode(node.Parent);
-            }
-            else
-            {
-                // check for content-type permissions
-                permissions = _repo.PermissionsForNode(0, node.ContentType.Id);
-            }
+                // check the node for set permissions
+                List<UserGroupPermissionsPoco> permissions = _repo.PermissionsForNode(node.Id, 0);
 
-            return permissions;
+                // return them if they exist, otherwise check the parent
+                if (permissions.Any()) return permissions;
+
+                if (node.Level > 1)
+                {
+                    node = node.Parent;
+                }
+                else
+                {
+                    // check for content-type permissions
+                    permissions = _repo.PermissionsForNode(0, node.ContentType.Id);
+                    return permissions;
+                }
+            }
         }
     }
 }
