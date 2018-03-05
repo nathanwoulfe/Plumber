@@ -20,7 +20,7 @@ namespace Workflow.Extensions
         {
             List<WorkflowTask> workflowItems = new List<WorkflowTask>();
 
-            if (!taskInstances.Any()) return workflowItems.OrderByDescending(x => x.CurrentStep).ToList();
+            if (!taskInstances.Any()) return workflowItems;
 
             bool useInstanceFromTask = instance == null;
 
