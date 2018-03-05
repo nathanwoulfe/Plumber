@@ -135,28 +135,29 @@ namespace Workflow.Services
 
         /// <summary>
         /// Get the explicit or implied approval flow for a given node
+        /// Will return explicit, content type, or inherited, in that order
         /// </summary>
         private List<UserGroupPermissionsPoco> GetPermissionsForNode(IPublishedContent node)
         {
             if (node == null) return null;
+            int nodeId = node.Id;
 
             while (true)
             {
                 // check the node for set permissions
+                // return them if they exist, otherwise check for content type, then the parent if none set for the type
                 List<UserGroupPermissionsPoco> permissions = _repo.PermissionsForNode(node.Id, 0);
-
-                // return them if they exist, otherwise check the parent
                 if (permissions.Any()) return permissions;
+
+                if (nodeId == node.Id)
+                {
+                    permissions = _repo.PermissionsForNode(0, node.ContentType.Id);
+                    if (permissions.Any()) return permissions;
+                }
 
                 if (node.Level > 1)
                 {
                     node = node.Parent;
-                }
-                else
-                {
-                    // check for content-type permissions
-                    permissions = _repo.PermissionsForNode(0, node.ContentType.Id);
-                    return permissions;
                 }
             }
         }
