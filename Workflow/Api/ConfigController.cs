@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Web.Http;
 using log4net;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Api
 {
@@ -30,11 +30,11 @@ namespace Workflow.Api
         /// <returns></returns>
         [HttpPost]
         [Route("saveconfig")]
-        public async Task<IHttpActionResult> SaveConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model)
+        public IHttpActionResult SaveConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model)
         {
             try
             {
-                bool success = await _configService.UpdateNodeConfigAsync(model);
+                bool success = _configService.UpdateNodeConfig(model);
                 return Ok(success);
             }
             catch (Exception ex)
@@ -54,11 +54,11 @@ namespace Workflow.Api
         /// <returns></returns>
         [HttpPost]
         [Route("savedoctypeconfig")]
-        public async Task<IHttpActionResult> SaveDocTypeConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model)
+        public IHttpActionResult SaveDocTypeConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model)
         {
             try
             {
-                bool success = await _configService.UpdateContentTypeConfigAsync(model);
+                bool success = _configService.UpdateContentTypeConfig(model);
                 return Ok(success);
             }
             catch (Exception ex)

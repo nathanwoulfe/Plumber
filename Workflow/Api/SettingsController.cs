@@ -14,6 +14,8 @@ using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Repositories;
+using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Api
 {
@@ -21,11 +23,12 @@ namespace Workflow.Api
     public class SettingsController : UmbracoAuthorizedApiController
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly PocoRepository _pr;
+
+        private readonly ISettingsService _settingsService;
 
         public SettingsController()
         {
-            _pr = new PocoRepository(DatabaseContext.Database);
+            _settingsService = new SettingsService();
         }
 
         /// <summary>
@@ -149,7 +152,7 @@ namespace Workflow.Api
         {
             try
             {
-                return Json(_pr.GetSettings(), ViewHelpers.CamelCase);
+                return Json(_settingsService.GetSettings(), ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
@@ -169,7 +172,7 @@ namespace Workflow.Api
         {
             try
             {
-                DatabaseContext.Database.Update(model);
+                _settingsService.UpdateSettings(model);
                 return Ok("Settings updated");
             }
             catch (Exception ex)

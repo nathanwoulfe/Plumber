@@ -11,7 +11,8 @@ using Umbraco.Web.WebApi;
 using Workflow.Models;
 using Workflow.Helpers;
 using Workflow.Processes;
-using Workflow.Repositories;
+using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Api
 {
@@ -22,7 +23,15 @@ namespace Workflow.Api
     public class ActionsController : UmbracoAuthorizedApiController
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static readonly PocoRepository Pr = new PocoRepository();
+
+        private readonly IInstancesService _instancesService;
+        private readonly ITasksService _tasksService;
+
+        public ActionsController()
+        {
+            _instancesService = new InstancesService();
+            _tasksService = new TasksService();
+        }
 
         /// <summary>
         /// 
@@ -292,13 +301,13 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="instanceGuid"></param>
         /// <returns></returns>
-        private static WorkflowInstancePoco GetInstance(Guid instanceGuid)
+        private WorkflowInstancePoco GetInstance(Guid instanceGuid)
         {
-            WorkflowInstancePoco instance = Pr.InstanceByGuid(instanceGuid);
+            WorkflowInstancePoco instance = _instancesService.GetByGuid(instanceGuid);
             instance.SetScheduledDate();
 
             // TODO -> fix this
-            List<WorkflowTaskInstancePoco> tasks = Pr.TasksAndGroupByInstanceId(instance.Guid);
+            List<WorkflowTaskInstancePoco> tasks = _tasksService.GetTasksWithGroupByInstanceGuid(instance.Guid);
 
             if (tasks.Any())
             {

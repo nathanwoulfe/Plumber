@@ -8,6 +8,7 @@ using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Api
 {

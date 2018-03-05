@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web.Http;
 using log4net;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
-using Workflow.Extensions;
 using Workflow.Models;
-using Workflow.Repositories;
+using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Api
 {
@@ -20,8 +19,14 @@ namespace Workflow.Api
     public class InstancesController : UmbracoAuthorizedApiController
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static readonly PocoRepository Pr = new PocoRepository();
 
+        private readonly IInstancesService _instancesService;
+
+        public InstancesController()
+        {
+            _instancesService = new InstancesService();
+        }
+        
         /// <summary>
         /// Returns all workflow instances, with their tasks
         /// </summary>
@@ -32,12 +37,12 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowInstancePoco> instances = Pr.GetAllInstances().OrderByDescending(x => x.CreatedDate).ToList();
-                List<WorkflowInstance> workflowInstances = instances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowInstanceList();
+                List<WorkflowInstance> workflowInstances = _instancesService.Get(page, count, null);
+
                 return Json(new
                 {
                     items = workflowInstances,
-                    total = instances.Count,
+                    total = _instancesService.CountPending(),
                     page,
                     count
                 }, ViewHelpers.CamelCase);
@@ -51,7 +56,7 @@ namespace Workflow.Api
         }
 
         /// <summary>
-        /// Returns all tasks
+        /// Returns all instances
         /// </summary>
         /// <returns></returns>        
         [HttpGet]
@@ -60,7 +65,8 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowInstance> instances = Pr.GetAllInstancesForDateRange(DateTime.Now.AddDays(days * -1)).ToWorkflowInstanceList();
+                List<WorkflowInstance> instances = _instancesService.Get(null, null, DateTime.Now.AddDays(days * -1));
+
                 return Json(new
                 {
                     items = instances,

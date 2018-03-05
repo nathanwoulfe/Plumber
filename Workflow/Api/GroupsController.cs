@@ -8,6 +8,7 @@ using Workflow.Models;
 using Workflow.Helpers;
 using Workflow.Services;
 using System.Threading.Tasks;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Api
 {
@@ -72,14 +73,14 @@ namespace Workflow.Api
                 // check that it doesn't already exist
                 if (poco == null)
                 {
-                    return Ok(new { status = 500, msg = "Group name already exists" });
+                    return Ok(new { status = 200, success = false, msg = "Group name already exists" });
                 }
 
                 string msg = $"Successfully created new user group '{name}'.";
                 Log.Debug(msg);
 
                 // return the id of the new group, to update the front-end route to display the edit view
-                return Ok(new { status = 200, msg, id = poco.GroupId });
+                return Ok(new { status = 200, success = true, msg, id = poco.GroupId });
             }
             catch (Exception ex)
             {
@@ -148,6 +149,7 @@ namespace Workflow.Api
             }
 
             // gone.
+            Log.Debug($"User group {id} deleted by {Utility.GetCurrentUser().Name}");
             return Ok("User group has been deleted");
         }
     }
