@@ -319,7 +319,7 @@ namespace Workflow.Processes
 
             WorkflowSettingsPoco settings = _settingsService.GetSettings();
 
-            SetApprovalGroup(taskInstance, nodeId, settings);
+            SetApprovalGroup(taskInstance, nodeId, nodeId, settings);
 
             _tasksService.InsertTask(taskInstance);
 
@@ -332,7 +332,7 @@ namespace Workflow.Processes
         /// <param name="taskInstance"></param>
         /// <param name="nodeId"></param>
         /// <param name="settings"></param>
-        private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId, WorkflowSettingsPoco settings)
+        private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId, int initialId, WorkflowSettingsPoco settings)
         {
             List<UserGroupPermissionsPoco> approvalGroup = _configService.GetPermissionsForNode(nodeId, 0);
             UserGroupPermissionsPoco group = null;
@@ -346,21 +346,28 @@ namespace Workflow.Processes
             }
             else
             {
-                // Recurse up the tree until we find something
-                IPublishedContent node = Utility.GetNode(nodeId);
-                if (node.Level != 1)
+                // check the content type only on original node
+                if (nodeId == initialId)
                 {
-                    SetApprovalGroup(taskInstance, node.Parent.Id, settings);
-                }
-                else // no group set, check for content-type approval then fallback to default approver
-                {
-                    List<UserGroupPermissionsPoco> contentTypeApproval = _configService.GetPermissionsForNode(nodeId, Instance.Node.ContentType.Id);
+                    List<UserGroupPermissionsPoco> contentTypeApproval = _configService.GetPermissionsForNode(0, Instance.Node.ContentType.Id);
+
                     if (contentTypeApproval.Any(g => g.ContentTypeId != 0))
                     {
                         group = contentTypeApproval.First(g => g.Permission == taskInstance.ApprovalStep);
                         SetInstanceTotalSteps(approvalGroup.Count);
                     }
-                    else
+                }
+
+                // don't overwrite or recurse up if the content type has permissions set
+                if (group == null)
+                {
+                    // If nothing set for the content type recurse up the tree until we find something
+                    IPublishedContent node = Utility.GetNode(nodeId);
+                    if (node.Level != 1)
+                    {
+                        SetApprovalGroup(taskInstance, node.Parent.Id, nodeId, settings);
+                    }
+                    else // no group set, fallback to default approver
                     {
                         group = _groupService.GetDefaultUserGroupPermissions(settings.DefaultApprover);
                         SetInstanceTotalSteps(1);
@@ -368,7 +375,7 @@ namespace Workflow.Processes
                 }
             }
 
-            // group will not be null
+            // group will not be null unless we have nothing set anywhere, which is silly
             if (group == null) return;
 
             taskInstance.GroupId = group.GroupId;
