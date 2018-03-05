@@ -7,6 +7,7 @@ using Umbraco.Core.Persistence;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Relators;
+using Workflow.Repositories.Interfaces;
 
 namespace Workflow.Repositories
 {
@@ -34,7 +35,7 @@ namespace Workflow.Repositories
         public WorkflowSettingsPoco GetSettings()
         {
             var wsp = new WorkflowSettingsPoco();
-            List<WorkflowSettingsPoco> settings = _database.Fetch<WorkflowSettingsPoco>("SELECT * FROM WorkflowSettings");
+            List<WorkflowSettingsPoco> settings = _database.Fetch<WorkflowSettingsPoco>(SqlHelpers.GetSettings);
 
             if (settings.Any())
             {
@@ -54,153 +55,21 @@ namespace Workflow.Repositories
         }
 
         /// <summary>
-        /// Get pending workflow tasks matching any of the provided status values
+        /// 
         /// </summary>
-        /// <param name="status">A collection of WorkflowStatus integers</param>
-        /// <param name="count">Number of items to return</param>
-        /// <param name="page">Index of the page to return</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetPendingTasks(IEnumerable<int> status, int count, int page)
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public UserGroupPermissionsPoco GetDefaultUserGroupPermissions(string name)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, new { statusInts = status.Select(s => s.ToString()).ToArray() })
-                .Skip((page - 1) * count).Take(count).ToList();
-        }
-
-        /// <summary>
-        /// Get all pending workflow tasks matching any of the provided status values
-        /// </summary>
-        /// <param name="status">A collection of WorkflowStatus integers</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetAllPendingTasks(IEnumerable<int> status)
-        {
-
-            return _database
-                    .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks,
-                        new {statusInts = status.Select(s => s.ToString()).ToArray()}).ToList();
-
-        }
-
-        /// <summary>
-        /// Get all tasks for the given group id
-        /// </summary>
-        /// <param name="groupId">Id of group to query</param>
-        /// <param name="count">Number of items to return</param>
-        /// <param name="page">Index of the page to return</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetAllGroupTasks(int groupId, int count, int page)
-        {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.AllGroupTasks, groupId)
-                .Skip((page - 1) * count).Take(count).ToList();
-        }
-
-        /// <summary>
-        /// Get all tasks created after the given date
-        /// </summary>
-        /// <param name="oldest">The creation date of the oldest tasks to return</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetAllTasksForDateRange(DateTime oldest)
-        {
-            return _database.Fetch<WorkflowTaskInstancePoco>(SqlHelpers.AllTasksForDateRange, oldest);
-        }
-
-
-        /// <summary>
-        /// Get all workflow instances
-        /// </summary>
-        /// <returns>A list of objects of type <see cref="WorkflowInstancePoco"/></returns>
-        public List<WorkflowInstancePoco> GetAllInstances()
-        {
-            return _database.Fetch<WorkflowInstancePoco, WorkflowTaskInstancePoco, UserGroupPoco, WorkflowInstancePoco>(new UserToGroupForInstanceRelator().MapIt, SqlHelpers.AllInstances);
-        }
-
-        /// <summary>
-        /// Get all workflow instances created after the given date
-        /// </summary>
-        /// <param name="oldest">The creation date of the oldest instances to return</param>
-        /// <returns>A list of objects of type <see cref="WorkflowInstancePoco"/></returns>
-        public List<WorkflowInstancePoco> GetAllInstancesForDateRange(DateTime oldest)
-        {
-            return _database.Fetch<WorkflowInstancePoco>(SqlHelpers.AllInstancesForDateRange, oldest);
-        }
-
-        /// <summary>
-        /// Get all tasks for the given node 
-        /// </summary>
-        /// <param name="nodeId">The node id</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> TasksByNode(int nodeId)
-        {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksByNode, nodeId);
-        }
-
-        /// <summary>
-        /// Get all tasks for the given user
-        /// </summary>
-        /// <param name="id">The user id</param>
-        /// <param name="status">The task status</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> TasksForUser(int id, int status)
-        {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksForUser, id, status);
-        }
-
-        /// <summary>
-        /// Get all tasks created by the given user
-        /// </summary>
-        /// <param name="id">The user id</param>
-        /// <param name="status">The task status collection</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> SubmissionsForUser(int id, IEnumerable<int> status)
-        {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.SubmissionsForUser, new { id, statusInts = status.Select(s => s.ToString()).ToArray() });
-        }
-
-        /// <summary>
-        /// Get a single instance by guid
-        /// </summary>
-        /// <param name="guid">The instance guid</param>
-        /// <returns>A list of objects of type <see cref="WorkflowInstancePoco"/></returns>
-        public WorkflowInstancePoco InstanceByGuid(Guid guid)
-        {
-            return _database.Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByGuid, guid).First();
-        }
-
-        /// <summary>
-        /// Get tasks and associated group by instance guid
-        /// </summary>
-        /// <param name="guid">The instance guid</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> TasksAndGroupByInstanceId(Guid guid)
-        {
-            return _database.Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TasksAndGroupByInstanceId, guid);
-        }
-
-        /// <summary>
-        /// Get all instances matching the given status[es] for the given node id
-        /// </summary>
-        /// <param name="nodeId">The node id</param>
-        /// <param name="status">Optional list of WorkflowStatus integers. If not provided, method returns all instances for the node.</param>
-        /// <returns>A list of objects of type <see cref="WorkflowInstancePoco"/></returns>
-        public List<WorkflowInstancePoco> InstancesByNodeAndStatus(int nodeId, List<int> status = null)
-        {
-            if (status == null || !status.Any())
-                return _database.Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByNodeStr, nodeId);
-
-
-            string statusStr = string.Concat("Status = ", string.Join(" OR Status = ", status));
-            if (!string.IsNullOrEmpty(statusStr))
-            {
-                statusStr = " AND " + statusStr;
-            }
-
-            return _database.Fetch<WorkflowInstancePoco>(string.Concat(SqlHelpers.InstanceByNodeStr, statusStr), nodeId);
+            UserGroupPermissionsPoco permissions = _database.Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupBasic, name).First();
+            return permissions;
         }
 
         /// <summary>
         /// Get all user groups and their associated permissions and user groups
         /// </summary>
         /// <returns>A list of objects of type <see cref="UserGroupPoco"/></returns>
-        public List<UserGroupPoco> UserGroups()
+        public IEnumerable<UserGroupPoco> GetUserGroups()
         {
             return _database.Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(new GroupsRelator().MapIt, SqlHelpers.UserGroups);            
         }
@@ -210,34 +79,34 @@ namespace Workflow.Repositories
         /// </summary>
         /// <param name="id">The group id</param>
         /// <returns>A list of objects of type <see cref="UserGroupPoco"/></returns>
-        public List<UserGroupPoco> PopulatedUserGroup(int id)
+        public UserGroupPoco GetPopulatedUserGroup(int id)
         {
             return _database
                 .Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(
                     new GroupsRelator().MapIt,
                     SqlHelpers.UserGroupDetailed,
                     id
-                );
+                ).First(g => !g.Deleted);
         }
 
         /// <summary>
-        /// Get user group by name
-        /// </summary>
-        /// <param name="value">The group name</param>
-        /// <returns>A list of objects of type <see cref="UserGroupPoco"/></returns>
-        public List<UserGroupPoco> UserGroupsByName(string value)
-        {
-            return _database.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE Name = @0", value);
-        }
-
-        /// <summary>
-        /// Get user group by alias
+        /// Check if the group alias is in use
         /// </summary>
         /// <param name="value">The group alias</param>
-        /// <returns>A list of objects of type <see cref="UserGroupPoco"/></returns>
-        public List<UserGroupPoco> UserGroupsByAlias(string value)
+        /// <returns>bool indicating group alias existence</returns>
+        public bool GroupAliasExists(string value)
         {
-            return _database.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE Alias = @0", value);
+            return _database.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE Alias = @0", value).Any(g => !g.Deleted);
+        }
+
+        /// <summary>
+        /// Check if the group name is in use
+        /// </summary>
+        /// <param name="value">The group name</param>
+        /// <returns>bool indicating group name existence</returns>
+        public bool GroupNameExists(string value)
+        {
+            return _database.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE Name = @0", value).Any(g => !g.Deleted);
         }
 
         /// <summary>
@@ -245,18 +114,9 @@ namespace Workflow.Repositories
         /// </summary>
         /// <param name="value">The group id</param>
         /// <returns>A list of objects of type <see cref="UserGroupPoco"/></returns>
-        public List<UserGroupPoco> UserGroupsById(int value)
+        public UserGroupPoco GetUserGroupById(int value)
         {
-            return _database.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE GroupId = @0", value);
-        }
-
-        /// <summary>
-        /// Get the most-recently created user group
-        /// </summary>
-        /// <returns>An object of type <see cref="UserGroupPoco"/></returns>
-        public UserGroupPoco NewestGroup()
-        {
-            return _database.Fetch<UserGroupPoco>(SqlHelpers.NewestGroup).First();
+            return _database.Fetch<UserGroupPoco>("SELECT * FROM WorkflowUserGroups WHERE GroupId = @0", value).FirstOrDefault();
         }
 
         /// <summary>
@@ -268,25 +128,6 @@ namespace Workflow.Repositories
         public List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int? contentTypeId)
         {
             return _database.Fetch<UserGroupPermissionsPoco, UserGroupPoco, User2UserGroupPoco, UserGroupPermissionsPoco>(new UserToGroupForPermissionsRelator().MapIt, SqlHelpers.PermissionsByNode, nodeId, contentTypeId);
-        }
-
-        /// <summary>
-        /// Get a count of all pending tasks
-        /// </summary>
-        /// <returns>An integer representing the number of pending workflow tasks</returns>
-        public int CountPendingTasks()
-        {
-            return _database.Fetch<int>(SqlHelpers.CountPendingTasks).First();
-        }
-
-        /// <summary>
-        /// Get a count of all tasks assigned to the given group id
-        /// </summary>
-        /// <param name="groupId">The group id</param>
-        /// <returns>An integer representing the number of pending workflow tasks assigned to the group</returns>
-        public int CountGroupTasks(int groupId)
-        {
-            return _database.Fetch<int>(SqlHelpers.CountGroupTasks, groupId).First();
         }
 
         /// <summary>
@@ -347,6 +188,11 @@ namespace Workflow.Repositories
             _database.Update(poco);
         }
 
+        public void UpdateSettings(WorkflowSettingsPoco settings)
+        {
+            _database.Update(settings);
+        }
+
         /// <summary>
         /// Delete a group
         /// </summary>
@@ -377,16 +223,7 @@ namespace Workflow.Repositories
         /// Add permission for node
         /// </summary>
         /// <param name="perm">Permission object of type <see cref="UserGroupPermissionsPoco"/></param>
-        public void AddPermissionForNode(UserGroupPermissionsPoco perm)
-        {
-            _database.Insert(perm);
-        }
-
-        /// <summary>
-        /// Add permission for content type
-        /// </summary>
-        /// <param name="perm">Permission object of type <see cref="UserGroupPermissionsPoco"/></param>
-        public void AddPermissionForContentType(UserGroupPermissionsPoco perm)
+        public void AddPermission(UserGroupPermissionsPoco perm)
         {
             _database.Insert(perm);
         }

@@ -4,13 +4,15 @@ using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Workflow.Models;
 using Workflow.Repositories;
+using Workflow.Repositories.Interfaces;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Services
 {
     public class ImportExportService : IImportExportService
     {
-        private readonly ILogger log;
-        private readonly IImportExportRepository repo;
+        private readonly ILogger _log;
+        private readonly IImportExportRepository _repo;
 
         public ImportExportService()
             : this(
@@ -22,8 +24,8 @@ namespace Workflow.Services
 
         public ImportExportService(ILogger log, IImportExportRepository repo)
         {
-            this.log = log;
-            this.repo = repo;
+            _log = log;
+            _repo = repo;
         }
 
         /// <summary>
@@ -36,14 +38,14 @@ namespace Workflow.Services
 
             try
             {
-                model.Settings = repo.ExportSettings();
-                model.UserGroups = repo.ExportUserGroups();
-                model.User2UserGroup = repo.ExportUser2UserGroups();
-                model.UserGroupPermissions = repo.ExportUserGroupPermissions();
+                model.Settings = _repo.ExportSettings();
+                model.UserGroups = _repo.ExportUserGroups();
+                model.User2UserGroup = _repo.ExportUser2UserGroups();
+                model.UserGroupPermissions = _repo.ExportUserGroupPermissions();
             }
             catch (Exception e)
             {
-                log.Error(GetType(), e.Message, e);
+                _log.Error(GetType(), e.Message, e);
             }
 
             return Task.FromResult(model);
@@ -58,22 +60,22 @@ namespace Workflow.Services
         {
             if (model.Settings != null)
             {
-                repo.ImportSettings(model.Settings);
+                _repo.ImportSettings(model.Settings);
             }
 
             if (model.UserGroups != null)
             {
-                repo.ImportUserGroups(model.UserGroups);
+                _repo.ImportUserGroups(model.UserGroups);
             }
 
             if (model.User2UserGroup != null)
             {
-                repo.ImportUser2UserGroups(model.User2UserGroup);
+                _repo.ImportUser2UserGroups(model.User2UserGroup);
             }
 
             if (model.UserGroupPermissions != null)
             {
-                repo.ImportUserGroupPermissions(model.UserGroupPermissions);
+                _repo.ImportUserGroupPermissions(model.UserGroupPermissions);
             }
 
             return Task.FromResult(true);

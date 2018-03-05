@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
-using Workflow.EventHandlers.Args;
+using Umbraco.Core.Models;
+using Workflow.Events.Args;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Repositories;
+using Workflow.Repositories.Interfaces;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Services
 {
     /// <summary>
-    /// Service for persisting changes to workflow config on nodes or content types4
+    /// Service for persisting changes to workflow config on nodes or content types
     /// </summary>
     public class ConfigService : IConfigService
     {
-        private readonly ILogger log;
-        private readonly IPocoRepository repo;
+        private readonly ILogger _log;
+        private readonly IPocoRepository _repo;
 
         public static event EventHandler ConfigUpdated;
         protected virtual void OnConfigUpdated(EventArgs e)
@@ -35,8 +37,8 @@ namespace Workflow.Services
 
         public ConfigService(ILogger log, IPocoRepository repo)
         {
-            this.log = log;
-            this.repo = repo;
+            _log = log;
+            _repo = repo;
         }
 
         /// <summary>
@@ -44,18 +46,18 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="model">Dictionary representing the indexed permissions for the node</param>
         /// <returns>Bool representing success state</returns>
-        public Task<bool> UpdateNodeConfigAsync(Dictionary<int, List<UserGroupPermissionsPoco>> model)
+        public bool UpdateNodeConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model)
         {
-            if (null == model || !model.Any()) return Task.FromResult(false);
+            if (null == model || !model.Any()) return false;
 
             KeyValuePair<int, List<UserGroupPermissionsPoco>> permission = model.First();
 
-            repo.DeleteNodeConfig(permission.Key);
+            _repo.DeleteNodeConfig(permission.Key);
 
-            if (!permission.Value.Any()) return Task.FromResult(false);
+            if (!permission.Value.Any()) return false;
 
             foreach (UserGroupPermissionsPoco poco in permission.Value)
-                repo.AddPermissionForNode(poco);
+                _repo.AddPermission(poco);
 
             // emit event
             OnConfigUpdated(new OnConfigUpdatedEventArgs
@@ -64,7 +66,7 @@ namespace Workflow.Services
                 UpdatedBy = Utility.GetCurrentUser()
             });
 
-            return Task.FromResult(true);
+            return true;
         }
 
         /// <summary>
@@ -72,18 +74,18 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="model">Dictionary representing the indexed permissions for the content type</param>
         /// <returns>Bool representing success state</returns>
-        public Task<bool> UpdateContentTypeConfigAsync(Dictionary<int, List<UserGroupPermissionsPoco>> model)
+        public bool UpdateContentTypeConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model)
         {
-            if (null == model || !model.Any()) return Task.FromResult(false);
+            if (null == model || !model.Any()) return false;
 
-            repo.DeleteContentTypeConfig();           
+            _repo.DeleteContentTypeConfig();           
                 
             foreach (KeyValuePair<int, List<UserGroupPermissionsPoco>> permission in model)
             {
                 if (!permission.Value.Any()) continue;
                 foreach (UserGroupPermissionsPoco perm in permission.Value)
                 {
-                    repo.AddPermissionForContentType(perm);
+                    _repo.AddPermission(perm);
                 }
             }
 
@@ -94,7 +96,67 @@ namespace Workflow.Services
                 UpdatedBy = Utility.GetCurrentUser()
             });
 
-            return Task.FromResult(true);
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        public bool HasFlow(int nodeId)
+        {
+            return _repo.HasFlow(nodeId);
+        }
+
+        /// <summary>
+        /// Get the assigned permissions for the given node or content type id
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <param name="contentTypeId"></param>
+        /// <returns></returns>
+        public List<UserGroupPermissionsPoco> GetPermissionsForNode(int nodeId, int? contentTypeId)
+        {
+            List<UserGroupPermissionsPoco> permissions = _repo.PermissionsForNode(nodeId, contentTypeId);
+
+            return permissions;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public List<UserGroupPermissionsPoco> GetRecursivePermissionsForNode(IPublishedContent node)
+        {
+            List<UserGroupPermissionsPoco> permissions = GetPermissionsForNode(node);
+            return permissions;
+        }
+
+        /// <summary>
+        /// Get the explicit or implied approval flow for a given node
+        /// </summary>
+        private List<UserGroupPermissionsPoco> GetPermissionsForNode(IPublishedContent node)
+        {
+            // check the node for set permissions
+            if (node == null) return null;
+
+            List<UserGroupPermissionsPoco> permissions = _repo.PermissionsForNode(node.Id, 0);
+
+            // return them if they exist, otherwise check the parent
+            if (permissions.Any()) return permissions;
+
+            if (node.Level != 1)
+            {
+                GetPermissionsForNode(node.Parent);
+            }
+            else
+            {
+                // check for content-type permissions
+                permissions = _repo.PermissionsForNode(0, node.ContentType.Id);
+            }
+
+            return permissions;
         }
     }
 }

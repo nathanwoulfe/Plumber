@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Workflow.Models;
 
-namespace Workflow.Services
+namespace Workflow.Services.Interfaces
 {
     public interface IImportExportService
     {

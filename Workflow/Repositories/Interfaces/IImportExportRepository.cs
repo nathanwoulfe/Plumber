@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Workflow.Models;
 
-namespace Workflow.Repositories
+namespace Workflow.Repositories.Interfaces
 {
     public interface IImportExportRepository
     {
