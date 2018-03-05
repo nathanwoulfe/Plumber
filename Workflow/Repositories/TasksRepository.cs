@@ -75,16 +75,6 @@ namespace Workflow.Repositories
         }
 
         /// <summary>
-        /// Get all tasks for the given node 
-        /// </summary>
-        /// <param name="nodeId">The node id</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetTasksByNodeId(int nodeId)
-        {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksByNode, nodeId);
-        }
-
-        /// <summary>
         /// Get pending workflow tasks matching any of the provided status values
         /// </summary>
         /// <param name="status">A collection of WorkflowStatus integers</param>
@@ -95,6 +85,22 @@ namespace Workflow.Repositories
         {
             return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, new { statusInts = status.Select(s => s.ToString()).ToArray() })
                 .Skip((page - 1) * count).Take(count).ToList();
+        }
+
+        public List<WorkflowTaskInstancePoco> GetPendingTasks(IUnitOfWork uow, IEnumerable<int> status, int count, int page)
+        {
+            return uow.Db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, new { statusInts = status.Select(s => s.ToString()).ToArray() })
+                .Skip((page - 1) * count).Take(count).ToList();
+        }
+
+        /// <summary>
+        /// Get all tasks for the given node 
+        /// </summary>
+        /// <param name="nodeId">The node id</param>
+        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
+        public List<WorkflowTaskInstancePoco> GetTasksByNodeId(int nodeId)
+        {
+            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksByNode, nodeId);
         }
 
         /// <summary>

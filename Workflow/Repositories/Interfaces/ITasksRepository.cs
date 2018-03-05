@@ -17,6 +17,7 @@ namespace Workflow.Repositories.Interfaces
         List<WorkflowTaskInstancePoco> GetAllPendingTasks(IEnumerable<int> status);
         List<WorkflowTaskInstancePoco> GetAllTasksForDateRange(DateTime oldest);
         List<WorkflowTaskInstancePoco> GetPendingTasks(IEnumerable<int> status, int count, int page);
+        List<WorkflowTaskInstancePoco> GetPendingTasks(IUnitOfWork uow, IEnumerable<int> status, int count, int page);
         List<WorkflowTaskInstancePoco> GetTasksByNodeId(int nodeId);
 
         List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(IUnitOfWork uow, int id, IEnumerable<int> status);
