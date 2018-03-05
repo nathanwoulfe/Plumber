@@ -6,7 +6,6 @@
         var directive = {
             restrict: 'AEC',
             scope: {
-                heading: '=',
                 items: '=',
                 type: '=',
                 loaded: '='
