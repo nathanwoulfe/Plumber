@@ -78,19 +78,11 @@ namespace Workflow.Repositories
         /// Get pending workflow tasks matching any of the provided status values
         /// </summary>
         /// <param name="status">A collection of WorkflowStatus integers</param>
-        /// <param name="count">Number of items to return</param>
-        /// <param name="page">Index of the page to return</param>
         /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetPendingTasks(IEnumerable<int> status, int count, int page)
+        public IEnumerable<WorkflowTaskInstancePoco> GetPendingTasks(IEnumerable<int> status)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, new { statusInts = status.Select(s => s.ToString()).ToArray() })
-                .Skip((page - 1) * count).Take(count).ToList();
-        }
-
-        public List<WorkflowTaskInstancePoco> GetPendingTasks(IUnitOfWork uow, IEnumerable<int> status, int count, int page)
-        {
-            return uow.Db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks, new { statusInts = status.Select(s => s.ToString()).ToArray() })
-                .Skip((page - 1) * count).Take(count).ToList();
+            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(
+                SqlHelpers.PendingTasks, new {statusInts = status.Select(s => s.ToString()).ToArray()});
         }
 
         /// <summary>
@@ -121,13 +113,11 @@ namespace Workflow.Repositories
         /// Get all tasks for the given group id
         /// </summary>
         /// <param name="groupId">Id of group to query</param>
-        /// <param name="count">Number of items to return</param>
-        /// <param name="page">Index of the page to return</param>
         /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetAllGroupTasks(int groupId, int count, int page)
+        public IEnumerable<WorkflowTaskInstancePoco> GetAllGroupTasks(int groupId)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.AllGroupTasks, groupId)
-                .Skip((page - 1) * count).Take(count).ToList();
+            return _database
+                .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.AllGroupTasks, groupId).ToList();
         }
 
         /// <summary>

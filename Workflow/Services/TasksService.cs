@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Umbraco.Core;
 using Workflow.Extensions;
 using Workflow.Models;
@@ -57,14 +58,8 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<WorkflowTask> GetPendingTasks(IEnumerable<int> status, int count, int page)
         {
-            List<WorkflowTaskInstancePoco> taskInstances = new List<WorkflowTaskInstancePoco>();
-
-            using (IUnitOfWork uow = _uow.GetUnitOfWork())
-            {
-                taskInstances = _tasksRepo.GetPendingTasks(uow, status, count, page);
-            }
-
-            List<WorkflowTask> tasks = taskInstances.ToWorkflowTaskList();
+            IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetPendingTasks(status);
+            List<WorkflowTask> tasks = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
 
             return tasks;
         }
@@ -78,8 +73,8 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<WorkflowTask> GetAllGroupTasks(int groupId, int count, int page)
         {
-            List<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllGroupTasks(groupId, count, page);
-            List<WorkflowTask> tasks = taskInstances.ToWorkflowTaskList();
+            IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllGroupTasks(groupId);
+            List<WorkflowTask> tasks = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
 
             return tasks;
         }
