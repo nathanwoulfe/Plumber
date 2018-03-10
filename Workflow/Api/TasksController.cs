@@ -137,6 +137,16 @@ namespace Workflow.Api
         [Route("node/pending/{id:int}")]
         public IHttpActionResult GetNodePendingTasks(int id)
         {
+            // id will be 0 when creating a new page - id is assigned after save
+            if (id == 0)
+            {
+                return Json(new
+                {
+                    settings = false,
+                    noFlow = false
+                }, ViewHelpers.CamelCase);
+            }
+
             try
             {
                 WorkflowSettingsPoco settings = _settingsService.GetSettings();

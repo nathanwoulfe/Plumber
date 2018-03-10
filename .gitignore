@@ -203,3 +203,4 @@ BuildPackage/artifacts/*
 Workflow.Site/Config/
 Workflow.Site/umbraco
 Workflow.Site/umbraco_client
+/Workflow.Site/Media/
