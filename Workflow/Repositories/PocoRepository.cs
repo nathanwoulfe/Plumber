@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Configuration;
@@ -26,6 +27,12 @@ namespace Workflow.Repositories
         public PocoRepository(UmbracoDatabase database)
         {
             _database = database;
+
+            // no idea why this is needed - sometimes the db connection is null.
+            if (_database.Connection == null)
+            {
+                _database.OpenSharedConnection();
+            }
         }
 
         /// <summary>
@@ -127,6 +134,16 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="UserGroupPermissionsPoco"/></returns>
         public List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int? contentTypeId)
         {
+            // huh? why?
+            if (_database.Connection == null)
+            {
+                _database.OpenSharedConnection();
+            }
+            else if (_database.Connection.State != ConnectionState.Closed && _database.Connection.State != ConnectionState.Open)
+            {
+                _database.Connection.Open();
+            }
+
             return _database.Fetch<UserGroupPermissionsPoco, UserGroupPoco, User2UserGroupPoco, UserGroupPermissionsPoco>(new UserToGroupForPermissionsRelator().MapIt, SqlHelpers.PermissionsByNode, nodeId, contentTypeId);
         }
 

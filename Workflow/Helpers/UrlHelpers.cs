@@ -15,15 +15,25 @@ namespace Workflow.Helpers
         public static string GetFullyQualifiedSiteUrl(string partialUrl)
         {
             var editUrl = Utility.GetSettings().EditUrl;
+            var request = HttpContext.Current.Request;
+
             if (string.IsNullOrEmpty(editUrl))
             {
-                var request = HttpContext.Current.Request;
                 if (request.ApplicationPath != null)
                     editUrl = request.Url.Scheme + "://" + request.Url.Authority +
                               request.ApplicationPath.TrimEnd('/') + "/";
             }
 
             if (editUrl == null) return string.Empty;
+
+            bool valid = Uri.TryCreate(editUrl, UriKind.Absolute, out Uri uriResult)
+                          && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+            // if result is false, the settings value has no scheme, so prepend from the current request, or fallback to https
+            if (!valid)
+            {
+                editUrl = (request.ApplicationPath != null ? request.Url.Scheme : Uri.UriSchemeHttps) + "://" + editUrl;
+            }
 
             var baseUrl = new Uri(editUrl);
             return (new Uri(baseUrl, partialUrl)).ToString();
