@@ -46,8 +46,8 @@
             // only refresh if viewing a content node
             if (editorState.current) {
                 workflowResource.getNodePendingTasks(editorState.current.id)
-                    .then(function(resp) {
-                            if (resp.noFlow || resp.settings) {
+                    .then(function (resp) {
+                            if (resp.noFlow || resp.settings) { 
                                 var msg = resp.noFlow
                                     ? 'No workflow groups have been configured - refer to the documentation tab in the Workflow section, then set at minimum an approval flow on the homepage node or document type.'
                                     : 'Workflow settings are configured incorrectly - refer to the documentation tab in the Workflow section.';
@@ -155,6 +155,8 @@
         // any user with access to the workflow section will be able to action workflows ie cancel outside their group membership
         function checkUserAccess(task) {
             vm.task = task;
+            vm.canAction = false;
+
             vm.adminUser = user.allowedSections.indexOf('workflow') !== -1;
             var currentTaskUsers = task.permissions[task.currentStep].userGroup.usersSummary;
 
