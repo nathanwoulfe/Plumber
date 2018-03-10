@@ -48,9 +48,9 @@
                 workflowResource.getNodePendingTasks(editorState.current.id)
                     .then(function (resp) {
                             if (resp.noFlow || resp.settings) { 
-                                var msg = resp.noFlow
-                                    ? 'No workflow groups have been configured - refer to the documentation tab in the Workflow section, then set at minimum an approval flow on the homepage node or document type.'
-                                    : 'Workflow settings are configured incorrectly - refer to the documentation tab in the Workflow section.';
+                                var msg = resp.noFlow ?
+                                    'No workflow groups have been configured - refer to the documentation tab in the Workflow section, then set at minimum an approval flow on the homepage node or document type.' :
+                                    'Workflow settings are configured incorrectly - refer to the documentation tab in the Workflow section.';
                                 notificationsService.warning('WORKFLOW INSTALLED BUT NOT CONFIGURED', msg);
                             } else if (resp.items && resp.items.length) {
                                 vm.active = true;

@@ -19,31 +19,31 @@
          * @param {} date 
          * @returns {} 
          */
-        $scope.getRequestedOn = function (date) {
+        $scope.getRequestedOn = function(date) {
             var d = new moment(date).utc();
             return d.format(d.minutes() === 0 ? dateFormatNoMinute : dateFormat);
-        }
+        };
 
         /**
          * Ensures cssName/statusName is UI-friendly
          * @param {} task 
          * @returns {} 
          */
-        $scope.getStatusName = function (task) {
+        $scope.getStatusName = function(task) {
             if ((task.type === 1 || task.type === 3) && task.status === 7) {
                 task.cssName = 'rejected';
                 return 'Rejected';
             }
 
-            return task.statusName.replace(' ', '-');    
-        }
+            return task.statusName.replace(' ', '-');
+        };
 
         /**
          * Set the icon for the given task, based on the stauts
          * @param { } task 
          * @returns { string } 
-         */ 
-        $scope.getIconName = function (task) {
+         */
+        $scope.getIconName = function(task) {
             //rejected
             if ((task.type === 1 || task.type === 3) && task.status === 7 || task.status === 2) {
                 return 'delete';
@@ -56,7 +56,9 @@
             if (task.status === 4) {
                 return 'next-media';
             }
-        }
+
+            return '';
+        };
 
         /**
          * Fetch all tasks for the current workflow instance

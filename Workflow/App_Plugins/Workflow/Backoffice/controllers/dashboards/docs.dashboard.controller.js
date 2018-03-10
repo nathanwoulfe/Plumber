@@ -26,7 +26,7 @@
         }
 
         function parseDocs(docs) {
-            
+
             var parser = new DOMParser();
             var article = angular.element(parser.parseFromString(docs, 'text/html')).find('article');
 
@@ -73,31 +73,32 @@
         /**
          * Allow links in docs to open other sections, based on simple matching on the hash and doc name
          */
+        function openDocFromDoc(e) {
+            e.preventDefault();
+            // on click, get the anchor, find the correct section and switch to it
+            var target = vm.docs.filter(function (v) {
+                var name = v.name.toLowerCase().replace(' ', '-');
+                return name.indexOf(e.target.hash.substring(1)) === 0;
+            })[0];
+
+            if (target) {
+                openDoc(target);
+            }
+        }
+
         function bindListeners() {
             $timeout(function () {
                 var elms = document.querySelectorAll('.umb-healthcheck-group__details-check-description a');
                 if (elms.length) {
                     for (i = 0; i < elms.length; i += 1) {
-                        elms[i].addEventListener('click',
-                            function (e) {
-                                e.preventDefault();
-                                // on click, get the anchor, find the correct section and switch to it
-                                var target = vm.docs.filter(function (v) {
-                                    var name = v.name.toLowerCase().replace(' ', '-');
-                                    return name.indexOf(e.target.hash.substring(1)) === 0;
-                                })[0];
-
-                                if (target) {
-                                    openDoc(target);
-                                }
-                            });
+                        elms[i].addEventListener('click', openDocFromDoc(e));
                     }
                 }
             });
         }
 
         workflowResource.getDocs()
-            .then(function(docs) {
+            .then(function (docs) {
                 parseDocs(docs);
             });
 

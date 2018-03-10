@@ -80,7 +80,6 @@
 
             workflowResource.saveConfig(response)
                 .then(function () {
-                    debugger;
                     navigationService.hideNavigation();
                     notificationsService.success('SUCCESS', 'Workflow configuration updated');
                     init();
@@ -91,9 +90,7 @@
             
         }
 
-        function updateSortOrder() {
-            debugger;
-        }
+        function updateSortOrder() { }
 
         function add() {
             vm.selectedApprovalGroup.permissions.push({
