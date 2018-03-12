@@ -50,7 +50,7 @@ namespace Workflow.Helpers
                 //Let's add the xml
                 const string xmlToAdd = "<section alias='WorkflowContentDashboardSection'>" +
                                         "<areas>" +
-                                        "<area>workflow</area>" +
+                                        "<area>content</area>" +
                                         "</areas>" +
                                         "<tab caption=\"Workflow\">" +
                                         "<control>/app_plugins/workflow/backoffice/views/workflow.userdashboard.html</control>" +
