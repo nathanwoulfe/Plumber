@@ -85,9 +85,7 @@ In cases where the content is already in a workflow, a notification is displayed
 
 For nodes where the workflow has been disabled, the default Umbraco options are displayed.
 
-### Deployment tools (v0.7+)<a name="deployment-tools"></a>
-
-**Scheduled for inclusion in v0.7.0**
+### Deployment tools<a name="deployment-tools"></a>
 
 The Deployment tab in the Workflow section provides an interface for exporting and importing Plumber configuration, for deployment across different environments. 
 
