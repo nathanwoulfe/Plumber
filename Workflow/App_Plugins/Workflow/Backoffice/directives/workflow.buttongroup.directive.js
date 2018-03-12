@@ -17,9 +17,9 @@
                 drawer: '@?'
             }, 
             link: function (scope) {
-                scope.detail = function (item) {
+                scope.detail = function(item) {
                     scope.workflowOverlay = workflowActionsService.detail(item);
-                }
+                };
 
                 scope.state = 'init';
 

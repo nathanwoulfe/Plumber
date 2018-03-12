@@ -32,7 +32,7 @@
         },
         pkg: grunt.file.readJSON('package.json'),
         dest: grunt.option('target') || '../dist',
-        basePath: 'App_Plugins/workflow',
+        basePath: 'App_Plugins/Workflow',
         banner:
             '*! <%= pkg.title || pkg.name %> - v<%= packageVersion() %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
             '<%= pkg.homepage ? " * " + pkg.homepage + "\\n" : "" %>' +
@@ -42,7 +42,7 @@
         concat: {
             dist: {
                 src: [
-                  '<%= basePath %>/backoffice/controllers/*.js',
+                  '<%= basePath %>/backoffice/controllers/**/*.js',
                   '<%= basePath %>/backoffice/directives/*.js',
                   '<%= basePath %>/backoffice/interceptors/*.js',
                   '<%= basePath %>/backoffice/resources/*.js'
@@ -82,9 +82,11 @@
         },
 
         watch: {
+
+            // dev watches everything, copies everything
             dev: {
-                files: ['<%= basePath %>/**/*.scss', '<%= basePath %>/**/*.js', '<%= basePath %>/**/*.html'],
-                tasks: ['sass:dist', 'copy:css', 'copy:js', 'copy:html'],
+                files: ['<%= basePath %>/**/*'],
+                tasks: ['sass:dist', 'copy:dev'],
                 options: {
                     livereload: true
                 }
@@ -100,31 +102,11 @@
                 tasks: ['concat:dist']
             },
 
-            views: {
-                files: ['<%= basePath %>/backoffice/views/**/*.html'],
+            html: {
+                files: ['<%= basePath %>/**/*.html'],
                 tasks: ['copy:views']
             },
             
-            approvalGroups: {
-                files: ['<%= basePath %>/backoffice/approval-groups/**/*.html'],
-                tasks: ['copy:approval-groups']
-            },
-            
-            partials: {
-                files: ['<%= basePath %>/backoffice/partials/**/*.html'],
-                tasks: ['copy:partials']
-            },
-            
-            dialogs: {
-                files: ['<%= basePath %>/backoffice/dialogs/**/*.html'],
-                tasks: ['copy:dialogs']
-            },
-			
-            groups: {
-                files: ['<%= basePath %>/backoffice/approval-groups/**/*.html'],
-                tasks: ['copy:groups']
-            },			
-
             config: {
                 files: ['<%= basePath %>/package.manifest'],
                 tasks: ['copy:config']
@@ -138,6 +120,13 @@
         },
 
         copy: {
+            dev: {
+                expand: true,
+                cwd: '<%= basePath %>/',
+                src: '**/*',
+                dest: '../workflow.site/<%= basePath %>/',
+            },
+
             config: {
                 src: '<%= basePath %>/dist.manifest', // dist.manifest only references the compiled, prod-ready css/js
                 dest: '<%= dest %>/<%= basePath %>/package.manifest',
@@ -145,21 +134,21 @@
 
             css: {
                 src: '<%= basePath %>/backoffice/css/styles.css',
-                dest: '../workflow.site/<%= basePath %>/backoffice/css/styles.min.css', // yes, it's not minified, but the build task will overwrite it later
+                dest: '<%= dest %>/<%= basePath %>/backoffice/css/styles.min.css', // yes, it's not minified, but the build task will overwrite it later
             },
 
             js: {
                 expand: true,
                 cwd: '<%= basePath %>/backoffice/',
                 src: '**/*.js',
-                dest: '../workflow.site/<%= basePath %>/backoffice/',
+                dest: '<%= dest %>/<%= basePath %>/backoffice/',
             },
 
             html: {
                 expand: true,
                 cwd: '<%= basePath %>/backoffice/',
-                src: '**/*.html',
-                dest: '../workflow.site/<%= basePath %>/backoffice/',
+                src: '**/*',
+                dest: '<%= dest %>/<%= basePath %>/backoffice/',
             },
 
             lang: {
@@ -174,41 +163,6 @@
                 cwd: '<%= basePath %>/backoffice/lib/',
                 src: '**',
                 dest: '<%= dest %>/<%= basePath %>/backoffice/lib/'
-            },
-
-            views: {
-                expand: true,
-                cwd: '<%= basePath %>/backoffice/views/',
-                src: '**',
-                dest: '<%= dest %>/<%= basePath %>/backoffice/views/'
-            },
-
-            approvalGroups: {
-                expand: true,
-                cwd: '<%= basePath %>/backoffice/approval-groups/',
-                src: '**',
-                dest: '<%= dest %>/<%= basePath %>/backoffice/approval-groups/'
-            },
-
-            partials: {
-                expand: true,
-                cwd: '<%= basePath %>/backoffice/partials/',
-                src: '**',
-                dest: '<%= dest %>/<%= basePath %>/backoffice/partials/'
-            },
-			
-            groups: {
-                expand: true,
-                cwd: '<%= basePath %>/backoffice/approval-groups/',
-                src: '**',
-                dest: '<%= dest %>/<%= basePath %>/backoffice/approval-groups/'
-            },			
-
-            dialogs: {
-                expand: true,
-                cwd: '<%= basePath %>/backoffice/dialogs/',
-                src: '**',
-                dest: '<%= dest %>/<%= basePath %>/backoffice/dialogs/'
             },
 
             nuget: {
@@ -326,7 +280,7 @@
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:groups', 'copy:views', 'copy:approvalGroups', 'copy:partials', 'copy:dialogs', 'copy:lib', 'copy:lang']);
+    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:js', 'copy:config', 'copy:html', 'copy:lib', 'copy:lang']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 

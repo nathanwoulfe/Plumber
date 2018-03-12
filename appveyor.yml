@@ -1,5 +1,5 @@
 # version format
-version: 0.7.2.{build}
+version: 0.7.3.{build}
 
 image: Visual Studio 2017
 
@@ -42,9 +42,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v0.7.2
-    release: Release 0.7.2
-    description: 'Bug fix on 0.7.0 -> reset canAction in drawer buttons to ensure user is not able to repeatedly submit'
+    tag: v0.7.3
+    release: Release 0.7.3
+    description: 'Bug fix on 0.7.0 -> gruntfile was messed up, removed duplicate tasks and ensure copies land in the right directories'
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
