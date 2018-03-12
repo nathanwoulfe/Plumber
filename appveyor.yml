@@ -44,7 +44,7 @@ deploy:
   - provider: GitHub
     tag: v0.7.3
     release: Release 0.7.3
-    description: 'Bug fix on 0.7.0 -> gruntfile was messed up, removed duplicate tasks and ensure copies land in the right directories'
+    description: 'Bug fix on 0.7.2 -> removed duplicate tasks from gruntfile and ensure copies land in the right directories'
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
