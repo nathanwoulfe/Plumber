@@ -147,7 +147,7 @@
             html: {
                 expand: true,
                 cwd: '<%= basePath %>/backoffice/',
-                src: '**/*',
+                src: '**/*.html',
                 dest: '<%= dest %>/<%= basePath %>/backoffice/',
             },
 
@@ -280,7 +280,7 @@
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:js', 'copy:config', 'copy:html', 'copy:lib', 'copy:lang']);
+    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:html', 'copy:lib', 'copy:lang']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 
