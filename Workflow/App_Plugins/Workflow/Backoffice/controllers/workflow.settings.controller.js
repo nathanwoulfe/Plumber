@@ -39,9 +39,8 @@
                 }
 
                 vm.flowTypes = [
-                    { i: 0, v: 'Other groups must approve' },
-                    { i: 1, v: 'All groups must approve' },
-                    { i: 2, v: 'All groups must approve, ignore author' }
+                    { i: 0, v: 'Explicit' },
+                    { i: 1, v: 'Implicit' },
                 ];
 
                 vm.flowType = vm.flowTypes[vm.settings.flowType];

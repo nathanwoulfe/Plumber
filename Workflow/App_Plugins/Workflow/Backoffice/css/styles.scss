@@ -37,6 +37,10 @@
         .umb-node-preview {
             min-width: 100%;
         }
+
+        .umb-property:last-child .umb-control-group {
+            margin-bottom:0;
+        }
     }
 
     .current-flow {

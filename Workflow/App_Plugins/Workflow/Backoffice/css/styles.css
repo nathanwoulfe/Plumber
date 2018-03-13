@@ -20,6 +20,8 @@
     margin-bottom: 0; }
   .workflow .umb-box .umb-node-preview {
     min-width: 100%; }
+  .workflow .umb-box .umb-property:last-child .umb-control-group {
+    margin-bottom: 0; }
   .workflow .current-flow {
     margin: 0; }
     .workflow .current-flow .umb-node-preview {
