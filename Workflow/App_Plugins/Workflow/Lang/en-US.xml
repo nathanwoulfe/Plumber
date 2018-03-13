@@ -31,15 +31,21 @@
     <key alias="config">Configuration</key>
     <key alias="currentWorkflowRoles">Current workflow roles</key>
     <key alias="excludeNodes">Exclude nodes</key>
-    
+
+    <!-- settings box titles -->
+    <key alias="generalSettings">General</key>
+    <key alias="emailSettings">Notifications / email</key>
+    <key alias="excludeNodeSettings">Exclusions</key>
+    <key alias="contentTypeSettings">Content type approval flows</key>
+
     <!-- text for description -->
     <key alias="defaultApprovalGroupDescription">The fallback publishing group for cases when no workflows are configured</key>
-    <key alias="flowTypeDescription">Controls how the original author is managed in subsequent tasks</key>
+    <key alias="flowTypeDescription">Controls how the original author is managed in subsequent tasks. Explicit requires all steps be approved, including steps where the original change author is a group member. Implicit auto-approves steps where the author is a member of the approving group.
+    </key>
     <key alias="sendNotificationsDescription">Should email notifications be sent to approval groups?</key>
     <key alias="workflowEmailDescription">FROM address for email notifications</key>
     <key alias="editSiteUrlDescription">Edit site URL for inclusion in email notifications (eg http://edit.mydomain.com)</key>
     <key alias="baseSiteUrlDescription">Live site URL for inclusion in email notifications (eg http://www.mydomain.com)</key>
-
 
     <key alias="excludeNodesDescription">Nodes (and their descendants) selected here will NOT be included in the workflow, and will revert to the default Umbraco actions</key>
     <key alias="documentFlowsDescription">Default workflow for all nodes of a given document type</key>
