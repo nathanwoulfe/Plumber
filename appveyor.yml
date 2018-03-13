@@ -20,8 +20,6 @@ install:
 
 test: off
 
-skip_non_tags: true
-
 artifacts:
   - path: BuildPackage\artifacts\*.nupkg
   - path: BuildPackage\artifacts\*.zip
