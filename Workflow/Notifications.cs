@@ -41,10 +41,6 @@ namespace Workflow
 
                 var flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep);
 
-                var userIdToExclude = Utility.GetSettings().FlowType != (int)FlowType.All
-                    ? instance.AuthorUserId
-                    : int.MinValue;
-
                 // always take get the emails for all previous users, sometimes they will be discarded later
                 // easier to just grab em all, rather than doing so conditionally
                 var emailsForAllTaskUsers = new List<string>();
@@ -60,7 +56,7 @@ namespace Workflow
                     var group = Pr.GetPopulatedUserGroup(task.GroupId);
                     if (group != null)
                     {
-                        emailsForAllTaskUsers.AddRange(group.PreferredEmailAddresses(userIdToExclude));
+                        emailsForAllTaskUsers.AddRange(group.PreferredEmailAddresses());
 
                         if (taskIndex == taskCount)
                         {
@@ -78,7 +74,7 @@ namespace Workflow
                 switch (emailType)
                 {
                     case EmailType.ApprovalRequest:
-                        to = finalTask.UserGroup.PreferredEmailAddresses(userIdToExclude);
+                        to = finalTask.UserGroup.PreferredEmailAddresses();
                         body = string.Format(EmailApprovalRequestString,
                             to.Count > 1 ? "Umbraco user" : finalTask.UserGroup.Name, docUrl, docTitle, instance.AuthorComment,
                             instance.AuthorUser.Name, instance.TypeDescription);

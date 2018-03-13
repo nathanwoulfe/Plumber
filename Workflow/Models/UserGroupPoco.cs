@@ -66,7 +66,7 @@ namespace Workflow.Models
         /// Otherwise it will return email addresses of all users in the group.
         /// </summary>
         /// <returns>collection of email addresses</returns>
-        public List<string> PreferredEmailAddresses(int idToExclude)
+        public List<string> PreferredEmailAddresses()
         {
             List<string> addresses = new List<string>();
 
@@ -79,7 +79,6 @@ namespace Workflow.Models
                 addresses.AddRange(from user in Users
                     .Where(u => u.User.IsApproved && 
                                 !u.User.IsLockedOut && 
-                                u.UserId != idToExclude && 
                                 Utility.IsValidEmailAddress(u.User.Email)) where user.User.Email != null select user.User.Email);
             }
             return addresses;

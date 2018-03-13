@@ -14,16 +14,13 @@ namespace Workflow.Models
 
     /// <summary>
     /// The permitted flow types
-    /// Other -> all groups the author is not a member of
-    /// All -> all groups 
-    /// Exclude -> all groups, but don't notify the orignal author for approval requests
+    /// Explicit -> all groups, regardles of original author membership
+    /// Implicit -> approval is implied when original author is in the approving group. Default behaviour 
     /// </summary>
-    [Obsolete("This is being revised and will be removed before v1")]
     public enum FlowType
     {
-        Other = 0,
-        All = 1,
-        Exclude = 2
+        Explicit = 0,
+        Implicit = 1
     }
 
     public class PackageVersion

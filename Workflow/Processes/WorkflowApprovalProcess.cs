@@ -24,6 +24,8 @@ namespace Workflow.Processes
         private readonly ISettingsService _settingsService;
         private readonly ITasksService _tasksService;
 
+        private WorkflowSettingsPoco _settings;
+
         protected WorkflowType Type { private get; set; }
         protected WorkflowInstancePoco Instance;
 
@@ -34,6 +36,8 @@ namespace Workflow.Processes
             _instancesService = new InstancesService();
             _settingsService = new SettingsService();
             _tasksService = new TasksService();
+
+            _settings = _settingsService.GetSettings();
         }
 
         # region Public methods
@@ -243,7 +247,8 @@ namespace Workflow.Processes
         /// </summary>
         private void ApproveOrContinue(WorkflowTaskInstancePoco taskInstance, int? userId = null, string comment = "APPROVAL NOT REQUIRED")
         {
-            if (!taskInstance.UserGroup.IsMember(Instance.AuthorUserId))
+            // if author is not in the approving group, or flow type is explicit, require approval
+            if (!taskInstance.UserGroup.IsMember(Instance.AuthorUserId) || _settings.FlowType == (int)FlowType.Explicit)
             {
                 SetPendingTask(taskInstance);
             }
@@ -331,6 +336,7 @@ namespace Workflow.Processes
         /// </summary>
         /// <param name="taskInstance"></param>
         /// <param name="nodeId"></param>
+        /// <param name="initialId"></param>
         /// <param name="settings"></param>
         private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId, int initialId, WorkflowSettingsPoco settings)
         {
