@@ -41,14 +41,13 @@
                 return workflowOverlay;
             },
 
-            initiate: function (name, id, dirty, publish) {
+            initiate: function (name, id, publish) {
                 var workflowOverlay = {
                     view: this.dialogPath + 'workflow.submit.dialog.html',
                     show: true,
                     title: 'Send for ' + (publish ? 'publish' : 'unpublish') + ' approval',
                     subtitle: 'Document: ' + name,
                     isPublish: publish,
-                    isDirty: dirty,
                     nodeId: id,
                     submit: function (model) {
 

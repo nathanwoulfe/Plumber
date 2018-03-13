@@ -88,6 +88,8 @@
     align-items: center; }
     .workflow.workflow-button-drawer > div {
       margin-left: 5px; }
+  .workflow .umb-button-group .umb-button__button:first-child:last-child {
+    border-radius: 3px; }
   .workflow .highcharts-root {
     width: 100%; }
   .workflow .highcharts-container {

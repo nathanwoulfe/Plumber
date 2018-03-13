@@ -18,9 +18,6 @@ install:
   - cmd: cd BuildPackage
   - cmd: Build.bat
 
-# to disable automatic builds
-build: off
-
 test: off
 
 skip_non_tags: true

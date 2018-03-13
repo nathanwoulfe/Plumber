@@ -39,7 +39,7 @@
         }
 
         .umb-property:last-child .umb-control-group {
-            margin-bottom:0;
+            margin-bottom: 0;
         }
     }
 
@@ -51,7 +51,7 @@
             border-bottom-color: #f3f3f5;
 
             &__action {
-                cursor:pointer;
+                cursor: pointer;
             }
         }
     }
@@ -157,6 +157,11 @@
             margin-left: 5px;
         }
     }
+
+    .umb-button-group .umb-button__button:first-child:last-child {
+        border-radius:3px;
+    }
+
     // import scss partials
     @import "highcharts";
     @import "listview";

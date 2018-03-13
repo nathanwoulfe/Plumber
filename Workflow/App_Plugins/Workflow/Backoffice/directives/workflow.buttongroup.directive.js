@@ -1,12 +1,13 @@
 ﻿(function () {
     'use strict';
 
-    function buttonGroupDirective($rootScope, editorState, workflowActionsService) {
+    function buttonGroupDirective($rootScope, angularHelper, editorState, workflowActionsService) {
 
         var directive = {
             restrict: 'E',
             replace: true,
             templateUrl: '../app_plugins/workflow/backoffice/partials/workflowButtonGroup.html',
+            require: '^form',
             scope: {
                 defaultButton: '=',
                 subButtons: '=',
@@ -15,21 +16,30 @@
                 direction: '@?',
                 float: '@?',
                 drawer: '@?'
-            }, 
-            link: function (scope) {
-                scope.detail = function(item) {
+            },
+            link: function (scope, elm, attr, contentForm) {
+
+                scope.detail = function (item) {
                     scope.workflowOverlay = workflowActionsService.detail(item);
                 };
 
                 scope.state = 'init';
 
+                // can watch the content form state in the directive, then broadcast the state change
+                scope.$watch(function () {
+                        return contentForm.$dirty;
+                    },
+                    function (newVal) {
+                        $rootScope.$broadcast('contentFormDirty', newVal);
+                    });
+
                 $rootScope.$on('buttonStateChanged', function (event, data) {
                     if (scope.item && scope.item.nodeId === data.id || editorState.current && editorState.current.id === data.id) {
                         scope.state = data.state;
 
-                        if (editorState.current && scope.$parent.contentForm) {
-                            // surely there's a better way...
-                            scope.$parent.contentForm.$setPristine();
+                        // button might be in a dashboard, so need to check for content form before resetting form state
+                        if (editorState.current && contentForm) {
+                            contentForm.$setPristine();
                         }
                     }
                 });
@@ -39,6 +49,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('workflowButtonGroup', buttonGroupDirective);
+    angular.module('umbraco.directives').directive('workflowButtonGroup', ['$rootScope', 'angularHelper', 'editorState', 'workflowActionsService', buttonGroupDirective]);
 
 }());
