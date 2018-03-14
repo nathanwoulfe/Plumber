@@ -19,6 +19,7 @@ install:
   - cmd: Build.bat
 
 test: off
+build: off
 
 artifacts:
   - path: BuildPackage\artifacts\*.nupkg
