@@ -155,15 +155,15 @@
 
         > div {
             margin-left: 5px;
-        }
+        } 
     }
 
-    .umb-button-group .umb-button__button:first-child:last-child {
+    .no-sub-button .umb-button__button {
         border-radius:3px;
-    }
+    } 
 
     // import scss partials
-    @import "highcharts";
+    @import "highcharts"; 
     @import "listview";
     @import "workflow-progress";
     @import "docs-dashboard";

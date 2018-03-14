@@ -13,6 +13,7 @@ Workflow.Site/App_Plugins/Workflow/**
 Workflow/pkg
 Workflow/dist
 Workflow/tmp
+Workflow/**/*.css
 dist
 
 # Build results

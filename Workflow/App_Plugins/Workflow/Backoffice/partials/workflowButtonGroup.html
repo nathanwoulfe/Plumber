@@ -5,7 +5,7 @@
         </svg>
     </button>
 
-    <div class="btn-group umb-button-group" ng-show="defaultButton != null" ng-class="{'dropup': direction === 'up'}">
+    <div class="btn-group umb-button-group" ng-show="defaultButton != null" ng-class="{'dropup': direction === 'up', 'no-sub-button' : !subButtons.length }">
         <umb-button type="button"
                     action="defaultButton.handler(item)"
                     button-style="success"

@@ -59,7 +59,7 @@
         sass: {
             dist: {
                 files: {
-                    '<%= basePath %>/backoffice/css/styles.css': ['<%= basePath %>/backoffice/css/styles.scss']
+                    '<%= basePath %>/backoffice/css/styles.min.css': ['<%= basePath %>/backoffice/css/styles.scss']
                 },
             }
         },
