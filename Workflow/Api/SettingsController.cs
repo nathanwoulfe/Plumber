@@ -100,7 +100,7 @@ namespace Workflow.Api
                 var fromCache = false;
 
                 MemoryCache cache = MemoryCache.Default;
-                if (cache[MagicStrings.VersionKey] != null)
+                if (cache[MagicStrings.DocsKey] != null)
                 {
                     docs = (string)cache.Get(MagicStrings.DocsKey);
                     fromCache = true;

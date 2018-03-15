@@ -10,6 +10,10 @@
                     <p>Release notes: {{ vm.version.releaseNotes }}</p>
                     <p>Release date: {{ vm.version.releaseDate }}</p>
                 </div>
+                 
+                <div class="upgrade upgrade-current alert alert-info" ng-if="!vm.version.outOfDate">
+                    <p>You're up to date, running Plumber {{ vm.version.currentVersion }}.</p>
+                </div>
 
                 <ul class="chart-header">
                     <li><span ng-bind="vm.totalApproved" class="wf-highcharts-color-approved"></span>approved</li>
