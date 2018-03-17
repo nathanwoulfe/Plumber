@@ -19,7 +19,8 @@ install:
   - cmd: Build.bat
   
 branches:
-  - only: master
+  only: 
+  - master
 
 test: off
 build: off
