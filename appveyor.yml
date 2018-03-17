@@ -17,7 +17,7 @@ install:
   - cmd: set UMBRACO_PACKAGE_MIN_VERSION=7.7.0
   - cmd: cd BuildPackage
   - cmd: Build.bat
-
+  
 branches:
   - only: master
 
