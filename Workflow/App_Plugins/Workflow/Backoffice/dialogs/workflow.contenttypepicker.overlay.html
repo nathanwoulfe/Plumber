@@ -1,0 +1,38 @@
+﻿<div ng-controller="Workflow.ContentTypePicker.Controller as vm">
+
+    <umb-load-indicator ng-if="vm.loading">
+    </umb-load-indicator>
+
+    <div class="form-search" style="margin-bottom: 15px;">
+        <i class="icon-search"></i>
+        <input type="text"
+               ng-model="vm.filter"
+               class="umb-search-field search-query input-block-level -full-width-input"
+               localize="placeholder"
+               placeholder="@placeholders_filter"
+               umb-auto-focus
+               prevent-enter-submit
+               no-dirty-check />
+    </div>
+
+    <div ng-if="!vm.loading">
+
+        <div class="umb-user-picker-item-list">
+            <a href="" class="umb-user-picker-list-item" ng-repeat="type in vm.types | filter:{ name: vm.filter }" ng-click="vm.selectType(type)">
+                <div class="umb-user-picker-list-item__avatar">
+                    <umb-checkmark class="umb-user-picker-list-item__checkmark"
+                                   ng-if="type.selected"
+                                   checked="type.selected">
+                    </umb-checkmark>
+                    <umb-avatar size="s"
+                                color="secondary"
+                                name="{{type.name}}">
+                    </umb-avatar>
+                </div>
+                <div class="umb-user-picker-list-item__content">
+                    <div class="umb-user-picker-list-item__name">{{ type.name }}</div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

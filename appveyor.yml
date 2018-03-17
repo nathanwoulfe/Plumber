@@ -18,6 +18,9 @@ install:
   - cmd: cd BuildPackage
   - cmd: Build.bat
 
+branches:
+  - only: master
+
 test: off
 build: off
 

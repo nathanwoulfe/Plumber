@@ -48,9 +48,9 @@
     <key alias="baseSiteUrlDescription">Live site URL for inclusion in email notifications (eg http://www.mydomain.com)</key>
 
     <key alias="excludeNodesDescription">Nodes (and their descendants) selected here will NOT be included in the workflow, and will revert to the default Umbraco actions</key>
-    <key alias="documentFlowsDescription">Default workflow for all nodes of a given document type</key>
+    <key alias="documentFlowsDescription">Configure default workflows for all nodes of a given document type. Add a content type, then select edit to update the approval flow</key>
     <key alias="nodeApprovalFlowsDescription">These workflows apply only to the specified node</key>
-    <key alias="groupDescriptionDetail">Describe the group's role and responsibilities</key>
+    <key alias="groupDescriptionDetail">Describe the group's role and responsibilities. This value is only displayed here</key>
 
   </area>  
 </language>

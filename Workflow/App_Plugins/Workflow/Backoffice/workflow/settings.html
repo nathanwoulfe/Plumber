@@ -1,14 +1,13 @@
 ﻿<form class="form-horizontal workflow workflow-settings" ng-controller="Workflow.Settings.Controller as vm">
     <umb-editor-view footer="true">
-        <umb-editor-header 
-            name="vm.name"
-            name-locked="true"
-            hide-icon="true"
-            hide-description="true"
-            hide-alias="true">
-        </umb-editor-header> 
+        <umb-editor-header name="vm.name"
+                           name-locked="true"
+                           hide-icon="true"
+                           hide-description="true"
+                           hide-alias="true">
+        </umb-editor-header>
         <umb-editor-container>
-            
+
             <div class="umb-package-details">
                 <div class="umb-package-details__main-content">
                     <div class="umb-box">
@@ -39,19 +38,19 @@
                         </div>
                         <div class="block-form umb-box-content">
                             <umb-control-group label="@workflow_sendNotifications" description="@workflow_sendNotificationsDescription">
-                                <input type="checkbox" ng-model="vm.settings.sendNotifications"/>
+                                <input type="checkbox" ng-model="vm.settings.sendNotifications" />
                             </umb-control-group>
 
                             <umb-control-group label="@workflow_workflowEmail" description="@workflow_workflowEmailDescription">
-                                <input type="email" ng-model="vm.settings.email"/>
+                                <input type="email" ng-model="vm.settings.email" />
                             </umb-control-group>
 
                             <umb-control-group label="@workflow_baseSiteUrl" description="@workflow_baseSiteUrlDescription">
-                                <input type="text" ng-model="vm.settings.siteUrl"/>
+                                <input type="text" ng-model="vm.settings.siteUrl" />
                             </umb-control-group>
 
                             <umb-control-group label="@workflow_editSiteUrl" description="@workflow_editSiteUrlDescription">
-                                <input type="text" ng-model="vm.settings.editUrl"/>
+                                <input type="text" ng-model="vm.settings.editUrl" />
                             </umb-control-group>
                         </div>
                     </div>
@@ -60,15 +59,16 @@
                     <div class="umb-box">
                         <div class="umb-box-header">
                             <div class="umb-box-header-title">
-                                <localize key="workflow_excludeNodeSettings">Exclusions</localize>
+                                <localize key="workflow_excludeNodes">Exclusions</localize>
                             </div>
                         </div>
                         <div class="block-form umb-box-content">
-                            <umb-control-group label="@workflow_excludeNodes" description="@workflow_excludeNodesDescription">
+                            <umb-control-group description="@workflow_excludeNodesDescription">
                                 <umb-property-editor model="vm.excludeNodesModel" id="exclude-nodes-picker"></umb-property-editor>
                             </umb-control-group>
                         </div>
                     </div>
+
                     <div class="umb-box">
                         <div class="umb-box-header">
                             <div class="umb-box-header-title">
@@ -76,27 +76,27 @@
                             </div>
                         </div>
                         <div class="block-form umb-box-content">
-                            <umb-control-group label="@workflow_documentFlows" description="@workflow_documentFlowsDescription">
-                                <input type="text" ng-model="search.$" placeholder="Search" prevent-enter-submit no-dirty-check/>
-                                <div class="control-panel" ng-repeat="d in vm.docTypes | filter:search | limitTo:5 ">
-                                    <h5 ng-bind="d.name"></h5>
-                                    <select ng-model="d.selectedApprovalGroup" ng-options="g as g.name for g in vm.groups">
-                                        <option selected disabled>--- Add ---</option>
-                                    </select>
-                                    <button class="btn btn-default" ng-click="vm.add(d)">Add</button>
-                                    <div ng-show="d.approvalPath">
-                                        <h6>Current flow</h6>
-                                        <ul class="current-flow">
-                                            <li ng-class="{'last': $last}" ng-repeat="u in d.approvalPath track by $index" ng-click="vm.remove(d, $index)" title="Remove approval role for {{u.name}}">{{u.name}}</li>
-                                        </ul>
+                            <umb-control-group description="@workflow_documentFlowsDescription"> 
+                                <div class="umb-node-preview ui-sortable-handle" ng-repeat="node in vm.docTypes | filter:vm.hasApprovalPath | orderBy:name">
+                                    <i class="umb-node-preview__icon {{ node.icon[0] === '.' ? 'icon-folder' : node.icon }}"></i>
+                                    <div class="umb-node-preview__content">
+                                        <div class="umb-node-preview__name" ng-bind="node.name"></div>
+                                        <div class="umb-node-preview__description" ng-if="description" ng-bind="node.description"></div>
+                                    </div>
+                                    <div class="umb-node-preview__actions">
+                                        <a class="umb-node-preview__action umb-node-preview__action--red" title="Edit approval steps" href="" ng-click="vm.editDocTypeFlow(node)"><localize key="general_edit">Edit</localize></a>
+                                        <a class="umb-node-preview__action umb-node-preview__action--red" title="Remove all approval steps" href="" ng-click="vm.removeDocTypeFlow(node)"><localize key="general_remove">Remove</localize></a>
                                     </div>
                                 </div>
+                                <a href="" class="umb-node-preview-add" ng-click="vm.openContentTypePicker()" prevent-default="">
+                                    <localize key="general_add">Add</localize>
+                                </a>
                             </umb-control-group>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
         </umb-editor-container>
         <umb-editor-footer>
             <umb-editor-footer-content-right>
@@ -104,4 +104,10 @@
             </umb-editor-footer-content-right>
         </umb-editor-footer>
     </umb-editor-view>
+    
+    <umb-overlay ng-if="vm.overlay.show"
+                 model="vm.overlay"
+                 view="vm.overlay.view"
+                 position="right">
+    </umb-overlay>
 </form>
