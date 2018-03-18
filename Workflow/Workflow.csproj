@@ -47,7 +47,6 @@
     <Compile Include="Events\Args\OnConfigUpdatedEventArgs.cs" />
     <Compile Include="Events\Args\OnGroupCreatedEventArgs.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
-    <Compile Include="Extensions\WorkflowListExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
     <Compile Include="Helpers\Installer.cs" />
     <Compile Include="Helpers\MagicStrings.cs" />

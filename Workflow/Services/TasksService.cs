@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Umbraco.Core;
-using Workflow.Extensions;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Repositories.Interfaces;
@@ -13,21 +12,24 @@ namespace Workflow.Services
 {
     public class TasksService : ITasksService
     {
+        private readonly IConfigService _configService;
         private readonly ITasksRepository _tasksRepo;
         private readonly IUnitOfWorkProvider _uow;
 
         public TasksService()
             : this(
                 new TasksRepository(ApplicationContext.Current.DatabaseContext.Database),
-                new PetaPocoUnitOfWorkProvider()
+                new PetaPocoUnitOfWorkProvider(),
+                new ConfigService()
             )
         {
         }
 
-        private TasksService(ITasksRepository tasksRepo, IUnitOfWorkProvider uow)
+        private TasksService(ITasksRepository tasksRepo, IUnitOfWorkProvider uow, IConfigService configService)
         {
             _tasksRepo = tasksRepo;
             _uow = uow;
+            _configService = configService;
         }
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace Workflow.Services
         public List<WorkflowTask> GetPendingTasks(IEnumerable<int> status, int count, int page)
         {
             IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetPendingTasks(status);
-            List<WorkflowTask> tasks = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
+            List<WorkflowTask> tasks = ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
 
             return tasks;
         }
@@ -74,9 +76,55 @@ namespace Workflow.Services
         public List<WorkflowTask> GetAllGroupTasks(int groupId, int count, int page)
         {
             IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllGroupTasks(groupId);
-            List<WorkflowTask> tasks = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
+            List<WorkflowTask> tasks = ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
 
             return tasks;
+        }
+
+        /// <summary>
+        /// Converts a list of workflowTaskInstances into a list of UI-ready workflowTasks
+        /// </summary>
+        /// <param name="taskInstances"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public List<WorkflowTask> ConvertToWorkflowTaskList(List<WorkflowTaskInstancePoco> taskInstances, WorkflowInstancePoco instance = null)
+        {
+            List<WorkflowTask> workflowItems = new List<WorkflowTask>();
+
+            if (!taskInstances.Any()) return workflowItems;
+
+            bool useInstanceFromTask = instance == null;
+
+            foreach (WorkflowTaskInstancePoco taskInstance in taskInstances)
+            {
+                instance = useInstanceFromTask ? taskInstance.WorkflowInstance : instance;
+
+                string instanceNodeName = instance.Node?.Name ?? "NODE NO LONGER EXISTS";
+                string typeDescription = instance.TypeDescription;
+
+                var item = new WorkflowTask
+                {
+                    Status = taskInstance.StatusName,
+                    CssStatus = taskInstance.StatusName.ToLower().Split(' ')[0],
+                    Type = typeDescription,
+                    NodeId = instance.NodeId,
+                    InstanceGuid = instance.Guid,
+                    ApprovalGroupId = taskInstance.UserGroup.GroupId,
+                    NodeName = instanceNodeName,
+                    RequestedBy = instance.AuthorUser.Name,
+                    RequestedById = instance.AuthorUser.Id,
+                    RequestedOn = taskInstance.CreatedDate.ToString(),
+                    ApprovalGroup = taskInstance.UserGroup.Name,
+                    Comments = useInstanceFromTask ? instance.AuthorComment : taskInstance.Comment,
+                    ActiveTask = taskInstance.StatusName,
+                    Permissions = _configService.GetRecursivePermissionsForNode(instance.Node),
+                    CurrentStep = taskInstance.ApprovalStep
+                };
+
+                workflowItems.Add(item);
+            }
+
+            return workflowItems.OrderByDescending(x => x.CurrentStep).ToList();
         }
 
         /// <summary>

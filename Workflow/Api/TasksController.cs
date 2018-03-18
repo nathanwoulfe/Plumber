@@ -110,7 +110,7 @@ namespace Workflow.Api
             {
                 // todo -> ony fetch the require page, not all
                 List<WorkflowTaskInstancePoco> taskInstances = _tasksService.GetTasksByNodeId(id);
-                List<WorkflowTask> workflowItems = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
+                List<WorkflowTask> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
 
                 return Json(new
                 {
@@ -174,7 +174,7 @@ namespace Workflow.Api
 
                 return Json(new
                 {
-                    items = taskInstances.Any() ? taskInstances.ToWorkflowTaskList() : new List<WorkflowTask>(),
+                    items = taskInstances.Any() ? _tasksService.ConvertToWorkflowTaskList(taskInstances) : new List<WorkflowTask>(),
                     total = taskInstances.Count
                 }, ViewHelpers.CamelCase);
             }
@@ -238,7 +238,7 @@ namespace Workflow.Api
                     taskInstances = taskInstances.Where(x => x.UserGroup.IsMember(userId)).ToList();
                 }
 
-                List<WorkflowTask> workflowItems = taskInstances.Skip((page - 1) * count).Take(count).ToList().ToWorkflowTaskList();
+                List<WorkflowTask> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
 
                 return Json(new
                 {

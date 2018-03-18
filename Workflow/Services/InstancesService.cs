@@ -17,21 +17,24 @@ namespace Workflow.Services
         private readonly ILogger _log;
         private readonly IInstancesRepository _repo;
         private readonly IUnitOfWorkProvider _uow;
+        private readonly ITasksService _tasksService;
 
         public InstancesService()
             : this(
                 ApplicationContext.Current.ProfilingLogger.Logger,
                 new InstancesRepository(ApplicationContext.Current.DatabaseContext.Database), 
-                new PetaPocoUnitOfWorkProvider()
+                new PetaPocoUnitOfWorkProvider(),
+                new TasksService()
             )
         {
         }
 
-        private InstancesService(ILogger log, IInstancesRepository repo, IUnitOfWorkProvider uow)
+        private InstancesService(ILogger log, IInstancesRepository repo, IUnitOfWorkProvider uow, ITasksService tasksService)
         {
             _log = log;
             _repo = repo;
             _uow = uow;
+            _tasksService = tasksService;
         }
 
         /// <summary>
@@ -65,11 +68,45 @@ namespace Workflow.Services
             List<WorkflowInstancePoco> instances = oldest.HasValue ? _repo.GetAllInstancesForDateRange(oldest.Value) : _repo.GetAllInstances();
 
             // todo - fetch only required data, don't do paging here
-            List<WorkflowInstance> workflowInstances = (page.HasValue && count.HasValue ?
+            List<WorkflowInstance> workflowInstances = ConvertToWorkflowInstanceList(
+                page.HasValue && count.HasValue ?
                 instances.Skip((page.Value - 1) * count.Value).Take(count.Value).ToList() :
-                instances).ToWorkflowInstanceList();
+                instances);
 
             return workflowInstances;
+        }
+
+        /// <summary>
+        /// Converts a list of instance pocos into UI-friendly instance models
+        /// </summary>
+        /// <param name="instances"></param>
+        /// <returns></returns>
+        public List<WorkflowInstance> ConvertToWorkflowInstanceList(List<WorkflowInstancePoco> instances)
+        {
+            List<WorkflowInstance> workflowInstances = new List<WorkflowInstance>();
+
+            if (instances == null || instances.Count <= 0)
+                return workflowInstances.OrderByDescending(x => x.RequestedOn).ToList();
+
+            foreach (WorkflowInstancePoco instance in instances)
+            {
+                var model = new WorkflowInstance
+                {
+                    Type = instance.TypeDescription,
+                    Status = instance.StatusName,
+                    CssStatus = instance.StatusName.ToLower().Split(' ')[0],
+                    NodeId = instance.NodeId,
+                    NodeName = instance.Node.Name,
+                    RequestedBy = instance.AuthorUser.Name,
+                    RequestedOn = instance.CreatedDate,
+                    CompletedOn = instance.CompletedDate,
+                    Tasks = _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance)
+                };
+
+                workflowInstances.Add(model);
+            }
+
+            return workflowInstances.OrderByDescending(x => x.RequestedOn).ToList();
         }
 
         /// <summary>
