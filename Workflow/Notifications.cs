@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
-using System.Threading.Tasks.Dataflow;
 using log4net;
+using Umbraco.Core.Models;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Repositories;
+using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow
 {
@@ -15,6 +17,7 @@ namespace Workflow
     {
         private static readonly PocoRepository Pr = new PocoRepository();
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ISettingsService SettingsService = new SettingsService();
 
         /// <summary>
         /// TODO: these should come from a config file rather than static strings...
@@ -31,43 +34,43 @@ namespace Workflow
         /// <param name="emailType">the type of email to be sent</param>
         public static void Send(WorkflowInstancePoco instance, EmailType emailType)
         {
-            bool? doSend = Pr.GetSettings().SendNotifications;
+            WorkflowSettingsPoco settings = SettingsService.GetSettings();
+
+            bool? doSend = settings.SendNotifications;
             if (doSend != true) return;
 
             try
             {
-                var docTitle = instance.Node.Name;
-                var docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
+                string docTitle = instance.Node.Name;
+                string docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
 
-                var flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep);
+                IOrderedEnumerable<WorkflowTaskInstancePoco> flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep);
 
                 // always take get the emails for all previous users, sometimes they will be discarded later
                 // easier to just grab em all, rather than doing so conditionally
-                var emailsForAllTaskUsers = new List<string>();
+                List<string> emailsForAllTaskUsers = new List<string>();
 
                 // in the loop, also store the last task to a variable, and keep the populated group
                 var taskIndex = 0;
-                var taskCount = flowTasks.Count();
+                int taskCount = flowTasks.Count();
                 WorkflowTaskInstancePoco finalTask = null;
-                foreach (var task in flowTasks)
+
+                foreach (WorkflowTaskInstancePoco task in flowTasks)
                 {
                     taskIndex += 1;
 
-                    var group = Pr.GetPopulatedUserGroup(task.GroupId);
-                    if (group != null)
-                    {
-                        emailsForAllTaskUsers.AddRange(group.PreferredEmailAddresses());
+                    UserGroupPoco group = Pr.GetPopulatedUserGroup(task.GroupId);
+                    if (group == null) continue;
 
-                        if (taskIndex == taskCount)
-                        {
-                            finalTask = task;
-                            finalTask.UserGroup = group;
-                        }
-                    }
+                    emailsForAllTaskUsers.AddRange(group.PreferredEmailAddresses());
+                    if (taskIndex != taskCount) continue;
+
+                    finalTask = task;
+                    finalTask.UserGroup = @group;
                 }
 
-                var to = new List<string>();
-                var systemEmailAddress = Utility.GetSettings().Email;
+                List<string> to = new List<string>();
+                string systemEmailAddress = settings.Email;
 
                 var body = "";
 
@@ -99,7 +102,7 @@ namespace Workflow
 
                         if (instance.WorkflowType == WorkflowType.Publish)
                         {
-                            var n = Utility.GetNode(instance.NodeId);
+                            IPublishedContent n = Utility.GetNode(instance.NodeId);
                             docUrl = UrlHelpers.GetFullyQualifiedSiteUrl(n.Url);
                         }
 
@@ -148,7 +151,7 @@ namespace Workflow
                     msg.From = new MailAddress(systemEmailAddress);
                 }
 
-                var subject = BuildEmailSubject(emailType, instance);
+                string subject = BuildEmailSubject(emailType, instance);
 
                 msg.To.Add(string.Join(",", to.Distinct()));
                 msg.Subject = subject;
@@ -179,7 +182,7 @@ namespace Workflow
 
             var index = 1;
 
-            foreach (var taskInstance in instance.TaskInstances)
+            foreach (WorkflowTaskInstancePoco taskInstance in instance.TaskInstances)
             {
                 result += BuildTaskSummary(taskInstance, index) + "<br/>";
                 index += 1;

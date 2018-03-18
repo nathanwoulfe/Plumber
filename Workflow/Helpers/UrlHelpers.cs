@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Web;
+using Workflow.Models;
+using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Helpers
 {
     public static class UrlHelpers
     {
         private const string ContentEditUrlFormat = "/umbraco#/content/content/edit/{0}";
+        private static readonly ISettingsService SettingsService = new SettingsService();
 
         /// <summary>
         /// This method gives a fully qualified url and can be used without an HTTPContext 
@@ -14,8 +18,10 @@ namespace Workflow.Helpers
         /// <returns>The fully qualified web site url</returns>
         public static string GetFullyQualifiedSiteUrl(string partialUrl)
         {
-            var editUrl = Utility.GetSettings().EditUrl;
-            var request = HttpContext.Current.Request;
+            WorkflowSettingsPoco settings = SettingsService.GetSettings();
+
+            string editUrl = settings.EditUrl;
+            HttpRequest request = HttpContext.Current.Request;
 
             if (string.IsNullOrEmpty(editUrl))
             {
@@ -56,10 +62,12 @@ namespace Workflow.Helpers
         /// <returns>The fully qualified Back Office edit url</returns>
         private static string GetFullyQualifiedEditUrl(string partialUrl)
         {
-            var editUrl = Utility.GetSettings().EditUrl;
+            WorkflowSettingsPoco settings = SettingsService.GetSettings();
+            string editUrl = settings.EditUrl;
+
             if (string.IsNullOrEmpty(editUrl))
             {
-                var request = HttpContext.Current.Request;
+                HttpRequest request = HttpContext.Current.Request;
                 if (request.ApplicationPath != null)
                     editUrl = request.Url.Scheme + "://" + request.Url.Authority +
                               request.ApplicationPath.TrimEnd('/') + "/";
