@@ -1,5 +1,6 @@
 ﻿using log4net;
 using System;
+using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Publishing;
@@ -73,7 +74,7 @@ namespace Workflow.Processes
                 node.ReleaseDate = null;
             }
 
-            Attempt<PublishStatus> publishStatus = _contentService.PublishWithStatus(node);
+            Attempt<PublishStatus> publishStatus = _contentService.PublishWithStatus(node, Instance.TaskInstances.Last().ActionedByUserId ?? Utility.GetCurrentUser().Id);
 
             if (!publishStatus.Success)
             {
@@ -89,6 +90,7 @@ namespace Workflow.Processes
             _instancesService.UpdateInstance(Instance);
 
             Notifications.Send(Instance, EmailType.ApprovedAndCompleted);
+
             Completed?.Invoke(this, new InstanceEventArgs(Instance, "PublishNow"));
         }
 

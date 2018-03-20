@@ -1,5 +1,6 @@
 ﻿using log4net;
 using System;
+using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Persistence;
@@ -77,7 +78,7 @@ namespace Workflow.Processes
 
                 // Perform the unpublish
                 IContent node = _contentService.GetById(Instance.NodeId);
-                success = _contentService.UnPublish(node);
+                success = _contentService.UnPublish(node, Instance.TaskInstances.Last().ActionedByUserId ?? Utility.GetCurrentUser().Id);
             }
             catch (Exception e)
             {
@@ -103,6 +104,7 @@ namespace Workflow.Processes
             {
                 Notifications.Send(Instance, EmailType.ApprovedAndCompleted);
                 Log.Info("Successfully unpublished page " + Instance.Node.Name);
+
 
                 Completed?.Invoke(this, new InstanceEventArgs(Instance, "UnpublishNow"));
             }
