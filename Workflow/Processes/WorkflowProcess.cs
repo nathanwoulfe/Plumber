@@ -15,7 +15,7 @@ using TaskType = Workflow.Models.TaskType;
 
 namespace Workflow.Processes
 {
-    public abstract class WorkflowProcess : IWorkflowProcess
+    public abstract class WorkflowProcess
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

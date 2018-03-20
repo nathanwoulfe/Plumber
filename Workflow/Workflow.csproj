@@ -102,7 +102,6 @@
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Processes\DocumentPublishProcess.cs" />
     <Compile Include="Helpers\Utility.cs" />
-    <Compile Include="Processes\IWorkflowProcess.cs" />
     <Compile Include="Processes\DocumentUnpublishProcess.cs" />
     <Compile Include="Models\UserGroupsModel.cs" />
     <Compile Include="Models\User2UserGroupPoco.cs" />
