@@ -10,7 +10,7 @@ namespace Workflow.Services.Interfaces
         IEnumerable<WorkflowInstancePoco> GetForNodeByStatus(int nodeId, IEnumerable<int> status);
 
         List<WorkflowInstance> Get(int? page, int? count, DateTime? oldest);
-        List<WorkflowInstance> ConvertToWorkflowInstanceList(List<WorkflowInstancePoco> instances);
+        //List<WorkflowInstance> ConvertToWorkflowInstanceList(List<WorkflowInstancePoco> instances);
         WorkflowInstancePoco GetByGuid(Guid guid);
 
         int CountPending();

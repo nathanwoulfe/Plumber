@@ -24,6 +24,12 @@ namespace Workflow.Events.Handlers
         protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext context)
         {
             ContentService.Publishing += ContentService_Publishing;
+            ConfigService.Updated += ConfigService_Updated;
+        }
+
+        private static void ConfigService_Updated(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private static void ContentService_Publishing(IPublishingStrategy sender, PublishEventArgs<IContent> e)

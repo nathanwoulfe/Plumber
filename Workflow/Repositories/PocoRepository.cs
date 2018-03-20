@@ -22,7 +22,7 @@ namespace Workflow.Repositories
         {
         }
 
-        public PocoRepository(UmbracoDatabase database)
+        private PocoRepository(UmbracoDatabase database)
         {
             _database = database;
         }

@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
-using Workflow.Extensions;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Repositories.Interfaces;
 using Workflow.Services.Interfaces;
-using Workflow.UnitOfWork;
 
 namespace Workflow.Services
 {
@@ -16,24 +14,21 @@ namespace Workflow.Services
     {
         private readonly ILogger _log;
         private readonly IInstancesRepository _repo;
-        private readonly IUnitOfWorkProvider _uow;
         private readonly ITasksService _tasksService;
 
         public InstancesService()
             : this(
                 ApplicationContext.Current.ProfilingLogger.Logger,
-                new InstancesRepository(ApplicationContext.Current.DatabaseContext.Database), 
-                new PetaPocoUnitOfWorkProvider(),
+                new InstancesRepository(), 
                 new TasksService()
             )
         {
         }
 
-        private InstancesService(ILogger log, IInstancesRepository repo, IUnitOfWorkProvider uow, ITasksService tasksService)
+        private InstancesService(ILogger log, IInstancesRepository repo, ITasksService tasksService)
         {
             _log = log;
             _repo = repo;
-            _uow = uow;
             _tasksService = tasksService;
         }
 
@@ -136,11 +131,7 @@ namespace Workflow.Services
         /// <returns></returns>
         public void InsertInstance(WorkflowInstancePoco instance)
         {
-            using (IUnitOfWork uow = _uow.GetUnitOfWork())
-            {
-                _repo.InsertInstance(uow, instance);
-                uow.Commit();
-            }
+            _repo.InsertInstance(instance);
         }
 
         /// <summary>
@@ -149,11 +140,7 @@ namespace Workflow.Services
         /// <param name="instance"></param>
         public void UpdateInstance(WorkflowInstancePoco instance)
         {
-            using (IUnitOfWork uow = _uow.GetUnitOfWork())
-            {
-                _repo.UpdateInstance(uow, instance);
-                uow.Commit();
-            }
+            _repo.UpdateInstance(instance);
         }
     }
 }

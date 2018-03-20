@@ -18,7 +18,7 @@ namespace Workflow.Repositories
         {
         }
 
-        public ImportExportRepository(UmbracoDatabase database)
+        private ImportExportRepository(UmbracoDatabase database)
         {
             _database = database;
         }

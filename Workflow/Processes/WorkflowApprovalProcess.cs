@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Umbraco.Core.Models;
+using Workflow.Events.Args;
 using Workflow.Extensions;
 using Workflow.Helpers;
 using Workflow.Models;
@@ -24,10 +25,13 @@ namespace Workflow.Processes
         private readonly ISettingsService _settingsService;
         private readonly ITasksService _tasksService;
 
-        private WorkflowSettingsPoco _settings;
+        private readonly WorkflowSettingsPoco _settings;
 
         protected WorkflowType Type { private get; set; }
         protected WorkflowInstancePoco Instance;
+
+        public static event EventHandler<InstanceEventArgs> Created;
+        public static event EventHandler<InstanceEventArgs> Cancelled;
 
         protected WorkflowApprovalProcess()
         {
@@ -62,6 +66,7 @@ namespace Workflow.Processes
 
             // create the first task in the workflow
             WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(nodeId);
+            Created?.Invoke(this, new InstanceEventArgs(Instance));
 
             if (taskInstance.UserGroup == null)
             {
@@ -221,6 +226,9 @@ namespace Workflow.Processes
                 // Send the notification
                 _instancesService.UpdateInstance(Instance);
                 Notifications.Send(Instance, EmailType.WorkflowCancelled);
+
+                // emit an event
+                Cancelled?.Invoke(this, new InstanceEventArgs(Instance));
             }
             else
             {

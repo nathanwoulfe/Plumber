@@ -6,7 +6,6 @@ using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Repositories.Interfaces;
 using Workflow.Services.Interfaces;
-using Workflow.UnitOfWork;
 
 namespace Workflow.Services
 {
@@ -14,21 +13,18 @@ namespace Workflow.Services
     {
         private readonly IConfigService _configService;
         private readonly ITasksRepository _tasksRepo;
-        private readonly IUnitOfWorkProvider _uow;
 
         public TasksService()
             : this(
-                new TasksRepository(ApplicationContext.Current.DatabaseContext.Database),
-                new PetaPocoUnitOfWorkProvider(),
+                new TasksRepository(),
                 new ConfigService()
             )
         {
         }
 
-        private TasksService(ITasksRepository tasksRepo, IUnitOfWorkProvider uow, IConfigService configService)
+        private TasksService(ITasksRepository tasksRepo, IConfigService configService)
         {
             _tasksRepo = tasksRepo;
-            _uow = uow;
             _configService = configService;
         }
 
@@ -168,10 +164,7 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status)
         {
-            using (IUnitOfWork uow = _uow.GetUnitOfWork())
-            {
-                return _tasksRepo.GetTaskSubmissionsForUser(uow, id, status);
-            }
+            return _tasksRepo.GetTaskSubmissionsForUser(id, status);
         }
 
         /// <summary>
@@ -181,10 +174,7 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetTasksWithGroupByInstanceGuid(Guid guid)
         {
-            using (IUnitOfWork uow = _uow.GetUnitOfWork())
-            {
-                return _tasksRepo.GetTasksAndGroupByInstanceId(uow, guid);
-            }
+            return _tasksRepo.GetTasksAndGroupByInstanceId(guid);
         }
 
         /// <summary>
@@ -193,11 +183,7 @@ namespace Workflow.Services
         /// <param name="poco"></param>
         public void InsertTask(WorkflowTaskInstancePoco poco)
         {
-            using (IUnitOfWork uow = _uow.GetUnitOfWork())
-            {
-                _tasksRepo.InsertTask(uow, poco);
-                uow.Commit();
-            }
+            _tasksRepo.InsertTask(poco);
         }
 
         /// <summary>
@@ -207,11 +193,7 @@ namespace Workflow.Services
         /// <returns></returns>
         public void UpdateTask(WorkflowTaskInstancePoco poco)
         {
-            using (IUnitOfWork uow = _uow.GetUnitOfWork())
-            {
-                _tasksRepo.UpdateTask(uow, poco);
-                uow.Commit();
-            }
+            _tasksRepo.UpdateTask(poco);
         }
     }
 }

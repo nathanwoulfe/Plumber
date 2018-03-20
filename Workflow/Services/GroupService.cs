@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Workflow.Events.Args;
-using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Repositories.Interfaces;
@@ -18,21 +17,19 @@ namespace Workflow.Services
         private readonly ILogger _log;
         private readonly IPocoRepository _repo;
 
-        public static event EventHandler GroupCreated;
-        protected virtual void OnGroupCreated(EventArgs e)
-        {
-            GroupCreated?.Invoke(this, e);
-        }
+        public static event EventHandler<GroupEventArgs> Created;
+        public static event EventHandler<GroupEventArgs> Updated;
+        public static event EventHandler<GroupDeletedEventArgs> Deleted;
 
         public GroupService()
             : this(
-                  ApplicationContext.Current.ProfilingLogger.Logger,
-                  new PocoRepository(ApplicationContext.Current.DatabaseContext.Database)
+                ApplicationContext.Current.ProfilingLogger.Logger,
+                new PocoRepository()
             )
         {
         }
 
-        public GroupService(ILogger log, IPocoRepository repo)
+        private GroupService(ILogger log, IPocoRepository repo)
         {
             _log = log;
             _repo = repo;
@@ -54,11 +51,7 @@ namespace Workflow.Services
             UserGroupPoco group = _repo.InsertUserGroup(name, alias, false);
 
             // emit event
-            OnGroupCreated(new OnGroupCreatedEventArgs
-            {
-                Group = group,
-                CreatedBy = Utility.GetCurrentUser()
-            });
+            Created?.Invoke(this, new GroupEventArgs(group));
 
             return Task.FromResult(group);
         }
@@ -127,6 +120,8 @@ namespace Workflow.Services
 
             _repo.UpdateUserGroup(poco);
 
+            Updated?.Invoke(this, new GroupEventArgs(poco));
+
             return Task.FromResult(poco);
         }
 
@@ -137,6 +132,7 @@ namespace Workflow.Services
         /// <returns></returns>
         public Task DeleteUserGroupAsync(int groupId)
         {
+            Deleted?.Invoke(this, new GroupDeletedEventArgs(groupId));
             return Task.Run(() => _repo.DeleteUserGroup(groupId));
         }
     }

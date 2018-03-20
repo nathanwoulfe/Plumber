@@ -2,9 +2,13 @@
 using System;
 using Umbraco.Core;
 using Umbraco.Core.Models;
+using Umbraco.Core.Persistence;
 using Umbraco.Core.Services;
+using Workflow.Events.Args;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Processes
 {
@@ -14,10 +18,25 @@ namespace Workflow.Processes
     public class DocumentUnpublishProcess : WorkflowApprovalProcess
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static IContentService _contentService;
+        private static IInstancesService _instancesService;
         private static string _nodeName;
 
+        public static event EventHandler<InstanceEventArgs> Completed;
+
         public DocumentUnpublishProcess()
-        {            
+            : this(
+                ApplicationContext.Current.Services.ContentService,
+                new InstancesService()
+            )
+        {
+        }
+
+        private DocumentUnpublishProcess(IContentService contentService, IInstancesService instancesService)
+        {
+            _contentService = contentService;
+            _instancesService = instancesService;
+
             Type = WorkflowType.Unpublish;
         }
 
@@ -54,12 +73,11 @@ namespace Workflow.Processes
                 // Have to do this prior to the publish due to workaround for "unpublish at" handling.
                 Instance.Status = (int)WorkflowStatus.Approved;
                 Instance.CompletedDate = DateTime.Now;
-                ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
+                _instancesService.UpdateInstance(Instance);
 
                 // Perform the unpublish
-                IContentService cs = ApplicationContext.Current.Services.ContentService;
-                IContent node = cs.GetById(Instance.NodeId);
-                success = cs.UnPublish(node);
+                IContent node = _contentService.GetById(Instance.NodeId);
+                success = _contentService.UnPublish(node);
             }
             catch (Exception e)
             {
@@ -68,7 +86,7 @@ namespace Workflow.Processes
                     // rollback the process completion.
                     Instance.Status = workflowStatus;
                     Instance.CompletedDate = null;
-                    ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
+                    _instancesService.UpdateInstance(Instance);
                 }
                 catch (Exception ex)
                 {
@@ -85,6 +103,8 @@ namespace Workflow.Processes
             {
                 Notifications.Send(Instance, EmailType.ApprovedAndCompleted);
                 Log.Info("Successfully unpublished page " + Instance.Node.Name);
+
+                Completed?.Invoke(this, new InstanceEventArgs(Instance, "UnpublishNow"));
             }
             else
             {
@@ -102,10 +122,12 @@ namespace Workflow.Processes
                 // Just complete the workflow
                 Instance.Status = (int)WorkflowStatus.Approved;
                 Instance.CompletedDate = DateTime.Now;
-                ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
+                _instancesService.UpdateInstance(Instance);
 
                 Notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
                 // Unpublish will occur via scheduler.
+                Completed?.Invoke(this, new InstanceEventArgs(Instance, "UnpublishAt"));
+
             }
             catch (Exception ex)
             {

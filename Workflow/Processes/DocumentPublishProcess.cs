@@ -4,8 +4,11 @@ using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Publishing;
 using Umbraco.Core.Services;
+using Workflow.Events.Args;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Processes
 {
@@ -15,9 +18,24 @@ namespace Workflow.Processes
     public class DocumentPublishProcess : WorkflowApprovalProcess
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly IContentService _contentService;
+        private readonly IInstancesService _instancesService;
+
+        public static event EventHandler<InstanceEventArgs> Completed;
 
         public DocumentPublishProcess()
+            : this(
+                ApplicationContext.Current.Services.ContentService,
+                new InstancesService()
+                )
         {
+        }
+
+        private DocumentPublishProcess(IContentService contentService, IInstancesService instancesService)
+        {
+            _contentService = contentService;
+            _instancesService = instancesService;
+
             Type = WorkflowType.Publish;
         }
 
@@ -47,8 +65,7 @@ namespace Workflow.Processes
             Instance.CompletedDate = DateTime.Now;
 
             // Perform the publish
-            IContentService cs = ApplicationContext.Current.Services.ContentService;
-            IContent node = cs.GetById(Instance.NodeId);
+            IContent node = _contentService.GetById(Instance.NodeId);
 
             // clear the release date
             if (node.ReleaseDate.HasValue)
@@ -56,7 +73,7 @@ namespace Workflow.Processes
                 node.ReleaseDate = null;
             }
 
-            Attempt<PublishStatus> publishStatus = cs.PublishWithStatus(node);
+            Attempt<PublishStatus> publishStatus = _contentService.PublishWithStatus(node);
 
             if (!publishStatus.Success)
             {
@@ -69,8 +86,10 @@ namespace Workflow.Processes
 
             }
 
-            ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
+            _instancesService.UpdateInstance(Instance);
+
             Notifications.Send(Instance, EmailType.ApprovedAndCompleted);
+            Completed?.Invoke(this, new InstanceEventArgs(Instance, "PublishNow"));
         }
 
         /// <summary>
@@ -83,9 +102,11 @@ namespace Workflow.Processes
                 // Just complete the workflow
                 Instance.Status = (int)WorkflowStatus.Approved;
                 Instance.CompletedDate = DateTime.Now;
-                ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
+                _instancesService.UpdateInstance(Instance);
 
                 Notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
+
+                Completed?.Invoke(this, new InstanceEventArgs(Instance, "PublishAt"));
 
                 // Publish will occur via scheduler.
             }

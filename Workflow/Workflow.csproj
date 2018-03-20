@@ -44,8 +44,10 @@
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.contenttypeflow.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.contenttypepicker.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.importexportdashboard.html" />
-    <Compile Include="Events\Args\OnConfigUpdatedEventArgs.cs" />
-    <Compile Include="Events\Args\OnGroupCreatedEventArgs.cs" />
+    <Compile Include="Events\Args\ConfigEventArgs.cs" />
+    <Compile Include="Events\Args\GroupEventArgs.cs" />
+    <Compile Include="Events\Args\InstanceEventArgs.cs" />
+    <Compile Include="Events\EventArgsBase.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
     <Compile Include="Helpers\Installer.cs" />
