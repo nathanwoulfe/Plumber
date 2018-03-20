@@ -15,7 +15,7 @@ using TaskType = Workflow.Models.TaskType;
 
 namespace Workflow.Processes
 {
-    public abstract class WorkflowApprovalProcess
+    public abstract class WorkflowProcess : IWorkflowProcess
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -33,7 +33,7 @@ namespace Workflow.Processes
         public static event EventHandler<InstanceEventArgs> Created;
         public static event EventHandler<InstanceEventArgs> Cancelled;
 
-        protected WorkflowApprovalProcess()
+        protected WorkflowProcess()
         {
             _configService = new ConfigService();
             _groupService = new GroupService();

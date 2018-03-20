@@ -15,7 +15,7 @@ namespace Workflow.Processes
     /// <summary>
     /// Process definition for the Document Publish workflow process.
     /// </summary>
-    public class DocumentPublishProcess : WorkflowApprovalProcess
+    public class DocumentPublishProcess : WorkflowProcess
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IContentService _contentService;
