@@ -3,4 +3,33 @@
     Layout = "Master.cshtml";
 }
 
+@{
+    var img = Umbraco.TypedMedia(1102);
+    <div style="position:relative; display:inline-block">
+        <img src="@img.Url"/>
+        <div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:-1;">@Html.Raw(img.GetPropertyValue("placeholder"))</div>
+    </div>
+
+    <style>
+        img {
+            opacity:0;
+            animation: fade 5s infinite;
+        }
+
+        @@keyframes fade {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+}
+
 @CurrentPage.GetGridHtml("content", "fanoe")
