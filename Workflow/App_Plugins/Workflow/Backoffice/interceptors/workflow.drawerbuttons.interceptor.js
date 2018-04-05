@@ -5,7 +5,7 @@
             request: function (request) {
                 if (request.url.toLowerCase().indexOf('footer-content-right') !== -1) {
                     if (location.href.indexOf('content') !== -1) {
-                        request.url = '/App_Plugins/workflow/backoffice/partials/umbEditorFooterContentRight.html';
+                        request.url = '../App_Plugins/workflow/backoffice/partials/umbEditorFooterContentRight.html';
                     }
                 }
                 return request || $q.when(request);

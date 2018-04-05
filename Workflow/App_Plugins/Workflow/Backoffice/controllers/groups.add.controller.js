@@ -18,7 +18,7 @@
                                     section: 'workflow'
                                 })
                                 .then(function() {
-                                    window.location = '/umbraco/#/workflow/workflow/edit-group/' + resp.id;
+                                    window.location = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/#/workflow/workflow/edit-group/' + resp.id;
                                     navigationService.hideNavigation();
                                 });
                             notificationsService.success('SUCCESS', resp.msg);

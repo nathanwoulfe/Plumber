@@ -3,7 +3,7 @@
 
     // create service
     function workflowResource($http, $q, umbRequestHelper) {
-        var urlBase = '/umbraco/backoffice/api/workflow/';
+        var urlBase = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/backoffice/api/workflow/';
 
         var service = {
             settingsUrl: urlBase + 'settings/',

@@ -42,12 +42,12 @@ namespace Workflow.Migrations
 
             const string logDashboard =
                 "<tab caption=\"Log viewer\">" +
-                "  <control>/app_plugins/workflow/backoffice/views/workflow.logsdashboard.html</control>" +
+                "  <control>../app_plugins/workflow/backoffice/views/workflow.logsdashboard.html</control>" +
                 "</tab>";
 
             const string importExportDashboard =
                 "<tab caption=\"Deployment\">" +
-                "  <control>/app_plugins/workflow/backoffice/views/workflow.importexportdashboard.html</control>" +
+                "  <control>../app_plugins/workflow/backoffice/views/workflow.importexportdashboard.html</control>" +
                 "</tab>";
 
             // update the respective config files
