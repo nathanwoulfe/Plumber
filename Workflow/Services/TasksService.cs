@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Workflow.Events.Args;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Repositories.Interfaces;
@@ -12,6 +13,9 @@ namespace Workflow.Services
     {
         private readonly IConfigService _configService;
         private readonly ITasksRepository _tasksRepo;
+
+        public static event EventHandler<TaskEventArgs> Created;
+        public static event EventHandler<TaskEventArgs> Updated;
 
         public TasksService()
             : this(
@@ -184,6 +188,7 @@ namespace Workflow.Services
         public void InsertTask(WorkflowTaskInstancePoco poco)
         {
             _tasksRepo.InsertTask(poco);
+            Created?.Invoke(this, new TaskEventArgs(poco));
         }
 
         /// <summary>
@@ -194,6 +199,7 @@ namespace Workflow.Services
         public void UpdateTask(WorkflowTaskInstancePoco poco)
         {
             _tasksRepo.UpdateTask(poco);
+            Updated?.Invoke(this, new TaskEventArgs(poco));
         }
     }
 }

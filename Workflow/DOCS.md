@@ -114,6 +114,56 @@ In cases where the content is already in a workflow, a notification is displayed
 
 For nodes where the workflow has been disabled, the default Umbraco options are displayed.
 
+### Events
+
+Plumber raises events in a similar fashion to Umbraco - if you're familiar with Umbraco's events, Plumber won't have any surprises.
+
+Currently, events are raised by the Config, Group and Tasks services, and the DocumentPublish and DocumentUnpublish processes and can be subscribed to as follows:
+
+Events are not cancellable, and serve to provide an entry point for writing custom notification layers - Slack, SMS, whatever you choose. 
+
+#### ConfigService
+
+The Config service is responsible for managing workflow configuration for nodes and content types.
+
+Events are raised whenever a node or content type configuration is updated.
+
+#### GroupService
+
+The Group service is responsible for managing approval groups.
+
+This service raises events whenever an approval group is created, updated or deleted.
+
+#### TasksService
+
+The Tasks service is responsible for all operations involving workflow tasks.
+
+This service raises events whenever a task is created or updated.
+
+#### DocumentPublishProcess and DocumentUnpublishProcess
+
+These processes are the core of the workflow, and manage instance/task creation and workflow progression.
+
+The processes raise events whenever a workflow instance is created or updated.
+
+#### Event subscription
+
+To subscribe to events, override the `ApplicationStarted` method in an `ApplicationEventHandler` class - just like you would to subscribe to any native Umbraco events:
+
+```
+protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext context)
+{
+    GroupService.Updated += GroupService_Updated;
+}
+
+private void GroupService_Updated(object sender, GroupEventArgs e)
+{
+    throw new NotImplementedException();
+}
+```
+
+For all services, `e` will provide the object being created, updated or deleted (typically a poco). 
+
 ### Deployment tools<a name="deployment-tools"></a>
 
 This feature is experimental. Use it at your own risk.

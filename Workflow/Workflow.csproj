@@ -46,6 +46,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.importexportdashboard.html" />
     <Compile Include="Events\Args\ConfigEventArgs.cs" />
     <Compile Include="Events\Args\GroupEventArgs.cs" />
+    <Compile Include="Events\Args\TaskEventArgs.cs" />
     <Compile Include="Events\Args\InstanceEventArgs.cs" />
     <Compile Include="Events\EventArgsBase.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
