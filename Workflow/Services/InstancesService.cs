@@ -95,7 +95,7 @@ namespace Workflow.Services
                     RequestedBy = instance.AuthorUser.Name,
                     RequestedOn = instance.CreatedDate,
                     CompletedOn = instance.CompletedDate,
-                    Tasks = _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance)
+                    Tasks = _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), true, instance)
                 };
 
                 workflowInstances.Add(model);
@@ -122,6 +122,15 @@ namespace Workflow.Services
         public int CountPending()
         {
             return _repo.CountPendingInstances();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public double CountAll()
+        {
+            return _repo.CountAllInstances();
         }
 
         /// <summary>

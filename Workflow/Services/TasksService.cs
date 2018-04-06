@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Umbraco.Core;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Repositories.Interfaces;
@@ -81,9 +80,10 @@ namespace Workflow.Services
         /// Converts a list of workflowTaskInstances into a list of UI-ready workflowTasks
         /// </summary>
         /// <param name="taskInstances"></param>
+        /// <param name="sorted">Depending on the caller, the response may not be sorted</param>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public List<WorkflowTask> ConvertToWorkflowTaskList(List<WorkflowTaskInstancePoco> taskInstances, WorkflowInstancePoco instance = null)
+        public List<WorkflowTask> ConvertToWorkflowTaskList(List<WorkflowTaskInstancePoco> taskInstances, bool sorted = true, WorkflowInstancePoco instance = null)
         {
             List<WorkflowTask> workflowItems = new List<WorkflowTask>();
 
@@ -120,7 +120,7 @@ namespace Workflow.Services
                 workflowItems.Add(item);
             }
 
-            return workflowItems.OrderByDescending(x => x.CurrentStep).ToList();
+            return sorted ? workflowItems.OrderByDescending(x => x.CurrentStep).ToList() : workflowItems.ToList();
         }
 
         /// <summary>

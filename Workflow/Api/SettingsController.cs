@@ -13,7 +13,6 @@ using Umbraco.Core.Models;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
-using Workflow.Repositories;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
 

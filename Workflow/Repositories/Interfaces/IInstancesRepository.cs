@@ -25,6 +25,13 @@ namespace Workflow.Repositories.Interfaces
         int CountPendingInstances();
 
         /// <summary>
+        /// 
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        double CountAllInstances();
+
+        /// <summary>
         /// Get all workflow instances, regardless of status
         /// </summary>
         /// <returns></returns>
