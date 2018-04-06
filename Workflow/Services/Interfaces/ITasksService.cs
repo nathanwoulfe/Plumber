@@ -11,7 +11,7 @@ namespace Workflow.Services.Interfaces
 
         List<WorkflowTask> GetPendingTasks(IEnumerable<int> status, int count, int page);
         List<WorkflowTask> GetAllGroupTasks(int groupId, int count, int page);
-        List<WorkflowTask> ConvertToWorkflowTaskList(List<WorkflowTaskInstancePoco> taskInstances, WorkflowInstancePoco instance = null);
+        List<WorkflowTask> ConvertToWorkflowTaskList(List<WorkflowTaskInstancePoco> taskInstances, bool sort = true, WorkflowInstancePoco instance = null);
         
         List<WorkflowTaskInstancePoco> GetTasksWithGroupByInstanceGuid(Guid guid);
         List<WorkflowTaskInstancePoco> GetAllPendingTasks(IEnumerable<int> status);

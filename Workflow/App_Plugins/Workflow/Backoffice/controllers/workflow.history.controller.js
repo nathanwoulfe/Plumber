@@ -80,7 +80,7 @@
         function setPaging(resp) {
             vm.items = resp.items;
             vm.pagination.pageNumber = resp.page;
-            vm.pagination.totalPages = Math.ceil(resp.total / resp.count);
+            vm.pagination.totalPages = resp.totalPages;
             vm.loading = false;
         }
 

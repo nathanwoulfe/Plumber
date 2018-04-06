@@ -78,7 +78,7 @@
           .then(function (resp) {
             vm.tasks = resp.items;
             vm.pagination.pageNumber = resp.page;
-            vm.pagination.totalPages = resp.total / resp.count;
+            vm.pagination.totalPages = resp.totalPages;
           });
     }
 

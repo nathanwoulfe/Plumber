@@ -52,6 +52,15 @@ namespace Workflow.Repositories
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public double CountAllInstances()
+        {
+            return _database.Fetch<double>(SqlHelpers.CountAllInstances).First();
+        }
+
+        /// <summary>
         /// Get all workflow instances
         /// </summary>
         /// <returns>A list of objects of type <see cref="WorkflowInstancePoco"/></returns>

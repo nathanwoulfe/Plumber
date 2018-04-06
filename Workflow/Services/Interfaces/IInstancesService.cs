@@ -10,10 +10,10 @@ namespace Workflow.Services.Interfaces
         IEnumerable<WorkflowInstancePoco> GetForNodeByStatus(int nodeId, IEnumerable<int> status);
 
         List<WorkflowInstance> Get(int? page, int? count, DateTime? oldest);
-        //List<WorkflowInstance> ConvertToWorkflowInstanceList(List<WorkflowInstancePoco> instances);
         WorkflowInstancePoco GetByGuid(Guid guid);
 
         int CountPending();
+        double CountAll(); // value is used to calculate total pages, using math.ceiling, so needs type
 
         void InsertInstance(WorkflowInstancePoco instance);
         void UpdateInstance(WorkflowInstancePoco instance);

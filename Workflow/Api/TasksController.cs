@@ -56,7 +56,7 @@ namespace Workflow.Api
                 return Json(new
                 {
                     items = workflowItems,
-                    total = taskCount,
+                    totalPages = (int)Math.Ceiling((double)taskCount / count),
                     page,
                     count
                 }, ViewHelpers.CamelCase);
@@ -110,12 +110,13 @@ namespace Workflow.Api
             {
                 // todo -> ony fetch the require page, not all
                 List<WorkflowTaskInstancePoco> taskInstances = _tasksService.GetTasksByNodeId(id);
-                List<WorkflowTask> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
+                // set sorted to false as the instances are ordered by create date -> sorting will order the paged items by workflow step
+                List<WorkflowTask> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList(), false);
 
                 return Json(new
                 {
                     items = workflowItems,
-                    total = taskInstances.Count,
+                    totalPages = (int)Math.Ceiling((double)taskInstances.Count / count),
                     page,
                     count
                 }, ViewHelpers.CamelCase);
@@ -243,7 +244,7 @@ namespace Workflow.Api
                 return Json(new
                 {
                     items = workflowItems,
-                    total = taskInstances.Count,
+                    totalPages = (int)Math.Ceiling((double)taskInstances.Count / count),
                     page,
                     count
                 }, ViewHelpers.CamelCase);
@@ -272,7 +273,7 @@ namespace Workflow.Api
                 return Json(new
                 {
                     items = workflowItems,
-                    total = groupTaskCount,
+                    totalPages = (int)Math.Ceiling((double)groupTaskCount / count),
                     page,
                     count
                 }, ViewHelpers.CamelCase);

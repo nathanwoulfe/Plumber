@@ -49,7 +49,7 @@
                     .then(function (resp) {
                         vm.activeTasks = resp.items;
                         vm.adminPagination.pageNumber = resp.page;
-                        vm.adminPagination.totalPages = resp.total / resp.count;
+                        vm.adminPagination.totalPages = resp.totalPages;
                         vm.loaded[2] = true;
                     }, function (err) {
                         notify(err);
