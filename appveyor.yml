@@ -1,5 +1,5 @@
 # version format
-version: 0.7.5.{build}
+version: 0.7.6.{build}
 
 image: Visual Studio 2017
 
@@ -42,9 +42,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v0.7.5
-    release: Release 0.7.5
-    description: 'Should not add context menu items to the content root or recycle bin'
+    tag: v0.7.6
+    release: Release 0.7.6
+    description: 'Updates to pagination and eventing'
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
