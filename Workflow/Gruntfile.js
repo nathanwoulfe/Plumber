@@ -1,4 +1,4 @@
-﻿module.exports = function (grunt) {
+﻿module.exports = grunt => {
     require('load-grunt-tasks')(grunt);
     require('time-grunt')(grunt);
     require('grunt-karma')(grunt);
@@ -14,7 +14,7 @@
     }
 
     grunt.initConfig({
-        packageVersion: function () {
+        packageVersion: () => {
             var buildVersion = grunt.option('buildversion') || '1.0.0.1',
                 packageSuffix = grunt.option('packagesuffix') || 'build',
                 buildBranch = grunt.option('buildbranch') || 'master';
@@ -23,7 +23,7 @@
             var basePackageVer = buildVersion.substring(0, findPoint);
             var buildNumber = buildVersion.substring(findPoint + 1, buildVersion.length);
             if (buildBranch.toLowerCase() !== 'release') {
-                return basePackageVer + '-' + 'build' + buildNumber;
+                return basePackageVer + '-build' + buildNumber;
             } else if (packageSuffix !== 'build' && packageSuffix.length > 0) {
                 return basePackageVer + '-' + packageSuffix;
             } else {
@@ -38,16 +38,17 @@
             '<%= pkg.homepage ? " * " + pkg.homepage + "\\n" : "" %>' +
             ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;\n' +
             ' * Licensed <%= pkg.license %>\n *',
+
         //Concat all the JS files into one
         concat: {
             dist: {
                 src: [
-                  '<%= basePath %>/backoffice/controllers/**/*.js',
-                  '<%= basePath %>/backoffice/directives/*.js',
-                  '<%= basePath %>/backoffice/interceptors/*.js',
-                  '<%= basePath %>/backoffice/resources/*.js'
+                    '<%= basePath %>/backoffice/controllers/**/*.js',
+                    '<%= basePath %>/backoffice/directives/*.js',
+                    '<%= basePath %>/backoffice/interceptors/*.js',
+                    '<%= basePath %>/backoffice/resources/*.js'
                 ],
-                dest: '<%= dest %>/<%= basePath %>/backoffice/js/workflow.js',
+                dest: '<%= basePath %>/backoffice/workflow.es6',
                 nonull: true,
                 options: {
                     banner: '/<%= banner %>/\n\n'
@@ -81,6 +82,22 @@
             }
         },
 
+        browserify: {
+            dist: {
+                files: {
+                    // destination for transpiled js : source js
+                    '<%= dest %>/<%= basePath %>/backoffice/js/workflow.js': '<%= basePath %>/backoffice/workflow.es6'
+                },
+                options: {
+                    transform: [['babelify', { presets: 'es2015' }]],
+                    browserifyOptions: {
+                        debug: false
+                    }
+                }
+            }
+        },
+
+
         watch: {
 
             // dev watches everything, copies everything
@@ -106,12 +123,12 @@
                 files: ['<%= basePath %>/**/*.html'],
                 tasks: ['copy:views']
             },
-            
+
             config: {
                 files: ['<%= basePath %>/package.manifest'],
                 tasks: ['copy:config']
             },
-            
+
             lang: {
                 files: ['<%= basePath %>/lang/**'],
                 tasks: ['copy:lang']
@@ -263,6 +280,7 @@
                     immed: true,
                     latedef: false,
                     newcap: false,
+                    esversion: 6,
                     noarg: true,
                     sub: true,
                     boss: true,
@@ -274,19 +292,19 @@
                     smarttabs: true,
                     globals: {},
                     force: true,
-                    ignores:['**/highcharts.js', '**/exporting.js']
+                    ignores: ['**/highcharts.js', '**/exporting.js']
                 }
             }
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'sass', 'cssmin', 'copy:config', 'copy:html', 'copy:lib', 'copy:lang']);
+    grunt.registerTask('default', ['jshint', 'concat', 'browserify', 'sass', 'cssmin', 'copy:config', 'copy:html', 'copy:lib', 'copy:lang']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 
     grunt.registerTask('dev', ['watch:dev']);
 
-    grunt.registerTask('test', 'Clean, copy test assets, test', function () {
+    grunt.registerTask('test', 'Clean, copy test assets, test', () => {
         var assetsDir = grunt.config.get('dest');
         //copies over umbraco assets from --target, this must point at the /umbraco/ directory
         if (assetsDir !== 'dist') {

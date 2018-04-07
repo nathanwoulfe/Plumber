@@ -15,7 +15,8 @@ Workflow/dist
 Workflow/tmp
 Workflow/**/*.css
 dist
-
+# *.es6 is a build artifact and should not be in source control
+Workflow/**/*.es6
 # Build results
 
 [Dd]ebug/
