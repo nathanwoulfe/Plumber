@@ -181,5 +181,5 @@
         getForRange();
     }
 
-    angular.module('umbraco').controller('Workflow.AdminDashboard.Controller', dashboardController);
+    angular.module('umbraco').controller('Workflow.AdminDashboard.Controller', ['plmbrWorkflowResource', dashboardController]);
 }());

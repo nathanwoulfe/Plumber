@@ -189,6 +189,7 @@
         });
     }
 
-    angular.module('umbraco').controller('Workflow.Settings.Controller', settingsController);
+    angular.module('umbraco').controller('Workflow.Settings.Controller',
+        ['$scope', '$q', 'plmbrWorkflowResource', 'notificationsService', 'plmbrGroupsResource', 'contentResource', settingsController]);
 
 }());

@@ -121,5 +121,6 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.UserDashboard.Controller', dashboardController);
+    angular.module('umbraco').controller('Workflow.UserDashboard.Controller',
+        ['$scope', '$rootScope', '$routeParams', 'plmbrWorkflowResource', 'authResource', 'notificationsService', dashboardController]);
 }());

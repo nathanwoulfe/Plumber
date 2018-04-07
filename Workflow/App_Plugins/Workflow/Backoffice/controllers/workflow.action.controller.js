@@ -88,6 +88,6 @@
             });
     }
 
-    angular.module('umbraco').controller('Workflow.Action.Controller', actionController);
+    angular.module('umbraco').controller('Workflow.Action.Controller', ['$scope', 'plmbrWorkflowResource', actionController]);
 }());
 

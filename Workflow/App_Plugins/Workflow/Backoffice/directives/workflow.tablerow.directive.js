@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function TableRowDirective() {
+    function tableRow() {
 
         var directive = {
             restrict: 'E',
@@ -19,6 +19,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('wfTableRow', TableRowDirective);
+    angular.module('umbraco.directives').directive('wfTableRow', tableRow);
 
 }());

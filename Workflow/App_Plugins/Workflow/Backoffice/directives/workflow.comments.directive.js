@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';    
 
-    function CommentsDirective() {
+    function comments() {
 
         var directive = {
             restrict: 'AEC',
@@ -38,6 +38,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('wfComments', CommentsDirective);
+    angular.module('umbraco.directives').directive('wfComments', comments);
 
 }());

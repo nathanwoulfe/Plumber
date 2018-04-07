@@ -34,6 +34,6 @@
         init();
     }
 
-    angular.module('umbraco').controller('Workflow.Groups.Dashboard.Controller', dashboardController);
+    angular.module('umbraco').controller('Workflow.Groups.Dashboard.Controller', ['$rootScope', 'plmbrGroupsResource', dashboardController]);
 
 }());

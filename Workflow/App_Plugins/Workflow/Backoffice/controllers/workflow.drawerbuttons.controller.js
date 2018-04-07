@@ -248,9 +248,18 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.DrawerButtons.Controller', ['$scope', '$rootScope', '$window',
+    angular.module('umbraco').controller('Workflow.DrawerButtons.Controller',
+        ['$scope',
+        '$rootScope',
+        '$window',
         'userService',
-        'workflowResource', 'workflowActionsService', 'contentEditingHelper', 'angularHelper', 'contentResource',
-        'editorState', '$routeParams', 'notificationsService', controller]);
+        'plmbrWorkflowResource',
+        'plmbrActionsService',
+        'contentEditingHelper',
+        'angularHelper',
+        'contentResource',
+        'editorState',
+        '$routeParams',
+        'notificationsService', controller]);
 }());
 

@@ -20,6 +20,7 @@
         };
     }
 
-    angular.module('umbraco').controller('Workflow.Groups.Delete.Controller', deleteController);
+    angular.module('umbraco').controller('Workflow.Groups.Delete.Controller',
+        ['$scope', '$rootScope', 'plmbrGroupsResource', 'navigationService', 'treeService', 'notificationsService', deleteController]);
 }());
 

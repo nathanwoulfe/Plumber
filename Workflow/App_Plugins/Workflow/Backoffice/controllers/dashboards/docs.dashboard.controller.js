@@ -91,27 +91,27 @@
                 var elms = document.querySelectorAll('.umb-healthcheck-group__details-check-description a');
                 if (elms.length) {
                     for (i = 0; i < elms.length; i += 1) {
-                        elms[i].addEventListener('click', openDocFromDoc(e));
-                    }
+                        elms[i].addEventListener('click', function(e) { openDocFromDoc(e); });
+                    };
                 }
-            });
-        }
-
-        workflowResource.getDocs()
-            .then(function (docs) {
-                parseDocs(docs);
-            });
-
-        angular.extend(vm,
-            {
-                viewState: 'list',
-                selectedDoc: {},
-
-                openDoc: openDoc,
-                setViewState: setViewState,
             });
     }
 
-    angular.module('umbraco').controller('Workflow.DocsDashboard.Controller', dashboardController);
+    workflowResource.getDocs()
+        .then(function (docs) {
+            parseDocs(docs);
+        });
+
+    angular.extend(vm,
+        {
+            viewState: 'list',
+            selectedDoc: {},
+
+            openDoc: openDoc,
+            setViewState: setViewState,
+        });
+}
+
+    angular.module('umbraco').controller('Workflow.DocsDashboard.Controller', ['$timeout', 'plmbrWorkflowResource', dashboardController]);
 
 }());

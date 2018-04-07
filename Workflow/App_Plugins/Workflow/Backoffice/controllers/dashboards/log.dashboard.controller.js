@@ -60,5 +60,5 @@
 
     }
 
-    angular.module('umbraco').controller('Workflow.Log.Controller', logController);
+    angular.module('umbraco').controller('Workflow.Log.Controller', ['plmbrWorkflowResource', logController]);
 }());

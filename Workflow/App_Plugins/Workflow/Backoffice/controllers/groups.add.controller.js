@@ -40,6 +40,7 @@
         };
     }
 
-    angular.module('umbraco').controller('Workflow.Groups.Add.Controller', addController);
+    angular.module('umbraco').controller('Workflow.Groups.Add.Controller',
+        ['$scope', 'plmbrGroupsResource', 'navigationService', 'notificationsService', 'treeService', addController]);
 }());
 

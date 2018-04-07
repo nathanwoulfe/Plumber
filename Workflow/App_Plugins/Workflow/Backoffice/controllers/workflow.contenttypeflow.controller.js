@@ -50,6 +50,6 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.ContentTypeFlow.Controller', contentTypeFlowController);
+    angular.module('umbraco').controller('Workflow.ContentTypeFlow.Controller', ['$scope', contentTypeFlowController]);
 }());
 

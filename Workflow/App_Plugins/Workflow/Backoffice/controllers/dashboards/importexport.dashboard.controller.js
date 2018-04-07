@@ -31,5 +31,5 @@
 
     }
 
-    angular.module('umbraco').controller('Workflow.ImportExport.Controller', importexportController);
+    angular.module('umbraco').controller('Workflow.ImportExport.Controller', ['plmbrWorkflowResource', 'notificationsService', importexportController]);
 }());
