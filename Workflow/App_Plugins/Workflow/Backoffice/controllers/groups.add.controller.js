@@ -3,39 +3,38 @@
 
     function addController($scope, workflowGroupsResource, navigationService, notificationsService, treeService) {
 
-        $scope.$watch('name',
-            function() {
-                $scope.failed = false;
-            });
+        $scope.$watch('name', () => {
+            this.failed = false;
+        });
 
-        $scope.add = function (name) {
-          workflowGroupsResource.add(name)
-              .then(function (resp) {
+        this.add = name => {
+            workflowGroupsResource.add(name)
+                .then(resp => {
                     if (resp.status === 200) {
                         if (resp.success === true) {
                             treeService.loadNodeChildren({
-                                    node: $scope.$parent.currentNode.parent(),
-                                    section: 'workflow'
-                                })
-                                .then(function() {
-                                    window.location = '/umbraco/#/workflow/workflow/edit-group/' + resp.id;
-                                    navigationService.hideNavigation();
+                                node: $scope.$parent.currentNode.parent(),
+                                section: 'workflow'
+                            }).then(() => {
+                                window.location = `/umbraco/#/workflow/workflow/edit-group/${resp.id}`;
+                                navigationService.hideNavigation();
                                 });
+
                             notificationsService.success('SUCCESS', resp.msg);
                         } else {
-                            $scope.failed = true;
-                            $scope.msg = resp.msg;
+                            this.failed = true;
+                            this.msg = resp.msg;
                         }
                     } else {
                         notificationsService.error('ERROR', resp.msg);
                     }
 
-                }, function (err) {   
+                }, err => {
                     notificationsService.error('ERROR', err);
                 });
         };
 
-        $scope.cancelAdd = function () {
+        this.cancelAdd = () => {
             navigationService.hideNavigation();
         };
     }
