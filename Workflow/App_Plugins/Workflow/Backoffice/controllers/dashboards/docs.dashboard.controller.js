@@ -7,14 +7,48 @@
      * @param {any} workflowResource
      */
     function dashboardController($timeout, workflowResource) {
-        var vm = this,
-            i;
 
-        function getContentForHeading(node, index, elements) {
+        this.viewState = 'list';
+        this.selectedDoc = {};
 
-            var html = '';
+        /**
+         * Allow links in docs to open other sections, based on simple matching on the hash and doc name
+         */
+        const openDocFromDoc = e => {
+            e.preventDefault();
+            // on click, get the anchor, find the correct section and switch to it
+            const target = this.docs.filter(v => {
+                var name = v.name.toLowerCase().replace(' ', '-');
+                return name.indexOf(e.target.hash.substring(1)) === 0;
+            })[0];
 
-            for (i = index + 1; i < elements.length; i += 1) {
+            if (target) {
+                this.openDoc(target);
+            }
+        }
+
+        const bindListeners = () => {
+            $timeout(() => {
+                var elms = document.querySelectorAll('.umb-healthcheck-group__details-check-description a');
+                if (elms.length) {
+                    for (let i = 0; i < elms.length; i += 1) {
+                        elms[i].addEventListener('click', e => { openDocFromDoc(e); });
+                    };
+                }
+            });
+        }
+
+        /**
+         * 
+         * @param {any} node
+         * @param {any} index
+         * @param {any} elements
+         */
+        const getContentForHeading = (node, index, elements) => {
+
+            let html = '';
+
+            for (let i = index + 1; i < elements.length; i += 1) {
                 if (elements[i].tagName !== 'H3') {
                     html += elements[i].outerHTML;
                 } else {
@@ -25,92 +59,56 @@
             return html;
         }
 
-        function parseDocs(docs) {
+        /**
+         * 
+         * @param {any} docs
+         */
+        const parseDocs = docs => {
 
-            var parser = new DOMParser();
-            var article = angular.element(parser.parseFromString(docs, 'text/html')).find('article');
-
-            // check for anchors between sections - these need to be handled by angular
-            //var links = article.find('a:not(.anchor)');
-            //if (links.length) {
-            //    for (i = 0; i < links.length; i += 1) {
-            //        if (links[i].hash) {
-            //            links[i].setAttribute('ng-click', 'vm.docsLinkClick($event)');
-            //        }
-            //    }
-            //}
+            const parser = new DOMParser();
+            const article = angular.element(parser.parseFromString(docs, 'text/html')).find('article');
 
             var elements = article.children();
             var json = [];
 
-            angular.forEach(elements, function (v, i) {
+            angular.forEach(elements, (v, i) => {
                 if (v.tagName === 'H3') {
-                    var o = {};
-                    o['name'] = v.innerText;
-                    o['content'] = getContentForHeading(v, i, elements);
-
-                    json.push(o);
+                    json.push({
+                        name: v.innerText,
+                        content: getContentForHeading(v, i, elements)
+                    });
                 }
             });
 
-            vm.docs = json;
-            vm.loaded = true;
-
+            this.docs = json;
+            this.loaded = true;
         }
 
-        function openDoc(doc) {
-            vm.selectedDoc = doc;
-            vm.viewState = 'details';
+        /**
+         * 
+         * @param {any} doc
+         */
+        this.openDoc = doc => {
+            this.selectedDoc = doc;
+            this.viewState = 'details';
 
             // this will only be the current open doc
             bindListeners();
         }
 
-        function setViewState(state) {
-            vm.viewState = state;
-        }
-
         /**
-         * Allow links in docs to open other sections, based on simple matching on the hash and doc name
+         * 
+         * @param {any} state
          */
-        function openDocFromDoc(e) {
-            e.preventDefault();
-            // on click, get the anchor, find the correct section and switch to it
-            var target = vm.docs.filter(function (v) {
-                var name = v.name.toLowerCase().replace(' ', '-');
-                return name.indexOf(e.target.hash.substring(1)) === 0;
-            })[0];
-
-            if (target) {
-                openDoc(target);
-            }
+        this.setViewState = state => {
+            this.viewState = state;
         }
 
-        function bindListeners() {
-            $timeout(function () {
-                var elms = document.querySelectorAll('.umb-healthcheck-group__details-check-description a');
-                if (elms.length) {
-                    for (i = 0; i < elms.length; i += 1) {
-                        elms[i].addEventListener('click', function(e) { openDocFromDoc(e); });
-                    };
-                }
+        workflowResource.getDocs()
+            .then(docs => {
+                parseDocs(docs);
             });
     }
-
-    workflowResource.getDocs()
-        .then(function (docs) {
-            parseDocs(docs);
-        });
-
-    angular.extend(vm,
-        {
-            viewState: 'list',
-            selectedDoc: {},
-
-            openDoc: openDoc,
-            setViewState: setViewState,
-        });
-}
 
     angular.module('umbraco').controller('Workflow.DocsDashboard.Controller', ['$timeout', 'plmbrWorkflowResource', dashboardController]);
 
