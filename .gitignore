@@ -205,3 +205,4 @@ Workflow.Site/Config/
 Workflow.Site/umbraco
 Workflow.Site/umbraco_client
 /Workflow.Site/Media/
+/Workflow/App_Plugins/Workflow/Backoffice/workflow.es6
