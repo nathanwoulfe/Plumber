@@ -2,24 +2,24 @@
     'use strict';
 
     function actionController($scope, workflowResource) {
-        $scope.limit = 250;
-        $scope.disabled = $scope.isFinalApproval === true ? false : true;
+        this.limit = 250;
+        this.disabled = this.isFinalApproval === true ? false : true;
 
-        var dateFormat = 'D MMM YYYY [at] h:mma',
-            dateFormatNoMinute = 'D MMM YYYY [at] ha';
+        const dateFormat = 'D MMM YYYY [at] h:mma';
+        const dateFormatNoMinute = 'D MMM YYYY [at] ha';
 
         /**
          * The requestedOn date for the instance should be parsed into a UI-ready value
          */
-        var requestedOn = new moment($scope.model.requestedOn, 'DD/MM/YYYY hh:mm:ss');
-        $scope.requestedOn = requestedOn.format(requestedOn.minute() === 0 ? dateFormatNoMinute : dateFormat);
+        const requestedOn = new moment($scope.model.requestedOn, 'DD/MM/YYYY hh:mm:ss');
+        this.requestedOn = requestedOn.format(requestedOn.minute() === 0 ? dateFormatNoMinute : dateFormat);
 
         /**
          * Parses the requestedOn date into a UI fiendly version
          * @param {} date 
          * @returns {} 
          */
-        $scope.getRequestedOn = function(date) {
+        this.getRequestedOn = date => {
             var d = new moment(date).utc();
             return d.format(d.minutes() === 0 ? dateFormatNoMinute : dateFormat);
         };
@@ -29,7 +29,7 @@
          * @param {} task 
          * @returns {} 
          */
-        $scope.getStatusName = function(task) {
+        this.getStatusName = task => {
             if ((task.type === 1 || task.type === 3) && task.status === 7) {
                 task.cssName = 'rejected';
                 return 'Rejected';
@@ -43,7 +43,7 @@
          * @param { } task 
          * @returns { string } 
          */
-        $scope.getIconName = function(task) {
+        this.getIconName = task => {
             //rejected
             if ((task.type === 1 || task.type === 3) && task.status === 7 || task.status === 2) {
                 return 'delete';
@@ -65,25 +65,24 @@
          * Then build a UI-ready object
          */
         workflowResource.getAllTasksByGuid($scope.model.guid)
-            .then(function(resp) {
-                var tasks = resp.items.filter(function(v) {
-                    return v.comment !== null;
-                });
+            .then(resp => {
+                var tasks = resp.items.filter(v => v.comment !== null);
+
                 // current step should only count approved tasks - maybe rejected/resubmitted into
-                $scope.currentStep = resp.currentStep;
-                $scope.totalSteps = resp.totalSteps;
+                this.currentStep = resp.currentStep;
+                this.totalSteps = resp.totalSteps;
 
                 // there may be multiple tasks for a given step, due to rejection/resubmission
                 // modify the tasks object to nest tasks
 
-                $scope.tasks = [];
-                tasks.forEach(function(v) {
+                this.tasks = [];
+                tasks.forEach(v => {
 
-                    if (!$scope.tasks[v.approvalStep]) {
-                        $scope.tasks[v.approvalStep] = [];
+                    if (!this.tasks[v.approvalStep]) {
+                        this.tasks[v.approvalStep] = [];
                     }
 
-                    $scope.tasks[v.approvalStep].push(v);
+                    this.tasks[v.approvalStep].push(v);
                 });
             });
     }
