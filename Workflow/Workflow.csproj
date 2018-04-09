@@ -351,7 +351,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "$(ProjectDir)..\Workflow.Site\bin" /Y /I /D</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetPath)" "$(ProjectDir)..\Workflow.Site\bin" /Y /I /D
+xcopy "$(ProjectDir)App_Plugins\*.*" "$(ProjectDir)..\Workflow.Site\App_Plugins" /A /K /Y /E</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
