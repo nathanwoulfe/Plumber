@@ -21,6 +21,7 @@ namespace Workflow.Processes
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static IContentService _contentService;
         private static IInstancesService _instancesService;
+        private readonly Notifications _notifications;
         private static string _nodeName;
 
         public static event EventHandler<InstanceEventArgs> Completed;
@@ -28,15 +29,17 @@ namespace Workflow.Processes
         public DocumentUnpublishProcess()
             : this(
                 ApplicationContext.Current.Services.ContentService,
-                new InstancesService()
+                new InstancesService(),
+                new Notifications()
             )
         {
         }
 
-        private DocumentUnpublishProcess(IContentService contentService, IInstancesService instancesService)
+        private DocumentUnpublishProcess(IContentService contentService, IInstancesService instancesService, Notifications notifications)
         {
             _contentService = contentService;
             _instancesService = instancesService;
+            _notifications = notifications;
 
             Type = WorkflowType.Unpublish;
         }
@@ -102,7 +105,7 @@ namespace Workflow.Processes
 
             if (success)
             {
-                Notifications.Send(Instance, EmailType.ApprovedAndCompleted);
+                _notifications.Send(Instance, EmailType.ApprovedAndCompleted);
                 Log.Info("Successfully unpublished page " + Instance.Node.Name);
 
                 Completed?.Invoke(this, new InstanceEventArgs(Instance, "UnpublishNow"));
@@ -125,7 +128,7 @@ namespace Workflow.Processes
                 Instance.CompletedDate = DateTime.Now;
                 _instancesService.UpdateInstance(Instance);
 
-                Notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
+                _notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
                 // Unpublish will occur via scheduler.
                 Completed?.Invoke(this, new InstanceEventArgs(Instance, "UnpublishAt"));
 

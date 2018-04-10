@@ -25,6 +25,8 @@ namespace Workflow.Processes
         private readonly ISettingsService _settingsService;
         private readonly ITasksService _tasksService;
 
+        private readonly Notifications _notifications;
+
         private readonly WorkflowSettingsPoco _settings;
 
         protected WorkflowType Type { private get; set; }
@@ -41,6 +43,8 @@ namespace Workflow.Processes
             _settingsService = new SettingsService();
             _tasksService = new TasksService();
 
+            _notifications = new Notifications();
+            
             _settings = _settingsService.GetSettings();
         }
 
@@ -225,7 +229,7 @@ namespace Workflow.Processes
 
                 // Send the notification
                 _instancesService.UpdateInstance(Instance);
-                Notifications.Send(Instance, EmailType.WorkflowCancelled);
+                _notifications.Send(Instance, EmailType.WorkflowCancelled);
 
                 // emit an event
                 Cancelled?.Invoke(this, new InstanceEventArgs(Instance));
@@ -308,7 +312,7 @@ namespace Workflow.Processes
             // Send the email after we've done the updates.
             if (emailRequired)
             {
-                Notifications.Send(Instance, emailType.Value);
+                _notifications.Send(Instance, emailType.Value);
             }
 
             _tasksService.UpdateTask(taskInstance);
@@ -419,7 +423,7 @@ namespace Workflow.Processes
             taskInstance.Status = (int)TaskStatus.PendingApproval;
             Instance.Status = (int)WorkflowStatus.PendingApproval;
 
-            Notifications.Send(Instance, EmailType.ApprovalRequest);
+            _notifications.Send(Instance, EmailType.ApprovalRequest);
 
             _tasksService.UpdateTask(taskInstance);
         }

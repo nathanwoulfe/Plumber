@@ -14,10 +14,12 @@ namespace Workflow.Api
     public class DodgyTestsController : UmbracoAuthorizedApiController
     {
         private readonly IInstancesService _instancesService;
+        private readonly Notifications _notifications;
 
         public DodgyTestsController()
         {
             _instancesService = new InstancesService();
+            _notifications = new Notifications();
         }
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace Workflow.Api
             {
                 WorkflowInstancePoco instance = _instancesService.GetByGuid(instanceGuid);
 
-                Notifications.Send(instance, (EmailType)emailType);
+                _notifications.Send(instance, (EmailType)emailType);
 
                 return "done - check the mail drop folder";
             }

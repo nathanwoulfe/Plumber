@@ -21,21 +21,24 @@ namespace Workflow.Processes
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IContentService _contentService;
         private readonly IInstancesService _instancesService;
+        private readonly Notifications _notifications;
 
         public static event EventHandler<InstanceEventArgs> Completed;
 
         public DocumentPublishProcess()
             : this(
                 ApplicationContext.Current.Services.ContentService,
-                new InstancesService()
+                new InstancesService(),
+                new Notifications()
                 )
         {
         }
 
-        private DocumentPublishProcess(IContentService contentService, IInstancesService instancesService)
+        private DocumentPublishProcess(IContentService contentService, IInstancesService instancesService, Notifications notifications)
         {
             _contentService = contentService;
             _instancesService = instancesService;
+            _notifications = notifications;
 
             Type = WorkflowType.Publish;
         }
@@ -89,7 +92,7 @@ namespace Workflow.Processes
 
             _instancesService.UpdateInstance(Instance);
 
-            Notifications.Send(Instance, EmailType.ApprovedAndCompleted);
+            _notifications.Send(Instance, EmailType.ApprovedAndCompleted);
             Completed?.Invoke(this, new InstanceEventArgs(Instance, "PublishNow"));
         }
 
@@ -105,7 +108,7 @@ namespace Workflow.Processes
                 Instance.CompletedDate = DateTime.Now;
                 _instancesService.UpdateInstance(Instance);
 
-                Notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
+                _notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
 
                 Completed?.Invoke(this, new InstanceEventArgs(Instance, "PublishAt"));
 
