@@ -311,7 +311,8 @@ namespace Workflow.Api
 
             if (tasks.Any())
             {
-                instance.TaskInstances = tasks;
+                // ordering by approval step is most logical
+                instance.TaskInstances = tasks.OrderBy(t => t.ApprovalStep).ToList();
             }
 
             return instance;

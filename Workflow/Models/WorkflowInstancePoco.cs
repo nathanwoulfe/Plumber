@@ -5,7 +5,6 @@ using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
-using Umbraco.Core.Services;
 using Workflow.Helpers;
 
 namespace Workflow.Models

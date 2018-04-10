@@ -281,7 +281,8 @@ namespace Workflow.Processes
         /// <param name="comment"></param>
         private void ProcessApprovalAction(WorkflowAction action, int userId, string comment)
         {
-            WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.Last(x => x.TaskStatus != TaskStatus.Approved);
+            // tasks are ordered by approval step, so could probably take the last, but best to also check for the correct status.
+            WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.LastOrDefault(x => x.TaskStatus != TaskStatus.Approved);
 
             if (taskInstance == null) return;
 
@@ -334,9 +335,7 @@ namespace Workflow.Processes
 
             Instance.TaskInstances.Add(taskInstance);
 
-            WorkflowSettingsPoco settings = _settingsService.GetSettings();
-
-            SetApprovalGroup(taskInstance, nodeId, nodeId, settings);
+            SetApprovalGroup(taskInstance, nodeId, nodeId);
 
             _tasksService.InsertTask(taskInstance);
 
@@ -349,12 +348,12 @@ namespace Workflow.Processes
         /// <param name="taskInstance"></param>
         /// <param name="nodeId"></param>
         /// <param name="initialId"></param>
-        /// <param name="settings"></param>
-        private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId, int initialId, WorkflowSettingsPoco settings)
+        private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId, int initialId)
         {
             List<UserGroupPermissionsPoco> approvalGroup = _configService.GetPermissionsForNode(nodeId, 0);
             UserGroupPermissionsPoco group = null;
 
+            // if the node has a approval flow set, this value will be the assigned groups
             if (approvalGroup.Any())
             {
                 // approval group length will match the number of groups mapped to the node
@@ -364,7 +363,7 @@ namespace Workflow.Processes
             }
             else
             {
-                // check the content type only on original node
+                // check the content type only on original node - ie, not when we are recursively searching for a flow to inherit
                 if (nodeId == initialId)
                 {
                     List<UserGroupPermissionsPoco> contentTypeApproval = _configService.GetPermissionsForNode(0, Instance.Node.ContentType.Id);
@@ -372,22 +371,23 @@ namespace Workflow.Processes
                     if (contentTypeApproval.Any(g => g.ContentTypeId != 0))
                     {
                         group = contentTypeApproval.First(g => g.Permission == taskInstance.ApprovalStep);
-                        SetInstanceTotalSteps(approvalGroup.Count);
+                        SetInstanceTotalSteps(contentTypeApproval.Count);
                     }
                 }
 
                 // don't overwrite or recurse up if the content type has permissions set
+                // group will still be null if no content type flow found
                 if (group == null)
                 {
                     // If nothing set for the content type recurse up the tree until we find something
                     IPublishedContent node = Utility.GetNode(nodeId);
                     if (node.Level != 1)
                     {
-                        SetApprovalGroup(taskInstance, node.Parent.Id, nodeId, settings);
+                        SetApprovalGroup(taskInstance, node.Parent.Id, nodeId);
                     }
                     else // no group set, fallback to default approver
                     {
-                        group = _groupService.GetDefaultUserGroupPermissions(settings.DefaultApprover);
+                        group = _groupService.GetDefaultUserGroupPermissions(_settingsService.GetSettings().DefaultApprover);
                         SetInstanceTotalSteps(1);
                     }
                 }

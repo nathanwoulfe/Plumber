@@ -48,7 +48,7 @@
                     group.permissions.forEach(p => {
                         if (p.nodeId === parseInt(id, 10)) {
                             this.inherited[p.permission] = {
-                                name: v.name,
+                                name: group.name,
                                 groupId: p.groupId,
                                 nodeName: p.nodeName,
                                 permission: p.permission
