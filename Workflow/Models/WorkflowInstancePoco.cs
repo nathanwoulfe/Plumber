@@ -16,6 +16,7 @@ namespace Workflow.Models
     {
         private IPublishedContent _node;
         private IUser _authorUser;
+        private Utility _utility;
 
         public WorkflowInstancePoco()
         {
@@ -23,6 +24,8 @@ namespace Workflow.Models
             Status = (int)WorkflowStatus.PendingApproval;
             CreatedDate = DateTime.Now;
             CompletedDate = null;
+
+            _utility = new Utility();
         }
 
         public WorkflowInstancePoco(int nodeId, int authorUserId, string authorComment, WorkflowType type) : this()
@@ -107,7 +110,7 @@ namespace Workflow.Models
         /// The document object associated with this workflow.
         /// </summary>
         [ResultColumn]
-        public IPublishedContent Node => _node ?? (_node = Utility.GetNode(NodeId));
+        public IPublishedContent Node => _node ?? (_node = _utility.GetNode(NodeId));
 
         /// <summary>
         /// The author user who initiated this workflow instance.

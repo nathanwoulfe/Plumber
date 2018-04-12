@@ -20,6 +20,8 @@ namespace Workflow
         private readonly ITasksService _tasksService;
         private readonly IGroupService _groupService;
 
+        private readonly Utility _utility;
+
         private const string EmailApprovalRequestString = "Dear {0},<br/><br/>Please review the following page for {5} approval: <a href=\"{1}\">{2}</a><br/><br/>Comment: {3}<br/><br/>Thanks,<br/>{4}";
         private const string EmailApprovedString = "Dear {0},<br/><br/>The following document's workflow has been approved and the document {3}: <a href=\"{1}\">{2}</a><br/>";
         private const string EmailRejectedString = "Dear {0},<br/><br/>The {5} workflow was rejected by {4}: <a href=\"{1}\">{2}</a><br/><br/>Comment: {3}";
@@ -30,6 +32,8 @@ namespace Workflow
             _settingsService = new SettingsService();
             _tasksService = new TasksService();
             _groupService = new GroupService();
+
+            _utility = new Utility();
         }
 
         /// <summary>
@@ -113,7 +117,7 @@ namespace Workflow
 
                         if (instance.WorkflowType == WorkflowType.Publish)
                         {
-                            IPublishedContent n = Utility.GetNode(instance.NodeId);
+                            IPublishedContent n = _utility.GetNode(instance.NodeId);
                             docUrl = UrlHelpers.GetFullyQualifiedSiteUrl(n.Url);
                         }
 
