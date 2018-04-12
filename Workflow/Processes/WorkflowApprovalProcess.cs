@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Umbraco.Core.Models;
 using Workflow.Extensions;
 using Workflow.Helpers;
@@ -375,7 +377,12 @@ namespace Workflow.Processes
                     }
                     else // no group set, fallback to default approver
                     {
-                        group = _groupService.GetDefaultUserGroupPermissions(settings.DefaultApprover);
+                        int groupId = int.Parse(settings.DefaultApprover);
+                        group = new UserGroupPermissionsPoco
+                        {
+                            GroupId = groupId,
+                            UserGroup = GetGroup(groupId).Result
+                        };
                         SetInstanceTotalSteps(1);
                     }
                 }
@@ -388,6 +395,15 @@ namespace Workflow.Processes
             taskInstance.UserGroup = group.UserGroup;
         }
 
+        /// <summary>
+        /// Helper to grab the user group when populating the default approver
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private async Task<UserGroupPoco> GetGroup(int id)
+        {
+            return await _groupService.GetPopulatedUserGroupAsync(id);
+        }
 
         /// <summary>
         /// set the total steps property for a workflow instance

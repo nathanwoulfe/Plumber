@@ -8,6 +8,7 @@ using Workflow.Models;
 using Workflow.Helpers;
 using Workflow.Services;
 using System.Threading.Tasks;
+using Umbraco.Web;
 using Workflow.Services.Interfaces;
 
 namespace Workflow.Api
@@ -19,6 +20,17 @@ namespace Workflow.Api
         private readonly IGroupService _groupService;
 
         public GroupsController()
+        {
+            _groupService = new GroupService();
+        }
+
+        public GroupsController(UmbracoContext umbracoContext) : base(umbracoContext)
+        {
+            _groupService = new GroupService();
+        }
+
+        public GroupsController(UmbracoContext umbracoContext, UmbracoHelper umbracoHelper) : base(umbracoContext,
+            umbracoHelper)
         {
             _groupService = new GroupService();
         }
@@ -37,7 +49,9 @@ namespace Workflow.Api
                 {
                     UserGroupPoco result = await _groupService.GetUserGroupAsync(id.Value);
                     if (result != null)
+                    {
                         return Json(result, ViewHelpers.CamelCase);
+                    }
                 }
                 else
                 {
@@ -48,7 +62,7 @@ namespace Workflow.Api
             }
             catch (Exception e)
             {
-                string error = $"Error getting group by id {id}";
+                string error = MagicStrings.ErrorGettingGroup.Replace("{id}", id.ToString());
                 Log.Error(error, e);
                 // if we are here, something isn't right...
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e, error));
@@ -73,10 +87,10 @@ namespace Workflow.Api
                 // check that it doesn't already exist
                 if (poco == null)
                 {
-                    return Ok(new { status = 200, success = false, msg = "Group name already exists" });
+                    return Ok(new { status = 200, success = false, msg = MagicStrings.GroupNameExists });
                 }
 
-                string msg = $"Successfully created new user group '{name}'.";
+                string msg = MagicStrings.GroupCreated.Replace("{name}", name);
                 Log.Debug(msg);
 
                 // return the id of the new group, to update the front-end route to display the edit view

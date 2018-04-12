@@ -18,7 +18,7 @@ namespace Workflow.Services
         private readonly ILogger _log;
         private readonly IPocoRepository _repo;
 
-        public static event EventHandler GroupCreated;
+        public event EventHandler GroupCreated;
         protected virtual void OnGroupCreated(EventArgs e)
         {
             GroupCreated?.Invoke(this, e);
@@ -84,17 +84,6 @@ namespace Workflow.Services
         {
             UserGroupPoco result = _repo.GetPopulatedUserGroup(id);
             return Task.FromResult(result);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public UserGroupPermissionsPoco GetDefaultUserGroupPermissions(string name)
-        {
-            UserGroupPermissionsPoco result = _repo.GetDefaultUserGroupPermissions(name);
-            return result;
         }
 
         /// <summary>

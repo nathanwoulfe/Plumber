@@ -72,7 +72,7 @@ namespace Workflow.Helpers
         /// <returns></returns>
         public static IUser GetCurrentUser()
         {
-            return UmbracoContext.Current.Security.CurrentUser;
+            return UmbracoContext.Current?.Security.CurrentUser;
         }
 
         /// <summary>

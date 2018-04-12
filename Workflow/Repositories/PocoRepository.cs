@@ -56,11 +56,11 @@ namespace Workflow.Repositories
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public UserGroupPermissionsPoco GetDefaultUserGroupPermissions(string name)
+        public UserGroupPermissionsPoco GetDefaultUserGroupPermissions(int id)
         {
-            UserGroupPermissionsPoco permissions = _database.Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupBasic, name).First();
+            UserGroupPermissionsPoco permissions = _database.Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupBasic, id).FirstOrDefault();
             return permissions;
         }
 
@@ -85,7 +85,7 @@ namespace Workflow.Repositories
                     new GroupsRelator().MapIt,
                     SqlHelpers.UserGroupDetailed,
                     id
-                ).First(g => !g.Deleted);
+                ).FirstOrDefault(g => !g.Deleted);
         }
 
         /// <summary>
