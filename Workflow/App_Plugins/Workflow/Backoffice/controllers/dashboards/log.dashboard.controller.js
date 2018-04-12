@@ -7,12 +7,12 @@
 
         function refresh() {
             workflowResource.getLog()
-                .then(function (resp) {
+                .then(resp => {
                     log.html = resp;
                 });
 
             workflowResource.getLogDates()
-                .then(function (resp) {
+                .then(resp => {
                     // resp is an array of log dates, where [0] is 'txt', for the current date as the source file is undated
                     log.datePickerConfig.minDate = resp.length > 1 ? moment(resp[1]) : moment();
                 });
@@ -21,9 +21,9 @@
         function datePickerChange(event) {
             // handle change for a valid date - fetch corresponding log file if date is ok
             if (event.date && event.date.isValid() && event.oldDate.isValid()) {
-                var date = event.date.format('YYYY-MM-DD');
+                const date = event.date.format('YYYY-MM-DD');
                 workflowResource.getLog(date === moment().format('YYYY-MM-DD') ? '' : date)
-                    .then(function (resp) {
+                    .then(resp => {
                         log.html = resp;
                     });
             }
@@ -60,5 +60,5 @@
 
     }
 
-    angular.module('umbraco').controller('Workflow.Log.Controller', logController);
+    angular.module('umbraco').controller('Workflow.Log.Controller', ['plmbrWorkflowResource', logController]);
 }());

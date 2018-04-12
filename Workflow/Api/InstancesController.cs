@@ -42,7 +42,7 @@ namespace Workflow.Api
                 return Json(new
                 {
                     items = workflowInstances,
-                    total = _instancesService.CountPending(),
+                    totalPages = (int)Math.Ceiling(_instancesService.CountAll() / count),
                     page,
                     count
                 }, ViewHelpers.CamelCase);

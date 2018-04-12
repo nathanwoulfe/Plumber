@@ -15,7 +15,7 @@ namespace Workflow.Services
         public SettingsService()
             : this(
                 ApplicationContext.Current.ProfilingLogger.Logger,
-                new PocoRepository(ApplicationContext.Current.DatabaseContext.Database)
+                new PocoRepository()
             )
         {
         }

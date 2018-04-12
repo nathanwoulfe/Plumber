@@ -80,7 +80,7 @@
         function setPaging(resp) {
             vm.items = resp.items;
             vm.pagination.pageNumber = resp.page;
-            vm.pagination.totalPages = resp.total / resp.count;
+            vm.pagination.totalPages = resp.totalPages;
             vm.loading = false;
         }
 
@@ -109,6 +109,6 @@
         }());
     }
 
-    angular.module('umbraco').controller('Workflow.History.Controller', historyController);
+    angular.module('umbraco').controller('Workflow.History.Controller', ['$scope', 'plmbrWorkflowResource', historyController]);
 
 }());

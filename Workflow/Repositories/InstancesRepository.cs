@@ -7,7 +7,6 @@ using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Relators;
 using Workflow.Repositories.Interfaces;
-using Workflow.UnitOfWork;
 
 namespace Workflow.Repositories
 {
@@ -20,7 +19,7 @@ namespace Workflow.Repositories
         {
         }
 
-        public InstancesRepository(UmbracoDatabase database)
+        private InstancesRepository(UmbracoDatabase database)
         {
             _database = database;
         }
@@ -28,21 +27,19 @@ namespace Workflow.Repositories
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="uow"></param>
         /// <param name="poco"></param>
-        public void InsertInstance(IUnitOfWork uow, WorkflowInstancePoco poco)
+        public void InsertInstance(WorkflowInstancePoco poco)
         {
-            uow.Db.Insert(poco);
+            _database.Insert(poco);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="uow"></param>
         /// <param name="poco"></param>
-        public void UpdateInstance(IUnitOfWork uow, WorkflowInstancePoco poco)
+        public void UpdateInstance(WorkflowInstancePoco poco)
         {
-            uow.Db.Update(poco);
+            _database.Update(poco);
         }
 
         /// <summary>
@@ -52,6 +49,15 @@ namespace Workflow.Repositories
         public int CountPendingInstances()
         {
             return _database.Fetch<int>(SqlHelpers.CountPendingInstances).First();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public double CountAllInstances()
+        {
+            return _database.Fetch<double>(SqlHelpers.CountAllInstances).First();
         }
 
         /// <summary>

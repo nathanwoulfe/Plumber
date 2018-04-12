@@ -7,37 +7,47 @@ using log4net;
 using Umbraco.Core.Models;
 using Workflow.Helpers;
 using Workflow.Models;
-using Workflow.Repositories;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
 
 namespace Workflow
 {
-    public static class Notifications
+    public class Notifications
     {
-        private static readonly PocoRepository Pr = new PocoRepository();
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static readonly ISettingsService SettingsService = new SettingsService();
 
-        /// <summary>
-        /// TODO: these should come from a config file rather than static strings...
-        /// </summary>
+        private readonly ISettingsService _settingsService;
+        private readonly ITasksService _tasksService;
+        private readonly IGroupService _groupService;
+
         private const string EmailApprovalRequestString = "Dear {0},<br/><br/>Please review the following page for {5} approval: <a href=\"{1}\">{2}</a><br/><br/>Comment: {3}<br/><br/>Thanks,<br/>{4}";
         private const string EmailApprovedString = "Dear {0},<br/><br/>The following document's workflow has been approved and the document {3}: <a href=\"{1}\">{2}</a><br/>";
         private const string EmailRejectedString = "Dear {0},<br/><br/>The {5} workflow was rejected by {4}: <a href=\"{1}\">{2}</a><br/><br/>Comment: {3}";
         private const string EmailCancelledString = "Dear {0},<br/><br/>{1} workflow has been cancelled for the following page: <a href=\"{2}\">{3}</a> by {4}.<br/><br/>Reason: {5}.";
+
+        public Notifications()
+        {
+            _settingsService = new SettingsService();
+            _tasksService = new TasksService();
+            _groupService = new GroupService();
+        }
 
         /// <summary>
         /// Sends an email notification out for the workflow process
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="emailType">the type of email to be sent</param>
-        public static void Send(WorkflowInstancePoco instance, EmailType emailType)
+        public async void Send(WorkflowInstancePoco instance, EmailType emailType)
         {
-            WorkflowSettingsPoco settings = SettingsService.GetSettings();
+            WorkflowSettingsPoco settings = _settingsService.GetSettings();
 
             bool? doSend = settings.SendNotifications;
             if (doSend != true) return;
+
+            if (!instance.TaskInstances.Any())
+            {
+                instance.TaskInstances = _tasksService.GetTasksWithGroupByInstanceGuid(instance.Guid);
+            }
 
             try
             {
@@ -53,20 +63,21 @@ namespace Workflow
                 // in the loop, also store the last task to a variable, and keep the populated group
                 var taskIndex = 0;
                 int taskCount = flowTasks.Count();
+
                 WorkflowTaskInstancePoco finalTask = null;
 
                 foreach (WorkflowTaskInstancePoco task in flowTasks)
                 {
                     taskIndex += 1;
 
-                    UserGroupPoco group = Pr.GetPopulatedUserGroup(task.GroupId);
+                    UserGroupPoco group = await _groupService.GetPopulatedUserGroupAsync(task.GroupId);
                     if (group == null) continue;
 
                     emailsForAllTaskUsers.AddRange(group.PreferredEmailAddresses());
                     if (taskIndex != taskCount) continue;
 
                     finalTask = task;
-                    finalTask.UserGroup = @group;
+                    finalTask.UserGroup = group;
                 }
 
                 List<string> to = new List<string>();

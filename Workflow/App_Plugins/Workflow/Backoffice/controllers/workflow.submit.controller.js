@@ -7,5 +7,5 @@
         });
     }
 
-    angular.module('umbraco').controller('Workflow.Submit.Controller', submitController);
+    angular.module('umbraco').controller('Workflow.Submit.Controller', ['$scope', submitController]);
 }());

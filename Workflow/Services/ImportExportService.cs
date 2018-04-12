@@ -17,12 +17,12 @@ namespace Workflow.Services
         public ImportExportService()
             : this(
                   ApplicationContext.Current.ProfilingLogger.Logger,
-                  new ImportExportRepository(ApplicationContext.Current.DatabaseContext.Database)
+                  new ImportExportRepository()
             )
         {
         }
 
-        public ImportExportService(ILogger log, IImportExportRepository repo)
+        private ImportExportService(ILogger log, IImportExportRepository repo)
         {
             _log = log;
             _repo = repo;

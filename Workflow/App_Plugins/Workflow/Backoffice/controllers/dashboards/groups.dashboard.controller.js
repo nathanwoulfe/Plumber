@@ -3,37 +3,27 @@
 
     function dashboardController($rootScope, workflowGroupsResource) {
 
-        var vm = this;
+        this.name = 'Approval groups';
+        this.loading = true;
+        this.items = [];
 
-        $rootScope.$on('refreshGroupsDash', function () {
-            init();
-        });
-
-        function init() {
+        this.init = () => {
             workflowGroupsResource.get()
-                .then(function(resp) {
-                    vm.loading = false;
-                    vm.items = resp;
+                .then(resp => {
+                    this.loading = false;
+                    this.items = resp;
                 });
         }
 
-        function getEmail(users) {
-            return users.map(function (v) {
-                return v.user.email;
-            }).join(';');
-        }
+        this.getEmail = (users) => users.map(v => v.user.email).join(';');
 
-        angular.extend(vm, {
-            name: 'Approval groups',
-            loading: true,
-            items: [],
-
-            getEmail: getEmail
+        $rootScope.$on('refreshGroupsDash', () => {
+            this.init();
         });
 
-        init();
+        this.init();
     }
 
-    angular.module('umbraco').controller('Workflow.Groups.Dashboard.Controller', dashboardController);
+    angular.module('umbraco').controller('Workflow.Groups.Dashboard.Controller', ['$rootScope', 'plmbrGroupsResource', dashboardController]);
 
 }());

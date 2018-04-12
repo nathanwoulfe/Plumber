@@ -12,9 +12,10 @@
 
             var series = [],
                 seriesNames = [],
-                s, o,
-                isTask = vm.type === 'Task',
-                d = new Date();
+                s, o, 
+                isTask = vm.type === 'Task';
+
+            const d = new Date();
 
             d.setDate(d.getDate() - vm.range);
             var then = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
@@ -34,7 +35,7 @@
                 }
             };
 
-            items.forEach(function (v) {
+            items.forEach(v => {
                 var statusName = isTask ? v.statusName : v.status;
 
                 // bit messy, but need to modify some returned name values
@@ -65,9 +66,7 @@
                         seriesNames.push(statusName);
                     }
 
-                    s = series.filter(function (ss) {
-                        return ss.name === statusName;
-                    })[0];
+                    s = series.filter(ss => ss.name === statusName)[0];
 
                     s.data[vm.range - now.diff(moment(isTask ? v.completedDate : v.completedOn), 'days')] += 1;
                     created.data[vm.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn), 'days')] += 1;
@@ -94,31 +93,30 @@
                     }
 
                 } else {
-                    var index = vm.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn), 'days');
+                    const index = vm.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn), 'days');
                     created.data[index < 0 ? 0 : index] += 1;
                     vm.totalPending += 1;
                 }
             });
 
-            created.data.forEach(function(d, i) {
+            created.data.forEach((v, i) => {
                 if (i > 0) {
                     created.data[i] += created.data[i - 1];
                 }
             });
             series.push(created);
 
-            vm.series = series.sort(function (a, b) { return a.name > b.name; });
+            vm.series = series.sort((a, b) => a.name > b.name);
 
-            vm.title = 'Workflow ' + vm.type.toLowerCase() + ' activity';
+            vm.title = `Workflow ${vm.type.toLowerCase()} activity`;
             vm.loaded = true;
         }
 
+        /**
+         * Returns an array of 0s, length equal to the selected range
+         */
         function defaultData() {
-            var arr = [];
-            for (var i = 0; i <= vm.range; i += 1) {
-                arr.push(0);
-            }
-            return arr;
+            return Array(vm.range).fill([]).map(() => 0);
         }
 
         function getForRange() {
@@ -133,14 +131,15 @@
 
                 vm.loaded = false;
                 vm.totalApproved = vm.totalCancelled = vm.totalPending = vm.totalRejected = 0;
+
                 if (vm.type === 'Task') {
                     workflowResource.getAllTasksForRange(vm.range)
-                        .then(function (resp) {
+                        .then(resp => {
                             lineChart(resp.items);
                         });
                 } else {
                     workflowResource.getAllInstancesForRange(vm.range)
-                        .then(function (resp) {
+                        .then(resp => {
                             lineChart(resp.items);
                         });
                 }
@@ -149,11 +148,11 @@
 
         // check the current installed version against the remote on GitHub, only if the 
         // alert has never been dismissed, or was dismissed more than 7 days ago
-        var pesterDate = localStorage.getItem(storeKey);
+        const pesterDate = localStorage.getItem(storeKey);
 
         if (!pesterDate || moment(pesterDate).isBefore(now)) {
             workflowResource.getVersion()
-                .then(function(resp) {
+                .then(resp => {
                     vm.version = resp;
                 });
         }
@@ -181,5 +180,5 @@
         getForRange();
     }
 
-    angular.module('umbraco').controller('Workflow.AdminDashboard.Controller', dashboardController);
+    angular.module('umbraco').controller('Workflow.AdminDashboard.Controller', ['plmbrWorkflowResource', dashboardController]);
 }());

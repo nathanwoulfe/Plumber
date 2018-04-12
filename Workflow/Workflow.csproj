@@ -44,8 +44,11 @@
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.contenttypeflow.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.contenttypepicker.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.importexportdashboard.html" />
-    <Compile Include="Events\Args\OnConfigUpdatedEventArgs.cs" />
-    <Compile Include="Events\Args\OnGroupCreatedEventArgs.cs" />
+    <Compile Include="Events\Args\ConfigEventArgs.cs" />
+    <Compile Include="Events\Args\GroupEventArgs.cs" />
+    <Compile Include="Events\Args\TaskEventArgs.cs" />
+    <Compile Include="Events\Args\InstanceEventArgs.cs" />
+    <Compile Include="Events\EventArgsBase.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
     <Compile Include="Helpers\Installer.cs" />
@@ -100,7 +103,6 @@
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Processes\DocumentPublishProcess.cs" />
     <Compile Include="Helpers\Utility.cs" />
-    <Compile Include="Processes\IWorkflowProcess.cs" />
     <Compile Include="Processes\DocumentUnpublishProcess.cs" />
     <Compile Include="Models\UserGroupsModel.cs" />
     <Compile Include="Models\User2UserGroupPoco.cs" />
@@ -113,7 +115,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Relators\TaskToInstanceRelator.cs" />
     <Compile Include="Relators\GroupsRelator.cs" />
-    <Compile Include="Processes\WorkflowApprovalProcess.cs" />
+    <Compile Include="Processes\WorkflowProcess.cs" />
     <Compile Include="Helpers\UrlHelpers.cs" />
     <Compile Include="Helpers\Exceptions.cs" />
     <Compile Include="Relators\UserToGroupForInstanceRelator.cs" />
@@ -197,13 +199,16 @@
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.config.dialog.html" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="businesslogic">
+    <Reference Include="businesslogic, Version=1.0.6634.25793, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\businesslogic.dll</HintPath>
     </Reference>
-    <Reference Include="cms">
+    <Reference Include="cms, Version=1.0.6634.25794, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\cms.dll</HintPath>
     </Reference>
-    <Reference Include="controls">
+    <Reference Include="controls, Version=1.0.6634.25794, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\controls.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
@@ -218,7 +223,8 @@
       <HintPath>..\packages\ImageProcessor.Web.4.8.3\lib\net45\ImageProcessor.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="interfaces">
+    <Reference Include="interfaces, Version=1.0.6634.25783, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\interfaces.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
@@ -268,7 +274,8 @@
     <Reference Include="Semver, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Semver.2.0.4\lib\net452\Semver.dll</HintPath>
     </Reference>
-    <Reference Include="SQLCE4Umbraco">
+    <Reference Include="SQLCE4Umbraco, Version=1.0.6634.25794, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\SQLCE4Umbraco.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -276,10 +283,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.1, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\UmbracoCms.Core.7.7.1\lib\net45\System.Data.SqlServerCe.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Data.SqlServerCe.Entity, Version=4.0.0.1, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <HintPath>..\packages\UmbracoCms.Core.7.7.1\lib\net45\System.Data.SqlServerCe.Entity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http" />
@@ -307,28 +310,36 @@
     <Reference Include="TidyNet">
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\TidyNet.dll</HintPath>
     </Reference>
-    <Reference Include="umbraco">
+    <Reference Include="umbraco, Version=1.0.6634.25796, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\umbraco.dll</HintPath>
     </Reference>
-    <Reference Include="Umbraco.Core">
+    <Reference Include="Umbraco.Core, Version=1.0.6634.25789, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\Umbraco.Core.dll</HintPath>
     </Reference>
-    <Reference Include="umbraco.DataLayer">
+    <Reference Include="umbraco.DataLayer, Version=1.0.6634.25793, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\umbraco.DataLayer.dll</HintPath>
     </Reference>
-    <Reference Include="umbraco.editorControls">
+    <Reference Include="umbraco.editorControls, Version=1.0.6634.25799, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\umbraco.editorControls.dll</HintPath>
     </Reference>
-    <Reference Include="umbraco.MacroEngines">
+    <Reference Include="umbraco.MacroEngines, Version=1.0.6634.25799, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\umbraco.MacroEngines.dll</HintPath>
     </Reference>
-    <Reference Include="umbraco.providers">
+    <Reference Include="umbraco.providers, Version=1.0.6634.25795, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\umbraco.providers.dll</HintPath>
     </Reference>
-    <Reference Include="Umbraco.Web.UI">
+    <Reference Include="Umbraco.Web.UI, Version=1.0.6634.25802, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\Umbraco.Web.UI.dll</HintPath>
     </Reference>
-    <Reference Include="UmbracoExamine">
+    <Reference Include="UmbracoExamine, Version=0.7.0.25794, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\UmbracoExamine.dll</HintPath>
     </Reference>
   </ItemGroup>

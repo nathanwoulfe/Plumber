@@ -3,33 +3,22 @@
 
     function importexportController(workflowResource, notificationsService) {
 
-        var vm = this;
-
-        function doImport() {
-            workflowResource.doImport(vm.importData)
-                .then(function(resp) {
-                    if (resp) {
-                        notificationsService.success('SUCCESS', 'Plumber config imported successfully');
-                    } else {
-                        notificationsService.error('ERROR', 'Plumber config import failed');
-                    }
+        this.doImport = () => {
+            workflowResource.doImport(this.importData)
+                .then(resp => {
+                    resp ? notificationsService.success('SUCCESS', 'Plumber config imported successfully')
+                        : notificationsService.error('ERROR', 'Plumber config import failed');
                 });
         }
 
-        function doExport() {
+        this.doExport = () => {
             workflowResource.doExport()
-                .then(function(resp) {
-                    vm.exportData = JSON.stringify(resp);
+                .then(resp => {
+                    this.exportData = JSON.stringify(resp);
                 });
         }
-
-        angular.extend(vm,
-            {
-                doImport: doImport,
-                doExport: doExport
-            });
 
     }
 
-    angular.module('umbraco').controller('Workflow.ImportExport.Controller', importexportController);
+    angular.module('umbraco').controller('Workflow.ImportExport.Controller', ['plmbrWorkflowResource', 'notificationsService', importexportController]);
 }());

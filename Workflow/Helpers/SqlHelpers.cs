@@ -23,6 +23,8 @@
 
         // instance
         public const string CountPendingInstances = @"SELECT COUNT(*) FROM WorkflowInstance WHERE Status = 3";
+        public const string CountAllInstances = @"SELECT COUNT(*) FROM WorkflowInstance";
+
         public const string InstanceByGuid = @"SELECT * FROM WorkflowInstance WHERE Guid = @0";
         public const string InstanceByNodeStr = @"SELECT * FROM WorkflowInstance WHERE NodeId = @0";
         public const string AllInstances = @"SELECT * FROM WorkflowInstance 
@@ -30,7 +32,7 @@
                             on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
-                            ORDER BY WorkflowInstance.CreatedDate";
+                            ORDER BY WorkflowInstance.CreatedDate DESC";
         public const string AllInstancesForDateRange = @"SELECT * FROM WorkflowInstance
                             WHERE CompletedDate IS NULL OR CompletedDate >= CONVERT(DATETIME, @0)";
 
@@ -59,14 +61,15 @@
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId                     
                             WHERE WorkflowInstance.AuthorUserId = @id
-                            AND WorkflowTaskInstance.Status in (@statusInts)";
+                            AND WorkflowTaskInstance.Status in (@statusInts)
+                            ORDER BY WorkflowTaskInstance.CreatedDate DESC";
         public const string AllGroupTasks = @"SELECT * FROM WorkflowTaskInstance 
                             LEFT JOIN WorkflowInstance
                             on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
                             WHERE WorkflowTaskInstance.GroupId = @0
-                            ORDER BY WorkflowTaskInstance.CreatedDate";
+                            ORDER BY WorkflowTaskInstance.CreatedDate DESC";
         public const string AllTasksForDateRange = @"SELECT * FROM WorkflowTaskInstance
                             WHERE CompletedDate IS NULL OR CompletedDate >= CONVERT(DATETIME, @0)";
         public const string PendingTasks = @"SELECT * FROM WorkflowTaskInstance 
@@ -75,18 +78,19 @@
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
                             WHERE WorkflowTaskInstance.Status in (@statusInts)
-                            ORDER BY WorkflowTaskInstance.CreatedDate";
+                            ORDER BY WorkflowTaskInstance.CreatedDate DESC";
         public const string TasksByNode = @"SELECT * FROM WorkflowTaskInstance 
                             LEFT JOIN WorkflowInstance
                             on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
-                            WHERE WorkflowInstance.NodeId = @0";                                                                
+                            WHERE WorkflowInstance.NodeId = @0
+                            ORDER BY WorkflowTaskInstance.CreatedDate DESC";                                                                
         public const string TasksAndGroupByInstanceId = @"SELECT * FROM WorkflowTaskInstance 
                             LEFT JOIN WorkflowUserGroups
                             ON WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
                             WHERE WorkflowInstanceGuid = @0
-                            ORDER BY WorkflowTaskInstance.CreatedDate";
+                            ORDER BY WorkflowTaskInstance.CreatedDate DESC";
 
         // permissions
         public const string PermissionsByNode = @"SELECT * FROM WorkflowUserGroupPermissions

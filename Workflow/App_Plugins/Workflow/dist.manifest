@@ -5,7 +5,6 @@
         '~/App_Plugins/workflow/backoffice/js/workflow.js'
     ],
     css: [
-		'~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.css',
 		'~/App_Plugins/workflow/backoffice/css/styles.min.css'
     ]
 }

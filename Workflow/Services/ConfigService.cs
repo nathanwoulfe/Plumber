@@ -5,7 +5,6 @@ using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Models;
 using Workflow.Events.Args;
-using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Repositories.Interfaces;
@@ -21,21 +20,17 @@ namespace Workflow.Services
         private readonly ILogger _log;
         private readonly IPocoRepository _repo;
 
-        public static event EventHandler ConfigUpdated;
-        protected virtual void OnConfigUpdated(EventArgs e)
-        {
-            ConfigUpdated?.Invoke(this, e);
-        }
+        public static event EventHandler Updated;
 
         public ConfigService()
             : this(
                   ApplicationContext.Current.ProfilingLogger.Logger,
-                  new PocoRepository(ApplicationContext.Current.DatabaseContext.Database)
+                  new PocoRepository()
             )
         {
         }
 
-        public ConfigService(ILogger log, IPocoRepository repo)
+        private ConfigService(ILogger log, IPocoRepository repo)
         {
             _log = log;
             _repo = repo;
@@ -59,12 +54,7 @@ namespace Workflow.Services
             foreach (UserGroupPermissionsPoco poco in permission.Value)
                 _repo.AddPermission(poco);
 
-            // emit event
-            OnConfigUpdated(new OnConfigUpdatedEventArgs
-            {
-                Model = model,
-                UpdatedBy = Utility.GetCurrentUser()
-            });
+            Updated?.Invoke(this, new ConfigEventArgs(model, "Node"));
 
             return true;
         }
@@ -89,12 +79,7 @@ namespace Workflow.Services
                 }
             }
 
-            // emit event
-            OnConfigUpdated(new OnConfigUpdatedEventArgs
-            {
-                Model = model,
-                UpdatedBy = Utility.GetCurrentUser()
-            });
+            Updated?.Invoke(this, new ConfigEventArgs(model, "ContentType"));
 
             return true;
         }

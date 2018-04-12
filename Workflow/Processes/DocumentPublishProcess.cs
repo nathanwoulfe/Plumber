@@ -1,23 +1,45 @@
 ﻿using log4net;
 using System;
+using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Publishing;
 using Umbraco.Core.Services;
+using Workflow.Events.Args;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Processes
 {
     /// <summary>
     /// Process definition for the Document Publish workflow process.
     /// </summary>
-    public class DocumentPublishProcess : WorkflowApprovalProcess
+    public class DocumentPublishProcess : WorkflowProcess
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly IContentService _contentService;
+        private readonly IInstancesService _instancesService;
+        private readonly Notifications _notifications;
+
+        public static event EventHandler<InstanceEventArgs> Completed;
 
         public DocumentPublishProcess()
+            : this(
+                ApplicationContext.Current.Services.ContentService,
+                new InstancesService(),
+                new Notifications()
+                )
         {
+        }
+
+        private DocumentPublishProcess(IContentService contentService, IInstancesService instancesService, Notifications notifications)
+        {
+            _contentService = contentService;
+            _instancesService = instancesService;
+            _notifications = notifications;
+
             Type = WorkflowType.Publish;
         }
 
@@ -47,8 +69,7 @@ namespace Workflow.Processes
             Instance.CompletedDate = DateTime.Now;
 
             // Perform the publish
-            IContentService cs = ApplicationContext.Current.Services.ContentService;
-            IContent node = cs.GetById(Instance.NodeId);
+            IContent node = _contentService.GetById(Instance.NodeId);
 
             // clear the release date
             if (node.ReleaseDate.HasValue)
@@ -56,7 +77,7 @@ namespace Workflow.Processes
                 node.ReleaseDate = null;
             }
 
-            Attempt<PublishStatus> publishStatus = cs.PublishWithStatus(node);
+            Attempt<PublishStatus> publishStatus = _contentService.PublishWithStatus(node, Instance.TaskInstances.Last().ActionedByUserId ?? Utility.GetCurrentUser().Id);
 
             if (!publishStatus.Success)
             {
@@ -69,8 +90,10 @@ namespace Workflow.Processes
 
             }
 
-            ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
-            Notifications.Send(Instance, EmailType.ApprovedAndCompleted);
+            _instancesService.UpdateInstance(Instance);
+
+            _notifications.Send(Instance, EmailType.ApprovedAndCompleted);
+            Completed?.Invoke(this, new InstanceEventArgs(Instance, "PublishNow"));
         }
 
         /// <summary>
@@ -83,9 +106,11 @@ namespace Workflow.Processes
                 // Just complete the workflow
                 Instance.Status = (int)WorkflowStatus.Approved;
                 Instance.CompletedDate = DateTime.Now;
-                ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
+                _instancesService.UpdateInstance(Instance);
 
-                Notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
+                _notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
+
+                Completed?.Invoke(this, new InstanceEventArgs(Instance, "PublishAt"));
 
                 // Publish will occur via scheduler.
             }

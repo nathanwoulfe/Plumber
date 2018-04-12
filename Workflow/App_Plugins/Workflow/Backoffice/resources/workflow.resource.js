@@ -117,6 +117,6 @@
     }
 
     // register service
-    angular.module('umbraco.services').factory('workflowResource', workflowResource);
+    angular.module('umbraco.services').factory('plmbrWorkflowResource', workflowResource);
 
 }());

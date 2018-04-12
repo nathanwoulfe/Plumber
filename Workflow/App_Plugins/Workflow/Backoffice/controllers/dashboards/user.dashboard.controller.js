@@ -12,19 +12,19 @@
         }
 
         // dash needs notification of when to refresh, as the action is in a deeper scope
-        $rootScope.$on('refreshWorkflowDash', function () {
+        $rootScope.$on('refreshWorkflowDash', () => {
             init();
         });
 
         function getPending() {
             // api call for tasks assigned to the current user
             workflowResource.getApprovalsForUser(vm.currentUser.id, vm.taskPagination.perPage, vm.taskPagination.pageNumber)
-                .then(function (resp) {
+                .then(resp => {
                     vm.tasks = resp.items;
                     vm.taskPagination.pageNumber = resp.page;
                     vm.taskPagination.totalPages = resp.total / resp.count;
                     vm.loaded[0] = true;
-                }, function (err) {
+                }, err => {
                     notify(err);
                 });
         }
@@ -32,12 +32,12 @@
         function getSubmissions() {
             // api call for tasks created by the current user
             workflowResource.getSubmissionsForUser(vm.currentUser.id, vm.submissionPagination.perPage, vm.submissionPagination.pageNumber)
-                .then(function (resp) {
+                .then(resp => {
                     vm.submissions = resp.items;
                     vm.submissionPagination.pageNumber = resp.page;
                     vm.submissionPagination.totalPages = resp.total / resp.count;
                     vm.loaded[1] = true;
-                }, function (err) {
+                }, err => {
                     notify(err);
                 });
         }
@@ -46,12 +46,12 @@
             // if the current user is in an admin group, display all active tasks
             if (vm.adminUser) {
                 workflowResource.getPendingTasks(vm.adminPagination.perPage, vm.adminPagination.pageNumber)
-                    .then(function (resp) {
+                    .then(resp => {
                         vm.activeTasks = resp.items;
                         vm.adminPagination.pageNumber = resp.page;
-                        vm.adminPagination.totalPages = resp.total / resp.count;
+                        vm.adminPagination.totalPages = resp.totalPages;
                         vm.loaded[2] = true;
-                    }, function (err) {
+                    }, err => {
                         notify(err);
                     });
             }
@@ -84,7 +84,7 @@
                 pageNumber: 1,
                 totalPages: 0,
                 perPage: 5,
-                goToPage: function (i) {
+                goToPage: i => {
                     vm.taskPagination.pageNumber = i;
                     getPending();
                 }
@@ -94,7 +94,7 @@
                 pageNumber: 1,
                 totalPages: 0,
                 perPage: 5,
-                goToPage: function (i) {
+                goToPage: i => {
                     vm.submissionPagination.pageNumber = i;
                     getSubmissions();
                 }
@@ -104,7 +104,7 @@
                 pageNumber: 1,
                 totalPages: 0,
                 perPage: 10,
-                goToPage: function (i) {
+                goToPage: i => {
                     vm.adminPagination.pageNumber = i;
                     getAdmin();
                 }
@@ -113,7 +113,7 @@
 
         // kick it all off
         authResource.getCurrentUser()
-            .then(function (user) {
+            .then(user => {
                 vm.currentUser = user;
                 vm.adminUser = user.allowedSections.indexOf('workflow') !== -1;
                 init();
@@ -121,5 +121,6 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.UserDashboard.Controller', dashboardController);
+    angular.module('umbraco').controller('Workflow.UserDashboard.Controller',
+        ['$scope', '$rootScope', '$routeParams', 'plmbrWorkflowResource', 'authResource', 'notificationsService', dashboardController]);
 }());

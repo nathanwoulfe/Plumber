@@ -6,7 +6,6 @@ using Umbraco.Core.Persistence;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Repositories.Interfaces;
-using Workflow.UnitOfWork;
 
 namespace Workflow.Repositories
 {
@@ -19,7 +18,7 @@ namespace Workflow.Repositories
         {
         }
 
-        public TasksRepository(UmbracoDatabase database)
+        private TasksRepository(UmbracoDatabase database)
         {
             _database = database;
         }
@@ -27,21 +26,19 @@ namespace Workflow.Repositories
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="uow"></param>
         /// <param name="poco"></param>
-        public void InsertTask(IUnitOfWork uow, WorkflowTaskInstancePoco poco)
+        public void InsertTask(WorkflowTaskInstancePoco poco)
         {
-            uow.Db.Insert(poco);
+            _database.Insert(poco);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="uow"></param>
         /// <param name="poco"></param>
-        public void UpdateTask(IUnitOfWork uow, WorkflowTaskInstancePoco poco)
+        public void UpdateTask(WorkflowTaskInstancePoco poco)
         {
-            uow.Db.Update(poco);
+            _database.Update(poco);
         }
 
         /// <summary>
@@ -66,12 +63,11 @@ namespace Workflow.Repositories
         /// <summary>
         /// Get tasks and associated group by instance guid
         /// </summary>
-        /// <param name="uow"></param>
         /// <param name="guid">The instance guid</param>
         /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetTasksAndGroupByInstanceId(IUnitOfWork uow, Guid guid)
+        public List<WorkflowTaskInstancePoco> GetTasksAndGroupByInstanceId(Guid guid)
         {
-            return uow.Db.Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TasksAndGroupByInstanceId, guid);
+            return _database.Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TasksAndGroupByInstanceId, guid);
         }
 
         /// <summary>
@@ -133,13 +129,12 @@ namespace Workflow.Repositories
         /// <summary>
         /// Get all tasks created by the given user
         /// </summary>
-        /// <param name="uow"></param>
         /// <param name="id">The user id</param>
         /// <param name="status">The task status collection</param>
         /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(IUnitOfWork uow, int id, IEnumerable<int> status)
+        public List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status)
         {
-            return uow.Db.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.SubmissionsForUser, new { id, statusInts = status.Select(s => s.ToString()).ToArray() });
+            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.SubmissionsForUser, new { id, statusInts = status.Select(s => s.ToString()).ToArray() });
         }
     }
 }

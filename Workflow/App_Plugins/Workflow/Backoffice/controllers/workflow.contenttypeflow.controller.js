@@ -28,8 +28,8 @@
          * @param {any} index
          */
         function remove($event, index) {
+            $event.stopPropagation();
             vm.approvalPath.splice(index, 1);
-
             $scope.model.type.approvalPath = vm.approvalPath;
         }
 
@@ -50,6 +50,6 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.ContentTypeFlow.Controller', contentTypeFlowController);
+    angular.module('umbraco').controller('Workflow.ContentTypeFlow.Controller', ['$scope', contentTypeFlowController]);
 }());
 

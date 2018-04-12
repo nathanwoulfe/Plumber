@@ -44,7 +44,7 @@ namespace Workflow.Api
         {
             try
             {
-                WorkflowApprovalProcess process;
+                WorkflowProcess process;
 
                 if (model.Publish)
                 {
@@ -107,7 +107,7 @@ namespace Workflow.Api
 
             try
             {
-                WorkflowApprovalProcess process = GetProcess(instance.Type);
+                WorkflowProcess process = GetProcess(instance.Type);
                 IUser currentUser = Utility.GetCurrentUser();
 
                 instance = process.ActionWorkflow(
@@ -174,7 +174,7 @@ namespace Workflow.Api
 
             try
             {
-                WorkflowApprovalProcess process = GetProcess(instance.Type);
+                WorkflowProcess process = GetProcess(instance.Type);
                 IUser currentUser = Utility.GetCurrentUser();
 
                 instance = process.ActionWorkflow(
@@ -215,7 +215,7 @@ namespace Workflow.Api
 
             try
             {
-                WorkflowApprovalProcess process = GetProcess(instance.Type);
+                WorkflowProcess process = GetProcess(instance.Type);
                 IUser currentUser = Utility.GetCurrentUser();
 
                 instance = process.CancelWorkflow(
@@ -254,7 +254,7 @@ namespace Workflow.Api
 
             try
             {
-                WorkflowApprovalProcess process = GetProcess(instance.Type);
+                WorkflowProcess process = GetProcess(instance.Type);
                 IUser currentUser = Utility.GetCurrentUser();
 
                 instance = process.ResubmitWorkflow(
@@ -311,7 +311,8 @@ namespace Workflow.Api
 
             if (tasks.Any())
             {
-                instance.TaskInstances = tasks;
+                // ordering by approval step is most logical
+                instance.TaskInstances = tasks.OrderBy(t => t.ApprovalStep).ToList();
             }
 
             return instance;

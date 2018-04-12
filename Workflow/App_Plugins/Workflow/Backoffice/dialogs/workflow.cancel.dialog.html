@@ -1,10 +1,10 @@
-﻿<div class="workflow" ng-controller="Workflow.Cancel.Controller">    
+﻿<div class="workflow" ng-controller="Workflow.Cancel.Controller as vm">    
     <wf-comments 
-        intro="intro"
-        limit="limit"
+        intro="vm.intro"
+        limit="vm.limit"
         label-text="'Comments'"
         comment="model.comment"
         is-final-approval="model.isFinalApproval"
-        disabled="disabled">
+        disabled="vm.disabled">
     </wf-comments>
 </div>

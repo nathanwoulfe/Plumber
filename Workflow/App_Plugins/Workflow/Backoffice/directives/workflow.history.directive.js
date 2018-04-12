@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function historyDirective() {
+    function history() {
 
         var directive = {
             restrict: 'E',
@@ -16,6 +16,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('wfHistory', historyDirective);
+    angular.module('umbraco.directives').directive('wfHistory', history);
 
 }());

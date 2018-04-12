@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Workflow.Models;
-using Workflow.UnitOfWork;
 
 namespace Workflow.Repositories.Interfaces
 {
     public interface ITasksRepository
     {
-        void InsertTask(IUnitOfWork uow, WorkflowTaskInstancePoco poco);
-        void UpdateTask(IUnitOfWork uow, WorkflowTaskInstancePoco poco);
+        void InsertTask(WorkflowTaskInstancePoco poco);
+        void UpdateTask(WorkflowTaskInstancePoco poco);
 
         int CountGroupTasks(int groupId);
         int CountPendingTasks();
@@ -20,7 +19,7 @@ namespace Workflow.Repositories.Interfaces
         List<WorkflowTaskInstancePoco> GetAllTasksForDateRange(DateTime oldest);
         List<WorkflowTaskInstancePoco> GetTasksByNodeId(int nodeId);
 
-        List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(IUnitOfWork uow, int id, IEnumerable<int> status);
-        List<WorkflowTaskInstancePoco> GetTasksAndGroupByInstanceId(IUnitOfWork uow, Guid guid);
+        List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status);
+        List<WorkflowTaskInstancePoco> GetTasksAndGroupByInstanceId(Guid guid);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Workflow.Models;
-using Workflow.UnitOfWork;
 
 namespace Workflow.Repositories.Interfaces
 {
@@ -9,25 +8,28 @@ namespace Workflow.Repositories.Interfaces
     {
         /// <summary>
         /// Persist a new workflow instance to the database
-        /// Might be an SQLServerSE thing, but sometimes fails without the uow...
         /// </summary>
-        /// <param name="uow"></param>
         /// <param name="poco"></param>
-        void InsertInstance(IUnitOfWork uow, WorkflowInstancePoco poco);
+        void InsertInstance(WorkflowInstancePoco poco);
 
         /// <summary>
         /// Persists an updated workflow instance to the database
-        /// Might be an SQLServerSE thing, but sometimes fails without the uow...
         /// </summary>
-        /// <param name="uow"></param>
         /// <param name="poco"></param>
-        void UpdateInstance(IUnitOfWork uow, WorkflowInstancePoco poco);
+        void UpdateInstance(WorkflowInstancePoco poco);
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         int CountPendingInstances();
+
+        /// <summary>
+        /// 
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        double CountAllInstances();
 
         /// <summary>
         /// Get all workflow instances, regardless of status

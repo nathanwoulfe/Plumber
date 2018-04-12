@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function tasksDirective($location, userService, workflowActionsService) {
+    function tasks($location, userService, workflowActionsService) {
 
         var directive = {
             restrict: 'AEC',
@@ -81,6 +81,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('wfTasks', tasksDirective);
+    angular.module('umbraco.directives').directive('wfTasks', ['$location', 'userService', 'plmbrActionsService', tasks]);
 
 }());

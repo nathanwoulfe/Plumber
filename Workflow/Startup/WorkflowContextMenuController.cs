@@ -1,4 +1,5 @@
-﻿using Umbraco.Core;
+﻿using System;
+using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Web;
@@ -15,7 +16,10 @@ namespace Workflow.Startup
 
         private static void ContentTreeController_MenuRendering(Umbraco.Web.Trees.TreeControllerBase sender, Umbraco.Web.Trees.MenuRenderingEventArgs e)
         {
-            if (sender.TreeAlias != "content" || string.CompareOrdinal(e.NodeId, "-1") == 0) return;
+            // only add context menu to content nodes, exclude the root and recycle bin
+            if (sender.TreeAlias != Constants.Trees.Content 
+                || Convert.ToInt32(e.NodeId) == Constants.System.Root 
+                || Convert.ToInt32(e.NodeId) == Constants.System.RecycleBinContent) return;
 
             int menuLength = e.Menu.Items.Count;
             string nodeName = Utility.GetNode(int.Parse(e.NodeId)).Name;

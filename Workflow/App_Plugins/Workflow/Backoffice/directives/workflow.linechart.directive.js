@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    function lineChartDirective() {
+    function lineChart() {
 
         var directive = {
             restrict: 'E',
@@ -80,6 +80,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('wfLineChart', lineChartDirective);
+    angular.module('umbraco.directives').directive('wfLineChart', lineChart);
 
 }());

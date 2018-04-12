@@ -1,5 +1,5 @@
 # version format
-version: 0.7.4.{build}
+version: 0.7.7.{build}
 
 image: Visual Studio 2017
 
@@ -42,9 +42,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v0.7.4
-    release: Release 0.7.4
-    description: 'Bug fix on 0.7.2 -> installed added workflow dash to wrong section'
+    tag: v0.7.7
+    release: Release 0.7.7
+    description: 'Array notation for all AngularJS dependency injection, add namespace to resources and services to avoid conflicts with Umbraco/other packages'
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR

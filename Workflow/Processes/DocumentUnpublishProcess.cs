@@ -1,23 +1,46 @@
 ﻿using log4net;
 using System;
+using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Models;
+using Umbraco.Core.Persistence;
 using Umbraco.Core.Services;
+using Workflow.Events.Args;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Processes
 {
     /// <summary>
     /// Process definition for the Document Publish workflow process.
     /// </summary>
-    public class DocumentUnpublishProcess : WorkflowApprovalProcess
+    public class DocumentUnpublishProcess : WorkflowProcess
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static IContentService _contentService;
+        private static IInstancesService _instancesService;
+        private readonly Notifications _notifications;
         private static string _nodeName;
 
+        public static event EventHandler<InstanceEventArgs> Completed;
+
         public DocumentUnpublishProcess()
-        {            
+            : this(
+                ApplicationContext.Current.Services.ContentService,
+                new InstancesService(),
+                new Notifications()
+            )
+        {
+        }
+
+        private DocumentUnpublishProcess(IContentService contentService, IInstancesService instancesService, Notifications notifications)
+        {
+            _contentService = contentService;
+            _instancesService = instancesService;
+            _notifications = notifications;
+
             Type = WorkflowType.Unpublish;
         }
 
@@ -54,12 +77,11 @@ namespace Workflow.Processes
                 // Have to do this prior to the publish due to workaround for "unpublish at" handling.
                 Instance.Status = (int)WorkflowStatus.Approved;
                 Instance.CompletedDate = DateTime.Now;
-                ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
+                _instancesService.UpdateInstance(Instance);
 
                 // Perform the unpublish
-                IContentService cs = ApplicationContext.Current.Services.ContentService;
-                IContent node = cs.GetById(Instance.NodeId);
-                success = cs.UnPublish(node);
+                IContent node = _contentService.GetById(Instance.NodeId);
+                success = _contentService.UnPublish(node, Instance.TaskInstances.Last().ActionedByUserId ?? Utility.GetCurrentUser().Id);
             }
             catch (Exception e)
             {
@@ -68,7 +90,7 @@ namespace Workflow.Processes
                     // rollback the process completion.
                     Instance.Status = workflowStatus;
                     Instance.CompletedDate = null;
-                    ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
+                    _instancesService.UpdateInstance(Instance);
                 }
                 catch (Exception ex)
                 {
@@ -83,8 +105,10 @@ namespace Workflow.Processes
 
             if (success)
             {
-                Notifications.Send(Instance, EmailType.ApprovedAndCompleted);
+                _notifications.Send(Instance, EmailType.ApprovedAndCompleted);
                 Log.Info("Successfully unpublished page " + Instance.Node.Name);
+
+                Completed?.Invoke(this, new InstanceEventArgs(Instance, "UnpublishNow"));
             }
             else
             {
@@ -102,10 +126,12 @@ namespace Workflow.Processes
                 // Just complete the workflow
                 Instance.Status = (int)WorkflowStatus.Approved;
                 Instance.CompletedDate = DateTime.Now;
-                ApplicationContext.Current.DatabaseContext.Database.Update(Instance);
+                _instancesService.UpdateInstance(Instance);
 
-                Notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
+                _notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
                 // Unpublish will occur via scheduler.
+                Completed?.Invoke(this, new InstanceEventArgs(Instance, "UnpublishAt"));
+
             }
             catch (Exception ex)
             {

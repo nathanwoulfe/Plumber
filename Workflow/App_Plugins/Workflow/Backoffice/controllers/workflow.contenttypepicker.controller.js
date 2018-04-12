@@ -31,6 +31,6 @@
 
     }
 
-    angular.module('umbraco').controller('Workflow.ContentTypePicker.Controller', contentTypePickerController);
+    angular.module('umbraco').controller('Workflow.ContentTypePicker.Controller', ['$scope', contentTypePickerController]);
 
 })();

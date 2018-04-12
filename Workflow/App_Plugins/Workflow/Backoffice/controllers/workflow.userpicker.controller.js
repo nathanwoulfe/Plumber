@@ -105,6 +105,6 @@
 
     }
 
-    angular.module('umbraco').controller('Workflow.UserPicker.Controller', userPickerController);
+    angular.module('umbraco').controller('Workflow.UserPicker.Controller', ['$scope', 'usersResource', 'localizationService', userPickerController]);
 
 })();
