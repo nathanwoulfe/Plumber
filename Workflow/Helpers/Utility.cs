@@ -10,19 +10,39 @@ using Workflow.Extensions;
 
 namespace Workflow.Helpers
 {
-    public static class Utility
+    public class Utility
     {
         private static readonly UmbracoHelper Helper = new UmbracoHelper(UmbracoContext.Current);
         private static readonly IUserService UserService = ApplicationContext.Current.Services.UserService;
         private static readonly IContentTypeService ContentTypeService = ApplicationContext.Current.Services.ContentTypeService;
         private static readonly IContentService ContentService = ApplicationContext.Current.Services.ContentService;
 
+        private UmbracoContext _context;
+        private UmbracoHelper _helper;
+        private IUserService _userService;
+        private IContentTypeService _contentTypeService;
+        private IContentService _contentService;
+
+        public Utility()
+            : this(UmbracoContext.Current)
+        {
+        }
+
+        // send this a mocke
+        public Utility(UmbracoContext context)
+        {
+            _context = context;
+            _helper = new UmbracoHelper(_context);
+
+            _userService = _context.Application.Services.UserService;
+        }
+
         /// <summary>
         /// Get the node from cache, falling back to the db
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static IPublishedContent GetNode(int id)
+        public IPublishedContent GetNode(int id)
         {
             IPublishedContent n = Helper.TypedContent(id);
             if (n != null) return n;

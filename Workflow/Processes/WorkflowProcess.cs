@@ -26,7 +26,7 @@ namespace Workflow.Processes
         private readonly ITasksService _tasksService;
 
         private readonly Notifications _notifications;
-
+        private readonly Utility _utility;
         private readonly WorkflowSettingsPoco _settings;
 
         protected WorkflowType Type { private get; set; }
@@ -44,7 +44,7 @@ namespace Workflow.Processes
             _tasksService = new TasksService();
 
             _notifications = new Notifications();
-            
+            _utility = new Utility();
             _settings = _settingsService.GetSettings();
         }
 
@@ -380,7 +380,7 @@ namespace Workflow.Processes
                 if (group == null)
                 {
                     // If nothing set for the content type recurse up the tree until we find something
-                    IPublishedContent node = Utility.GetNode(nodeId);
+                    IPublishedContent node = _utility.GetNode(nodeId);
                     if (node.Level != 1)
                     {
                         SetApprovalGroup(taskInstance, node.Parent.Id, nodeId);

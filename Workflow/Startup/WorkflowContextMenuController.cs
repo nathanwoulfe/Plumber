@@ -21,8 +21,10 @@ namespace Workflow.Startup
                 || Convert.ToInt32(e.NodeId) == Constants.System.Root 
                 || Convert.ToInt32(e.NodeId) == Constants.System.RecycleBinContent) return;
 
+            var utility = new Utility();
+
             int menuLength = e.Menu.Items.Count;
-            string nodeName = Utility.GetNode(int.Parse(e.NodeId)).Name;
+            string nodeName = utility.GetNode(int.Parse(e.NodeId)).Name;
             IUser currentUser = UmbracoContext.Current.Security.CurrentUser;
             var items = new Umbraco.Web.Models.Trees.MenuItemList();
 

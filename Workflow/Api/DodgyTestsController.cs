@@ -15,11 +15,13 @@ namespace Workflow.Api
     {
         private readonly IInstancesService _instancesService;
         private readonly Notifications _notifications;
+        private readonly Utility _utility;
 
         public DodgyTestsController()
         {
             _instancesService = new InstancesService();
             _notifications = new Notifications();
+            _utility = new Utility();
         }
 
         /// <summary>
@@ -37,9 +39,11 @@ namespace Workflow.Api
             {
                 WorkflowInstancePoco instance = _instancesService.GetByGuid(instanceGuid);
 
+                var node = _utility.GetNode(1078);
+
                 _notifications.Send(instance, (EmailType)emailType);
 
-                return "done - check the mail drop folder";
+                return node.Name;
             }
             catch (Exception e)
             {
