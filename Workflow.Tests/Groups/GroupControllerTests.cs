@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Results;
@@ -52,6 +50,25 @@ namespace Workflow.Tests.Groups
             Assert.Equal(200, Utility.ObjectValue(content, "status"));
             Assert.Equal(MagicStrings.GroupCreated.Replace("{name}", name), Utility.ObjectValue(content, "msg"));
         }
+
+        // CAN DELETE VIA SERVICE - THIS REQUIRES GETCURRENTUSER TO WORK. NEED TO MOCK IT
+        //[Fact]
+        //public async void Can_Delete_Group()
+        //{
+        //    var model = new Model
+        //    {
+        //        Data = Utility.RandomString()
+        //    };
+
+        //    //create the group
+        //    dynamic content = await (await _groupsController.Post(model)).GetContent();
+
+        //    // delete the group using the returned group id
+        //    dynamic result = await (await _groupsController.Delete((int)Utility.ObjectValue(content, "id"))).GetContent();
+
+        //    Assert.Equal(200, Utility.ObjectValue(content, "status"));
+        //    Assert.Equal(MagicStrings.GroupDeleted, Utility.ObjectValue(content, "msg"));
+        //}
 
         [Fact]
         public async void Cannot_Create_Group_With_No_Name()

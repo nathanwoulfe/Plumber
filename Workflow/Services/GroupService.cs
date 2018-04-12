@@ -21,6 +21,8 @@ namespace Workflow.Services
         public static event EventHandler<GroupEventArgs> Updated;
         public static event EventHandler<GroupDeletedEventArgs> Deleted;
 
+        public event EventHandler GroupCreated;
+
         public GroupService()
             : this(
                 ApplicationContext.Current.ProfilingLogger.Logger,

@@ -389,7 +389,7 @@ namespace Workflow.Processes
                     }
                     else // no group set, fallback to default approver
                     {
-                        int groupId = int.Parse(settings.DefaultApprover);
+                        int groupId = int.Parse(_settings.DefaultApprover);
                         group = new UserGroupPermissionsPoco
                         {
                             GroupId = groupId,

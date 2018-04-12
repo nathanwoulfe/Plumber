@@ -163,7 +163,7 @@ namespace Workflow.Api
             }
 
             // gone.
-            Log.Debug($"User group {id} deleted by {Utility.GetCurrentUser().Name}");
+            Log.Debug($"User group {id} deleted by {Utility.GetCurrentUser()?.Name}");
             return Ok("User group has been deleted");
         }
     }
