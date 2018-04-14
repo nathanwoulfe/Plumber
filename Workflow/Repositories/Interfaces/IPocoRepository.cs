@@ -15,7 +15,7 @@ namespace Workflow.Repositories.Interfaces
         UserGroupPoco GetPopulatedUserGroup(int id);
         UserGroupPoco GetUserGroupById(int id);
 
-        UserGroupPermissionsPoco GetDefaultUserGroupPermissions(int id);
+        //UserGroupPermissionsPoco GetDefaultUserGroupPermissions(int id);
 
         IEnumerable<UserGroupPoco> GetUserGroups();
 

@@ -126,7 +126,7 @@ namespace Workflow.Api
                 // need to check the new name/alias isn't already in use
                 if (result == null)
                 {
-                    return Content(HttpStatusCode.OK, new { status = 500, msg = "Group name already exists" });
+                    return Content(HttpStatusCode.OK, new { status = 500, msg = MagicStrings.GroupNameExists });
                 }
 
             }

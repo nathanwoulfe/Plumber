@@ -3,7 +3,7 @@ using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Persistence;
-using Umbraco.Web;
+using Umbraco.Core.Services;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Relators;
@@ -17,6 +17,7 @@ namespace Workflow.Repositories
     public class PocoRepository : IPocoRepository
     {
         private readonly UmbracoDatabase _database;
+        private readonly IContentService _contentService;
         //private readonly Utility _utility;
 
         public PocoRepository() : this(ApplicationContext.Current)
@@ -26,7 +27,9 @@ namespace Workflow.Repositories
         private PocoRepository(ApplicationContext current)
         {
             _database = current.DatabaseContext.Database;
-           // _utility = new Utility();
+            _contentService = current.Services.ContentService;
+
+            // _utility = new Utility();
         }
 
         /// <summary>
@@ -60,11 +63,11 @@ namespace Workflow.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public UserGroupPermissionsPoco GetDefaultUserGroupPermissions(int id)
-        {
-            UserGroupPermissionsPoco permissions = _database.Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupBasic, id).FirstOrDefault();
-            return permissions;
-        }
+        //public UserGroupPermissionsPoco GetDefaultUserGroupPermissions(int id)
+        //{
+        //    UserGroupPermissionsPoco permissions = _database.Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupBasic, id).FirstOrDefault();
+        //    return permissions;
+        //}
 
         /// <summary>
         /// Get all user groups and their associated permissions and user groups
@@ -144,7 +147,7 @@ namespace Workflow.Repositories
         /// <returns>A boolean reflecting the workflow state on the homepage node</returns>
         public bool HasFlow(int nodeId)
         {
-            string homepageNodeId = ApplicationContext.Current.Services.ContentService.GetById(nodeId).Path.Split(',')[1];
+            string homepageNodeId = _contentService.GetById(nodeId).Path.Split(',')[1];
             return _database.Fetch<int>("SELECT * FROM WorkflowUserGroupPermissions WHERE NodeId = @0", homepageNodeId).Any();
         }
 

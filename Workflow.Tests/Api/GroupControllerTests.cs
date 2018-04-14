@@ -30,13 +30,13 @@ namespace Workflow.Tests.Api
             // not testing this, but need it for quickly creating groups
             _groupService = new GroupService();
 
-            Mock<WebSecurity> webSecurity = new Mock<WebSecurity>(null, null);
-            var currentUser = Mock.Of<IUser>(u =>
-                u.IsApproved
-                && u.Name == Utility.RandomString()
-                && u.Id == Utility.RandomInt());
+            //Mock<WebSecurity> webSecurity = new Mock<WebSecurity>(null, null);
+            //var currentUser = Mock.Of<IUser>(u =>
+            //    u.IsApproved
+            //    && u.Name == Utility.RandomString()
+            //    && u.Id == Utility.RandomInt());
 
-            webSecurity.Setup(x => x.CurrentUser).Returns(currentUser);
+            //webSecurity.Setup(x => x.CurrentUser).Returns(currentUser);
 
             var context = new ContextMocker();
 
@@ -78,6 +78,12 @@ namespace Workflow.Tests.Api
             object result = await (await _groupsController.Delete((int)content.Get("id"))).GetContent();
 
             Assert.Equal(MagicStrings.GroupDeleted, result);
+
+            // what happens if the group doesnt exist?
+            object result2 = await (await _groupsController.Delete(9999)).GetContent();
+
+            // not a lot - task will succeed, but nothing is actually deleted. does this matter?
+            Assert.NotNull(result2);
         }
 
         /// <summary>

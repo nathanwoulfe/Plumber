@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Umbraco.Core;
-using Umbraco.Core.Logging;
-using Umbraco.Web;
 using Workflow.Events.Args;
 using Workflow.Models;
 using Workflow.Repositories;
