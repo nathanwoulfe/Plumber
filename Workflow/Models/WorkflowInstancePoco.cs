@@ -116,13 +116,13 @@ namespace Workflow.Models
         /// The author user who initiated this workflow instance.
         /// </summary>
         [ResultColumn]
-        public IUser AuthorUser => _authorUser ?? (_authorUser = Utility.GetUser(AuthorUserId));
+        public IUser AuthorUser => _authorUser ?? (_authorUser = _utility.GetUser(AuthorUserId));
 
         /// <summary>
         /// Title case text name for the workflow status.
         /// </summary>
         [ResultColumn]
-        public string StatusName => Utility.PascalCaseToTitleCase(WorkflowStatus.ToString());
+        public string StatusName => _utility.PascalCaseToTitleCase(WorkflowStatus.ToString());
 
         /// <summary>
         /// Indicates whether the workflow instance is currently active.
@@ -138,7 +138,7 @@ namespace Workflow.Models
         [ResultColumn]
         public ICollection<WorkflowTaskInstancePoco> TaskInstances { get; set; }
 
-        private static string WorkflowTypeDescription(WorkflowType type, DateTime? scheduledDate)
+        private string WorkflowTypeDescription(WorkflowType type, DateTime? scheduledDate)
         {
             if (scheduledDate.HasValue)
             {
@@ -148,14 +148,14 @@ namespace Workflow.Models
             return WorkflowTypeName(type);
         }
 
-        private static string WorkflowTypeName(WorkflowType type)
+        private string WorkflowTypeName(WorkflowType type)
         {
-            return Utility.PascalCaseToTitleCase(type.ToString());
+            return _utility.PascalCaseToTitleCase(type.ToString());
         }
 
-        public static string EmailTypeName(EmailType type)
+        public string EmailTypeName(EmailType type)
         {
-            return Utility.PascalCaseToTitleCase(type.ToString());
+            return _utility.PascalCaseToTitleCase(type.ToString());
         }
     }
 }

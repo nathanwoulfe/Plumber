@@ -3,6 +3,7 @@ using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Persistence;
+using Umbraco.Web;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Relators;
@@ -16,15 +17,16 @@ namespace Workflow.Repositories
     public class PocoRepository : IPocoRepository
     {
         private readonly UmbracoDatabase _database;
+        //private readonly Utility _utility;
 
-        public PocoRepository()
-            : this(ApplicationContext.Current.DatabaseContext.Database)
+        public PocoRepository() : this(ApplicationContext.Current)
         {
         }
 
-        private PocoRepository(UmbracoDatabase database)
+        private PocoRepository(ApplicationContext current)
         {
-            _database = database;
+            _database = current.DatabaseContext.Database;
+           // _utility = new Utility();
         }
 
         /// <summary>
@@ -124,10 +126,15 @@ namespace Workflow.Repositories
         /// <param name="nodeId">The node id</param>
         /// <param name="contentTypeId">The contentType id</param>
         /// <returns>A list of objects of type <see cref="UserGroupPermissionsPoco"/></returns>
-        public List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int? contentTypeId)
+        public List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int contentTypeId = 0)
         {
             return _database.Fetch<UserGroupPermissionsPoco, UserGroupPoco, User2UserGroupPoco, UserGroupPermissionsPoco>
                 (new UserToGroupForPermissionsRelator().MapIt, SqlHelpers.PermissionsByNode, nodeId, contentTypeId);
+        }
+
+        public List<UserGroupPermissionsPoco> GetAllPermissions()
+        {
+            return _database.Fetch<UserGroupPermissionsPoco>("SELECT * FROM WorkflowUserGroupPermissions");
         }
 
         /// <summary>

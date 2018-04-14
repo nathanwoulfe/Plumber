@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
+using Umbraco.Web;
 using Workflow.Events.Args;
 using Workflow.Models;
 using Workflow.Repositories;
@@ -14,26 +15,18 @@ namespace Workflow.Services
 {
     public class GroupService : IGroupService
     {
-        private readonly ILogger _log;
         private readonly IPocoRepository _repo;
 
-        public static event EventHandler<GroupEventArgs> Created;
-        public static event EventHandler<GroupEventArgs> Updated;
-        public static event EventHandler<GroupDeletedEventArgs> Deleted;
+        public event EventHandler<GroupEventArgs> Created;
+        public event EventHandler<GroupEventArgs> Updated;
+        public event EventHandler<GroupDeletedEventArgs> Deleted;
 
-        public event EventHandler GroupCreated;
-
-        public GroupService()
-            : this(
-                ApplicationContext.Current.ProfilingLogger.Logger,
-                new PocoRepository()
-            )
+        public GroupService() : this(new PocoRepository())
         {
         }
 
-        private GroupService(ILogger log, IPocoRepository repo)
+        private GroupService(IPocoRepository repo)
         {
-            _log = log;
             _repo = repo;
         }
 

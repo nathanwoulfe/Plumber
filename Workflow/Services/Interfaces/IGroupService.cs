@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Workflow.Events.Args;
 using Workflow.Models;
 
 namespace Workflow.Services.Interfaces
@@ -16,6 +17,8 @@ namespace Workflow.Services.Interfaces
 
         Task DeleteUserGroupAsync(int groupId);
 
-        event EventHandler GroupCreated;
+        event EventHandler<GroupEventArgs> Created;
+        event EventHandler<GroupDeletedEventArgs> Deleted;
+        event EventHandler<GroupEventArgs> Updated;
     }
 }

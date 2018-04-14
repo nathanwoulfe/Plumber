@@ -12,29 +12,25 @@ namespace Workflow.Helpers
 {
     public class Utility
     {
-        private static readonly UmbracoHelper Helper = new UmbracoHelper(UmbracoContext.Current);
-        private static readonly IUserService UserService = ApplicationContext.Current.Services.UserService;
-        private static readonly IContentTypeService ContentTypeService = ApplicationContext.Current.Services.ContentTypeService;
-        private static readonly IContentService ContentService = ApplicationContext.Current.Services.ContentService;
+        private readonly UmbracoContext _context;
+        private readonly UmbracoHelper _helper;
 
-        private UmbracoContext _context;
-        private UmbracoHelper _helper;
-        private IUserService _userService;
-        private IContentTypeService _contentTypeService;
-        private IContentService _contentService;
+        private readonly IUserService _userService;
+        private readonly IContentTypeService _contentTypeService;
+        private readonly IContentService _contentService;
 
-        public Utility()
-            : this(UmbracoContext.Current)
+        public Utility() : this(ApplicationContext.Current, UmbracoContext.Current)
         {
         }
-
-        // send this a mocke
-        public Utility(UmbracoContext context)
+        
+        private Utility(ApplicationContext current, UmbracoContext context)
         {
             _context = context;
             _helper = new UmbracoHelper(_context);
 
-            _userService = _context.Application.Services.UserService;
+            _userService = current.Services.UserService;
+            _contentTypeService = current.Services.ContentTypeService;
+            _contentService = current.Services.ContentService;
         }
 
         /// <summary>
@@ -44,10 +40,10 @@ namespace Workflow.Helpers
         /// <returns></returns>
         public IPublishedContent GetNode(int id)
         {
-            IPublishedContent n = Helper.TypedContent(id);
+            IPublishedContent n = _helper.TypedContent(id);
             if (n != null) return n;
 
-            IContent c = ContentService.GetById(id);
+            IContent c = _contentService.GetById(id);
 
             return c?.ToPublishedContent();
         }
@@ -57,13 +53,23 @@ namespace Workflow.Helpers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static string GetNodeName(int id)
+        public string GetNodeName(int id)
         {
-            IPublishedContent n = Helper.TypedContent(id);
+            IPublishedContent n = _helper.TypedContent(id);
             if (n != null) return n.Name;
 
-            IContent c = ContentService.GetById(id);
+            IContent c = _contentService.GetById(id);
             return c != null ? c.Name : MagicStrings.NoNode;
+        }
+
+        /// <summary>
+        /// Get the  id of the root ancestor node for the given id
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        public string GetRootNodeId(int nodeId)
+        {
+            return _contentService.GetById(nodeId).Path.Split(',')[1];
         }
 
         /// <summary>
@@ -71,9 +77,9 @@ namespace Workflow.Helpers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static IUser GetUser(int id)
+        public IUser GetUser(int id)
         {
-            return UserService.GetUserById(id);
+            return _userService.GetUserById(id);
         }
 
         /// <summary>
@@ -81,18 +87,18 @@ namespace Workflow.Helpers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static IContentType GetContentType(int id)
+        public IContentType GetContentType(int id)
         {
-            return ContentTypeService.GetContentType(id);
+            return _contentTypeService.GetContentType(id);
         }
 
         /// <summary>
         /// Get the current logged-in user
         /// </summary>
         /// <returns></returns>
-        public static IUser GetCurrentUser()
+        public IUser GetCurrentUser()
         {
-            return UmbracoContext.Current?.Security.CurrentUser;
+            return _context.Security.CurrentUser;
         }
 
         /// <summary>
@@ -100,7 +106,7 @@ namespace Workflow.Helpers
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static string PascalCaseToTitleCase(string str)
+        public string PascalCaseToTitleCase(string str)
         {
             return str != null ? Regex.Replace(str, "([A-Z]+?(?=(([A-Z]?[a-z])|$))|[0-9]+)", " $1").Trim() : null;
         }
@@ -108,7 +114,7 @@ namespace Workflow.Helpers
         /// <summary>Checks whether the email address is valid.</summary>
         /// <param name="email">the email address to check</param>
         /// <returns>true if valid, false otherwise.</returns>
-        public static bool IsValidEmailAddress(string email)
+        public bool IsValidEmailAddress(string email)
         {
             try
             {

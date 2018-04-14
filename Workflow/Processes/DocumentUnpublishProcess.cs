@@ -21,7 +21,10 @@ namespace Workflow.Processes
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static IContentService _contentService;
         private static IInstancesService _instancesService;
+
         private readonly Notifications _notifications;
+        private readonly Utility _utility;
+
         private static string _nodeName;
 
         public static event EventHandler<InstanceEventArgs> Completed;
@@ -30,16 +33,18 @@ namespace Workflow.Processes
             : this(
                 ApplicationContext.Current.Services.ContentService,
                 new InstancesService(),
-                new Notifications()
+                new Notifications(),
+                new Utility()
             )
         {
         }
 
-        private DocumentUnpublishProcess(IContentService contentService, IInstancesService instancesService, Notifications notifications)
+        private DocumentUnpublishProcess(IContentService contentService, IInstancesService instancesService, Notifications notifications, Utility utility)
         {
             _contentService = contentService;
             _instancesService = instancesService;
             _notifications = notifications;
+            _utility = utility;
 
             Type = WorkflowType.Unpublish;
         }
@@ -81,7 +86,7 @@ namespace Workflow.Processes
 
                 // Perform the unpublish
                 IContent node = _contentService.GetById(Instance.NodeId);
-                success = _contentService.UnPublish(node, Instance.TaskInstances.Last().ActionedByUserId ?? Utility.GetCurrentUser().Id);
+                success = _contentService.UnPublish(node, Instance.TaskInstances.Last().ActionedByUserId ?? _utility.GetCurrentUser().Id);
             }
             catch (Exception e)
             {

@@ -18,21 +18,25 @@ namespace Workflow.Api
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IGroupService _groupService;
+        private readonly Utility _utility;
 
         public GroupsController()
         {
             _groupService = new GroupService();
+            _utility = new Utility();
         }
 
         public GroupsController(UmbracoContext umbracoContext) : base(umbracoContext)
         {
             _groupService = new GroupService();
+            _utility = new Utility();
         }
 
         public GroupsController(UmbracoContext umbracoContext, UmbracoHelper umbracoHelper) : base(umbracoContext,
             umbracoHelper)
         {
             _groupService = new GroupService();
+            _utility = new Utility();
         }
 
         /// <summary>
@@ -163,7 +167,7 @@ namespace Workflow.Api
             }
 
             // gone.
-            Log.Debug($"User group {id} deleted by {Utility.GetCurrentUser()?.Name}");
+            Log.Debug($"User group {id} deleted by {_utility.GetCurrentUser()?.Name}");
             return Ok("User group has been deleted");
         }
     }

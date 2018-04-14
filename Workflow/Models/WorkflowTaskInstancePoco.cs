@@ -12,6 +12,7 @@ namespace Workflow.Models
     public class WorkflowTaskInstancePoco
     {
         private IUser _actionedByUser;
+        private readonly Utility _utility;
 
         public WorkflowTaskInstancePoco()
         {
@@ -19,6 +20,8 @@ namespace Workflow.Models
             CompletedDate = null;
             Status = (int)Models.TaskStatus.PendingApproval;
             ApprovalStep = 0;
+
+            _utility = new Utility();
         }
 
         public WorkflowTaskInstancePoco(TaskType type)
@@ -75,17 +78,17 @@ namespace Workflow.Models
             {
                 if (_actionedByUser == null && ActionedByUserId.HasValue)
                 {
-                    _actionedByUser = Utility.GetUser(ActionedByUserId.Value);
+                    _actionedByUser = _utility.GetUser(ActionedByUserId.Value);
                 }
                 return _actionedByUser;
             }
         }
 
         [ResultColumn]
-        public string TypeName => Utility.PascalCaseToTitleCase(Type.ToString());
+        public string TypeName => _utility.PascalCaseToTitleCase(Type.ToString());
 
         [ResultColumn]
-        public string StatusName => Utility.PascalCaseToTitleCase(TaskStatus.ToString());
+        public string StatusName => _utility.PascalCaseToTitleCase(TaskStatus.ToString());
 
         [ResultColumn]
         public virtual UserGroupPoco UserGroup { get; set; }
