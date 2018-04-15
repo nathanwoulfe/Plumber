@@ -237,11 +237,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\TasksControllerTests.cs" />
     <Compile Include="AsyncExtensions.cs" />
     <Compile Include="Api\GroupControllerTests.cs" />
     <Content Include="Config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Compile Include="Helpers\UtilityTests.cs" />
+    <Compile Include="Processes\WorkflowProcessTests.cs" />
     <Compile Include="Repositories\ImportExportRepositoryTests.cs" />
     <Compile Include="Repositories\PocoRepositoryTests.cs" />
     <Compile Include="Services\ConfigServiceTests.cs" />

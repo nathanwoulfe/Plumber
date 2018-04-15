@@ -32,15 +32,6 @@ namespace Workflow.Tests.Services
         }
 
         [Fact]
-        public void Can_Get_Flow()
-        {
-            Scaffold.AddContent();
-
-            // will fail as repo references applicationcontext
-            Assert.False(_configService.HasFlow(1078));
-        }
-
-        [Fact]
         public void Can_Get_All()
         {
             Scaffold.AddContent();

@@ -71,11 +71,11 @@ namespace Workflow.Tests.Repositories
         }
 
         [Fact]
-        public void Can_Check_Root_Config()
+        public void Can_Check_Node_Has_Permissions()
         {
             Scaffold.AddContent();
-            
-            Assert.True(_repo.HasFlow(1079));
+
+            Assert.True(_repo.NodeHasPermissions(1079));
         }
     }
 }

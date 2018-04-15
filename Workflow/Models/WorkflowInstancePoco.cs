@@ -16,7 +16,7 @@ namespace Workflow.Models
     {
         private IPublishedContent _node;
         private IUser _authorUser;
-        private Utility _utility;
+        private readonly Utility _utility;
 
         public WorkflowInstancePoco()
         {
@@ -76,7 +76,7 @@ namespace Workflow.Models
 
         public void SetScheduledDate()
         {
-            IContent content = ApplicationContext.Current.Services.ContentService.GetById(NodeId);
+            IContent content = _utility.GetContent(NodeId);
             switch (Type)
             {
                 case (int)WorkflowType.Publish when content.ReleaseDate.HasValue:
@@ -110,7 +110,7 @@ namespace Workflow.Models
         /// The document object associated with this workflow.
         /// </summary>
         [ResultColumn]
-        public IPublishedContent Node => _node ?? (_node = _utility.GetNode(NodeId));
+        public IPublishedContent Node => _node ?? (_node = _utility.GetPublishedContent(NodeId));
 
         /// <summary>
         /// The author user who initiated this workflow instance.

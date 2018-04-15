@@ -6,8 +6,7 @@ using System.Web.Http.Results;
 using Chauffeur.TestingTools;
 using GDev.Umbraco.Test;
 using Moq;
-using Umbraco.Core.Models.Membership;
-using Umbraco.Web.Security;
+using Umbraco.Web;
 using Workflow.Api;
 using Workflow.Helpers;
 using Workflow.Models;
@@ -20,6 +19,7 @@ namespace Workflow.Tests.Api
     public class GroupControllerTests : UmbracoHostTestBase
     {
         private readonly GroupsController _groupsController;
+        private readonly ContextMocker _mocker;
         private readonly IGroupService _groupService;
 
         public GroupControllerTests()
@@ -30,21 +30,21 @@ namespace Workflow.Tests.Api
             // not testing this, but need it for quickly creating groups
             _groupService = new GroupService();
 
-            //Mock<WebSecurity> webSecurity = new Mock<WebSecurity>(null, null);
-            //var currentUser = Mock.Of<IUser>(u =>
-            //    u.IsApproved
-            //    && u.Name == Utility.RandomString()
-            //    && u.Id == Utility.RandomInt());
+            _mocker = new ContextMocker();
 
-            //webSecurity.Setup(x => x.CurrentUser).Returns(currentUser);
-
-            var context = new ContextMocker();
-
-            _groupsController = new GroupsController(context.UmbracoContextMock)
+            _groupsController = new GroupsController(_mocker.UmbracoContextMock)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
             };
+        }
+
+        [Fact]
+        public void Constructors_Work()
+        {
+            // chasing coverage - make sure constructors are all accessible
+            Assert.NotNull(new GroupsController());
+            Assert.NotNull(new GroupsController(_mocker.UmbracoContextMock, new UmbracoHelper(_mocker.UmbracoContextMock)));
         }
 
         [Fact]
@@ -61,6 +61,41 @@ namespace Workflow.Tests.Api
 
             Assert.Equal(200, (int)content.Get("status"));
             Assert.Equal(MagicStrings.GroupCreated.Replace("{name}", name), content.Get("msg"));
+        }
+
+        [Fact]
+        public async void Can_Update_Group()
+        {
+            Scaffold.AddContent();
+
+            var group = new UserGroupPoco
+            {
+                GroupId = 12,
+                Name = "PublisherUpdated",
+                Alias = "publisherUpdated",
+                Users = new List<User2UserGroupPoco>()
+            };
+
+            object result = await (await _groupsController.Put(group)).GetContent();
+
+            Assert.Equal(MagicStrings.GroupUpdated.Replace("{name}", "PublisherUpdated"), result.Get("msg"));
+        }
+
+        [Fact]
+        public async void Cannot_Update_Group_If_Name_In_Use()
+        {
+            Scaffold.AddContent();
+
+            var group = new UserGroupPoco
+            {
+                GroupId = 3,
+                Name = "Publisher",
+                Users = new List<User2UserGroupPoco>()
+            };
+
+            object result = await (await _groupsController.Put(group)).GetContent();
+
+            Assert.Equal(MagicStrings.GroupNameExists, result.Get("msg"));
         }
 
         [Fact]

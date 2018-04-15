@@ -15,6 +15,7 @@
         public const string GroupNameExists = "Group name already exists";
         public const string GroupCreated = "Successfully created new user group '{name}'.";
         public const string GroupDeleted = "User group has been deleted";
+        public const string GroupUpdated = "User group '{name}' has been saved";
         public const string ErrorGettingGroup = "Error getting group by id {id}";
 
         public const string HttpResponseException = "HttpResponseException";

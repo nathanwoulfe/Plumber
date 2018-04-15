@@ -141,14 +141,13 @@ namespace Workflow.Repositories
         }
 
         /// <summary>
-        /// Check that the given node has a workflow assigned - this is checked on the homepage node, as all workflows will ultimately inherit from the homepage
+        /// Check that the given node has a workflow assigned
         /// </summary>
         /// <param name="nodeId">The node id</param>
-        /// <returns>A boolean reflecting the workflow state on the homepage node</returns>
-        public bool HasFlow(int nodeId)
+        /// <returns>A boolean reflecting the workflow state on the node</returns>
+        public bool NodeHasPermissions(int nodeId)
         {
-            string homepageNodeId = _contentService.GetById(nodeId).Path.Split(',')[1];
-            return _database.Fetch<int>("SELECT * FROM WorkflowUserGroupPermissions WHERE NodeId = @0", homepageNodeId).Any();
+            return _database.Fetch<int>("SELECT * FROM WorkflowUserGroupPermissions WHERE NodeId = @0", nodeId).Any();
         }
 
         /// <summary>

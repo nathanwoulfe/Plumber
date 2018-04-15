@@ -7,6 +7,8 @@ using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Services;
 using Umbraco.Web;
 using Workflow.Extensions;
+using Workflow.Repositories;
+using Workflow.Repositories.Interfaces;
 
 namespace Workflow.Helpers
 {
@@ -18,19 +20,27 @@ namespace Workflow.Helpers
         private readonly IUserService _userService;
         private readonly IContentTypeService _contentTypeService;
         private readonly IContentService _contentService;
+        private readonly IPocoRepository _pocoRepo;
 
-        public Utility() : this(ApplicationContext.Current, UmbracoContext.Current)
+        public Utility() : this(
+            new PocoRepository(), 
+            ApplicationContext.Current.Services.UserService,
+            ApplicationContext.Current.Services.ContentTypeService,
+            ApplicationContext.Current.Services.ContentService,
+            UmbracoContext.Current)
         {
         }
         
-        private Utility(ApplicationContext current, UmbracoContext context)
+        public Utility(IPocoRepository pocoRepo, IUserService userService, IContentTypeService contentTypeService, IContentService contentService, UmbracoContext context)
         {
             _context = context;
             _helper = new UmbracoHelper(_context);
 
-            _userService = current.Services.UserService;
-            _contentTypeService = current.Services.ContentTypeService;
-            _contentService = current.Services.ContentService;
+            _userService = userService;
+            _contentTypeService = contentTypeService;
+            _contentService = contentService;
+
+            _pocoRepo = pocoRepo;
         }
 
         /// <summary>
@@ -38,7 +48,7 @@ namespace Workflow.Helpers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IPublishedContent GetNode(int id)
+        public IPublishedContent GetPublishedContent(int id)
         {
             IPublishedContent n = _helper.TypedContent(id);
             if (n != null) return n;
@@ -46,6 +56,16 @@ namespace Workflow.Helpers
             IContent c = _contentService.GetById(id);
 
             return c?.ToPublishedContent();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IContent GetContent(int id)
+        {
+            return _contentService.GetById(id);
         }
 
         /// <summary>
@@ -67,9 +87,10 @@ namespace Workflow.Helpers
         /// </summary>
         /// <param name="nodeId"></param>
         /// <returns></returns>
-        public string GetRootNodeId(int nodeId)
+        public bool HasFlow(int nodeId)
         {
-            return _contentService.GetById(nodeId).Path.Split(',')[1];
+            string root = _contentService.GetById(nodeId).Path.Split(',')[1];
+            return _pocoRepo.NodeHasPermissions(int.Parse(root));
         }
 
         /// <summary>

@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Umbraco.Core.Models;
 using Workflow.Events.Args;
@@ -382,7 +381,7 @@ namespace Workflow.Processes
                 if (group == null)
                 {
                     // If nothing set for the content type recurse up the tree until we find something
-                    IPublishedContent node = _utility.GetNode(nodeId);
+                    IPublishedContent node = _utility.GetPublishedContent(nodeId);
                     if (node.Level != 1)
                     {
                         SetApprovalGroup(taskInstance, node.Parent.Id, nodeId);

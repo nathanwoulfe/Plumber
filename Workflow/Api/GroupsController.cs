@@ -139,7 +139,7 @@ namespace Workflow.Api
             }
 
             // feedback to the browser
-            string msgText = $"User group '{group.Name}' has been saved.";
+            string msgText = MagicStrings.GroupUpdated.Replace("{name}", group.Name);
             Log.Debug(msgText);
 
             return Ok(new { status = 200, msg = msgText });

@@ -6,6 +6,7 @@ using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Umbraco.Web;
 using Umbraco.Web.WebApi;
 using Workflow.Extensions;
 using Workflow.Models;
@@ -25,17 +26,39 @@ namespace Workflow.Api
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly ITasksService _tasksService;
         private readonly ISettingsService _settingsService;
-        private readonly IConfigService _configService;
         private readonly IInstancesService _instancesService;
         private readonly IGroupService _groupService;
+
+        private readonly Utility _utility;
 
         public TasksController()
         {
             _tasksService = new TasksService();
             _settingsService = new SettingsService();
-            _configService = new ConfigService();
             _instancesService = new InstancesService();
             _groupService = new GroupService();
+
+            _utility = new Utility();
+        }
+
+        public TasksController(UmbracoContext umbracoContext) : base(umbracoContext)
+        {
+            _tasksService = new TasksService();
+            _settingsService = new SettingsService();
+            _instancesService = new InstancesService();
+            _groupService = new GroupService();
+
+            _utility = new Utility();
+        }
+
+        public TasksController(UmbracoContext umbracoContext, UmbracoHelper umbracoHelper) : base(umbracoContext, umbracoHelper)
+        {
+            _tasksService = new TasksService();
+            _settingsService = new SettingsService();
+            _instancesService = new InstancesService();
+            _groupService = new GroupService();
+
+            _utility = new Utility();
         }
 
         /// <summary>
@@ -151,7 +174,7 @@ namespace Workflow.Api
             try
             {
                 WorkflowSettingsPoco settings = _settingsService.GetSettings();
-                bool hasFlow = _configService.HasFlow(id);
+                bool hasFlow = _utility.HasFlow(id);
 
                 if (null == settings || !hasFlow)
                 {

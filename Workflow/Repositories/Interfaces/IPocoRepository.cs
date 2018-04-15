@@ -5,7 +5,7 @@ namespace Workflow.Repositories.Interfaces
 {
     public interface IPocoRepository
     {
-        bool HasFlow(int nodeId);
+        bool NodeHasPermissions(int nodeId);
         bool GroupAliasExists(string value);
         bool GroupNameExists(string value);
 

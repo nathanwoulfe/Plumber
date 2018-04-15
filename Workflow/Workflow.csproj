@@ -58,10 +58,6 @@
     <Compile Include="Repositories\Interfaces\IInstancesRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITasksRepository.cs" />
     <Compile Include="Repositories\TasksRepository.cs" />
-    <Compile Include="UnitOfWork\IUnitOfWork.cs" />
-    <Compile Include="UnitOfWork\IUnitOfWorkProvider.cs" />
-    <Compile Include="UnitOfWork\PetaPocoUnitOfWork.cs" />
-    <Compile Include="UnitOfWork\PetaPocoUnitOfWorkProvider.cs" />
     <Compile Include="Repositories\Interfaces\IImportExportRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPocoRepository.cs" />
     <Compile Include="Migrations\VersionZeroFiveZero.cs" />

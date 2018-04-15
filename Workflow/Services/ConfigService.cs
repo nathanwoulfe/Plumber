@@ -82,13 +82,7 @@ namespace Workflow.Services
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="nodeId"></param>
         /// <returns></returns>
-        public bool HasFlow(int nodeId)
-        {
-            return _repo.HasFlow(nodeId);
-        }
-
         public List<UserGroupPermissionsPoco> GetAll()
         {
             return _repo.GetAllPermissions();

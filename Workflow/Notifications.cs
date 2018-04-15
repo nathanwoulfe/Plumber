@@ -117,7 +117,7 @@ namespace Workflow
 
                         if (instance.WorkflowType == WorkflowType.Publish)
                         {
-                            IPublishedContent n = _utility.GetNode(instance.NodeId);
+                            IPublishedContent n = _utility.GetPublishedContent(instance.NodeId);
                             docUrl = UrlHelpers.GetFullyQualifiedSiteUrl(n.Url);
                         }
 

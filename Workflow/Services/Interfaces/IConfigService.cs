@@ -10,7 +10,6 @@ namespace Workflow.Services.Interfaces
     {
         bool UpdateNodeConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model);
         bool UpdateContentTypeConfig(Dictionary<int, List<UserGroupPermissionsPoco>> model);
-        bool HasFlow(int nodeId);
 
         List<UserGroupPermissionsPoco> GetAll();
         List<UserGroupPermissionsPoco> GetPermissionsForNode(int nodeId, int contentTypeId = 0);
