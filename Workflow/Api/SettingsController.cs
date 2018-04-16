@@ -9,7 +9,10 @@ using System.Runtime.Caching;
 using System.Web.Http;
 using log4net;
 using Newtonsoft.Json.Linq;
+using Umbraco.Core;
 using Umbraco.Core.Models;
+using Umbraco.Core.Services;
+using Umbraco.Web;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
@@ -24,10 +27,20 @@ namespace Workflow.Api
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly ISettingsService _settingsService;
+        private readonly IContentTypeService _contentTypeService;
 
         public SettingsController()
         {
             _settingsService = new SettingsService();
+            _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
+
+        }
+
+        // public constructor for injection - call this guy in tests to ensure context
+        public SettingsController(UmbracoContext umbracoContext) : base(umbracoContext)
+        {
+            _settingsService = new SettingsService();
+            _contentTypeService = umbracoContext.Application.Services.ContentTypeService;
         }
 
         /// <summary>
@@ -70,11 +83,11 @@ namespace Workflow.Api
                     OutOfDate = !string.Equals(currentVersion, latestVersion,
                         StringComparison.InvariantCultureIgnoreCase)
                 };
-                
+
 
                 // Store data in the cache    
                 cache.Add(MagicStrings.VersionKey, packageVersion,
-                    new CacheItemPolicy {AbsoluteExpiration = DateTime.Now.AddHours(6)});
+                    new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddHours(6) });
 
                 return Json(packageVersion, ViewHelpers.CamelCase);
             }
@@ -172,11 +185,11 @@ namespace Workflow.Api
             try
             {
                 _settingsService.UpdateSettings(model);
-                return Ok("Settings updated");
+                return Ok(MagicStrings.SettingsUpdated);
             }
             catch (Exception ex)
             {
-                const string error = "Could not save settings";
+                const string error = MagicStrings.SettingsNotUpdated;
                 Log.Error(error, ex);
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
             }
@@ -191,7 +204,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<IContentType> contentTypes = Services.ContentTypeService.GetAllContentTypes().ToList();
+                List<IContentType> contentTypes = _contentTypeService.GetAllContentTypes().ToList();
                 return Json(contentTypes, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
