@@ -11,7 +11,7 @@ namespace Workflow.Helpers
         /// Adds the application/custom section to Umbraco
         /// </summary>
         /// <param name="applicationContext"></param>
-        public void AddSection(ApplicationContext applicationContext)
+        public bool AddSection(ApplicationContext applicationContext)
         {
             //Get SectionService
             var sectionService = applicationContext.Services.SectionService;
@@ -24,10 +24,13 @@ namespace Workflow.Helpers
             {
                 //So let's create it the section
                 sectionService.MakeNew("Workflow", "workflow", "icon-path");
+                return true;
             }
+
+            return false;
         }
 
-        public void AddContentSectionDashboard()
+        public bool AddContentSectionDashboard()
         {
             var saveFile = false;
             const string dashboardPath = "~/config/dashboard.config";
@@ -37,7 +40,7 @@ namespace Workflow.Helpers
 
             //Load settings.config XML file
             var dashboardXml = new XmlDocument();
-            if (dashboardFilePath == null) return;
+            if (dashboardFilePath == null) return false;
 
             dashboardXml.Load(dashboardFilePath);
 
@@ -84,13 +87,16 @@ namespace Workflow.Helpers
             {
                 //Save the XML file
                 dashboardXml.Save(dashboardFilePath);
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>
         /// Adds the required XML to the dashboard.config file
         /// </summary>
-        public void AddSectionDashboard()
+        public bool AddSectionDashboard()
         {
             var saveFile = false;
             const string dashboardPath = "~/config/dashboard.config";
@@ -100,7 +106,7 @@ namespace Workflow.Helpers
 
             //Load settings.config XML file
             var dashboardXml = new XmlDocument();
-            if (dashboardFilePath == null) return;
+            if (dashboardFilePath == null) return false;
             dashboardXml.Load(dashboardFilePath);
 
             // Section Node
@@ -149,7 +155,10 @@ namespace Workflow.Helpers
             {
                 //Save the XML file
                 dashboardXml.Save(dashboardFilePath);
+                return true;
             }
+
+            return false;
         }
     }
 }
