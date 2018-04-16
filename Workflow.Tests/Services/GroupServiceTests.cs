@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Chauffeur.TestingTools;
 using GDev.Umbraco.Test;
 using Workflow.Models;
@@ -20,7 +18,7 @@ namespace Workflow.Tests.Services
         public GroupServiceTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.AddTables();
+            Scaffold.Tables();
 
             // even though it's not being used, this needs to stay
             _mocker = new ContextMocker();
@@ -140,7 +138,7 @@ namespace Workflow.Tests.Services
         public async void Can_Delete_Group_And_Event_Is_Raised()
         {
             // populate groups
-            Scaffold.AddContent();
+            Scaffold.Config();
 
             IEnumerable<UserGroupPoco> groups = await _groupService.GetUserGroupsAsync();
             int groupId = groups.First().GroupId;

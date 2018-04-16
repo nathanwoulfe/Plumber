@@ -18,6 +18,9 @@
         public const string GroupUpdated = "User group '{name}' has been saved";
         public const string ErrorGettingGroup = "Error getting group by id {id}";
 
+        public const string SettingsUpdated = "Settings updated";
+        public const string SettingsNotUpdated = "Could not save settings";
+
         public const string HttpResponseException = "HttpResponseException";
     }
 }

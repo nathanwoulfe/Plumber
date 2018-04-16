@@ -69,15 +69,14 @@ namespace Workflow.Helpers
         }
 
         /// <summary>
-        /// Get the node name from cache, falling back to the db
+        /// Get the node name from the db
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public string GetNodeName(int id)
         {
-            IPublishedContent n = _helper.TypedContent(id);
-            if (n != null) return n.Name;
-
+            //IPublishedContent n = _helper.TypedContent(id);
+            //if (n != null) return n.Name;
             IContent c = _contentService.GetById(id);
             return c != null ? c.Name : MagicStrings.NoNode;
         }
@@ -129,7 +128,12 @@ namespace Workflow.Helpers
         /// <returns></returns>
         public string PascalCaseToTitleCase(string str)
         {
-            return str != null ? Regex.Replace(str, "([A-Z]+?(?=(([A-Z]?[a-z])|$))|[0-9]+)", " $1").Trim() : null;
+            if (str == null)
+                return null;
+
+            str = char.ToUpper(str[0]) + str.Substring(1);
+
+            return Regex.Replace(str, "([A-Z]+?(?=(([A-Z]?[a-z])|$))|[0-9]+)", " $1").Trim();
         }
         
         /// <summary>Checks whether the email address is valid.</summary>

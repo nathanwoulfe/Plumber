@@ -130,7 +130,7 @@ namespace Workflow.Services
 
                 if (nodeId == node.Id)
                 {
-                    permissions = _repo.PermissionsForNode(0, node.ContentType?.Id ?? 0);
+                    permissions = _repo.PermissionsForNode(0, node.ContentType.Id);
                     if (permissions.Any()) return permissions;
                 }
 

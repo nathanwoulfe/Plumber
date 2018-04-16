@@ -24,7 +24,7 @@ namespace Workflow.Tests.Api
         public TasksControllerTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.AddTables();
+            Scaffold.Tables();
 
             _mocker = new ContextMocker();
 

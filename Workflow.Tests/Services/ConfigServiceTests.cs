@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using Chauffeur.TestingTools;
-using GDev.Umbraco.Test;
 using Moq;
+using Umbraco.Core;
 using Umbraco.Core.Models;
-using Umbraco.Core.Models.PublishedContent;
+using Umbraco.Core.Services;
+using Umbraco.Web;
+using Workflow.Extensions;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
@@ -14,14 +16,21 @@ namespace Workflow.Tests.Services
     public class ConfigServiceTests : UmbracoHostTestBase
     {
         private readonly IConfigService _configService;
+        private readonly IContentService _contentService;
+        private readonly IContentTypeService _contentTypeService;
+        private readonly UmbracoContext _context;
 
         public ConfigServiceTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.AddTables();
+            Scaffold.Tables();
 
-            var mocker = new ContextMocker();
+            _context = Scaffold.EnsureContext();
+            
             _configService = new ConfigService();
+
+            _contentService = ApplicationContext.Current.Services.ContentService;
+            _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
 
         }
 
@@ -34,7 +43,7 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Get_All()
         {
-            Scaffold.AddContent();
+            Scaffold.Config();
 
             List<UserGroupPermissionsPoco> allPermissions = _configService.GetAll();
             Assert.NotEmpty(allPermissions);
@@ -43,7 +52,7 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Get_Permissions_For_Node()
         {
-            Scaffold.AddContent();
+            Scaffold.Config();
 
             // will return an empty collection as no permissions exist
             Assert.Empty(_configService.GetPermissionsForNode(9999));
@@ -56,7 +65,7 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Recursive_Permissions_Returns_Null_When_Node_Is_Null()
         {
-            Scaffold.AddContent();
+            Scaffold.Config();
 
             // no node, returns immediately
             List<UserGroupPermissionsPoco> permissions = _configService.GetRecursivePermissionsForNode(null);
@@ -66,7 +75,9 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Get_Recursive_Permissions_For_Node()
         {
-            Scaffold.AddContent();
+            Scaffold.Config();
+            Scaffold.ContentType(_contentTypeService);
+            var type = _contentTypeService.GetContentType("textpage");
 
             var mock = new MockRepository(MockBehavior.Default);
             Mock<IPublishedContent> content = mock.Create<IPublishedContent>();
@@ -78,15 +89,21 @@ namespace Workflow.Tests.Services
             // node has permissions, returns without recursion
             Assert.NotNull(permissions);
 
-            // recurse
-            Mock<IPublishedContent> child = mock.Create<IPublishedContent>();
-            child.Setup(x => x.Id).Returns(1099);
-            child.Setup(x => x.Level).Returns(2);
-            child.Setup(x => x.Parent).Returns(content.Object);
+            // todo - to recurse, we need a contenttype
+        }
 
-            permissions = _configService.GetRecursivePermissionsForNode(child.Object);
+        [Fact]
+        public void Can_Get_Content_Type_Permission_For_Node()
+        {
+            Scaffold.ContentType(_contentTypeService);
+            IContentType type = _contentTypeService.GetContentType("textpage");
+            IContent node = Scaffold.Node(_contentService);
+          
+            Dictionary<int, List<UserGroupPermissionsPoco>> perms = Scaffold.Permissions(0, 2, 0, type.Id);
 
-            Assert.NotNull(permissions);
+            _configService.UpdateContentTypeConfig(perms);
+
+            Assert.NotNull(_configService.GetPermissionsForNode(node.Id));
         }
 
         [Fact]

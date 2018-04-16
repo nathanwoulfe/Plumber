@@ -14,7 +14,7 @@ namespace Workflow.Tests.Repositories
         public PocoRepositoryTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.AddTables();
+            Scaffold.Tables();
 
             var context = new ContextMocker();
 
@@ -24,21 +24,21 @@ namespace Workflow.Tests.Repositories
         [Fact]
         public void Returns_True_If_Group_Alias_Exists()
         {
-            Scaffold.AddContent();
+            Scaffold.Config();
             Assert.True(_repo.GroupAliasExists("publisher"));
         }
 
         [Fact]
         public void Returns_False_If_Group_Alias_Does_Not_Exist()
         {
-            Scaffold.AddContent();
+            Scaffold.Config();
             Assert.False(_repo.GroupAliasExists("doesntexist"));
         }
 
         [Fact]
         public void Returns_Settings_If_Settings_Exist()
         {
-            Scaffold.AddContent();
+            Scaffold.Config();
             WorkflowSettingsPoco settings = _repo.GetSettings();
 
             Assert.NotNull(settings);
@@ -73,7 +73,7 @@ namespace Workflow.Tests.Repositories
         [Fact]
         public void Can_Check_Node_Has_Permissions()
         {
-            Scaffold.AddContent();
+            Scaffold.Config();
 
             Assert.True(_repo.NodeHasPermissions(1079));
         }

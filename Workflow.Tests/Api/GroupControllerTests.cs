@@ -5,7 +5,6 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using Chauffeur.TestingTools;
 using GDev.Umbraco.Test;
-using Moq;
 using Umbraco.Web;
 using Workflow.Api;
 using Workflow.Helpers;
@@ -25,7 +24,7 @@ namespace Workflow.Tests.Api
         public GroupControllerTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.AddTables();
+            Scaffold.Tables();
 
             // not testing this, but need it for quickly creating groups
             _groupService = new GroupService();
@@ -66,7 +65,7 @@ namespace Workflow.Tests.Api
         [Fact]
         public async void Can_Update_Group()
         {
-            Scaffold.AddContent();
+            Scaffold.Config();
 
             var group = new UserGroupPoco
             {
@@ -84,7 +83,7 @@ namespace Workflow.Tests.Api
         [Fact]
         public async void Cannot_Update_Group_If_Name_In_Use()
         {
-            Scaffold.AddContent();
+            Scaffold.Config();
 
             var group = new UserGroupPoco
             {

@@ -9,7 +9,7 @@ using Xunit;
 namespace Workflow.Tests.Repositories
 {
     /// <summary>
-    /// Import is tested implicitly in Scaffold.AddContent
+    /// Import is tested implicitly in Scaffold.Config
     /// </summary>
     public class ImportExportRepositoryTests : UmbracoHostTestBase
     {
@@ -18,7 +18,7 @@ namespace Workflow.Tests.Repositories
         public ImportExportRepositoryTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.AddTables();
+            Scaffold.Tables();
 
             var context = new ContextMocker();
 
@@ -32,7 +32,7 @@ namespace Workflow.Tests.Repositories
             Assert.NotNull(settings);
             Assert.Null(settings.DefaultApprover);
 
-            Scaffold.AddContent();
+            Scaffold.Config();
             settings = _repo.ExportSettings();
             Assert.NotNull(settings);
             Assert.Equal("12", settings.DefaultApprover);
@@ -44,7 +44,7 @@ namespace Workflow.Tests.Repositories
             IEnumerable<User2UserGroupExport> user2UserGroups = _repo.ExportUser2UserGroups();
             Assert.Empty(user2UserGroups);
 
-            Scaffold.AddContent();
+            Scaffold.Config();
 
             user2UserGroups = _repo.ExportUser2UserGroups();
             Assert.NotEmpty(user2UserGroups);
@@ -56,7 +56,7 @@ namespace Workflow.Tests.Repositories
             IEnumerable<UserGroupExport> userGroups = _repo.ExportUserGroups();
             Assert.Empty(userGroups);
 
-            Scaffold.AddContent();
+            Scaffold.Config();
 
             userGroups = _repo.ExportUserGroups();
             Assert.NotEmpty(userGroups);
@@ -68,7 +68,7 @@ namespace Workflow.Tests.Repositories
             IEnumerable<UserGroupPermissionsExport> userGroupPermissions = _repo.ExportUserGroupPermissions();
             Assert.Empty(userGroupPermissions);
 
-            Scaffold.AddContent();
+            Scaffold.Config();
 
             userGroupPermissions = _repo.ExportUserGroupPermissions();
             Assert.NotEmpty(userGroupPermissions);
