@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Web.Http;
 using log4net;
 using Umbraco.Core.Models.Membership;
+using Umbraco.Web;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 using Workflow.Helpers;
@@ -30,6 +31,14 @@ namespace Workflow.Api
         private readonly Utility _utility;
 
         public ActionsController()
+        {
+            _instancesService = new InstancesService();
+            _tasksService = new TasksService();
+
+            _utility = new Utility();
+        }
+
+        public ActionsController(UmbracoContext umbracoContext) : base(umbracoContext)
         {
             _instancesService = new InstancesService();
             _tasksService = new TasksService();

@@ -33,7 +33,6 @@ namespace Workflow.Api
         {
             _settingsService = new SettingsService();
             _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
-
         }
 
         // public constructor for injection - call this guy in tests to ensure context
