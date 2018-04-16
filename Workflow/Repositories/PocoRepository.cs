@@ -3,6 +3,7 @@ using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Persistence;
+using Umbraco.Core.Services;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Relators;
@@ -16,15 +17,19 @@ namespace Workflow.Repositories
     public class PocoRepository : IPocoRepository
     {
         private readonly UmbracoDatabase _database;
+        private readonly IContentService _contentService;
+        //private readonly Utility _utility;
 
-        public PocoRepository()
-            : this(ApplicationContext.Current.DatabaseContext.Database)
+        public PocoRepository() : this(ApplicationContext.Current)
         {
         }
 
-        private PocoRepository(UmbracoDatabase database)
+        private PocoRepository(ApplicationContext current)
         {
-            _database = database;
+            _database = current.DatabaseContext.Database;
+            _contentService = current.Services.ContentService;
+
+            // _utility = new Utility();
         }
 
         /// <summary>
@@ -56,13 +61,13 @@ namespace Workflow.Repositories
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public UserGroupPermissionsPoco GetDefaultUserGroupPermissions(string name)
-        {
-            UserGroupPermissionsPoco permissions = _database.Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupBasic, name).First();
-            return permissions;
-        }
+        //public UserGroupPermissionsPoco GetDefaultUserGroupPermissions(int id)
+        //{
+        //    UserGroupPermissionsPoco permissions = _database.Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupBasic, id).FirstOrDefault();
+        //    return permissions;
+        //}
 
         /// <summary>
         /// Get all user groups and their associated permissions and user groups
@@ -85,7 +90,7 @@ namespace Workflow.Repositories
                     new GroupsRelator().MapIt,
                     SqlHelpers.UserGroupDetailed,
                     id
-                ).First(g => !g.Deleted);
+                ).FirstOrDefault(g => !g.Deleted);
         }
 
         /// <summary>
@@ -124,21 +129,25 @@ namespace Workflow.Repositories
         /// <param name="nodeId">The node id</param>
         /// <param name="contentTypeId">The contentType id</param>
         /// <returns>A list of objects of type <see cref="UserGroupPermissionsPoco"/></returns>
-        public List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int? contentTypeId)
+        public List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int contentTypeId = 0)
         {
             return _database.Fetch<UserGroupPermissionsPoco, UserGroupPoco, User2UserGroupPoco, UserGroupPermissionsPoco>
                 (new UserToGroupForPermissionsRelator().MapIt, SqlHelpers.PermissionsByNode, nodeId, contentTypeId);
         }
 
+        public List<UserGroupPermissionsPoco> GetAllPermissions()
+        {
+            return _database.Fetch<UserGroupPermissionsPoco>("SELECT * FROM WorkflowUserGroupPermissions");
+        }
+
         /// <summary>
-        /// Check that the given node has a workflow assigned - this is checked on the homepage node, as all workflows will ultimately inherit from the homepage
+        /// Check that the given node has a workflow assigned
         /// </summary>
         /// <param name="nodeId">The node id</param>
-        /// <returns>A boolean reflecting the workflow state on the homepage node</returns>
-        public bool HasFlow(int nodeId)
+        /// <returns>A boolean reflecting the workflow state on the node</returns>
+        public bool NodeHasPermissions(int nodeId)
         {
-            string homepageNodeId = ApplicationContext.Current.Services.ContentService.GetById(nodeId).Path.Split(',')[1];
-            return _database.Fetch<int>("SELECT * FROM WorkflowUserGroupPermissions WHERE NodeId = @0", homepageNodeId).Any();
+            return _database.Fetch<int>("SELECT * FROM WorkflowUserGroupPermissions WHERE NodeId = @0", nodeId).Any();
         }
 
         /// <summary>

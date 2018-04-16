@@ -16,7 +16,7 @@ namespace Workflow.Models
     {
         private IPublishedContent _node;
         private IUser _authorUser;
-        private Utility _utility;
+        private readonly Utility _utility;
 
         public WorkflowInstancePoco()
         {
@@ -76,7 +76,7 @@ namespace Workflow.Models
 
         public void SetScheduledDate()
         {
-            IContent content = ApplicationContext.Current.Services.ContentService.GetById(NodeId);
+            IContent content = _utility.GetContent(NodeId);
             switch (Type)
             {
                 case (int)WorkflowType.Publish when content.ReleaseDate.HasValue:
@@ -110,19 +110,19 @@ namespace Workflow.Models
         /// The document object associated with this workflow.
         /// </summary>
         [ResultColumn]
-        public IPublishedContent Node => _node ?? (_node = _utility.GetNode(NodeId));
+        public IPublishedContent Node => _node ?? (_node = _utility.GetPublishedContent(NodeId));
 
         /// <summary>
         /// The author user who initiated this workflow instance.
         /// </summary>
         [ResultColumn]
-        public IUser AuthorUser => _authorUser ?? (_authorUser = Utility.GetUser(AuthorUserId));
+        public IUser AuthorUser => _authorUser ?? (_authorUser = _utility.GetUser(AuthorUserId));
 
         /// <summary>
         /// Title case text name for the workflow status.
         /// </summary>
         [ResultColumn]
-        public string StatusName => Utility.PascalCaseToTitleCase(WorkflowStatus.ToString());
+        public string StatusName => _utility.PascalCaseToTitleCase(WorkflowStatus.ToString());
 
         /// <summary>
         /// Indicates whether the workflow instance is currently active.
@@ -138,7 +138,7 @@ namespace Workflow.Models
         [ResultColumn]
         public ICollection<WorkflowTaskInstancePoco> TaskInstances { get; set; }
 
-        private static string WorkflowTypeDescription(WorkflowType type, DateTime? scheduledDate)
+        private string WorkflowTypeDescription(WorkflowType type, DateTime? scheduledDate)
         {
             if (scheduledDate.HasValue)
             {
@@ -148,14 +148,14 @@ namespace Workflow.Models
             return WorkflowTypeName(type);
         }
 
-        private static string WorkflowTypeName(WorkflowType type)
+        private string WorkflowTypeName(WorkflowType type)
         {
-            return Utility.PascalCaseToTitleCase(type.ToString());
+            return _utility.PascalCaseToTitleCase(type.ToString());
         }
 
-        public static string EmailTypeName(EmailType type)
+        public string EmailTypeName(EmailType type)
         {
-            return Utility.PascalCaseToTitleCase(type.ToString());
+            return _utility.PascalCaseToTitleCase(type.ToString());
         }
     }
 }

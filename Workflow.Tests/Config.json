@@ -1,0 +1,395 @@
+﻿{
+    "settings": {
+        "defaultApprover": "12",
+        "email": "your@email.here",
+        "editUrl": "edit.mydomain.commmmmmm",
+        "siteUrl": null,
+        "flowType": 1,
+        "sendNotifications": true,
+        "excludeNodes": "1082"
+    },
+    "userGroups": [
+        {
+            "groupId": 1,
+            "description": "this is a change",
+            "name": "Group A",
+            "alias": "group-a",
+            "groupEmail": null,
+            "deleted": false
+        },
+        {
+            "groupId": 2,
+            "description": null,
+            "name": "Group B",
+            "alias": "group-b",
+            "groupEmail": null,
+            "deleted": false
+        },
+        {
+            "groupId": 3,
+            "description": null,
+            "name": "Group C",
+            "alias": "group-c",
+            "groupEmail": null,
+            "deleted": false
+        },
+        {
+            "groupId": 4,
+            "description": null,
+            "name": "Group D",
+            "alias": "group-d",
+            "groupEmail": null,
+            "deleted": false
+        },
+        {
+            "groupId": 5,
+            "description": null,
+            "name": "Group Eee",
+            "alias": "group-e",
+            "groupEmail": null,
+            "deleted": false
+        },
+        {
+            "groupId": 6,
+            "description": null,
+            "name": "Delete this group",
+            "alias": "delete-this-group",
+            "groupEmail": null,
+            "deleted": true
+        },
+        {
+            "groupId": 7,
+            "description": null,
+            "name": "test group",
+            "alias": "test-group",
+            "groupEmail": null,
+            "deleted": true
+        },
+        {
+            "groupId": 8,
+            "description": null,
+            "name": "Review 1",
+            "alias": "review-1",
+            "groupEmail": null,
+            "deleted": false
+        },
+        {
+            "groupId": 9,
+            "description": null,
+            "name": "Review 2",
+            "alias": "review-2",
+            "groupEmail": null,
+            "deleted": true
+        },
+        {
+            "groupId": 10,
+            "description": null,
+            "name": "Review 3",
+            "alias": "review-3",
+            "groupEmail": null,
+            "deleted": false
+        },
+        {
+            "groupId": 11,
+            "description": null,
+            "name": "Approver",
+            "alias": "approver",
+            "groupEmail": null,
+            "deleted": false
+        },
+        {
+            "groupId": 12,
+            "description": null,
+            "name": "Publisher",
+            "alias": "publisher",
+            "groupEmail": null,
+            "deleted": false
+        },
+        {
+            "groupId": 13,
+            "description": null,
+            "name": "tis a new group",
+            "alias": "tis-a-new-group",
+            "groupEmail": null,
+            "deleted": true
+        },
+        {
+            "groupId": 14,
+            "description": null,
+            "name": "dssdgsdgsdg",
+            "alias": "dssdgsdgsdg",
+            "groupEmail": null,
+            "deleted": true
+        },
+        {
+            "groupId": 15,
+            "description": null,
+            "name": "ghdfhdfhdfhdhf",
+            "alias": "ghdfhdfhdfhdhf",
+            "groupEmail": null,
+            "deleted": true
+        },
+        {
+            "groupId": 16,
+            "description": null,
+            "name": "fdhdfhdfhfhd",
+            "alias": "fdhdfhdfhfhd",
+            "groupEmail": null,
+            "deleted": true
+        },
+        {
+            "groupId": 17,
+            "description": null,
+            "name": "dfhdfhdfh",
+            "alias": "dfhdfhdfh",
+            "groupEmail": null,
+            "deleted": true
+        },
+        {
+            "groupId": 18,
+            "description": null,
+            "name": "sdgsgsgg",
+            "alias": "sdgsgsgg",
+            "groupEmail": null,
+            "deleted": true
+        },
+        {
+            "groupId": 19,
+            "description": null,
+            "name": "fffffffffffffffffffffff",
+            "alias": "fffffffffffffffffffffff",
+            "groupEmail": null,
+            "deleted": true
+        },
+        {
+            "groupId": 20,
+            "description": null,
+            "name": "sddddddddddddddd",
+            "alias": "sddddddddddddddd",
+            "groupEmail": null,
+            "deleted": true
+        },
+        {
+            "groupId": 21,
+            "description": null,
+            "name": "sdsdsdededed",
+            "alias": "sdsdsdededed",
+            "groupEmail": null,
+            "deleted": true
+        },
+        {
+            "groupId": 22,
+            "description": null,
+            "name": "thtythrthtrhyt",
+            "alias": "thtythrthtrhyt",
+            "groupEmail": null,
+            "deleted": true
+        }
+    ],
+    "user2UserGroup": [
+        {
+            "userId": 2,
+            "groupId": 1
+        },
+        {
+            "userId": 1,
+            "groupId": 2
+        },
+        {
+            "userId": 3,
+            "groupId": 3
+        },
+        {
+            "userId": 4,
+            "groupId": 4
+        },
+        {
+            "userId": 5,
+            "groupId": 4
+        },
+        {
+            "userId": 2,
+            "groupId": 4
+        },
+        {
+            "userId": 4,
+            "groupId": 5
+        },
+        {
+            "userId": 3,
+            "groupId": 12
+        },
+        {
+            "userId": 0,
+            "groupId": 8
+        },
+        {
+            "userId": 0,
+            "groupId": 9
+        },
+        {
+            "userId": 0,
+            "groupId": 10
+        },
+        {
+            "userId": 1,
+            "groupId": 11
+        },
+        {
+            "userId": 2,
+            "groupId": 3
+        },
+        {
+            "userId": 0,
+            "groupId": 1
+        },
+        {
+            "userId": 0,
+            "groupId": 11
+        },
+        {
+            "userId": 2,
+            "groupId": 2
+        }
+    ],
+    "userGroupPermissions": [
+        {
+            "groupId": 2,
+            "nodeId": 1073,
+            "contentTypeId": 0,
+            "permission": 0
+        },
+        {
+            "groupId": 4,
+            "nodeId": 1079,
+            "contentTypeId": 0,
+            "permission": 0
+        },
+        {
+            "groupId": 1,
+            "nodeId": 1089,
+            "contentTypeId": 0,
+            "permission": 0
+        },
+        {
+            "groupId": 2,
+            "nodeId": 1089,
+            "contentTypeId": 0,
+            "permission": 1
+        },
+        {
+            "groupId": 1,
+            "nodeId": 0,
+            "contentTypeId": 1068,
+            "permission": 0
+        },
+        {
+            "groupId": 3,
+            "nodeId": 0,
+            "contentTypeId": 1068,
+            "permission": 1
+        },
+        {
+            "groupId": 5,
+            "nodeId": 0,
+            "contentTypeId": 1068,
+            "permission": 2
+        },
+        {
+            "groupId": 2,
+            "nodeId": 0,
+            "contentTypeId": 1069,
+            "permission": 0
+        },
+        {
+            "groupId": 4,
+            "nodeId": 1084,
+            "contentTypeId": 0,
+            "permission": 0
+        },
+        {
+            "groupId": 1,
+            "nodeId": 1074,
+            "contentTypeId": 0,
+            "permission": 0
+        },
+        {
+            "groupId": 2,
+            "nodeId": 1074,
+            "contentTypeId": 0,
+            "permission": 1
+        },
+        {
+            "groupId": 12,
+            "nodeId": 1074,
+            "contentTypeId": 0,
+            "permission": 2
+        },
+        {
+            "groupId": 2,
+            "nodeId": 1084,
+            "contentTypeId": 0,
+            "permission": 1
+        },
+        {
+            "groupId": 1,
+            "nodeId": 1093,
+            "contentTypeId": 0,
+            "permission": 0
+        },
+        {
+            "groupId": 2,
+            "nodeId": 1093,
+            "contentTypeId": 0,
+            "permission": 1
+        },
+        {
+            "groupId": 12,
+            "nodeId": 1093,
+            "contentTypeId": 0,
+            "permission": 2
+        },
+        {
+            "groupId": 3,
+            "nodeId": 0,
+            "contentTypeId": 1069,
+            "permission": 1
+        },
+        {
+            "groupId": 3,
+            "nodeId": 1073,
+            "contentTypeId": 0,
+            "permission": 1
+        },
+        {
+            "groupId": 12,
+            "nodeId": 1073,
+            "contentTypeId": 0,
+            "permission": 2
+        },
+        {
+            "groupId": 1,
+            "nodeId": 0,
+            "contentTypeId": 1071,
+            "permission": 0
+        },
+        {
+            "groupId": 2,
+            "nodeId": 0,
+            "contentTypeId": 1071,
+            "permission": 1
+        },
+        {
+            "groupId": 3,
+            "nodeId": 0,
+            "contentTypeId": 1071,
+            "permission": 2
+        },
+        {
+            "groupId": 4,
+            "nodeId": 0,
+            "contentTypeId": 1071,
+            "permission": 3
+        }
+    ]
+}

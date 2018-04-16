@@ -58,10 +58,6 @@
     <Compile Include="Repositories\Interfaces\IInstancesRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITasksRepository.cs" />
     <Compile Include="Repositories\TasksRepository.cs" />
-    <Compile Include="UnitOfWork\IUnitOfWork.cs" />
-    <Compile Include="UnitOfWork\IUnitOfWorkProvider.cs" />
-    <Compile Include="UnitOfWork\PetaPocoUnitOfWork.cs" />
-    <Compile Include="UnitOfWork\PetaPocoUnitOfWorkProvider.cs" />
     <Compile Include="Repositories\Interfaces\IImportExportRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPocoRepository.cs" />
     <Compile Include="Migrations\VersionZeroFiveZero.cs" />
@@ -211,10 +207,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\controls.dll</HintPath>
     </Reference>
-    <Reference Include="Examine, Version=0.1.85.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Examine.0.1.85\lib\net45\Examine.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
@@ -231,9 +223,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\UmbracoCms.Core.7.7.1\lib\net45\log4net.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="log4net">
+      <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Log4Net.Async, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Log4Net.Async.2.0.4\lib\net40\Log4Net.Async.dll</HintPath>
@@ -312,9 +303,8 @@
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.XML" />
-    <Reference Include="TidyNet, Version=1.0.0.0, Culture=neutral">
-      <HintPath>..\packages\UmbracoCms.Core.7.7.1\lib\net45\TidyNet.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="TidyNet">
+      <HintPath>..\packages\UmbracoCms.Core.7.9.2\lib\net45\TidyNet.dll</HintPath>
     </Reference>
     <Reference Include="umbraco, Version=1.0.6634.25796, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

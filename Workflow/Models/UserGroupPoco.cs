@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
 using Workflow.Helpers;
@@ -12,6 +11,8 @@ namespace Workflow.Models
     [PrimaryKey("GroupId", autoIncrement = true)]
     public class UserGroupPoco
     {
+        private readonly Utility _utility = new Utility();
+
         [Column("GroupId")]
         [PrimaryKeyColumn(AutoIncrement = true)]
         public int GroupId { get; set; }
@@ -70,7 +71,7 @@ namespace Workflow.Models
         {
             List<string> addresses = new List<string>();
 
-            if (Utility.IsValidEmailAddress(GroupEmail))
+            if (_utility.IsValidEmailAddress(GroupEmail))
             {
                 addresses.Add(GroupEmail);
             }
@@ -79,7 +80,7 @@ namespace Workflow.Models
                 addresses.AddRange(from user in Users
                     .Where(u => u.User.IsApproved && 
                                 !u.User.IsLockedOut && 
-                                Utility.IsValidEmailAddress(u.User.Email)) where user.User.Email != null select user.User.Email);
+                                _utility.IsValidEmailAddress(u.User.Email)) where user.User.Email != null select user.User.Email);
             }
             return addresses;
         }

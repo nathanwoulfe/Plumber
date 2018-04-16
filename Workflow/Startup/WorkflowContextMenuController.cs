@@ -24,7 +24,7 @@ namespace Workflow.Startup
             var utility = new Utility();
 
             int menuLength = e.Menu.Items.Count;
-            string nodeName = utility.GetNode(int.Parse(e.NodeId)).Name;
+            string nodeName = utility.GetNodeName(int.Parse(e.NodeId));
             IUser currentUser = UmbracoContext.Current.Security.CurrentUser;
             var items = new Umbraco.Web.Models.Trees.MenuItemList();
 

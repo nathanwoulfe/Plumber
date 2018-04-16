@@ -10,6 +10,8 @@ namespace Workflow.Models
     [PrimaryKey("Id", autoIncrement = true)]
     public class User2UserGroupPoco
     {
+        private readonly Utility _utility = new Utility();
+
         [Column("Id")]
         [PrimaryKeyColumn(AutoIncrement = true)]
         public int Id { get; set; }
@@ -21,9 +23,9 @@ namespace Workflow.Models
         public int GroupId { get; set; }
 
         [ResultColumn]
-        public string Name => Utility.GetUser(UserId)?.Name ?? string.Empty;
+        public string Name => _utility.GetUser(UserId)?.Name ?? string.Empty;
 
         [ResultColumn]
-        public IUser User => Utility.GetUser(UserId);
+        public IUser User => _utility.GetUser(UserId);
     }
 }

@@ -22,6 +22,7 @@ namespace Workflow.Processes
         private readonly IContentService _contentService;
         private readonly IInstancesService _instancesService;
         private readonly Notifications _notifications;
+        private readonly Utility _utility;
 
         public static event EventHandler<InstanceEventArgs> Completed;
 
@@ -29,16 +30,18 @@ namespace Workflow.Processes
             : this(
                 ApplicationContext.Current.Services.ContentService,
                 new InstancesService(),
-                new Notifications()
+                new Notifications(),
+                new Utility()
                 )
         {
         }
 
-        private DocumentPublishProcess(IContentService contentService, IInstancesService instancesService, Notifications notifications)
+        private DocumentPublishProcess(IContentService contentService, IInstancesService instancesService, Notifications notifications, Utility utility)
         {
             _contentService = contentService;
             _instancesService = instancesService;
             _notifications = notifications;
+            _utility = utility;
 
             Type = WorkflowType.Publish;
         }
@@ -77,7 +80,7 @@ namespace Workflow.Processes
                 node.ReleaseDate = null;
             }
 
-            Attempt<PublishStatus> publishStatus = _contentService.PublishWithStatus(node, Instance.TaskInstances.Last().ActionedByUserId ?? Utility.GetCurrentUser().Id);
+            Attempt<PublishStatus> publishStatus = _contentService.PublishWithStatus(node, Instance.TaskInstances.Last().ActionedByUserId ?? _utility.GetCurrentUser().Id);
 
             if (!publishStatus.Success)
             {

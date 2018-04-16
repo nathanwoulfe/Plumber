@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Umbraco.Core.Models;
 using Workflow.Events.Args;
 using Workflow.Extensions;
@@ -380,14 +381,19 @@ namespace Workflow.Processes
                 if (group == null)
                 {
                     // If nothing set for the content type recurse up the tree until we find something
-                    IPublishedContent node = _utility.GetNode(nodeId);
+                    IPublishedContent node = _utility.GetPublishedContent(nodeId);
                     if (node.Level != 1)
                     {
                         SetApprovalGroup(taskInstance, node.Parent.Id, nodeId);
                     }
                     else // no group set, fallback to default approver
                     {
-                        group = _groupService.GetDefaultUserGroupPermissions(_settingsService.GetSettings().DefaultApprover);
+                        int groupId = int.Parse(_settings.DefaultApprover);
+                        group = new UserGroupPermissionsPoco
+                        {
+                            GroupId = groupId,
+                            UserGroup = GetGroup(groupId).Result
+                        };
                         SetInstanceTotalSteps(1);
                     }
                 }
@@ -400,6 +406,15 @@ namespace Workflow.Processes
             taskInstance.UserGroup = group.UserGroup;
         }
 
+        /// <summary>
+        /// Helper to grab the user group when populating the default approver
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private async Task<UserGroupPoco> GetGroup(int id)
+        {
+            return await _groupService.GetPopulatedUserGroupAsync(id);
+        }
 
         /// <summary>
         /// set the total steps property for a workflow instance

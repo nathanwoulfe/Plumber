@@ -4,6 +4,7 @@ using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Models;
+using Umbraco.Web;
 using Workflow.Events.Args;
 using Workflow.Models;
 using Workflow.Repositories;
@@ -17,22 +18,16 @@ namespace Workflow.Services
     /// </summary>
     public class ConfigService : IConfigService
     {
-        private readonly ILogger _log;
         private readonly IPocoRepository _repo;
-
-        public static event EventHandler Updated;
+        public event EventHandler<ConfigEventArgs> Updated;
 
         public ConfigService()
-            : this(
-                  ApplicationContext.Current.ProfilingLogger.Logger,
-                  new PocoRepository()
-            )
+            : this(new PocoRepository())
         {
         }
 
-        private ConfigService(ILogger log, IPocoRepository repo)
+        private ConfigService(IPocoRepository repo)
         {
-            _log = log;
             _repo = repo;
         }
 
@@ -87,11 +82,10 @@ namespace Workflow.Services
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="nodeId"></param>
         /// <returns></returns>
-        public bool HasFlow(int nodeId)
+        public List<UserGroupPermissionsPoco> GetAll()
         {
-            return _repo.HasFlow(nodeId);
+            return _repo.GetAllPermissions();
         }
 
         /// <summary>
@@ -100,7 +94,7 @@ namespace Workflow.Services
         /// <param name="nodeId"></param>
         /// <param name="contentTypeId"></param>
         /// <returns></returns>
-        public List<UserGroupPermissionsPoco> GetPermissionsForNode(int nodeId, int? contentTypeId)
+        public List<UserGroupPermissionsPoco> GetPermissionsForNode(int nodeId, int contentTypeId = 0)
         {
             List<UserGroupPermissionsPoco> permissions = _repo.PermissionsForNode(nodeId, contentTypeId);
 

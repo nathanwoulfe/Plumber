@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Workflow.Events.Args;
 using Workflow.Models;
 
 namespace Workflow.Services.Interfaces
@@ -11,10 +13,12 @@ namespace Workflow.Services.Interfaces
         Task<UserGroupPoco> UpdateUserGroupAsync(UserGroupPoco poco);
         Task<UserGroupPoco> CreateUserGroupAsync(string name);
 
-        UserGroupPermissionsPoco GetDefaultUserGroupPermissions(string name);
-
         Task<IEnumerable<UserGroupPoco>> GetUserGroupsAsync();
 
         Task DeleteUserGroupAsync(int groupId);
+
+        event EventHandler<GroupEventArgs> Created;
+        event EventHandler<GroupDeletedEventArgs> Deleted;
+        event EventHandler<GroupEventArgs> Updated;
     }
 }

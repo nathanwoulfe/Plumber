@@ -7,34 +7,40 @@ using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Services;
 using Umbraco.Web;
 using Workflow.Extensions;
+using Workflow.Repositories;
+using Workflow.Repositories.Interfaces;
 
 namespace Workflow.Helpers
 {
     public class Utility
     {
-        private static readonly UmbracoHelper Helper = new UmbracoHelper(UmbracoContext.Current);
-        private static readonly IUserService UserService = ApplicationContext.Current.Services.UserService;
-        private static readonly IContentTypeService ContentTypeService = ApplicationContext.Current.Services.ContentTypeService;
-        private static readonly IContentService ContentService = ApplicationContext.Current.Services.ContentService;
+        private readonly UmbracoContext _context;
+        private readonly UmbracoHelper _helper;
 
-        private UmbracoContext _context;
-        private UmbracoHelper _helper;
-        private IUserService _userService;
-        private IContentTypeService _contentTypeService;
-        private IContentService _contentService;
+        private readonly IUserService _userService;
+        private readonly IContentTypeService _contentTypeService;
+        private readonly IContentService _contentService;
+        private readonly IPocoRepository _pocoRepo;
 
-        public Utility()
-            : this(UmbracoContext.Current)
+        public Utility() : this(
+            new PocoRepository(), 
+            ApplicationContext.Current.Services.UserService,
+            ApplicationContext.Current.Services.ContentTypeService,
+            ApplicationContext.Current.Services.ContentService,
+            UmbracoContext.Current)
         {
         }
-
-        // send this a mocke
-        public Utility(UmbracoContext context)
+        
+        public Utility(IPocoRepository pocoRepo, IUserService userService, IContentTypeService contentTypeService, IContentService contentService, UmbracoContext context)
         {
             _context = context;
             _helper = new UmbracoHelper(_context);
 
-            _userService = _context.Application.Services.UserService;
+            _userService = userService;
+            _contentTypeService = contentTypeService;
+            _contentService = contentService;
+
+            _pocoRepo = pocoRepo;
         }
 
         /// <summary>
@@ -42,28 +48,48 @@ namespace Workflow.Helpers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IPublishedContent GetNode(int id)
+        public IPublishedContent GetPublishedContent(int id)
         {
-            IPublishedContent n = Helper.TypedContent(id);
+            IPublishedContent n = _helper.TypedContent(id);
             if (n != null) return n;
 
-            IContent c = ContentService.GetById(id);
+            IContent c = _contentService.GetById(id);
 
             return c?.ToPublishedContent();
         }
 
         /// <summary>
-        /// Get the node name from cache, falling back to the db
+        /// 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static string GetNodeName(int id)
+        public IContent GetContent(int id)
         {
-            IPublishedContent n = Helper.TypedContent(id);
-            if (n != null) return n.Name;
+            return _contentService.GetById(id);
+        }
 
-            IContent c = ContentService.GetById(id);
+        /// <summary>
+        /// Get the node name from the db
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetNodeName(int id)
+        {
+            //IPublishedContent n = _helper.TypedContent(id);
+            //if (n != null) return n.Name;
+            IContent c = _contentService.GetById(id);
             return c != null ? c.Name : MagicStrings.NoNode;
+        }
+
+        /// <summary>
+        /// Get the  id of the root ancestor node for the given id
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        public bool HasFlow(int nodeId)
+        {
+            string root = _contentService.GetById(nodeId).Path.Split(',')[1];
+            return _pocoRepo.NodeHasPermissions(int.Parse(root));
         }
 
         /// <summary>
@@ -71,9 +97,9 @@ namespace Workflow.Helpers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static IUser GetUser(int id)
+        public IUser GetUser(int id)
         {
-            return UserService.GetUserById(id);
+            return _userService.GetUserById(id);
         }
 
         /// <summary>
@@ -81,18 +107,18 @@ namespace Workflow.Helpers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static IContentType GetContentType(int id)
+        public IContentType GetContentType(int id)
         {
-            return ContentTypeService.GetContentType(id);
+            return _contentTypeService.GetContentType(id);
         }
 
         /// <summary>
         /// Get the current logged-in user
         /// </summary>
         /// <returns></returns>
-        public static IUser GetCurrentUser()
+        public IUser GetCurrentUser()
         {
-            return UmbracoContext.Current.Security.CurrentUser;
+            return _context.Security.CurrentUser;
         }
 
         /// <summary>
@@ -100,15 +126,20 @@ namespace Workflow.Helpers
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static string PascalCaseToTitleCase(string str)
+        public string PascalCaseToTitleCase(string str)
         {
-            return str != null ? Regex.Replace(str, "([A-Z]+?(?=(([A-Z]?[a-z])|$))|[0-9]+)", " $1").Trim() : null;
+            if (str == null)
+                return null;
+
+            str = char.ToUpper(str[0]) + str.Substring(1);
+
+            return Regex.Replace(str, "([A-Z]+?(?=(([A-Z]?[a-z])|$))|[0-9]+)", " $1").Trim();
         }
         
         /// <summary>Checks whether the email address is valid.</summary>
         /// <param name="email">the email address to check</param>
         /// <returns>true if valid, false otherwise.</returns>
-        public static bool IsValidEmailAddress(string email)
+        public bool IsValidEmailAddress(string email)
         {
             try
             {

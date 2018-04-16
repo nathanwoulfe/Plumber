@@ -1,4 +1,5 @@
-﻿using Umbraco.Core.Persistence;
+﻿using System.Runtime.InteropServices.WindowsRuntime;
+using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
 using Workflow.Helpers;
 
@@ -9,6 +10,8 @@ namespace Workflow.Models
     [PrimaryKey("Id", autoIncrement = true)]
     public class UserGroupPermissionsPoco
     {
+        private readonly Utility _utility = new Utility();
+
         [Column("Id")]
         [PrimaryKeyColumn(AutoIncrement = true)]
         public int Id { get; set; }
@@ -30,10 +33,10 @@ namespace Workflow.Models
         public int Permission { get; set; }
 
         [ResultColumn]
-        public string NodeName => NodeId > 0 ? Utility.GetNodeName(NodeId) : string.Empty;
+        public string NodeName => NodeId > 0 ? _utility.GetNodeName(NodeId) : string.Empty;
 
         [ResultColumn]
-        public string ContentTypeName => ContentTypeId > 0 ? Utility.GetContentType(ContentTypeId).Name : string.Empty;
+        public string ContentTypeName => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId).Name : string.Empty;
 
 
         [ResultColumn]

@@ -25,6 +25,6 @@ namespace Workflow.Events.Args
             GroupId = groupId;
         }
 
-        private int GroupId { get; set; }
+        public int GroupId { get; }
     }
 }

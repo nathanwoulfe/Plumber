@@ -39,7 +39,7 @@ namespace Workflow.Api
             {
                 WorkflowInstancePoco instance = _instancesService.GetByGuid(instanceGuid);
 
-                var node = _utility.GetNode(1078);
+                var node = _utility.GetPublishedContent(1078);
 
                 _notifications.Send(instance, (EmailType)emailType);
 

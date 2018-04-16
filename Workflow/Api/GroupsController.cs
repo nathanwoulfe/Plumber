@@ -8,6 +8,7 @@ using Workflow.Models;
 using Workflow.Helpers;
 using Workflow.Services;
 using System.Threading.Tasks;
+using Umbraco.Web;
 using Workflow.Services.Interfaces;
 
 namespace Workflow.Api
@@ -17,10 +18,25 @@ namespace Workflow.Api
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IGroupService _groupService;
+        private readonly Utility _utility;
 
         public GroupsController()
         {
             _groupService = new GroupService();
+            _utility = new Utility();
+        }
+
+        public GroupsController(UmbracoContext umbracoContext) : base(umbracoContext)
+        {
+            _groupService = new GroupService();
+            _utility = new Utility();
+        }
+
+        public GroupsController(UmbracoContext umbracoContext, UmbracoHelper umbracoHelper) : base(umbracoContext,
+            umbracoHelper)
+        {
+            _groupService = new GroupService();
+            _utility = new Utility();
         }
 
         /// <summary>
@@ -37,7 +53,9 @@ namespace Workflow.Api
                 {
                     UserGroupPoco result = await _groupService.GetUserGroupAsync(id.Value);
                     if (result != null)
+                    {
                         return Json(result, ViewHelpers.CamelCase);
+                    }
                 }
                 else
                 {
@@ -48,7 +66,7 @@ namespace Workflow.Api
             }
             catch (Exception e)
             {
-                string error = $"Error getting group by id {id}";
+                string error = MagicStrings.ErrorGettingGroup.Replace("{id}", id.ToString());
                 Log.Error(error, e);
                 // if we are here, something isn't right...
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e, error));
@@ -73,10 +91,10 @@ namespace Workflow.Api
                 // check that it doesn't already exist
                 if (poco == null)
                 {
-                    return Ok(new { status = 200, success = false, msg = "Group name already exists" });
+                    return Ok(new { status = 200, success = false, msg = MagicStrings.GroupNameExists });
                 }
 
-                string msg = $"Successfully created new user group '{name}'.";
+                string msg = MagicStrings.GroupCreated.Replace("{name}", name);
                 Log.Debug(msg);
 
                 // return the id of the new group, to update the front-end route to display the edit view
@@ -108,7 +126,7 @@ namespace Workflow.Api
                 // need to check the new name/alias isn't already in use
                 if (result == null)
                 {
-                    return Content(HttpStatusCode.OK, new { status = 500, msg = "Group name already exists" });
+                    return Content(HttpStatusCode.OK, new { status = 500, msg = MagicStrings.GroupNameExists });
                 }
 
             }
@@ -121,7 +139,7 @@ namespace Workflow.Api
             }
 
             // feedback to the browser
-            string msgText = $"User group '{group.Name}' has been saved.";
+            string msgText = MagicStrings.GroupUpdated.Replace("{name}", group.Name);
             Log.Debug(msgText);
 
             return Ok(new { status = 200, msg = msgText });
@@ -149,7 +167,7 @@ namespace Workflow.Api
             }
 
             // gone.
-            Log.Debug($"User group {id} deleted by {Utility.GetCurrentUser().Name}");
+            Log.Debug($"User group {id} deleted by {_utility.GetCurrentUser()?.Name}");
             return Ok("User group has been deleted");
         }
     }

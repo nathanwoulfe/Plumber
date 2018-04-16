@@ -117,7 +117,7 @@ namespace Workflow
 
                         if (instance.WorkflowType == WorkflowType.Publish)
                         {
-                            IPublishedContent n = _utility.GetNode(instance.NodeId);
+                            IPublishedContent n = _utility.GetPublishedContent(instance.NodeId);
                             docUrl = UrlHelpers.GetFullyQualifiedSiteUrl(n.Url);
                         }
 
@@ -252,7 +252,7 @@ namespace Workflow
         /// <returns></returns>
         private static string BuildEmailSubject(EmailType emailType, WorkflowInstancePoco instance)
         {
-            return $"{WorkflowInstancePoco.EmailTypeName(emailType)} - {instance.Node.Name} ({instance.TypeDescription})";
+            return $"{instance.EmailTypeName(emailType)} - {instance.Node.Name} ({instance.TypeDescription})";
         }
     }
 }

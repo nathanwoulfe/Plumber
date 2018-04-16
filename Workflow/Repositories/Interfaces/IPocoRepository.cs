@@ -5,7 +5,7 @@ namespace Workflow.Repositories.Interfaces
 {
     public interface IPocoRepository
     {
-        bool HasFlow(int nodeId);
+        bool NodeHasPermissions(int nodeId);
         bool GroupAliasExists(string value);
         bool GroupNameExists(string value);
 
@@ -15,11 +15,12 @@ namespace Workflow.Repositories.Interfaces
         UserGroupPoco GetPopulatedUserGroup(int id);
         UserGroupPoco GetUserGroupById(int id);
 
-        UserGroupPermissionsPoco GetDefaultUserGroupPermissions(string name);
+        //UserGroupPermissionsPoco GetDefaultUserGroupPermissions(int id);
 
         IEnumerable<UserGroupPoco> GetUserGroups();
 
-        List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int? contentTypeId);
+        List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int contentTypeId = 0);
+        List<UserGroupPermissionsPoco> GetAllPermissions();
 
         void AddUserToGroup(User2UserGroupPoco user);
         void AddPermission(UserGroupPermissionsPoco perm);

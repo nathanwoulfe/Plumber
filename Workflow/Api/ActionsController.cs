@@ -1,11 +1,11 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web.Http;
+using log4net;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
@@ -27,10 +27,14 @@ namespace Workflow.Api
         private readonly IInstancesService _instancesService;
         private readonly ITasksService _tasksService;
 
+        private readonly Utility _utility;
+
         public ActionsController()
         {
             _instancesService = new InstancesService();
             _tasksService = new TasksService();
+
+            _utility = new Utility();
         }
 
         /// <summary>
@@ -55,7 +59,7 @@ namespace Workflow.Api
                     process = new DocumentUnpublishProcess();
                 }
 
-                WorkflowInstancePoco instance = process.InitiateWorkflow(int.Parse(model.NodeId), Utility.GetCurrentUser().Id, model.Comment);
+                WorkflowInstancePoco instance = process.InitiateWorkflow(int.Parse(model.NodeId), _utility.GetCurrentUser().Id, model.Comment);
 
                 string msg = string.Empty;
 
@@ -108,7 +112,7 @@ namespace Workflow.Api
             try
             {
                 WorkflowProcess process = GetProcess(instance.Type);
-                IUser currentUser = Utility.GetCurrentUser();
+                IUser currentUser = _utility.GetCurrentUser();
 
                 instance = process.ActionWorkflow(
                     instance,
@@ -175,7 +179,7 @@ namespace Workflow.Api
             try
             {
                 WorkflowProcess process = GetProcess(instance.Type);
-                IUser currentUser = Utility.GetCurrentUser();
+                IUser currentUser = _utility.GetCurrentUser();
 
                 instance = process.ActionWorkflow(
                     instance,
@@ -216,7 +220,7 @@ namespace Workflow.Api
             try
             {
                 WorkflowProcess process = GetProcess(instance.Type);
-                IUser currentUser = Utility.GetCurrentUser();
+                IUser currentUser = _utility.GetCurrentUser();
 
                 instance = process.CancelWorkflow(
                     instance,
@@ -255,7 +259,7 @@ namespace Workflow.Api
             try
             {
                 WorkflowProcess process = GetProcess(instance.Type);
-                IUser currentUser = Utility.GetCurrentUser();
+                IUser currentUser = _utility.GetCurrentUser();
 
                 instance = process.ResubmitWorkflow(
                     instance,
