@@ -188,7 +188,7 @@
     ],
     "user2UserGroup": [
         {
-            "userId": 2,
+            "userId": 0,
             "groupId": 1
         },
         {
@@ -238,10 +238,6 @@
         {
             "userId": 2,
             "groupId": 3
-        },
-        {
-            "userId": 0,
-            "groupId": 1
         },
         {
             "userId": 0,

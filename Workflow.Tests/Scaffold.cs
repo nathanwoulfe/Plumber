@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Hosting;
+using System.Web.WebSockets;
 using Moq;
 using Newtonsoft.Json;
 using Umbraco.Core;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
+using Umbraco.Core.Persistence;
 using Umbraco.Core.Services;
 using Umbraco.Web;
 using Umbraco.Web.Routing;
@@ -22,10 +25,15 @@ namespace Workflow.Tests
         public static void Tables()
         {
             // ensure required tables exist
-            Persistence.Helper().CreateTable<UserGroupPoco>();
-            Persistence.Helper().CreateTable<User2UserGroupPoco>();
-            Persistence.Helper().CreateTable<UserGroupPermissionsPoco>();
-            Persistence.Helper().CreateTable<WorkflowSettingsPoco>();
+            DatabaseSchemaHelper persistenceHelper = Persistence.Helper();
+
+            persistenceHelper.CreateTable<UserGroupPoco>();
+            persistenceHelper.CreateTable<User2UserGroupPoco>();
+            persistenceHelper.CreateTable<UserGroupPermissionsPoco>();
+            persistenceHelper.CreateTable<WorkflowSettingsPoco>();
+            persistenceHelper.CreateTable<WorkflowInstancePoco>();
+            persistenceHelper.CreateTable<WorkflowTaskInstancePoco>();
+
         }
 
         public static UmbracoContext EnsureContext()
@@ -120,6 +128,32 @@ namespace Workflow.Tests
                 GroupId = groupId,
                 Id = id,
                 UserId = id
+            };
+        }
+
+        public static WorkflowInstancePoco Instance(Guid guid, int type, int nodeId = 1073, int authorUserId = 0)
+        {
+            return new WorkflowInstancePoco
+            {
+                AuthorUserId = authorUserId,
+                Guid = guid,
+                AuthorComment = Utility.RandomString(),
+                NodeId = nodeId,
+                CreatedDate = DateTime.Now,
+                Type = type
+            };
+        }
+
+        public static WorkflowTaskInstancePoco Task(Guid guid = new Guid(), DateTime createdDate = new DateTime(), int groupId = 1, int approvalStep = 1, int status = 3)
+        {
+            return new WorkflowTaskInstancePoco
+            {
+                GroupId = groupId,
+                Comment = Utility.RandomString(),
+                CreatedDate = createdDate == DateTime.MinValue ? DateTime.Now : createdDate,
+                ApprovalStep = approvalStep,
+                WorkflowInstanceGuid = guid == Guid.Empty ? Guid.NewGuid() : guid,
+                Status = status
             };
         }
 

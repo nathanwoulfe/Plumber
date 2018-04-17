@@ -50,8 +50,12 @@ namespace Workflow.Helpers
         /// <returns></returns>
         public IPublishedContent GetPublishedContent(int id)
         {
-            IPublishedContent n = _helper.TypedContent(id);
-            if (n != null) return n;
+            // applicationUrl is null in tests, so can use it to avoid hitting the published cache, which is not available
+            if(_context.Application.UmbracoApplicationUrl != null)
+            {
+                IPublishedContent n = _helper.TypedContent(id);
+                if (n != null) return n;
+            }
 
             IContent c = _contentService.GetById(id);
 
@@ -75,8 +79,12 @@ namespace Workflow.Helpers
         /// <returns></returns>
         public string GetNodeName(int id)
         {
-            //IPublishedContent n = _helper.TypedContent(id);
-            //if (n != null) return n.Name;
+            if (_context.Application.UmbracoApplicationUrl != null)
+            {
+                IPublishedContent n = _helper.TypedContent(id);
+                if (n != null) return n.Name;
+            }
+
             IContent c = _contentService.GetById(id);
             return c != null ? c.Name : MagicStrings.NoNode;
         }
