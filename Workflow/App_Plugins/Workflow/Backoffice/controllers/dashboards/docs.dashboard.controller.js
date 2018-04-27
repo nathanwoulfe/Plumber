@@ -25,7 +25,7 @@
             if (target) {
                 this.openDoc(target);
             }
-        }
+        };
 
         const bindListeners = () => {
             $timeout(() => {
@@ -33,10 +33,10 @@
                 if (elms.length) {
                     for (let i = 0; i < elms.length; i += 1) {
                         elms[i].addEventListener('click', e => { openDocFromDoc(e); });
-                    };
+                    }
                 }
             });
-        }
+        };
 
         /**
          * 
@@ -57,7 +57,7 @@
             }
 
             return html;
-        }
+        };
 
         /**
          * 
@@ -71,18 +71,19 @@
             var elements = article.children();
             var json = [];
 
-            angular.forEach(elements, (v, i) => {
-                if (v.tagName === 'H3') {
-                    json.push({
-                        name: v.innerText,
-                        content: getContentForHeading(v, i, elements)
-                    });
-                }
-            });
+            angular.forEach(elements,
+                (v, i) => {
+                    if (v.tagName === 'H3') {
+                        json.push({
+                            name: v.innerText,
+                            content: getContentForHeading(v, i, elements)
+                        });
+                    }
+                });
 
             this.docs = json;
             this.loaded = true;
-        }
+        };
 
         /**
          * 
@@ -94,7 +95,7 @@
 
             // this will only be the current open doc
             bindListeners();
-        }
+        };
 
         /**
          * 
@@ -102,7 +103,7 @@
          */
         this.setViewState = state => {
             this.viewState = state;
-        }
+        };
 
         workflowResource.getDocs()
             .then(docs => {

@@ -13,7 +13,7 @@
                     this.loading = false;
                     this.items = resp;
                 });
-        }
+        };
 
         this.getEmail = (users) => users.map(v => v.user.email).join(';');
 
