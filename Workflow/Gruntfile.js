@@ -89,7 +89,7 @@
                     '<%= dest %>/<%= basePath %>/backoffice/js/workflow.js': '<%= basePath %>/backoffice/workflow.es6'
                 },
                 options: {
-                    transform: [['babelify', { presets: 'es2015' }]],
+                    transform: [['babelify', { presets: 'env' }]],
                     browserifyOptions: {
                         debug: false
                     }
