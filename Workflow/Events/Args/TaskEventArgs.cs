@@ -9,6 +9,6 @@ namespace Workflow.Events.Args
             Task = task;
         }
 
-        private WorkflowTaskInstancePoco Task { get; set; }
+        public WorkflowTaskInstancePoco Task { get; set; }
     }
 }

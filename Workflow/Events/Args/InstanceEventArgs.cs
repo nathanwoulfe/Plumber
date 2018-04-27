@@ -10,7 +10,7 @@ namespace Workflow.Events.Args
             Type = type;
         }
 
-        private string Type { get; set; }
-        private WorkflowInstancePoco Instance { get; set; }
+        public string Type { get; set; }
+        public WorkflowInstancePoco Instance { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Workflow.Events.Args
             Type = type;
         }
 
-        private Dictionary<int, List<UserGroupPermissionsPoco>> Model { get; set; }
-        private string Type { get; set; }
+        public  Dictionary<int, List<UserGroupPermissionsPoco>> Model { get; set; }
+        public string Type { get; set; }
     }
 }

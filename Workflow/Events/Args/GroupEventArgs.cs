@@ -12,7 +12,7 @@ namespace Workflow.Events.Args
             Group = group;
         }
 
-        private UserGroupPoco Group { get; set; }
+        public UserGroupPoco Group { get; set; }
     }
 
     /// <summary>
