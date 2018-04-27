@@ -4,21 +4,52 @@
 
     function userPickerController($scope, usersResource, localizationService) {
 
-        var vm = this;
-
-        vm.users = [];
-        vm.loading = false;
-        vm.usersOptions = {};
-
-        vm.selectUser = selectUser;
-        vm.searchUsers = searchUsers;
-        vm.changePageNumber = changePageNumber;
+        this.users = [];
+        this.loading = false;
+        this.usersOptions = {};
 
         //////////
 
-        function onInit() {
+        const preSelect = (selection, users) => {
+            angular.forEach(selection, selected => {
+                    angular.forEach(users, user => {
+                            if (selected.userId === user.id) {
+                                user.selected = true;
+                            }
+                        });
+                });
+        };
 
-            vm.loading = true;
+        const getUsers = () => {
+
+            this.loading = true;
+
+            // Get users
+            usersResource.getPagedResults(this.usersOptions).then(users => {
+
+                this.users = users.items;
+
+                this.usersOptions.pageNumber = users.pageNumber;
+                this.usersOptions.pageSize = users.pageSize;
+                this.usersOptions.totalItems = users.totalItems;
+                this.usersOptions.totalPages = users.totalPages;
+
+                preSelect($scope.model.selection, this.users);
+
+                this.loading = false;
+
+            });
+        }
+
+        const search = _.debounce(() => {
+            $scope.$apply(() => {
+                getUsers();
+            });
+        }, 500);
+
+        const onInit = () => {
+
+            this.loading = true;
 
             // set default title
             if (!$scope.model.title) {
@@ -33,19 +64,19 @@
             // get users
             getUsers();
 
+        };
+
+
+        this.searchUsers = () => {
+            search();
         }
 
-        function preSelect(selection, users) {
-            angular.forEach(selection, function (selected) {
-                angular.forEach(users, function (user) {
-                    if (selected.userId === user.id) {
-                        user.selected = true;
-                    }
-                });
-            });
+        this.changePageNumber = pageNumber => {
+            this.usersOptions.pageNumber = pageNumber;
+            getUsers();
         }
 
-        function selectUser(user) {
+        this.selectUser = user => {
 
             if (!user.selected) {
 
@@ -54,52 +85,17 @@
 
             } else {
 
-                angular.forEach($scope.model.selection, function (selectedUser, index) {
-                    if (selectedUser.userId === user.id) {
-                        user.selected = false;
-                        $scope.model.selection.splice(index, 1);
-                    }
-                });
+                angular.forEach($scope.model.selection,
+                    function (selectedUser, index) {
+                        if (selectedUser.userId === user.id) {
+                            user.selected = false;
+                            $scope.model.selection.splice(index, 1);
+                        }
+                    });
 
             }
 
-        }
-
-        var search = _.debounce(function () {
-            $scope.$apply(function () {
-                getUsers();
-            });
-        }, 500);
-
-        function searchUsers() {
-            search();
-        }
-
-        function getUsers() {
-
-            vm.loading = true;
-
-            // Get users
-            usersResource.getPagedResults(vm.usersOptions).then(function (users) {
-
-                vm.users = users.items;
-
-                vm.usersOptions.pageNumber = users.pageNumber;
-                vm.usersOptions.pageSize = users.pageSize;
-                vm.usersOptions.totalItems = users.totalItems;
-                vm.usersOptions.totalPages = users.totalPages;
-
-                preSelect($scope.model.selection, vm.users);
-
-                vm.loading = false;
-
-            });
-        }
-
-        function changePageNumber(pageNumber) {
-            vm.usersOptions.pageNumber = pageNumber;
-            getUsers();
-        }
+        };
 
         onInit();
 
