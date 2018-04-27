@@ -28,12 +28,41 @@ namespace Workflow.Tests.Services
         }
 
         [Fact]
-        public void Can_Insert_Task()
+        public void Can_Insert_Task_And_Raise_Event()
         {
+            _service.Created += (sender, args) =>
+            {
+                Assert.NotNull(args);
+                Assert.IsAssignableFrom<WorkflowTaskInstancePoco>(args.Task);
+            };
+
             int count = _service.CountPendingTasks();
+
+            WorkflowTaskInstancePoco task = Scaffold.Task();
+
             _service.InsertTask(Scaffold.Task());
 
             Assert.Equal(count + 1, _service.CountPendingTasks());
+        }
+
+        [Fact]
+        public void Can_Update_Task_And_Raise_Event()
+        {
+            const string comment = "Comment has been updated";
+
+            _service.Updated += (sender, args) =>
+            {
+                Assert.NotNull(args);
+                Assert.IsAssignableFrom<WorkflowTaskInstancePoco>(args.Task);
+                Assert.Equal(comment, args.Task.Comment);
+            };
+
+            WorkflowTaskInstancePoco task = Scaffold.Task();
+            _service.InsertTask(task);
+
+            task.Comment = comment;
+
+            _service.UpdateTask(task);
         }
 
         [Fact]
@@ -74,7 +103,6 @@ namespace Workflow.Tests.Services
             Assert.NotNull(result);
             Assert.Single(result);
             Assert.Equal(1, result[0].GroupId); // same as default in scaffold.task
-            Assert.NotNull(result[0].UserGroup);
         }
 
         [Fact]
@@ -132,10 +160,28 @@ namespace Workflow.Tests.Services
         }
 
         [Fact]
+        public void Can_Get_Tasks_By_Group_Id()
+        {
+            Scaffold.Config();
+
+            _service.InsertTask(Scaffold.Task(Guid.Empty, DateTime.Now.AddDays(-1), 3, 1, 1));
+            _service.InsertTask(Scaffold.Task(Guid.Empty, DateTime.Now, 3, 3));
+
+            List<WorkflowTask> result = _service.GetAllGroupTasks(3, 10, 1);
+
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count);
+        }
+
+        [Fact]
         public void Can_Get_Pending_Workflow_Tasks()
         {
             Scaffold.Config();
             const int nodeId = 1055;
+
+            List<WorkflowTask> result = _service.GetPendingTasks(new[] { 1, 2, 3 }, 10, 1);
+            Assert.NotNull(result);
+            Assert.Empty(result);
 
             Guid guid = Guid.NewGuid();
 
@@ -144,7 +190,7 @@ namespace Workflow.Tests.Services
             _service.InsertTask(Scaffold.Task(guid, DateTime.Now.AddDays(-1), 3, 2, 1));
             _service.InsertTask(Scaffold.Task(guid, DateTime.Now, 3, 3));
 
-            List<WorkflowTask> result = _service.GetPendingTasks(new[] {1, 2, 3}, 10, 1);
+            result = _service.GetPendingTasks(new[] {1, 2, 3}, 10, 1);
 
             Assert.NotNull(result);
             Assert.Equal(3, result.Count);
