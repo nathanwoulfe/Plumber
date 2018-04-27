@@ -37,7 +37,7 @@
                         });
                     });
             }
-        }
+        };
 
         // history tab
         const getHistory = () => {
@@ -47,11 +47,11 @@
                     this.pagination.pageNumber = resp.page;
                     this.pagination.totalPages = resp.totalPages;
                 });
-        }
+        };
 
         this.editDocTypePermission = () => {
             $location.path('/workflow/workflow/settings/info');
-        }
+        };
 
         this.perPage = () => [2, 5, 10, 20, 50];
 
@@ -59,7 +59,7 @@
         this.editContentPermission = id => {
             navigationService.changeSection('content');
             $location.path(`/content/content/edit/${id}`);
-        }
+        };
 
         /**
          * Remove a user from the group
@@ -74,7 +74,7 @@
             });
 
             this.group.users.splice(index, 1);
-        }
+        };
 
         /**
          * Open the picker to add a new user to the group
@@ -99,7 +99,7 @@
                     this.userPicker = null;
                 }
             };
-        }
+        };
 
         /**
          * Save the group and show appropriate notifications
@@ -113,10 +113,11 @@
                     } else {
                         notificationsService.error('ERROR', resp.msg);
                     }
-                }, err => {
+                },
+                err => {
                     notificationsService.error('ERROR', err);
                 });
-        }
+        };
 
         /**
          * Fetch the group by the given id, or create an empty model if the id is -1 (ie a new group - id doesn't exist until saving)
@@ -149,7 +150,7 @@
 
                 this.loaded = true;
             }
-        }
+        };
 
         // declare scoped variables
         this.tabs =

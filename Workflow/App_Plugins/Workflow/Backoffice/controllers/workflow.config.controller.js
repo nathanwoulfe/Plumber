@@ -32,7 +32,7 @@
                     }
                 });
             });
-        }
+        };
 
         /**
          * 
@@ -57,7 +57,7 @@
                     });
                 });
             });
-        }
+        };
 
         /**
          * Fetch the groups and content type data
@@ -74,7 +74,7 @@
                             checkAncestorPermissions(resp.path.split(','));
                         });
                 });
-        }
+        };
 
         if (!nodeId) {
             navigationService.hideDialog();
@@ -103,15 +103,16 @@
 
             workflowResource.saveConfig(response)
                 .then(() => {
-                    navigationService.hideNavigation();
-                    notificationsService.success('SUCCESS', 'Workflow configuration updated');
-                    init();
-                }, err => {
-                    navigationService.hideNavigation();
-                    notificationsService.error('ERROR', err);
-                });               
-            
-        }
+                        navigationService.hideNavigation();
+                        notificationsService.success('SUCCESS', 'Workflow configuration updated');
+                        init();
+                    },
+                    err => {
+                        navigationService.hideNavigation();
+                        notificationsService.error('ERROR', err);
+                    });
+
+        };
 
         /**
          * Adds a stage to the approval flow
@@ -124,7 +125,7 @@
             });
 
             this.approvalPath.push(this.selectedApprovalGroup);
-        }
+        };
 
         /**
          * Removes a stage from the approval flow
@@ -143,7 +144,7 @@
                     }
                 });
             });
-        }
+        };
     }
 
     // register controller 
