@@ -11,13 +11,13 @@
         //////////
 
         const preSelect = (selection, users) => {
-            angular.forEach(selection, selected => {
-                    angular.forEach(users, user => {
-                            if (selected.userId === user.id) {
-                                user.selected = true;
-                            }
-                        });
+            selection.forEach(selected => {
+                users.forEach(user => {
+                    if (selected.userId === user.id) {
+                        user.selected = true;
+                    }
                 });
+            });
         };
 
         const getUsers = () => {
@@ -39,7 +39,7 @@
                 this.loading = false;
 
             });
-        }
+        };
 
         const search = _.debounce(() => {
             $scope.$apply(() => {
@@ -69,12 +69,12 @@
 
         this.searchUsers = () => {
             search();
-        }
+        };
 
         this.changePageNumber = pageNumber => {
             this.usersOptions.pageNumber = pageNumber;
             getUsers();
-        }
+        };
 
         this.selectUser = user => {
 
@@ -85,13 +85,12 @@
 
             } else {
 
-                angular.forEach($scope.model.selection,
-                    function (selectedUser, index) {
-                        if (selectedUser.userId === user.id) {
-                            user.selected = false;
-                            $scope.model.selection.splice(index, 1);
-                        }
-                    });
+                $scope.model.selection.forEach((selectedUser, index) => {
+                    if (selectedUser.userId === user.id) {
+                        user.selected = false;
+                        $scope.model.selection.splice(index, 1);
+                    }
+                });
 
             }
 

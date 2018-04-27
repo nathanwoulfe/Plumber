@@ -60,7 +60,7 @@
         sass: {
             dist: {
                 files: {
-                    '<%= basePath %>/backoffice/css/styles.min.css': ['<%= basePath %>/backoffice/css/styles.scss']
+                    '<%= basePath %>/backoffice/css/styles.css': ['<%= basePath %>/backoffice/css/styles.scss']
                 },
             }
         },
@@ -70,13 +70,13 @@
                 files: [{
                     expand: true,
                     cwd: '<%= basePath %>/backoffice/css',
-                    src: ['*.css'],
+                    src: 'styles.css',
                     dest: '<%= dest %>/<%= basePath %>/backoffice/css',
                     ext: '.min.css'
                 }]
             },
             add_banner: {
-                files: {
+                files: { 
                     '<%= dest %>/<%= basePath %>/backoffice/css/styles.min.css': ['<%= dest %>/<%= basePath %>/backoffice/css/styles.min.css']
                 }
             }
@@ -292,6 +292,7 @@
                     smarttabs: true,
                     globals: {},
                     force: true,
+                    loopfunc: true,
                     ignores: ['**/highcharts.js', '**/exporting.js']
                 }
             }

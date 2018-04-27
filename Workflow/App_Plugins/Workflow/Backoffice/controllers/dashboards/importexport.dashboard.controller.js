@@ -6,9 +6,11 @@
         this.doImport = () => {
             workflowResource.doImport(this.importData)
                 .then(resp => {
-                    resp
-                        ? notificationsService.success('SUCCESS', 'Plumber config imported successfully')
-                        : notificationsService.error('ERROR', 'Plumber config import failed');
+                    if (resp) {
+                        notificationsService.success('SUCCESS', 'Plumber config imported successfully');
+                    } else {
+                        notificationsService.error('ERROR', 'Plumber config import failed');
+                    }
                 });
         };
 

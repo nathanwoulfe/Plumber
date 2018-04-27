@@ -134,7 +134,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.tasks.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\interceptors\workflow.config.interceptors.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\interceptors\workflow.drawerbuttons.interceptor.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.css" />
+    <None Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.scss" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\modules\exporting.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\partials\table\historyinstance.html" />
