@@ -1,22 +1,21 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
     function lineChart() {
 
-        var directive = {
+        const directive = {
             restrict: 'E',
             template: '<div class="chart-container"><div></div></div>',
             scope: {
                 series: '=',
                 ready: '='
             },
-            link: function (scope, element) {
-                var el = element[0].querySelector('.chart-container div');
+            link: (scope, element) => {
+                const el = element[0].querySelector('.chart-container div');
 
-                scope.$watch('ready', function (newVal) {
+                scope.$watch('ready', newVal => {
                     if (newVal === true) {
-                        var options = {
-
+                         const options = {
                             credits: {
                                 enabled: false
                             },
@@ -31,22 +30,17 @@
                             tooltip: {
                                 shared: true,
                                 formatter: function() {
-                                    var r = this.points.filter(function(p) {
-                                            return p.y > 0;
-                                        }).length > 0;
+                                    const r = this.points.filter(p => p.y > 0).length > 0;
 
                                     if (!r) {
                                         return false;
                                     }
 
-                                    var s = '<span>' + new Date(this.x).toDateString() + '</span><br />';
-                                    this.points.forEach(function (p) {
+                                    var s = `<span>${new Date(this.x).toDateString()}</span><br />`;
+
+                                    this.points.forEach(p => {
                                         if (p.y > 0) {
-                                            s += '<span class="wf-highcharts-color-' + p.series.name.toLowerCase().replace(' ', '-') +'">\u25CF</span> ' +
-                                                p.series.name +
-                                                ': <b>' +
-                                                p.y +
-                                                '</b><br/>';
+                                            s += `<span class="wf-highcharts-color-${p.series.name.toLowerCase().replace(' ', '-')}">\u25CF</span> ${p.series.name}: <b>${p.y}</b><br/>`;
                                         }
                                     });
 
@@ -82,4 +76,4 @@
 
     angular.module('umbraco.directives').directive('wfLineChart', lineChart);
 
-}());
+})();

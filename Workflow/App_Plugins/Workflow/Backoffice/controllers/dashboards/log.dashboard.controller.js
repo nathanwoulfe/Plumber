@@ -1,39 +1,37 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
     function logController(workflowResource) {
 
-        var log = this;
-
-        function refresh() {
+        const refresh = () => {
             workflowResource.getLog()
                 .then(resp => {
-                    log.html = resp;
+                    this.html = resp;
                 });
 
             workflowResource.getLogDates()
                 .then(resp => {
                     // resp is an array of log dates, where [0] is 'txt', for the current date as the source file is undated
-                    log.datePickerConfig.minDate = resp.length > 1 ? moment(resp[1]) : moment();
+                    this.datePickerConfig.minDate = resp.length > 1 ? moment(resp[1]) : moment();
                 });
-        }
+        };
 
-        function datePickerChange(event) {
+        const datePickerChange = event => {
             // handle change for a valid date - fetch corresponding log file if date is ok
             if (event.date && event.date.isValid() && event.oldDate.isValid()) {
                 const date = event.date.format('YYYY-MM-DD');
                 workflowResource.getLog(date === moment().format('YYYY-MM-DD') ? '' : date)
                     .then(resp => {
-                        log.html = resp;
+                        this.html = resp;
                     });
             }
-        }
+        };
 
-        function datePickerError() {
+        const datePickerError = () => {
             // handle error
-        }
+        };
 
-        angular.extend(log,
+        angular.extend(this,
             {
                 simple: true,
                 filter: 'all',
@@ -61,4 +59,4 @@
     }
 
     angular.module('umbraco').controller('Workflow.Log.Controller', ['plmbrWorkflowResource', logController]);
-}());
+})();

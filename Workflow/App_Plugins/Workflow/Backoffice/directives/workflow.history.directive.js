@@ -1,9 +1,9 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
     function history() {
 
-        var directive = {
+        const directive = {
             restrict: 'E',
             scope: {
                 items: '=',
@@ -18,4 +18,4 @@
 
     angular.module('umbraco.directives').directive('wfHistory', history);
 
-}());
+})();

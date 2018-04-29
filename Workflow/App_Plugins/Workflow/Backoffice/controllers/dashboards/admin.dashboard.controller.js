@@ -1,24 +1,24 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
     function dashboardController(workflowResource) {
 
-        var vm = this,
-            storeKey = 'plumberUpdatePrompt',
-            msPerDay = 1000 * 60 * 60 * 24,
-            now = moment();
+        const storeKey = 'plumberUpdatePrompt';
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const now = moment();
 
-        function lineChart(items) {
+        const lineChart = items => {
 
             var series = [],
                 seriesNames = [],
-                s, o, 
-                isTask = vm.type === 'Task';
+                s,
+                o,
+                isTask = this.type === 'Task';
 
             const d = new Date();
 
-            d.setDate(d.getDate() - vm.range);
-            var then = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+            d.setDate(d.getDate() - this.range);
+            const then = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
 
             var created = {
                 name: 'Total (cumulative)',
@@ -47,8 +47,7 @@
 
                 if (v.type !== 2 && v.status === 7) {
                     statusName = v.statusName = 'Rejected';
-                }
-                else if (v.type === 2 && v.status === 7) {
+                } else if (v.type === 2 && v.status === 7) {
                     statusName = v.statusName = 'Resubmitted';
                 }
 
@@ -68,34 +67,30 @@
 
                     s = series.filter(ss => ss.name === statusName)[0];
 
-                    s.data[vm.range - now.diff(moment(isTask ? v.completedDate : v.completedOn), 'days')] += 1;
-                    created.data[vm.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn), 'days')] += 1;
+                    s.data[this.range - now.diff(moment(isTask ? v.completedDate : v.completedOn), 'days')] += 1;
+                    created.data[this.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn), 'days')] += 1;
 
                     if (statusName === 'Approved') {
-                        vm.totalApproved += 1;
+                        this.totalApproved += 1;
                         s.className = 'wf-highcharts-color-approved';
-                    }
-                    else if (statusName === 'Rejected') {
-                        vm.totalRejected += 1;
+                    } else if (statusName === 'Rejected') {
+                        this.totalRejected += 1;
                         s.className = 'wf-highcharts-color-rejected';
-                    }
-                    else if (statusName === 'Resubmitted') {
-                        vm.totalResubmitted += 1;
+                    } else if (statusName === 'Resubmitted') {
+                        this.totalResubmitted += 1;
                         s.className = 'wf-highcharts-color-resubmitted';
-                    }
-                    else if (statusName === 'Not Required') {
-                        vm.totalNotRequired += 1;
+                    } else if (statusName === 'Not Required') {
+                        this.totalNotRequired += 1;
                         s.className = 'wf-highcharts-color-notreq';
-                    }
-                    else {
-                        vm.totalCancelled += 1;
+                    } else {
+                        this.totalCancelled += 1;
                         s.className = 'wf-highcharts-color-cancelled';
                     }
 
                 } else {
-                    const index = vm.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn), 'days');
+                    const index = this.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn), 'days');
                     created.data[index < 0 ? 0 : index] += 1;
-                    vm.totalPending += 1;
+                    this.totalPending += 1;
                 }
             });
 
@@ -106,45 +101,36 @@
             });
             series.push(created);
 
-            vm.series = series.sort((a, b) => a.name > b.name);
+            this.series = series.sort((a, b) => a.name > b.name);
 
-            vm.title = `Workflow ${vm.type.toLowerCase()} activity`;
-            vm.loaded = true;
-        }
+            this.title = `Workflow ${this.type.toLowerCase()} activity`;
+            this.loaded = true;
+        };
 
         /**
          * Returns an array of 0s, length equal to the selected range
          */
-        function defaultData() {
-            return Array(vm.range).fill([]).map(() => 0);
-        }
+        const defaultData = () => Array(this.range).fill([]).map(() => 0);
 
-        function getForRange() {
-            if (vm.range > 0) {
+        const getForRange = () => {
+            if (this.range > 0) {
 
-                vm.totalApproved = 0;
-                vm.totalCancelled = 0;
-                vm.totalPending = 0;
-                vm.totalRejected = 0;
-                vm.totalResubmitted = 0;
-                vm.totalNotRequired = 0;
+                this.totalApproved = 0;
+                this.totalCancelled = 0;
+                this.totalPending = 0;
+                this.totalRejected = 0;
+                this.totalResubmitted = 0;
+                this.totalNotRequired = 0;
 
-                vm.loaded = false;
-                vm.totalApproved = vm.totalCancelled = vm.totalPending = vm.totalRejected = 0;
+                this.loaded = false;
+                this.totalApproved = this.totalCancelled = this.totalPending = this.totalRejected = 0;
 
-                if (vm.type === 'Task') {
-                    workflowResource.getAllTasksForRange(vm.range)
-                        .then(resp => {
-                            lineChart(resp.items);
-                        });
-                } else {
-                    workflowResource.getAllInstancesForRange(vm.range)
-                        .then(resp => {
-                            lineChart(resp.items);
-                        });
-                }
+                workflowResource[this.type === 'Task' ? 'getAllTasksForRange' : 'getAllInstancesForRange'](this.range)
+                    .then(resp => {
+                        lineChart(resp.items);
+                    });
             }
-        }
+        };
 
         // check the current installed version against the remote on GitHub, only if the 
         // alert has never been dismissed, or was dismissed more than 7 days ago
@@ -153,16 +139,16 @@
         if (!pesterDate || moment(pesterDate).isBefore(now)) {
             workflowResource.getVersion()
                 .then(resp => {
-                    vm.version = resp;
+                    this.version = resp;
                 });
         }
 
-        function updateAlertHidden() {
+        const updateAlertHidden = () => {
             localStorage.setItem(storeKey, now.add(7, 'days'));
-        }
+        };
 
         // kick it off with a four-week span
-        angular.extend(vm, {
+        angular.extend(this, {
             range: 28,
             type: 'Task',
             loaded: false,
@@ -181,4 +167,4 @@
     }
 
     angular.module('umbraco').controller('Workflow.AdminDashboard.Controller', ['plmbrWorkflowResource', dashboardController]);
-}());
+})();
