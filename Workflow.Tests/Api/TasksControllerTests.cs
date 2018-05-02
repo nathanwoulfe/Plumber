@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Results;
 using Chauffeur.TestingTools;
-using GDev.Umbraco.Test;
+using Newtonsoft.Json.Linq;
+using Umbraco.Core;
+using Umbraco.Core.Models;
+using Umbraco.Core.Services;
 using Umbraco.Web;
 using Workflow.Api;
 using Workflow.Helpers;
@@ -18,17 +20,27 @@ namespace Workflow.Tests.Api
     public class TasksControllerTests : UmbracoHostTestBase
     {
         private readonly TasksController _tasksController;
-        private readonly ContextMocker _mocker;
         private readonly ITasksService _tasksService;
+        private readonly IInstancesService _instancesService;
+        private readonly IConfigService _configService;
+
+        private readonly UmbracoContext _context;
+        private readonly IContentService _contentService;
+        private readonly IContentTypeService _contentTypeService;
 
         public TasksControllerTests()
         {
             Host.Run(new[] { "install y" }).Wait();
             Scaffold.Tables();
 
-            _mocker = new ContextMocker();
+            _context = Scaffold.EnsureContext();
+            _contentService = ApplicationContext.Current.Services.ContentService;
+            _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
+            _tasksService = new TasksService();
+            _instancesService = new InstancesService();
+            _configService = new ConfigService();
 
-            _tasksController = new TasksController(_mocker.UmbracoContextMock)
+            _tasksController = new TasksController(_context)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
@@ -40,9 +52,109 @@ namespace Workflow.Tests.Api
         {
             // chasing coverage - make sure constructors are all accessible
             Assert.NotNull(new TasksController());
-            Assert.NotNull(new TasksController(_mocker.UmbracoContextMock,
-                new UmbracoHelper(_mocker.UmbracoContextMock)));
+            Assert.NotNull(new TasksController(_context, new UmbracoHelper(_context)));
         }
 
+        [Fact]
+        public async void Get_Pending_Tasks_Response_Is_Generic_When_Id_Zero()
+        {
+            // get a  generic response if id is 0 
+            object content = await _tasksController.GetNodePendingTasks(0).GetContent();
+            Assert.Null(content.Get("settings"));
+            Assert.Null(content.Get("noFlow"));
+        }
+
+        [Fact]
+        public async void Get_Pending_Tasks_Response_Is_Generic_When_No_Settings_Or_Flow()
+        {
+            Scaffold.ContentType(_contentTypeService);
+            IContent node = Scaffold.Node(_contentService);
+
+            // generic response if no settings
+            object content = await _tasksController.GetNodePendingTasks(node.Id).GetContent();
+            Assert.Null(content.Get("settings"));
+            Assert.Null(content.Get("noFlow"));
+        }
+
+        [Fact]
+        public async void Get_Pending_Tasks_Response_Is_Error_When_No_Node()
+        {
+            // get an error if the node doesn't exist
+            object content = await _tasksController.GetNodePendingTasks(666).GetContent();
+            Assert.Equal("NullReferenceException", (string)content.Get("ExceptionType"));
+            Assert.Equal(MagicStrings.ErrorGettingPendingTasksForNode.Replace("{id}", "666"), (string)content.Get("ExceptionMessage"));
+        }
+
+        [Fact]
+        public async void Can_Get_Node_Pending_Tasks()
+        {
+            Scaffold.ContentType(_contentTypeService);
+            IContent node = Scaffold.Node(_contentService);
+
+            Scaffold.Config();
+
+            Guid guid = Guid.NewGuid();
+
+            _instancesService.InsertInstance(Scaffold.Instance(guid, 1, node.Id));
+            _tasksService.InsertTask(Scaffold.Task(guid));
+            _tasksService.InsertTask(Scaffold.Task(guid));
+            _tasksService.InsertTask(Scaffold.Task(guid));
+
+            // needs flow or function exits
+            Dictionary<int, List<UserGroupPermissionsPoco>> config = Scaffold.Permissions(node.Id, 3, 2);
+            _configService.UpdateNodeConfig(config);
+
+            JObject content = await _tasksController.GetNodePendingTasks(node.Id).GetContent();
+
+            Assert.Equal(3, content.Value<int>("total"));
+        }
+
+        [Fact]
+        public async void Can_Get_Paged_Node_Tasks()
+        {
+            // get an error if the node doesn't exist
+            //object response = await _tasksController.GetNodeTasks(666, -1, -1).GetContent();
+            //Assert.Equal("NullReferenceException", (string)response.Get("ExceptionType"));
+            //Assert.Equal(MagicStrings.ErrorGettingPendingTasksForNode.Replace("{id}", "666"), (string)response.Get("ExceptionMessage"));
+            
+            Scaffold.ContentType(_contentTypeService);
+            IContent node = Scaffold.Node(_contentService);
+
+            Scaffold.Config();
+
+            Guid guid = Guid.NewGuid();
+
+            _instancesService.InsertInstance(Scaffold.Instance(guid, 1, node.Id));
+            _tasksService.InsertTask(Scaffold.Task(guid));
+            _tasksService.InsertTask(Scaffold.Task(guid));
+            _tasksService.InsertTask(Scaffold.Task(guid));
+
+            // needs flow or function exits
+            Dictionary<int, List<UserGroupPermissionsPoco>> config = Scaffold.Permissions(node.Id, 3, 2);
+            _configService.UpdateNodeConfig(config);
+
+            JObject content = await _tasksController.GetNodeTasks(node.Id, 10, 1).GetContent();
+
+            Assert.Equal(1, content.Value<int>("totalPages"));
+            Assert.Equal(10, content.Value<int>("count"));
+            Assert.Equal(3, content.Value<JArray>("items").Count);
+
+            // when 3 tasks, 1 per page, page 2 should be 1 item
+            content = await _tasksController.GetNodeTasks(node.Id, 1, 2).GetContent();
+
+            Assert.Equal(3, content.Value<int>("totalPages"));
+            Assert.Equal(1, content.Value<int>("count"));
+            Assert.Single(content.Value<JArray>("items"));
+
+            // when 5 tasks, and 2 per page, page 2 should be 2 items
+            _tasksService.InsertTask(Scaffold.Task(guid));
+            _tasksService.InsertTask(Scaffold.Task(guid));
+
+            content = await _tasksController.GetNodeTasks(node.Id, 2, 2).GetContent();
+
+            Assert.Equal(3, content.Value<int>("totalPages"));
+            Assert.Equal(2, content.Value<int>("count"));
+            Assert.Equal(2, content.Value<JArray>("items").Count);
+        }
     }
 }

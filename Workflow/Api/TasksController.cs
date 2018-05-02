@@ -204,7 +204,7 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                string msg = $"Error getting pending tasks for node {id}";
+                string msg = MagicStrings.ErrorGettingPendingTasksForNode.Replace("{id}", id.ToString());
                 Log.Error(msg, ex);
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }

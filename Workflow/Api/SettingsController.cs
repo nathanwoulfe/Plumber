@@ -35,11 +35,17 @@ namespace Workflow.Api
             _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
         }
 
-        // public constructor for injection - call this guy in tests to ensure context
         public SettingsController(UmbracoContext umbracoContext) : base(umbracoContext)
         {
             _settingsService = new SettingsService();
-            _contentTypeService = umbracoContext.Application.Services.ContentTypeService;
+            _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
+        }
+
+        public SettingsController(UmbracoContext umbracoContext, UmbracoHelper umbracoHelper) : base(umbracoContext,
+            umbracoHelper)
+        {
+            _settingsService = new SettingsService();
+            _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
         }
 
         /// <summary>

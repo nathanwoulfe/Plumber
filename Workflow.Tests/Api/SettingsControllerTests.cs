@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Runtime.Caching;
-using System.Runtime.InteropServices;
 using System.Web.Http;
-using System.Web.Http.Results;
 using Chauffeur.TestingTools;
 using GDev.Umbraco.Test;
 using Newtonsoft.Json.Linq;
 using Umbraco.Core;
-using Umbraco.Web;
 using Workflow.Api;
 using Workflow.Helpers;
 using Workflow.Models;
-using Workflow.Services.Interfaces;
 using Xunit;
 
 namespace Workflow.Tests.Api
