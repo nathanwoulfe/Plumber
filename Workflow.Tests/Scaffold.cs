@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Hosting;
-using System.Web.WebSockets;
 using Moq;
 using Newtonsoft.Json;
 using Umbraco.Core;
