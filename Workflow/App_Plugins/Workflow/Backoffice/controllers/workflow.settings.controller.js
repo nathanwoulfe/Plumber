@@ -8,9 +8,17 @@
 
         this.excludeNodesModel = {
             view: 'contentpicker',
+            editor:'Umbraco.MultiNodeTreePicker2',
             alias: 'excludeNodesPicker',
-            config: {
-                multiPicker: '1'
+            config: { 
+                multiPicker: '1',
+                idType: 'id',
+                showEditButton: '0',
+                showOpenButton: '0',
+                showPathOnHover: '0',
+                startNode: {
+                    type: 'content'
+                }
             }
         };
 
