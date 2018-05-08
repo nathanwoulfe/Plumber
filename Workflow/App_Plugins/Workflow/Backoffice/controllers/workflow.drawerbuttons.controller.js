@@ -4,11 +4,12 @@
     // create controller 
     // since this controller is loaded in response to an injector match, we can use it to check for active workflow groups 
     // and display a message if none are configured, while also displaying the default button set
-    function controller($scope, $rootScope, $window, userService, workflowResource, workflowActionsService, contentEditingHelper, angularHelper, contentResource, editorState, $routeParams, notificationsService) {
+    function controller($scope, $rootScope, $window, userService, workflowResource, workflowGroupsResource, workflowActionsService, contentEditingHelper, angularHelper, contentResource, editorState, $routeParams, notificationsService) {
         var vm = this,
             user;
 
         var dashboardClick = editorState.current === null;
+        var hasPermissions = true;
 
         var defaultButtons = contentEditingHelper.configureContentEditorButtons({
             create: $routeParams.create,
@@ -112,34 +113,52 @@
         function getNodeTasks() {
             // only refresh if viewing a content node
             if (editorState.current) {
-                workflowResource.getNodePendingTasks(editorState.current.id)
-                    .then(function (resp) {
-                        if ((resp.noFlow || resp.settings) && !editorState.current.trashed) {
-                            var msg = resp.noFlow ?
-                                'No workflow groups have been configured - refer to the documentation tab in the Workflow section, then set at minimum an approval flow on the homepage node or document type.' :
-                                'Workflow settings are configured incorrectly - refer to the documentation tab in the Workflow section.';
-                            notificationsService.warning('WORKFLOW INSTALLED BUT NOT CONFIGURED', msg);
-                        } else if (resp.items && resp.items.length) {
-                            vm.active = true;
 
-                            // if the workflow status is rejected, the original author should be able to edit and resubmit
-                            var currentTask = resp.items[resp.items.length - 1];
-                            vm.rejected = currentTask.cssStatus === 'rejected';
+                // check if the node is included in the workflow model
+                workflowGroupsResource.get()
+                    .then(groups => {
+                        const nodePerms = workflowResource.checkNodePermissions(groups, editorState.current.id, editorState.current.contentTypeAlias)
+                        const ancestorPerms = workflowResource.checkAncestorPermissions(editorState.current.path, groups);
 
-                            // if the task has been rejected and the current user requested the change, let them edit
-                            vm.isChangeAuthor = currentTask.requestedById === user.id;
-                            vm.userCanEdit = vm.rejected && vm.isChangeAuthor;
+                        if (nodePerms.approvalPath.length ||
+                            nodePerms.contentTypeApprovalPath.length ||
+                            ancestorPerms.length) {
 
-                            checkUserAccess(currentTask);
+                            getPendingTasks();
                         } else {
-                            vm.active = false;
-                            setButtons();
+                            hasPermissions = false;
+                            vm.buttonGroup = defaultButtons;
                         }
-
-                    },
-                    function () {
-
                     });
+
+                function getPendingTasks() {
+                    workflowResource.getNodePendingTasks(editorState.current.id)
+                        .then(function (resp) {
+                            if (resp.noDefaultApprover && !editorState.current.trashed) {
+                                const msg = 'ensure a default approval group has been set.';
+                                notificationsService.warning('WORKFLOW CONFIGURATION INCOMPLETE', msg);
+                            } else if (resp.items && resp.items.length) {
+                                vm.active = true;
+
+                                // if the workflow status is rejected, the original author should be able to edit and resubmit
+                                const currentTask = resp.items[resp.items.length - 1];
+                                vm.rejected = currentTask.cssStatus === 'rejected';
+
+                                // if the task has been rejected and the current user requested the change, let them edit
+                                vm.isChangeAuthor = currentTask.requestedById === user.id;
+                                vm.userCanEdit = vm.rejected && vm.isChangeAuthor;
+
+                                checkUserAccess(currentTask);
+                            } else {
+                                vm.active = false;
+                                setButtons();
+                            }
+
+                        },
+                        function () {
+
+                        });
+                }
             }
         }
 
@@ -180,7 +199,7 @@
                 }
                 // primary button is approve when the user is in the approving group and task is not rejected
                 else if (vm.canAction && !vm.rejected) {
-                    vm.buttonGroup .defaultButton = buttons.approveButton;
+                    vm.buttonGroup.defaultButton = buttons.approveButton;
                 } else if (vm.userCanEdit) { // rejected tasks show the resubmit, only when the user is the original author
                     vm.buttonGroup.defaultButton = buttons.resubmitButton;
                 } else { // all other cases see the detail button
@@ -192,12 +211,12 @@
                 // if the user is in the approving group, and the task is not rejected, add reject to sub buttons
                 if (vm.canAction && !vm.rejected) {
                     vm.buttonGroup.subButtons.push(buttons.rejectButton);
-                } 
+                }
                 // if the user is admin, the change author or in the approving group for a non-rejected task, add the cancel button
                 if (vm.isAdmin || vm.userCanEdit || vm.isChangeAuthor || (vm.canAction && !vm.rejected)) {
                     vm.buttonGroup.subButtons.push(buttons.cancelButton);
                 }
-                
+
 
             }
         }
@@ -207,7 +226,7 @@
          */
         function setButtons() {
             // default button will be null when the current user has browse-only permission
-            if (defaultButtons.defaultButton !== null && !vm.active) {
+            if (defaultButtons.defaultButton !== null && !vm.active && hasPermissions) {
                 var subButtons = saveAndPublish ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] : [buttons.unpublishButton, buttons.saveButton];
                 // if the content is dirty, show save. otherwise show request approval
                 vm.buttonGroup = {
@@ -250,16 +269,17 @@
     // register controller 
     angular.module('umbraco').controller('Workflow.DrawerButtons.Controller',
         ['$scope',
-        '$rootScope',
-        '$window',
-        'userService',
-        'plmbrWorkflowResource',
-        'plmbrActionsService',
-        'contentEditingHelper',
-        'angularHelper',
-        'contentResource',
-        'editorState',
-        '$routeParams',
-        'notificationsService', controller]);
+            '$rootScope',
+            '$window',
+            'userService',
+            'plmbrWorkflowResource',
+            'plmbrGroupsResource',
+            'plmbrActionsService',
+            'contentEditingHelper',
+            'angularHelper',
+            'contentResource',
+            'editorState',
+            '$routeParams',
+            'notificationsService', controller]);
 }());
 

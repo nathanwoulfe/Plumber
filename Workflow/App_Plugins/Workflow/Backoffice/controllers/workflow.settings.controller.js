@@ -84,7 +84,7 @@
         this.save = () => {
             const permissions = {};
 
-            this.settings.defaultApprover = this.defaultApprover.groupId;
+            this.settings.defaultApprover = this.defaultApprover ? this.defaultApprover.groupId : '';
             this.settings.flowType = this.flowType.i;
 
             if (this.excludeNodesModel.value) {

@@ -173,15 +173,14 @@ namespace Workflow.Api
 
             try
             {
+                // must have a default approval group set
                 WorkflowSettingsPoco settings = _settingsService.GetSettings();
-                bool hasFlow = _utility.HasFlow(id);
 
-                if (null == settings || !hasFlow)
+                if (string.IsNullOrEmpty(settings?.DefaultApprover))
                 {
                     return Json(new
                     {
-                        settings = settings == null,
-                        noFlow = !hasFlow
+                        noDefaultApprover = true,
                     }, ViewHelpers.CamelCase);
                 }
 

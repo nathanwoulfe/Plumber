@@ -16,49 +16,7 @@
             handle: '.sort-handle',
             stop: () => {}
         };
-
-        /**
-         * 
-         */
-        const checkNodePermissions = () => {
-            this.groups.forEach(v => {
-                v.permissions.forEach(p => {
-                    if (p.nodeId === nodeIdInt) {
-                        this.approvalPath[p.permission] = v;
-                    }
-
-                    if (p.contentTypeName === this.contentTypeName) {
-                        this.contentTypeApprovalPath[p.permission] = v;
-                    }
-                });
-            });
-        };
-
-        /**
-         * 
-         * @param {any} path
-         */
-        const checkAncestorPermissions = path => {
-            // first is -1, last is the current node
-            path.shift();
-            path.pop();
-
-            path.forEach(id => {
-                this.groups.forEach(group => {
-                    group.permissions.forEach(p => {
-                        if (p.nodeId === parseInt(id, 10)) {
-                            this.inherited[p.permission] = {
-                                name: group.name,
-                                groupId: p.groupId,
-                                nodeName: p.nodeName,
-                                permission: p.permission
-                            };
-                        }
-                    });
-                });
-            });
-        };
-
+        
         /**
          * Fetch the groups and content type data
          */
@@ -70,8 +28,12 @@
                     contentResource.getById(nodeId)
                         .then(resp => {
                             this.contentTypeName = resp.contentTypeName;
-                            checkNodePermissions();
-                            checkAncestorPermissions(resp.path.split(','));
+
+                            const nodePerms = workflowResource.checkNodePermissions(this.groups, nodeIdInt, this.contentTypeName);
+                            this.approvalPath = nodePerms.approvalPath;
+                            this.contentTypeApprovalPath = nodePerms.contentTypeApprovalPath;
+
+                            this.inherited = workflowResource.checkAncestorPermissions(resp.path, this.groups);
                         });
                 });
         };

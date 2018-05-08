@@ -5,8 +5,8 @@
     border-radius:3px;
 
     &__name {
-        flex-basis:20%;
-        max-width:20%;
+        flex-basis:15%;
+        max-width:15%;
     }
 }
 
@@ -17,9 +17,9 @@
 
     &.show-overflow {
         overflow:visible;
-        flex: 0 0 140px;
+        flex: 0 0 150px;
         > * {
-            overflow: visible;
+            overflow: visible;  
         }
     }
 }

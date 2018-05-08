@@ -95,7 +95,7 @@
                 return this.request('GET', this.logsUrl + 'datelist');
             },
 
-            doImport: function(model) {
+            doImport: function (model) {
                 return this.request('POST', urlBase + 'import', model);
             },
 
@@ -110,7 +110,55 @@
 
             saveDocTypeConfig: function (p) {
                 return this.request('POST', urlBase + 'config/savedoctypeconfig', p);
+            },
+
+            checkNodePermissions: (groups, id, contentTypeName) => {
+                const resp = {
+                    approvalPath: [],
+                    contentTypeApprovalPath: []
+                };
+
+                groups.forEach(v => {
+                    v.permissions.forEach(p => {
+                        if (p.nodeId === id) {
+                            resp.approvalPath[p.permission] = v;
+                        }
+
+                        if (p.contentTypeName === contentTypeName) {
+                            resp.contentTypeApprovalPath[p.permission] = v;
+                        }
+                    });
+                });
+
+                return resp;
+            },
+
+            checkAncestorPermissions: (path, groups) => {
+                // first is -1, last is the current node
+                path = path.split(',');
+                path.shift();
+                path.pop();
+
+                const resp = [];
+
+                path.forEach(id => {
+                    groups.forEach(group => {
+                        group.permissions.forEach(p => {
+                            if (p.nodeId === parseInt(id, 10)) {
+                                resp[p.permission] = {
+                                    name: group.name,
+                                    groupId: p.groupId,
+                                    nodeName: p.nodeName,
+                                    permission: p.permission
+                                };
+                            }
+                        });
+                    });
+                });
+
+                return resp;
             }
+
         };
 
         return service;
