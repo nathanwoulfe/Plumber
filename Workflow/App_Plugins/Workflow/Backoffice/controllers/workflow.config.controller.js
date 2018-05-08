@@ -2,7 +2,7 @@
     'use strict';
 
     // create controller 
-    function configController($scope, workflowGroupsResource, workflowResource, notificationsService, contentResource, navigationService) {
+    function configController($scope, $rootScope, workflowGroupsResource, workflowResource, notificationsService, contentResource, navigationService) {
         var nodeId = $scope.dialogOptions.currentNode ? $scope.dialogOptions.currentNode.id : undefined,
             nodeIdInt = nodeId ? parseInt(nodeId, 10) : undefined;
 
@@ -14,9 +14,9 @@
             axis: 'y',
             cursor: 'move',
             handle: '.sort-handle',
-            stop: () => {}
+            stop: () => { }
         };
-        
+
         /**
          * Fetch the groups and content type data
          */
@@ -65,14 +65,15 @@
 
             workflowResource.saveConfig(response)
                 .then(() => {
-                        navigationService.hideNavigation();
-                        notificationsService.success('SUCCESS', 'Workflow configuration updated');
-                        init();
-                    },
-                    err => {
-                        navigationService.hideNavigation();
-                        notificationsService.error('ERROR', err);
-                    });
+                    navigationService.hideNavigation();
+                    notificationsService.success('SUCCESS', 'Workflow configuration updated');
+                    $rootScope.$broadcast('configUpdated');
+                    init();
+                },
+                err => {
+                    navigationService.hideNavigation();
+                    notificationsService.error('ERROR', err);
+                });
 
         };
 
@@ -111,6 +112,6 @@
 
     // register controller 
     angular.module('umbraco').controller('Workflow.Config.Controller',
-        ['$scope', 'plmbrGroupsResource', 'plmbrWorkflowResource', 'notificationsService', 'contentResource', 'navigationService', configController]);
+        ['$scope', '$rootScope', 'plmbrGroupsResource', 'plmbrWorkflowResource', 'notificationsService', 'contentResource', 'navigationService', configController]);
 }());
 

@@ -112,6 +112,7 @@
 
         function getNodeTasks() {
             // only refresh if viewing a content node
+            debugger;
             if (editorState.current) {
 
                 // check if the node is included in the workflow model
@@ -124,6 +125,7 @@
                             nodePerms.contentTypeApprovalPath.length ||
                             ancestorPerms.length) {
 
+                            hasPermissions = true;
                             getPendingTasks();
                         } else {
                             hasPermissions = false;
@@ -172,6 +174,10 @@
 
         // ensures dash/buttons refresh
         $rootScope.$on('workflowActioned', function () {
+            getNodeTasks();
+        });
+
+        $rootScope.$on('configUpdated', function () {
             getNodeTasks();
         });
 
