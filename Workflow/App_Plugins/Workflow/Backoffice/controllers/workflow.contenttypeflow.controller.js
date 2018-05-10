@@ -1,25 +1,26 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
     // create controller 
     function contentTypeFlowController($scope) {
-        var vm = this;
 
-        vm.approvalPath = $scope.model.type.approvalPath;
-        
-        function updateSortOrder() { }
+        if ($scope.model.type) {
+            this.approvalPath = $scope.model.type.approvalPath;
+        }
+
+        const updateSortOrder = () => { }
 
         /**
          * 
          */
-        function add() {
-            if (vm.approvalPath) {
-                vm.approvalPath.push(vm.selectedApprovalGroup);
+        this.add = () => {
+            if (this.approvalPath) {
+                this.approvalPath.push(this.selectedApprovalGroup);
             } else {
-                vm.approvalPath = [vm.selectedApprovalGroup];
+                this.approvalPath = [this.selectedApprovalGroup];
             }
 
-            $scope.model.type.approvalPath = vm.approvalPath;
+            $scope.model.type.approvalPath = this.approvalPath;
         }
 
         /**
@@ -27,29 +28,24 @@
          * @param {any} $event
          * @param {any} index
          */
-        function remove($event, index) {
+        this.remove = ($event, index) => {
             $event.stopPropagation();
-            vm.approvalPath.splice(index, 1);
-            $scope.model.type.approvalPath = vm.approvalPath;
+            this.approvalPath.splice(index, 1);
+            $scope.model.type.approvalPath = this.approvalPath;
         }
 
-        angular.extend(vm, {
 
-            sortOptions: {
-                axis: 'y',
-                cursor: 'move',
-                handle: '.sort-handle',
-                stop: function () {
-                    updateSortOrder();
-                }
-            },
-
-            add: add,
-            remove: remove
-        });
+        this.sortOptions = {
+            axis: 'y',
+            cursor: 'move',
+            handle: '.sort-handle',
+            stop: () => {
+                updateSortOrder();
+            }
+        };
     }
 
     // register controller 
     angular.module('umbraco').controller('Workflow.ContentTypeFlow.Controller', ['$scope', contentTypeFlowController]);
-}());
+})();
 

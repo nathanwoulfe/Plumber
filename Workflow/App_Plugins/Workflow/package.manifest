@@ -19,7 +19,6 @@
     "~/App_Plugins/workflow/backoffice/controllers/workflow.settings.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.submit.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.userpicker.controller.js",
-    "~/App_Plugins/workflow/backoffice/controllers/workflow.contenttypepicker.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.contenttypeflow.controller.js",
 
     "~/App_Plugins/workflow/backoffice/directives/workflow.buttongroup.directive.js",

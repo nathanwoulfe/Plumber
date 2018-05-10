@@ -8,9 +8,9 @@
 
         this.excludeNodesModel = {
             view: 'contentpicker',
-            editor:'Umbraco.MultiNodeTreePicker2',
+            editor: 'Umbraco.MultiNodeTreePicker2',
             alias: 'excludeNodesPicker',
-            config: { 
+            config: {
                 multiPicker: '1',
                 idType: 'id',
                 showEditButton: '0',
@@ -129,7 +129,8 @@
                 show: true,
                 type: type,
                 groups: this.groups,
-                title: 'Edit content type approval flow',
+                types: this.docTypes.filter(v => !v.approvalPath),
+                title: `${type ? 'Edit' : 'Add'} content type approval flow`,
                 submit: model => {
 
                     // map the updated approval path back onto the doctypes collection 
@@ -137,33 +138,6 @@
                         this.docTypes.forEach(v => {
                             if (v.id === model.type.id) {
                                 v.approvalPath = model.type.approvalPath;
-                            }
-                        });
-                    }
-
-                    this.overlay.close();
-                },
-                close: () => {
-                    this.overlay.show = false;
-                    this.overlay = null;
-                }
-            };
-        };
-
-        this.openContentTypePicker = () => {
-            this.overlay = {
-                view: `${overlayBase}workflow.contenttypepicker.overlay.html`,
-                show: true,
-                types: this.docTypes.filter(v => !v.approvalPath),
-                title: 'Select content type',
-                submit: model => {
-
-                    // if a selection is returned, add an approval group array to the doctype
-                    // so that it appears in the list view
-                    if (model.selection) {
-                        this.docTypes.forEach(v => {
-                            if (v.id === model.selection.id) {
-                                v.approvalPath = [];
                             }
                         });
                     }

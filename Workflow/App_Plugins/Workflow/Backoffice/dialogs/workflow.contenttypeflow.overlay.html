@@ -2,22 +2,32 @@
 
     <umb-load-indicator ng-if="vm.loading">
     </umb-load-indicator>
+    
+    <div ng-if="!model.type">
+        <h6>Select content type</h6>
+        <select class="flow-select" ng-if="!model.type" ng-model="model.type" ng-options="g as g.name for g in model.types">
+            <option selected disabled>--- Select content type ---</option>
+        </select>
+    </div>
 
-    <select class="flow-select" ng-model="vm.selectedApprovalGroup" ng-options="g as g.name for g in model.groups">
-        <option selected disabled>--- Add ---</option>
-    </select>
-    <button class="btn btn-default" ng-click="vm.add()">Add</button>
-    <div ng-show="vm.approvalPath.length">
-        <h5>Current flow</h5>
-        <ul class="current-flow" ui-sortable="vm.sortOptions" ng-model="vm.approvalPath">
-            <li class="umb-node-preview" ng-repeat="u in vm.approvalPath track by $index">
-                <div class="umb-node-preview__content">Stage {{ $index + 1 }}: {{ u.name }}</div>
-                <div class="umb-node-preview__actions">
-                    <a class="umb-node-preview__action" ng-href="/umbraco/#/workflow/workflow/edit-group/{{ u.groupId }}">Edit group</a>
-                    <span class="umb-node-preview__action sort-handle"><i class="icon icon-navigation-vertical"></i></span>
-                    <span class="umb-node-preview__action" ng-click="vm.remove($event, $index)"><i class="icon icon-delete"></i></span> 
-                </div>
-            </li>
-        </ul>
+    <div ng-if="model.type">
+        <h6>Select workflow group</h6>
+        <select class="flow-select" ng-model="vm.selectedApprovalGroup" ng-options="g as g.name for g in model.groups">
+            <option selected disabled>--- Add ---</option>
+        </select>
+        <button class="btn btn-default" ng-click="vm.add()">Add</button>
+        <div ng-show="vm.approvalPath.length">
+            <h5>Current flow</h5>
+            <ul class="current-flow" ui-sortable="vm.sortOptions" ng-model="vm.approvalPath">
+                <li class="umb-node-preview" ng-repeat="u in vm.approvalPath track by $index">
+                    <div class="umb-node-preview__content">Stage {{ $index + 1 }}: {{ u.name }}</div>
+                    <div class="umb-node-preview__actions">
+                        <a class="umb-node-preview__action" ng-href="/umbraco/#/workflow/workflow/edit-group/{{ u.groupId }}">Edit group</a>
+                        <span class="umb-node-preview__action sort-handle"><i class="icon icon-navigation-vertical"></i></span>
+                        <span class="umb-node-preview__action" ng-click="vm.remove($event, $index)"><i class="icon icon-delete"></i></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
