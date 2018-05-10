@@ -89,7 +89,7 @@
         public const string TasksAndGroupByInstanceId = @"SELECT * FROM WorkflowTaskInstance 
                             LEFT JOIN WorkflowUserGroups
                             ON WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
-                            WHERE WorkflowInstanceGuid = @0
+                            WHERE WorkflowTaskInstance.WorkflowInstanceGuid = @0
                             ORDER BY WorkflowTaskInstance.CreatedDate DESC";
 
         // permissions

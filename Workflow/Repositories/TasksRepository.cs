@@ -67,7 +67,7 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
         public List<WorkflowTaskInstancePoco> GetTasksAndGroupByInstanceId(Guid guid)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco>(SqlHelpers.TasksAndGroupByInstanceId, guid);
+            return _database.Fetch<WorkflowTaskInstancePoco, UserGroupPoco>(SqlHelpers.TasksAndGroupByInstanceId, guid);
         }
 
         /// <summary>

@@ -52,6 +52,10 @@
             if (task.type === 2 && task.status === 7 || task.status === 1) {
                 return 'check';
             }
+            // pending
+            if (task.status === 3) {
+                return 'record';
+            }
             // not required
             if (task.status === 4) {
                 return 'next-media';
@@ -66,7 +70,7 @@
          */
         workflowResource.getAllTasksByGuid($scope.model.guid)
             .then(resp => {
-                var tasks = resp.items.filter(v => v.comment !== null);
+                var tasks = resp.items;//.filter(v => v.comment !== null);
 
                 // current step should only count approved tasks - maybe rejected/resubmitted into
                 this.currentStep = resp.currentStep;

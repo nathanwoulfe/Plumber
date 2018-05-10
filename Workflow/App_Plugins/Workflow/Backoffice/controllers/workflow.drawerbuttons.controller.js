@@ -5,13 +5,17 @@
     // since this controller is loaded in response to an injector match, we can use it to check for active workflow groups 
     // and display a message if none are configured, while also displaying the default button set
     function controller($scope, $rootScope, $window, userService, workflowResource, workflowGroupsResource, workflowActionsService, contentEditingHelper, angularHelper, contentResource, editorState, $routeParams, notificationsService) {
-        var vm = this,
-            user;
 
-        var dashboardClick = editorState.current === null;
-        var hasPermissions = true;
+        this.active = false;
+        this.excludeNode = false;
+        this.buttonGroupState = 'init';
 
-        var defaultButtons = contentEditingHelper.configureContentEditorButtons({
+        let hasPermissions = true;
+        let dirty = false;
+        let user = undefined;
+
+        const dashboardClick = editorState.current === null;
+        const defaultButtons = contentEditingHelper.configureContentEditorButtons({
             create: $routeParams.create,
             content: $scope.content,
             methods: {
@@ -22,52 +26,52 @@
             }
         });
 
-        var saveAndPublish = defaultButtons.defaultButton && defaultButtons.defaultButton.labelKey === 'buttons_saveAndPublish';
+        const saveAndPublish = defaultButtons.defaultButton && defaultButtons.defaultButton.labelKey === 'buttons_saveAndPublish';
 
-        var buttons = {
+        const buttons = {
             approveButton: {
                 labelKey: 'workflow_approveButtonLong',
-                handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.action(item, 'Approve', dashboardClick);
+                handler: item => {
+                    this.workflowOverlay = workflowActionsService.action(item, 'Approve', dashboardClick);
                 }
             },
             cancelButton: {
                 labelKey: 'workflow_cancelButtonLong',
                 cssClass: 'danger',
-                handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.cancel(item, dashboardClick);
+                handler: item => {
+                    this.workflowOverlay = workflowActionsService.cancel(item, dashboardClick);
                 }
             },
             rejectButton: {
                 labelKey: 'workflow_rejectButton',
                 cssClass: 'warning',
-                handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.action(item, 'Reject', dashboardClick);
+                handler: item => {
+                    this.workflowOverlay = workflowActionsService.action(item, 'Reject', dashboardClick);
                 }
             },
             resubmitButton: {
                 labelKey: 'workflow_resubmitButton',
-                handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.action(item, 'Resubmit', dashboardClick);
+                handler: item => {
+                    this.workflowOverlay = workflowActionsService.action(item, 'Resubmit', dashboardClick);
                 }
             },
             detailButton: {
                 labelKey: 'workflow_detailButton',
-                handler: function (item) {
-                    vm.workflowOverlay = workflowActionsService.detail(item);
+                handler: item => {
+                    this.workflowOverlay = workflowActionsService.detail(item);
                 }
             },
             saveButton: {
                 labelKey: 'workflow_saveButton',
                 cssClass: 'success',
-                handler: function () {
+                handler: () => {
                     workflowActionsService.buttonState('busy', editorState.current.id);
                     contentEditingHelper.contentEditorPerformSave({
                         statusMessage: 'Saving...',
                         saveMethod: contentResource.save,
                         scope: $scope,
                         content: editorState.current
-                    }).then(function (resp) {
+                    }).then(resp => {
                         workflowActionsService.buttonState(
                             resp.notifications && resp.notifications[0].type === 3 ? 'success' : 'error', editorState.current.id);
                     });
@@ -76,44 +80,127 @@
             publishButton: {
                 labelKey: 'workflow_publishButton',
                 cssClass: 'success',
-                handler: function () {
-                    vm.workflowOverlay = workflowActionsService.initiate(editorState.current.name, editorState.current.id, true);
+                handler: () => {
+                    this.workflowOverlay = workflowActionsService.initiate(editorState.current.name, editorState.current.id, true);
                 }
             },
             unpublishButton: {
                 labelKey: 'workflow_unpublishButton',
                 cssClass: 'warning',
-                handler: function () {
-                    vm.workflowOverlay = workflowActionsService.initiate(editorState.current.name, editorState.current.id, false);
+                handler: () => {
+                    this.workflowOverlay = workflowActionsService.initiate(editorState.current.name, editorState.current.id, false);
                 }
             }
         };
 
         // are there common elements between two arrays?
-        function common(arr1, arr2) {
-            return arr1.some(function (el) {
-                return arr2.indexOf(el) > -1;
-            });
-        }
-
+        const common = (arr1, arr2) => arr1.some(el => arr2.indexOf(el) > -1);
 
         // fetch settings to check node exclusion stat
         workflowResource.getSettings()
-            .then(function (settings) {
+            .then(settings => {
                 if (settings && settings.excludeNodes) {
-                    var exclude = settings.excludeNodes.split(',');
+                    const exclude = settings.excludeNodes.split(',');
                     // if any elements are shared, exclude the node from the workflow mechanism
                     // by checking the path not just the id, this becomes recursive, and the excludeNodes cascades down the tree
                     if (common(editorState.current.path.split(','), exclude)) {
-                        vm.excludeNode = true;
+                        this.excludeNode = true;
                     }
                 }
             });
 
-        function getNodeTasks() {
+        /**
+         * any user with access to the workflow section will be able to action workflows ie cancel outside their group membership
+         * @param {any} task
+         */
+        const checkUserAccess = task => {
+            this.task = task || this.task;
+            this.canAction = false;
+
+            this.adminUser = user.allowedSections.indexOf('workflow') !== -1;
+            const currentTaskUsers = this.task.permissions[this.task.currentStep].userGroup.usersSummary;
+
+            if (currentTaskUsers.indexOf(`|${user.id}|`) !== -1) {
+                this.canAction = true;
+            }
+
+            if (this.active) {
+
+                this.buttonGroup = {};
+
+                if (dirty && this.userCanEdit) {
+                    this.buttonGroup.defaultButton = buttons.saveButton;
+                }
+                // primary button is approve when the user is in the approving group and task is not rejected
+                else if (this.canAction && !this.rejected) {
+                    this.buttonGroup.defaultButton = buttons.approveButton;
+                } else if (this.userCanEdit) { // rejected tasks show the resubmit, only when the user is the original author
+                    this.buttonGroup.defaultButton = buttons.resubmitButton;
+                } else { // all other cases see the detail button
+                    this.buttonGroup.defaultButton = buttons.detailButton;
+                }
+
+                this.buttonGroup.subButtons = [];
+
+                // if the user is in the approving group, and the task is not rejected, add reject to sub buttons
+                if (this.canAction && !this.rejected) {
+                    this.buttonGroup.subButtons.push(buttons.rejectButton);
+                }
+                // if the user is admin, the change author or in the approving group for a non-rejected task, add the cancel button
+                if (this.isAdmin || this.userCanEdit || this.isChangeAuthor || (this.canAction && !this.rejected)) {
+                    this.buttonGroup.subButtons.push(buttons.cancelButton);
+                }
+            }
+        }
+
+        /**
+         * Manages the default states for the buttons - updates when no active task, or when the content form is dirtied
+         */
+        const setButtons = () => {
+            // default button will be null when the current user has browse-only permission
+            if (defaultButtons.defaultButton !== null && !this.active && hasPermissions) {
+                const subButtons = saveAndPublish ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] : [buttons.unpublishButton, buttons.saveButton];
+                // if the content is dirty, show save. otherwise show request approval
+                this.buttonGroup = {
+                    defaultButton: dirty ? buttons.saveButton : buttons.publishButton,
+                    subButtons: dirty ? (saveAndPublish ? [defaultButtons.defaultButton] : []) : subButtons
+                };
+            }
+
+            // if a task is active, the default buttons should be updated to match the current user's access/role in the workflow
+            if (this.active) {
+                checkUserAccess();
+            }
+        }
+
+        const getNodeTasks = () => {
             // only refresh if viewing a content node
-            debugger;
             if (editorState.current) {
+
+                const getPendingTasks = () => {
+                    workflowResource.getNodePendingTasks(editorState.current.id)
+                        .then(resp => {
+                            if (resp.noDefaultApprover && !editorState.current.trashed) {
+                                const msg = 'ensure a default approval group has been set.';
+                                notificationsService.warning('WORKFLOW CONFIGURATION INCOMPLETE', msg);
+                            } else if (resp.items && resp.items.length) {
+                                this.active = true;
+
+                                // if the workflow status is rejected, the original author should be able to edit and resubmit
+                                const currentTask = resp.items[resp.items.length - 1];
+                                this.rejected = currentTask.cssStatus === 'rejected';
+
+                                // if the task has been rejected and the current user requested the change, let them edit
+                                this.isChangeAuthor = currentTask.requestedById === user.id;
+                                this.userCanEdit = this.rejected && this.isChangeAuthor;
+
+                                checkUserAccess(currentTask);
+                            } else {
+                                this.active = false;
+                                setButtons();
+                            }
+                        }, () => { });
+                }
 
                 // check if the node is included in the workflow model
                 workflowGroupsResource.get()
@@ -129,147 +216,44 @@
                             getPendingTasks();
                         } else {
                             hasPermissions = false;
-                            vm.buttonGroup = defaultButtons;
+                            this.buttonGroup = defaultButtons;
                         }
                     });
-
-                function getPendingTasks() {
-                    workflowResource.getNodePendingTasks(editorState.current.id)
-                        .then(function (resp) {
-                            if (resp.noDefaultApprover && !editorState.current.trashed) {
-                                const msg = 'ensure a default approval group has been set.';
-                                notificationsService.warning('WORKFLOW CONFIGURATION INCOMPLETE', msg);
-                            } else if (resp.items && resp.items.length) {
-                                vm.active = true;
-
-                                // if the workflow status is rejected, the original author should be able to edit and resubmit
-                                const currentTask = resp.items[resp.items.length - 1];
-                                vm.rejected = currentTask.cssStatus === 'rejected';
-
-                                // if the task has been rejected and the current user requested the change, let them edit
-                                vm.isChangeAuthor = currentTask.requestedById === user.id;
-                                vm.userCanEdit = vm.rejected && vm.isChangeAuthor;
-
-                                checkUserAccess(currentTask);
-                            } else {
-                                vm.active = false;
-                                setButtons();
-                            }
-
-                        },
-                        function () {
-
-                        });
-                }
             }
         }
 
         // use this to ensure changes are saved when submitting for publish
         // event is broadcast from the buttons directive, which watches the content form
-        var dirty = false;
-        $rootScope.$on('contentFormDirty', function (event, data) {
+        $rootScope.$on('contentFormDirty', (event, data) => {
             dirty = data;
             setButtons();
         });
 
         // ensures dash/buttons refresh
-        $rootScope.$on('workflowActioned', function () {
+        $rootScope.$on('workflowActioned', () => {
             getNodeTasks();
         });
 
-        $rootScope.$on('configUpdated', function () {
+        $rootScope.$on('configUpdated', () => {
             getNodeTasks();
         });
-
-        /**
-         * any user with access to the workflow section will be able to action workflows ie cancel outside their group membership
-         * @param {any} task
-         */
-        function checkUserAccess(task) {
-            vm.task = task || vm.task;
-            vm.canAction = false;
-
-            vm.adminUser = user.allowedSections.indexOf('workflow') !== -1;
-            var currentTaskUsers = vm.task.permissions[vm.task.currentStep].userGroup.usersSummary;
-
-            if (currentTaskUsers.indexOf('|' + user.id + '|') !== -1) {
-                vm.canAction = true;
-            }
-
-            if (vm.active) {
-
-                vm.buttonGroup = {};
-
-                if (dirty && vm.userCanEdit) {
-                    vm.buttonGroup.defaultButton = buttons.saveButton;
-                }
-                // primary button is approve when the user is in the approving group and task is not rejected
-                else if (vm.canAction && !vm.rejected) {
-                    vm.buttonGroup.defaultButton = buttons.approveButton;
-                } else if (vm.userCanEdit) { // rejected tasks show the resubmit, only when the user is the original author
-                    vm.buttonGroup.defaultButton = buttons.resubmitButton;
-                } else { // all other cases see the detail button
-                    vm.buttonGroup.defaultButton = buttons.detailButton;
-                }
-
-                vm.buttonGroup.subButtons = [];
-
-                // if the user is in the approving group, and the task is not rejected, add reject to sub buttons
-                if (vm.canAction && !vm.rejected) {
-                    vm.buttonGroup.subButtons.push(buttons.rejectButton);
-                }
-                // if the user is admin, the change author or in the approving group for a non-rejected task, add the cancel button
-                if (vm.isAdmin || vm.userCanEdit || vm.isChangeAuthor || (vm.canAction && !vm.rejected)) {
-                    vm.buttonGroup.subButtons.push(buttons.cancelButton);
-                }
-
-
-            }
-        }
-
-        /**
-         * Manages the default states for the buttons - updates when no active task, or when the content form is dirtied
-         */
-        function setButtons() {
-            // default button will be null when the current user has browse-only permission
-            if (defaultButtons.defaultButton !== null && !vm.active && hasPermissions) {
-                var subButtons = saveAndPublish ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] : [buttons.unpublishButton, buttons.saveButton];
-                // if the content is dirty, show save. otherwise show request approval
-                vm.buttonGroup = {
-                    defaultButton: dirty ? buttons.saveButton : buttons.publishButton,
-                    subButtons: dirty ? (saveAndPublish ? [defaultButtons.defaultButton] : []) : subButtons
-                };
-            }
-
-            // if a task is active, the default buttons should be updated to match the current user's access/role in the workflow
-            if (vm.active) {
-                checkUserAccess();
-            }
-        }
 
         // preview should not save, if the content is in a workflow
-        function preview(content) {
+        this.preview = content => {
             // Chromes popup blocker will kick in if a window is opened 
             // outwith the initial scoped request. This trick will fix that.
-            var previewWindow = $window.open('preview/?id=' + content.id, 'umbpreview');
+            const previewWindow = $window.open(`preview/?id=${content.id}`, 'umbpreview');
             // Build the correct path so both /#/ and #/ work.
-            var redirect = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/preview/?id=' + content.id;
+            const redirect = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/preview/?id=' + content.id;
             previewWindow.location.href = redirect;
         }
 
         // it all starts here
         userService.getCurrentUser()
-            .then(function (userResp) {
+            .then(userResp => {
                 user = userResp;
                 getNodeTasks();
             });
-
-        angular.extend(vm, {
-            active: false,
-            excludeNode: false,
-            buttonGroupState: 'init',
-            preview: preview
-        });
     }
 
     // register controller 
