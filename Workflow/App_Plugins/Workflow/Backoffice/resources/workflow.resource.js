@@ -112,7 +112,7 @@
                 return this.request('POST', urlBase + 'config/savedoctypeconfig', p);
             },
 
-            checkNodePermissions: (groups, id, contentTypeName) => {
+            checkNodePermissions: (groups, id, contentTypeAlias) => {
                 const resp = {
                     approvalPath: [],
                     contentTypeApprovalPath: []
@@ -124,12 +124,11 @@
                             resp.approvalPath[p.permission] = v;
                         }
 
-                        if (p.contentTypeName === contentTypeName) {
+                        if (p.contentTypeAlias === contentTypeAlias) {
                             resp.contentTypeApprovalPath[p.permission] = v;
                         }
                     });
                 });
-
                 return resp;
             },
 

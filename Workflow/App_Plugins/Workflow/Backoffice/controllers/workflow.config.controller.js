@@ -27,9 +27,10 @@
 
                     contentResource.getById(nodeId)
                         .then(resp => {
+                            this.contentTypeAlias = resp.contentTypeAlias;
                             this.contentTypeName = resp.contentTypeName;
 
-                            const nodePerms = workflowResource.checkNodePermissions(this.groups, nodeIdInt, this.contentTypeName);
+                            const nodePerms = workflowResource.checkNodePermissions(this.groups, nodeIdInt, this.contentTypeAlias);
                             this.approvalPath = nodePerms.approvalPath;
                             this.contentTypeApprovalPath = nodePerms.contentTypeApprovalPath;
 

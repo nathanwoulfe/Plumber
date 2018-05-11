@@ -38,6 +38,8 @@ namespace Workflow.Models
         [ResultColumn]
         public string ContentTypeName => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId).Name : string.Empty;
 
+        [ResultColumn]
+        public string ContentTypeAlias => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId).Alias : string.Empty;
 
         [ResultColumn]
         public UserGroupPoco UserGroup { get; set; }

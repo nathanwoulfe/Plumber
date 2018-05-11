@@ -4,13 +4,13 @@
     // create controller 
     // since this controller is loaded in response to an injector match, we can use it to check for active workflow groups 
     // and display a message if none are configured, while also displaying the default button set
-    function controller($scope, $rootScope, $window, userService, workflowResource, workflowGroupsResource, workflowActionsService, contentEditingHelper, angularHelper, contentResource, editorState, $routeParams, notificationsService) {
+    function controller($scope, $rootScope, $timeout, $window, userService, workflowResource, workflowGroupsResource, workflowActionsService, contentEditingHelper, angularHelper, contentResource, editorState, $routeParams, notificationsService) {
 
         this.active = false;
         this.excludeNode = false;
         this.buttonGroupState = 'init';
 
-        let hasPermissions = true;
+        let workflowConfigured = false;
         let dirty = false;
         let user = undefined;
 
@@ -158,13 +158,17 @@
          */
         const setButtons = () => {
             // default button will be null when the current user has browse-only permission
-            if (defaultButtons.defaultButton !== null && !this.active && hasPermissions) {
+            if (workflowConfigured && defaultButtons.defaultButton !== null) {
                 const subButtons = saveAndPublish ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] : [buttons.unpublishButton, buttons.saveButton];
                 // if the content is dirty, show save. otherwise show request approval
                 this.buttonGroup = {
                     defaultButton: dirty ? buttons.saveButton : buttons.publishButton,
                     subButtons: dirty ? (saveAndPublish ? [defaultButtons.defaultButton] : []) : subButtons
                 };
+            } else {
+                if (defaultButtons.defaultButton !== null && !this.active) {
+                    this.buttonGroup = defaultButtons;
+                }
             }
 
             // if a task is active, the default buttons should be updated to match the current user's access/role in the workflow
@@ -205,17 +209,17 @@
                 // check if the node is included in the workflow model
                 workflowGroupsResource.get()
                     .then(groups => {
-                        const nodePerms = workflowResource.checkNodePermissions(groups, editorState.current.id, editorState.current.contentTypeAlias)
+                        const nodePerms = workflowResource.checkNodePermissions(groups, editorState.current.id, editorState.current.contentTypeAlias);
                         const ancestorPerms = workflowResource.checkAncestorPermissions(editorState.current.path, groups);
 
                         if (nodePerms.approvalPath.length ||
                             nodePerms.contentTypeApprovalPath.length ||
                             ancestorPerms.length) {
 
-                            hasPermissions = true;
+                            workflowConfigured = true;
                             getPendingTasks();
                         } else {
-                            hasPermissions = false;
+                            workflowConfigured = false;
                             this.buttonGroup = defaultButtons;
                         }
                     });
@@ -260,6 +264,7 @@
     angular.module('umbraco').controller('Workflow.DrawerButtons.Controller',
         ['$scope',
             '$rootScope',
+            '$timeout',
             '$window',
             'userService',
             'plmbrWorkflowResource',
