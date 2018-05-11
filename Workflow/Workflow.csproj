@@ -40,9 +40,7 @@
     <Compile Include="Api\ExportController.cs" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\importexport.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.contenttypeflow.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.contenttypepicker.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.contenttypeflow.overlay.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.contenttypepicker.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.importexportdashboard.html" />
     <Compile Include="Events\Args\ConfigEventArgs.cs" />
     <Compile Include="Events\Args\GroupEventArgs.cs" />
