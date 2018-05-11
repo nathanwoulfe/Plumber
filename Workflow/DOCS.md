@@ -32,7 +32,6 @@ Once content has been submitted into a workflow, either as an initial request or
 
 Plumber comes pre-wired with sensible defaults, but these should be modified to best suit your site.
 
-- **Default approval group:** this is the fallback group for cases when no workflow is configured. You'll need to configure your groups before setting this value.
 - **Flow type:** how should the approval flow progress? These options manage how the change author is included in the workflow:
     - **Explicit:** all steps of the workflow must be completed, and all users will be notified of tasks (including the change author)
     - **Implicit:** all steps where the original change author is NOT a member of the group must be completed. Steps where the original change author is a member of the approving group will be completed automatically, and noted in the workflow history as not required.
@@ -70,7 +69,7 @@ A given content node may have all three approval flow types applied, but only on
 
 - **Explicit:** set directly on a content node via the context menu. This type will take priority over all others.
 - **Document-type:** set in the settings section. This approval flow will apply to all content of the selected document type, unless the node has an explicit flow set.
-- **Inherited:** if a node has no explicit approval flow, nor a flow applied to its document-type, Plumber will traverse the content tree until it finds a node with an explicit flow, and will use this flow for the current change. For this reason, an approval flow should always be set on the homepage node as a default.
+- **Inherited:** if a node has no explicit approval flow, nor a flow applied to its document-type, Plumber will traverse the content tree until it finds a node with an explicit flow, and will use this flow for the current change.
 
 Current responsibilites for groups can be reviewed on the user group view, for explicit and document-type approval flows only.
 
