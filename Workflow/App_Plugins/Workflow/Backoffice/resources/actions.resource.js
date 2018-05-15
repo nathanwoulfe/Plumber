@@ -1,135 +1,17 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
     function workflowActionsService($rootScope, workflowResource, notificationsService) {
 
-        var service = {
-
-            dialogPath: '../app_plugins/workflow/backoffice/dialogs/',
-
-            action: function (item, type, fromDash) {
-
-                var workflowOverlay = {
-                    view: this.dialogPath + 'workflow.action.dialog.html',
-                    show: true,
-                    title: type + ' workflow process',
-                    subtitle: 'Document: ' + item.nodeName,
-                    comment: item.comments,
-                    approvalComment: '',
-                    guid: item.instanceGuid,
-                    requestedBy: item.requestedBy,
-                    requestedOn: item.requestedOn,
-                    submit: function (model) {
-
-                        buttonState('busy', item.nodeId);
-
-                        // build the function name and access it via index rather than property - saves duplication
-                        var functionName = type.toLowerCase() + 'WorkflowTask';
-                        workflowResource[functionName](item.instanceGuid, model.approvalComment)
-                            .then(function (resp) {
-                                notify(resp, fromDash, item.nodeId);
-                            });
-                       
-                        workflowOverlay.close();
-                    },
-                    close: function () {
-                        workflowOverlay.show = false;
-                        workflowOverlay = null;
-                    }
-                };
-
-                return workflowOverlay;
-            },
-
-            initiate: function (name, id, publish) {
-                var workflowOverlay = {
-                    view: this.dialogPath + 'workflow.submit.dialog.html',
-                    show: true,
-                    title: 'Send for ' + (publish ? 'publish' : 'unpublish') + ' approval',
-                    subtitle: 'Document: ' + name,
-                    isPublish: publish,
-                    nodeId: id,
-                    submit: function (model) {
-
-                        buttonState('busy', id);
-
-                        workflowResource.initiateWorkflow(id, model.comment, publish)
-                            .then(function(resp) {
-                                notify(resp, false, id);
-                            });
-
-                        workflowOverlay.close();
-                    },
-                    close: function () {
-                        workflowOverlay.show = false;
-                        workflowOverlay = null;
-                    }
-                };
-                return workflowOverlay;
-            },
-
-            cancel: function (item, fromDash) {
-                var workflowOverlay = {
-                    view: this.dialogPath + 'workflow.cancel.dialog.html',
-                    show: true,
-                    title: 'Cancel workflow process',
-                    subtitle: 'Document: ' + item.nodeName,
-                    comment: '',
-                    isFinalApproval: item.activeTask === 'Pending Final Approval',
-                    submit: function (model) {
-
-                        buttonState('busy', item.nodeId);
-
-                        workflowResource.cancelWorkflowTask(item.instanceGuid, model.comment)
-                            .then(function (resp) {
-                                notify(resp, fromDash, item.nodeId);
-                            });
-
-                        workflowOverlay.close();
-                    },
-                    close: function () {
-                        workflowOverlay.show = false;
-                        workflowOverlay = null;
-                    }
-                };
-
-                return workflowOverlay;
-            },
-
-            detail: function (item) {
-
-                var workflowOverlay = {
-                    view: this.dialogPath + 'workflow.action.dialog.html',
-                    show: true,
-                    title: 'Workflow detail',
-                    subtitle: 'Document: ' + item.nodeName,
-                    comment: item.comments,
-                    guid: item.instanceGuid,
-                    requestedBy: item.requestedBy,
-                    requestedOn: item.requestedOn,
-                    detail: true,
-                    
-                    close: function () {
-                        workflowOverlay.show = false;
-                        workflowOverlay = null;
-                    }
-                };
-
-                return workflowOverlay;
-            },
-
-            buttonState: function(state, id) {
-                buttonState(state, id);
-            }
-        };
+        const dialogPath = '../app_plugins/workflow/backoffice/dialogs/'; 
 
         // UI feedback for button directive
-        function buttonState(state, id) {
+        const buttonState = (state, id) => {
             $rootScope.$emit('buttonStateChanged', { state: state, id: id });
         }
 
         // display notification after actioning workflow task
-        function notify(d, fromDash, id) {
+        const notify = (d, fromDash, id) => {
             if (d.status === 200) {
 
                 notificationsService.success('SUCCESS', d.message);
@@ -146,10 +28,126 @@
             }
         }
 
+        const service = {
+
+            action: (item, type, fromDash) => {
+                let workflowOverlay = {
+                    view: dialogPath + 'workflow.action.dialog.html',
+                    show: true,
+                    title: type + ' workflow process',
+                    subtitle: `Document: ${item.nodeName}`,
+                    comment: item.comments,
+                    approvalComment: '',
+                    guid: item.instanceGuid,
+                    requestedBy: item.requestedBy,
+                    requestedOn: item.requestedOn,
+                    submit: model => {
+
+                        buttonState('busy', item.nodeId);
+
+                        // build the function name and access it via index rather than property - saves duplication
+                        const functionName = type.toLowerCase() + 'WorkflowTask';
+                        workflowResource[functionName](item.instanceGuid, model.approvalComment)
+                            .then(resp => {
+                                notify(resp, fromDash, item.nodeId);
+                            });
+                       
+                        workflowOverlay.close();
+                    },
+                    close: () => {
+                        workflowOverlay.show = false;
+                        workflowOverlay = null;
+                    }
+                };
+
+                return workflowOverlay;
+            },
+
+            initiate: (name, id, publish) => {
+                let workflowOverlay = {
+                    view: dialogPath + 'workflow.submit.dialog.html',
+                    show: true,
+                    title: `Send for ${publish ? 'publish' : 'unpublish'} approval`,
+                    subtitle: `Document: ${name}`,
+                    isPublish: publish,
+                    nodeId: id,
+                    submit: model => {
+
+                        buttonState('busy', id);
+
+                        workflowResource.initiateWorkflow(id, model.comment, publish)
+                            .then(resp => {
+                                notify(resp, false, id);
+                            });
+
+                        workflowOverlay.close();
+                    },
+                    close: () => {
+                        workflowOverlay.show = false;
+                        workflowOverlay = null;
+                    }
+                };
+                return workflowOverlay;
+            },
+
+            cancel: (item, fromDash) => {
+                let workflowOverlay = {
+                    view: dialogPath + 'workflow.cancel.dialog.html',
+                    show: true,
+                    title: 'Cancel workflow process',
+                    subtitle: `Document: ${item.nodeName}`,
+                    comment: '',
+                    isFinalApproval: item.activeTask === 'Pending Final Approval',
+                    submit: model => {
+
+                        buttonState('busy', item.nodeId);
+
+                        workflowResource.cancelWorkflowTask(item.instanceGuid, model.comment)
+                            .then(resp => {
+                                notify(resp, fromDash, item.nodeId);
+                            });
+
+                        workflowOverlay.close();
+                    },
+                    close: () => {
+                        workflowOverlay.show = false;
+                        workflowOverlay = null;
+                    }
+                };
+
+                return workflowOverlay;
+            },
+
+            detail: item => {
+                let workflowOverlay = {
+                    view: dialogPath + 'workflow.action.dialog.html',
+                    show: true,
+                    title: 'Workflow detail',
+                    subtitle: `Document: ${item.nodeName}`,
+                    comment: item.comments,
+                    guid: item.instanceGuid,
+                    requestedBy: item.requestedBy,
+                    requestedOn: item.requestedOn,
+                    detail: true,
+                    
+                    close: () => {
+                        workflowOverlay.show = false;
+                        workflowOverlay = null;
+                    }
+                };
+
+                return workflowOverlay;
+            },
+
+            buttonState: (state, id) => {
+                buttonState(state, id);
+            }
+        };
+
         return service;
     }
 
     angular.module('umbraco.services').factory('plmbrActionsService',
         ['$rootScope', 'plmbrWorkflowResource', 'notificationsService', workflowActionsService]);
 
-}());
+})();
