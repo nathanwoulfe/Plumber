@@ -1,115 +1,102 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
     // create service
     function workflowResource($http, $q, umbRequestHelper) {
-        var urlBase = '/umbraco/backoffice/api/workflow/';
+        const urlBase = '/umbraco/backoffice/api/workflow/';
 
-        var service = {
-            settingsUrl: urlBase + 'settings/',
-            tasksUrl: urlBase + 'tasks/',
-            instancesUrl: urlBase + 'instances/',
-            actionsUrl: urlBase + 'actions/',
-            logsUrl: urlBase + 'logs/',
+        // are there common elements between two arrays?
+        const common = (arr1, arr2) => arr1.some(el => arr2.indexOf(el) > -1);
 
-            request: function (method, url, data) {
-                return umbRequestHelper.resourcePromise(
-                    method === 'GET' ?
-                        $http.get(url) :
-                        $http.post(url, data),
-                    'Something broke'
-                );
-            },
+        const request = (method, url, data) =>
+            umbRequestHelper.resourcePromise(
+                method === 'GET' ? $http.get(url) : $http.post(url, data),
+                'Something broke');
 
-            getContentTypes: function () {
-                return this.request('GET', this.settingsUrl + 'getcontenttypes');
-            },
+        const urls = {
+            settings: urlBase + 'settings/',
+            tasks: urlBase + 'tasks/',
+            instances: urlBase + 'instances/',
+            actions: urlBase + 'actions/',
+            logs: urlBase + 'logs/',
+        };
+
+        const service = {
+
+            getContentTypes: () => request('GET', urls.settings + 'getcontenttypes'),
 
             /* tasks and approval endpoints */
-            getApprovalsForUser: function (userId, count, page) {
-                return this.request('GET', this.tasksUrl + 'flows/' + userId + '/0/' + count + '/' + page);
-            },
-            getSubmissionsForUser: function (userId, count, page) {
-                return this.request('GET', this.tasksUrl + 'flows/' + userId + '/1/' + count + '/' + page);
-            },
-            getPendingTasks: function (count, page) {
-                return this.request('GET', this.tasksUrl + 'pending/' + count + '/' + page);
-            },
-            getAllTasksForRange: function (days) {
-                return this.request('GET', this.tasksUrl + 'range/' + days);
-            },
-            getAllInstances: function (count, page) {
-                return this.request('GET', this.instancesUrl + count + '/' + page);
-            },
-            getAllInstancesForRange: function (days) {
-                return this.request('GET', this.instancesUrl + 'range/' + days);
-            },
-            getAllTasksForGroup: function (groupId, count, page) {
-                return this.request('GET', this.tasksUrl + 'group/' + groupId + '/' + count + '/' + page);
-            },
-            getAllTasksByGuid: function (guid) {
-                return this.request('GET', this.tasksUrl + 'tasksbyguid/' + guid);
-            },
-            getNodeTasks: function (id, count, page) {
-                return this.request('GET', this.tasksUrl + 'node/' + id + '/' + count + '/' + page);
-            },
-            getNodePendingTasks: function (id) {
-                return this.request('GET', this.tasksUrl + 'node/pending/' + id);
-            },
+            getApprovalsForUser: (userId, count, page) => request('GET', urls.tasks + 'flows/' + userId + '/0/' + count + '/' + page),
+
+            getSubmissionsForUser: (userId, count, page) => request('GET', urls.tasks + 'flows/' + userId + '/1/' + count + '/' + page),
+
+            getPendingTasks: (count, page) => request('GET', urls.tasks + 'pending/' + count + '/' + page),
+
+            getAllTasksForRange: days => request('GET', urls.tasks + 'range/' + days),
+
+            getAllInstances: (count, page) => request('GET', urls.instances + count + '/' + page),
+
+            getAllInstancesForRange: days => request('GET', urls.instances + 'range/' + days),
+
+            getAllTasksForGroup: (groupId, count, page) => request('GET', urls.tasks + 'group/' + groupId + '/' + count + '/' + page),
+
+            getAllTasksByGuid: guid => request('GET', urls.tasks + 'tasksbyguid/' + guid),
+
+            getNodeTasks: (id, count, page) => request('GET', urls.tasks + 'node/' + id + '/' + count + '/' + page),
+
+            getNodePendingTasks: id => request('GET', urls.tasks + 'node/pending/' + id),
+
 
             /* workflow actions */
-            initiateWorkflow: function (nodeId, comment, publish) {
-                return this.request('POST', this.actionsUrl + 'initiate', { nodeId: nodeId, comment: comment, publish: publish });
-            },
-            approveWorkflowTask: function (instanceGuid, comment) {
-                return this.request('POST', this.actionsUrl + 'approve', { instanceGuid: instanceGuid, comment: comment });
-            },
-            rejectWorkflowTask: function (instanceGuid, comment) {
-                return this.request('POST', this.actionsUrl + 'reject', { instanceGuid: instanceGuid, comment: comment });
-            },
-            resubmitWorkflowTask: function (instanceGuid, comment) {
-                return this.request('POST', this.actionsUrl + 'resubmit', { instanceGuid: instanceGuid, comment: comment });
-            },
-            cancelWorkflowTask: function (instanceGuid, comment) {
-                return this.request('POST', this.actionsUrl + 'cancel', { instanceGuid: instanceGuid, comment: comment });
-            },
+            initiateWorkflow: (nodeId, comment, publish) =>
+                request('POST',
+                    urls.actions + 'initiate', { nodeId: nodeId, comment: comment, publish: publish }),
+
+            approveWorkflowTask: (instanceGuid, comment) =>
+                request('POST',
+                    urls.actions + 'approve', { instanceGuid: instanceGuid, comment: comment }),
+
+            rejectWorkflowTask: (instanceGuid, comment) =>
+                request('POST',
+                    urls.actions + 'reject', { instanceGuid: instanceGuid, comment: comment }),
+
+            resubmitWorkflowTask: (instanceGuid, comment) =>
+                request('POST',
+                    urls.actions + 'resubmit', { instanceGuid: instanceGuid, comment: comment }),
+
+            cancelWorkflowTask: (instanceGuid, comment) =>
+                request('POST',
+                    urls.actions + 'cancel', { instanceGuid: instanceGuid, comment: comment }),
+
 
             /* get/set workflow settings*/
-            getSettings: function () {
-                return this.request('GET', this.settingsUrl + 'get');
-            },
-            saveSettings: function (settings) {
-                return this.request('POST', this.settingsUrl + 'save', settings);
-            },
+            getSettings: () => request('GET', urls.settings + 'get'),
 
-            getVersion: function () {
-                return this.request('GET', this.settingsUrl + 'version');
-            },
-            getDocs: function () {
-                return this.request('GET', this.settingsUrl + 'docs');
-            },
-            getLog: function (date) {
-                return this.request('GET', this.logsUrl + 'get/' + (date || ''));
-            },
-            getLogDates: function () {
-                return this.request('GET', this.logsUrl + 'datelist');
-            },
+            saveSettings: settings => request('POST', urls.settings + 'save', settings),
 
-            doImport: function (model) {
-                return this.request('POST', urlBase + 'import', model);
-            },
+            getVersion: () => request('GET', urls.settings + 'version'),
 
-            doExport: function () {
-                return this.request('GET', urlBase + 'export');
-            },
+            getDocs: () => request('GET', urls.settings + 'docs'),
+
+            getLog: date => request('GET', urls.logs + 'get/' + (date || '')),
+
+            getLogDates: () => request('GET', urls.logs + 'datelist'),
+
+
+            doImport: model => request('POST', urlBase + 'import', model),
+
+            doExport: () => request('GET', urlBase + 'export'),
 
             /*** SAVE PERMISSIONS ***/
-            saveConfig: function (p) {
-                return this.request('POST', urlBase + 'config/saveconfig', p);
-            },
+            saveConfig: p => request('POST', urlBase + 'config/saveconfig', p),
 
-            saveDocTypeConfig: function (p) {
-                return this.request('POST', urlBase + 'config/savedoctypeconfig', p);
+            saveDocTypeConfig: p => request('POST', urlBase + 'config/savedoctypeconfig', p),
+
+            checkExclusion: (excludedNodes, path) => {
+                const excluded = excludedNodes.split(',');
+                // if any elements are shared, exclude the node from the workflow mechanism
+                // by checking the path not just the id, this becomes recursive, and the excludeNodes cascades down the tree
+                return common(path.split(','), excluded);
             },
 
             checkNodePermissions: (groups, id, contentTypeAlias) => {
@@ -166,4 +153,4 @@
     // register service
     angular.module('umbraco.services').factory('plmbrWorkflowResource', workflowResource);
 
-}());
+})();

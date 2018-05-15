@@ -2,7 +2,7 @@
     'use strict';
 
     // create controller 
-    function configController($scope, $rootScope, workflowGroupsResource, workflowResource, notificationsService, contentResource, navigationService) {
+    function configController($scope, $rootScope, $q, workflowGroupsResource, workflowResource, notificationsService, contentResource, navigationService) {
         var nodeId = $scope.dialogOptions.currentNode ? $scope.dialogOptions.currentNode.id : undefined,
             nodeIdInt = nodeId ? parseInt(nodeId, 10) : undefined;
 
@@ -17,42 +17,36 @@
             stop: () => { }
         };
 
+        let node = undefined;
+        let settings = undefined;
+
         /**
          * Fetch the groups and content type data
          */
         const init = () => {
-            workflowGroupsResource.get()
-                .then(groups => {
-                    this.groups = groups;
+            this.contentTypeAlias = node.contentTypeAlias;
+            this.contentTypeName = node.contentTypeName;
 
-                    contentResource.getById(nodeId)
-                        .then(resp => {
-                            this.contentTypeAlias = resp.contentTypeAlias;
-                            this.contentTypeName = resp.contentTypeName;
+            const nodePerms = workflowResource.checkNodePermissions(this.groups, nodeIdInt, this.contentTypeAlias);
+            this.approvalPath = nodePerms.approvalPath;
+            this.contentTypeApprovalPath = nodePerms.contentTypeApprovalPath;
 
-                            const nodePerms = workflowResource.checkNodePermissions(this.groups, nodeIdInt, this.contentTypeAlias);
-                            this.approvalPath = nodePerms.approvalPath;
-                            this.contentTypeApprovalPath = nodePerms.contentTypeApprovalPath;
+            this.inherited = workflowResource.checkAncestorPermissions(node.path, this.groups);
 
-                            this.inherited = workflowResource.checkAncestorPermissions(resp.path, this.groups);
-
-                            this.activeType = this.approvalPath.length
-                                ? 'content'
-                                : this.contentTypeApprovalPath.length
-                                ? 'type'
-                                : this.inherited.length
-                                ? 'inherited'
-                                : null;
-                        });
-                });
+            if (!this.excludeNode) {
+                this.activeType = this.approvalPath.length
+                    ? 'content'
+                    : this.contentTypeApprovalPath.length
+                    ? 'type'
+                    : this.inherited.length
+                    ? 'inherited'
+                    : null;
+            }
         };
 
         if (!nodeId) {
             navigationService.hideDialog();
             notificationsService.error('ERROR', 'No active content node');
-        }
-        else {
-            init();
         }
 
         /**
@@ -117,10 +111,21 @@
                 });
             });
         };
+
+        // it all starts here
+        const promises = [contentResource.getById(nodeId), workflowResource.getSettings(), workflowGroupsResource.get()];
+
+        $q.all(promises)
+            .then(resp => {
+                [node, settings, this.groups] = resp;
+
+                this.excludeNode = workflowResource.checkExclusion(settings.excludeNodes, nodeId);
+                init();
+            });
     }
 
     // register controller 
     angular.module('umbraco').controller('Workflow.Config.Controller',
-        ['$scope', '$rootScope', 'plmbrGroupsResource', 'plmbrWorkflowResource', 'notificationsService', 'contentResource', 'navigationService', configController]);
+        ['$scope', '$rootScope', '$q', 'plmbrGroupsResource', 'plmbrWorkflowResource', 'notificationsService', 'contentResource', 'navigationService', configController]);
 }());
 

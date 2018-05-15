@@ -1,10 +1,7 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
-    // create controller 
-    // since this controller is loaded in response to an injector match, we can use it to check for active workflow groups 
-    // and display a message if none are configured, while also displaying the default button set
-    function controller($scope, $rootScope, $timeout, $window, userService, workflowResource, workflowGroupsResource, workflowActionsService, contentEditingHelper, angularHelper, contentResource, editorState, $routeParams, notificationsService) {
+    function controller($scope, $rootScope, $q, $timeout, $window, userService, workflowResource, workflowGroupsResource, workflowActionsService, contentEditingHelper, angularHelper, contentResource, editorState, $routeParams, notificationsService) {
 
         this.active = false;
         this.excludeNode = false;
@@ -12,7 +9,10 @@
 
         let workflowConfigured = false;
         let dirty = false;
+
         let user = undefined;
+        let settings = undefined;
+        let groups = undefined;
 
         const dashboardClick = editorState.current === null;
         const defaultButtons = contentEditingHelper.configureContentEditorButtons({
@@ -64,18 +64,7 @@
             saveButton: {
                 labelKey: 'workflow_saveButton',
                 cssClass: 'success',
-                handler: () => {
-                    workflowActionsService.buttonState('busy', editorState.current.id);
-                    contentEditingHelper.contentEditorPerformSave({
-                        statusMessage: 'Saving...',
-                        saveMethod: contentResource.save,
-                        scope: $scope,
-                        content: editorState.current
-                    }).then(resp => {
-                        workflowActionsService.buttonState(
-                            resp.notifications && resp.notifications[0].type === 3 ? 'success' : 'error', editorState.current.id);
-                    });
-                }
+                handler: $scope.save
             },
             publishButton: {
                 labelKey: 'workflow_publishButton',
@@ -92,22 +81,6 @@
                 }
             }
         };
-
-        // are there common elements between two arrays?
-        const common = (arr1, arr2) => arr1.some(el => arr2.indexOf(el) > -1);
-
-        // fetch settings to check node exclusion stat
-        workflowResource.getSettings()
-            .then(settings => {
-                if (settings && settings.excludeNodes) {
-                    const exclude = settings.excludeNodes.split(',');
-                    // if any elements are shared, exclude the node from the workflow mechanism
-                    // by checking the path not just the id, this becomes recursive, and the excludeNodes cascades down the tree
-                    if (common(editorState.current.path.split(','), exclude)) {
-                        this.excludeNode = true;
-                    }
-                }
-            });
 
         /**
          * any user with access to the workflow section will be able to action workflows ie cancel outside their group membership
@@ -158,8 +131,12 @@
          */
         const setButtons = () => {
             // default button will be null when the current user has browse-only permission
+            this.buttonGroup = {};
+
             if (workflowConfigured && defaultButtons.defaultButton !== null) {
-                const subButtons = saveAndPublish ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] : [buttons.unpublishButton, buttons.saveButton];
+                const subButtons = saveAndPublish
+                    ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton]
+                    : [buttons.unpublishButton, buttons.saveButton];
                 // if the content is dirty, show save. otherwise show request approval
                 this.buttonGroup = {
                     defaultButton: dirty ? buttons.saveButton : buttons.publishButton,
@@ -204,22 +181,20 @@
                 }
 
                 // check if the node is included in the workflow model
-                workflowGroupsResource.get()
-                    .then(groups => {
-                        const nodePerms = workflowResource.checkNodePermissions(groups, editorState.current.id, editorState.current.contentTypeAlias);
-                        const ancestorPerms = workflowResource.checkAncestorPermissions(editorState.current.path, groups);
+                // groups has been fetched already
+                const nodePerms = workflowResource.checkNodePermissions(groups, editorState.current.id, editorState.current.contentTypeAlias);
+                const ancestorPerms = workflowResource.checkAncestorPermissions(editorState.current.path, groups);
 
-                        if (nodePerms.approvalPath.length ||
-                            nodePerms.contentTypeApprovalPath.length ||
-                            ancestorPerms.length) {
+                if (nodePerms.approvalPath.length ||
+                    nodePerms.contentTypeApprovalPath.length ||
+                    ancestorPerms.length && !this.excludeNode) {
 
-                            workflowConfigured = true;
-                            getPendingTasks();
-                        } else {
-                            workflowConfigured = false;
-                            this.buttonGroup = defaultButtons;
-                        }
-                    });
+                    workflowConfigured = true;
+                    getPendingTasks();
+                } else {
+                    workflowConfigured = false;
+                    this.buttonGroup = defaultButtons;
+                }
             }
         }
 
@@ -250,9 +225,12 @@
         }
 
         // it all starts here
-        userService.getCurrentUser()
-            .then(userResp => {
-                user = userResp;
+        const promises = [userService.getCurrentUser(), workflowResource.getSettings(), workflowGroupsResource.get()];
+
+        $q.all(promises)
+            .then(resp => {
+                [user, settings, groups] = resp;
+                this.excludeNode = workflowResource.checkExclusion(settings.excludeNodes, editorState.current.path);
                 getNodeTasks();
             });
     }
@@ -261,6 +239,7 @@
     angular.module('umbraco').controller('Workflow.DrawerButtons.Controller',
         ['$scope',
             '$rootScope',
+            '$q',
             '$timeout',
             '$window',
             'userService',
@@ -273,5 +252,4 @@
             'editorState',
             '$routeParams',
             'notificationsService', controller]);
-}());
-
+})();

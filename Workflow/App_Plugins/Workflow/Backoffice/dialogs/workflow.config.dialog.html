@@ -1,6 +1,7 @@
 ﻿<div class="umb-pane workflow" ng-controller="Workflow.Config.Controller as vm">
     <div class="umb-dialog-body with-footer">
         <div class="umb-pane">
+            <h6 ng-if="vm.excludeNode" class="badge">Current page is excluded from the workflow</h6>
             <h4>Content approval flow <span class="badge" ng-if="vm.activeType === 'content'">ACTIVE</span></h4>
             <p>Flows set on the current node take priority over content-type and inherited flows.</p>
             <select class="flow-select" ng-model="vm.selectedApprovalGroup" ng-options="g as g.name for g in vm.groups">
@@ -15,12 +16,12 @@
                         <div class="umb-node-preview__actions">
                             <a class="umb-node-preview__action" ng-href="/umbraco/#/workflow/workflow/edit-group/{{ u.groupId }}">Edit group</a>
                             <span class="umb-node-preview__action sort-handle" ng-click="vm.remove($event, $index)"><i class="icon icon-navigation-vertical"></i></span>
-                            <span class="umb-node-preview__action umb-node-preview__action--red" ng-click="vm.remove($event, $index)"><i class="icon icon-delete"></i></span> 
+                            <span class="umb-node-preview__action umb-node-preview__action--red" ng-click="vm.remove($event, $index)"><i class="icon icon-delete"></i></span>
                         </div>
                     </li>
                 </ul>
             </div>
-            <hr />
+            <hr/>
             <h4>Content type approval flow ({{ vm.contentTypeName }}) <span class="badge" ng-if="vm.activeType === 'type'">ACTIVE</span></h4>
             <p>Flows set on the content type take priority over inherited flows.</p>
             <ul class="current-flow" ng-if="vm.contentTypeApprovalPath.length">
@@ -32,7 +33,7 @@
                 </li>
             </ul>
             <p ng-if="!vm.contentTypeApprovalPath.length"><i>No content type flow set for {{ vm.contentTypeName }}</i></p>
-            <hr />
+            <hr/>
             <h4>Inherited approval flow <span ng-if="vm.inherited.length">({{ vm.inherited[0].nodeName}})</span> <span class="badge" ng-if="vm.activeType === 'inherited'">ACTIVE</span></h4>
             <p>Workflow configuration is inherited from ancestor nodes unless set by content type or on the current node.</p>
             <ul class="current-flow" ng-if="vm.inherited.length">
