@@ -173,17 +173,6 @@ namespace Workflow.Api
 
             try
             {
-                // must have a default approval group set
-                WorkflowSettingsPoco settings = _settingsService.GetSettings();
-
-                if (string.IsNullOrEmpty(settings?.DefaultApprover))
-                {
-                    return Json(new
-                    {
-                        noDefaultApprover = true,
-                    }, ViewHelpers.CamelCase);
-                }
-
                 List<WorkflowTaskInstancePoco> taskInstances = _tasksService.GetTasksByNodeId(id);
                 if (!taskInstances.Any() || taskInstances.Last().TaskStatus == TaskStatus.Cancelled)
                 {

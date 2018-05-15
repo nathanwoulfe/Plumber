@@ -179,15 +179,12 @@
 
         const getNodeTasks = () => {
             // only refresh if viewing a content node
-            if (editorState.current) {
+            if (editorState.current && !editorState.current.trashed) {
 
                 const getPendingTasks = () => {
                     workflowResource.getNodePendingTasks(editorState.current.id)
                         .then(resp => {
-                            if (resp.noDefaultApprover && !editorState.current.trashed) {
-                                const msg = 'ensure a default approval group has been set.';
-                                notificationsService.warning('WORKFLOW CONFIGURATION INCOMPLETE', msg);
-                            } else if (resp.items && resp.items.length) {
+                            if (resp.items && resp.items.length) {
                                 this.active = true;
 
                                 // if the workflow status is rejected, the original author should be able to edit and resubmit

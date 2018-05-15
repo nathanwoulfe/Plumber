@@ -27,15 +27,23 @@
         height: 200px;
 
         &.group-description {
-            width: auto;
+            width: auto; 
         }
+    }
+
+    .badge { 
+        border-radius:2px;
+        background:$umbGreen;  
+        font-weight:400;
+        transform:translateY(-2px);
+        text-shadow:none;
     }
 
     .flow-select {
         margin-bottom: 0;
     }
 
-    .umb-box {
+    .umb-box { 
         .umb-node-preview {
             min-width: 100%;
         }

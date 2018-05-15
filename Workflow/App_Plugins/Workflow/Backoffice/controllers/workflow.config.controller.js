@@ -35,6 +35,14 @@
                             this.contentTypeApprovalPath = nodePerms.contentTypeApprovalPath;
 
                             this.inherited = workflowResource.checkAncestorPermissions(resp.path, this.groups);
+
+                            this.activeType = this.approvalPath.length
+                                ? 'content'
+                                : this.contentTypeApprovalPath.length
+                                ? 'type'
+                                : this.inherited.length
+                                ? 'inherited'
+                                : null;
                         });
                 });
         };
