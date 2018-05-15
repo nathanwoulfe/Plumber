@@ -1,114 +1,100 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
     function historyController($scope, workflowResource) {
 
-      var vm = this,
-            width = $scope.dialogOptions ? $scope.dialogOptions.currentAction.metaData.width : undefined,
-            node = $scope.dialogOptions ? $scope.dialogOptions.currentNode : undefined;
+        this.name = 'Workflow history';
+
+        this.pagination = {
+            pageNumber: 1,
+            totalPages: 0,
+            perPage: 10,
+            goToPage: i => {
+                this.pagination.pageNumber = i;
+                if (this.node !== undefined) {
+                    this.auditNode();
+                } else {
+                    this.getAllInstances();
+                }
+            }
+        };
+
+        const width = $scope.dialogOptions ? $scope.dialogOptions.currentAction.metaData.width : undefined;
+        const node = $scope.dialogOptions ? $scope.dialogOptions.currentNode : undefined;
+
+        const setPaging = resp => {
+            this.items = resp.items;
+            this.pagination.pageNumber = resp.page;
+            this.pagination.totalPages = resp.totalPages;
+            this.loading = false;
+        };
 
         if (width) {
             angular.element('#dialog').css('width', width);
         }
 
-        function perPage() {
-            return [2, 5, 10, 20, 50];
-        }
+        this.perPage = () => [2, 5, 10, 20, 50];
 
-        function selectNode() {
-            vm.overlay = {
+        this.selectNode = () => {
+            this.overlay = {
                 view: 'contentpicker',
                 show: true,
-                submit: function (model) {
-                    vm.overlay.show = false;
-                    vm.overlay = null;
-                    if (model.selection) {
-                        auditNode(model.selection[0]);
+                submit: model => {
+                    if(model.selection) {
+                        this.auditNode(model.selection[0]);
                     } else {
                         $scope.items = [];
                     }
+                    this.overlay.close();
                 },
-                close: function () {
-                    vm.overlay.show = false;
-                    vm.overlay = null;
+                close: () => {
+                    this.overlay.show = false;
+                    this.overlay = null;
                 }
             };
         }
 
-        function getAllInstances() {
-            vm.loading = true;
+        this.getAllInstances = () => {
+            this.loading = true;
 
             // when switching, set state, reset paging and clear node data
-            if (!vm.instanceView) {
-                vm.instanceView = true;
-                vm.pagination.pageNumber = 1;
-                vm.node = undefined;
+            if (!this.instanceView) {
+                this.instanceView = true;
+                this.pagination.pageNumber = 1;
+                this.node = undefined;
             }
 
-            workflowResource.getAllInstances(vm.pagination.perPage, vm.pagination.pageNumber)
-                .then(function (resp) {
+            workflowResource.getAllInstances(this.pagination.perPage, this.pagination.pageNumber)
+                .then(resp => {
                     setPaging(resp);
                 });
         }
 
-        function auditNode(data) {
-            vm.loading = true;
+        this.auditNode = data => {
+            this.loading = true;
 
             // when switching from instance to node, reset paging, toggle state and store node
-            if (vm.instanceView) {
-                vm.pagination.pageNumber = 1;
-                vm.instanceView = false;
+            if (this.instanceView) {
+                this.pagination.pageNumber = 1;
+                this.instanceView = false;
             }
 
-            vm.node = data || vm.node;
+            this.node = data || this.node;
 
-            workflowResource.getNodeTasks(vm.node.id, vm.pagination.perPage, vm.pagination.pageNumber)
-                .then(function (resp) {
+            workflowResource.getNodeTasks(this.node.id, this.pagination.perPage, this.pagination.pageNumber)
+                .then(resp => {
                     setPaging(resp);
                 });
         }
 
-        function goToPage(i) {
-            vm.pagination.pageNumber = i;
-            if (vm.node !== undefined) {
-                auditNode();
-            } else {
-                getAllInstances();
-            }
-        }
-
-        function setPaging(resp) {
-            vm.items = resp.items;
-            vm.pagination.pageNumber = resp.page;
-            vm.pagination.totalPages = resp.totalPages;
-            vm.loading = false;
-        }
-
-        angular.extend(vm, {
-            auditNode: auditNode,
-            getAllInstances: getAllInstances,
-            selectNode: selectNode,
-            perPage: perPage,
-
-            name: 'Workflow history',
-            pagination: {
-                pageNumber: 1,
-                totalPages: 0,
-                perPage: 10,
-                goToPage: goToPage
-            }
-        });
-
         // go get the data
-        (function () {
-            if (node) {
-                auditNode(node);
-            } else {
-                getAllInstances();
-            }
-        }());
+        if (node) {
+            this.auditNode(node);
+        } else {
+            this.getAllInstances();
+        } 
     }
 
     angular.module('umbraco').controller('Workflow.History.Controller', ['$scope', 'plmbrWorkflowResource', historyController]);
 
-}());
+})();

@@ -1,10 +1,10 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
     // create controller 
     function configController($scope, $rootScope, $q, workflowGroupsResource, workflowResource, notificationsService, contentResource, navigationService) {
-        var nodeId = $scope.dialogOptions.currentNode ? $scope.dialogOptions.currentNode.id : undefined,
-            nodeIdInt = nodeId ? parseInt(nodeId, 10) : undefined;
+        const nodeId = $scope.dialogOptions.currentNode ? $scope.dialogOptions.currentNode.id : undefined;
+        const nodeIdInt = nodeId ? parseInt(nodeId, 10) : undefined;
 
         this.inherited = [];
         this.approvalPath = [];

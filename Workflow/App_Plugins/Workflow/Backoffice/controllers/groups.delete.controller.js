@@ -1,18 +1,23 @@
-﻿(function () {  
+﻿(() => {
     'use strict';
 
-    function deleteController($scope, $rootScope, workflowGroupsResource, navigationService, treeService, notificationsService) {
+    function deleteController($scope,
+        $rootScope,
+        workflowGroupsResource,
+        navigationService,
+        treeService,
+        notificationsService) {
 
         this.delete = id => {
-          workflowGroupsResource.delete(id)
+            workflowGroupsResource.delete(id)
                 .then(resp => {
                     treeService.loadNodeChildren({ node: $scope.$parent.currentNode.parent(), section: 'workflow' })
-                        .then(()  =>{
+                        .then(() => {
                             navigationService.hideNavigation();
                             notificationsService.success('SUCCESS', resp);
                             $rootScope.$emit('refreshGroupsDash');
                         });
-              });
+                });
         };
 
         this.cancelDelete = () => {
@@ -21,6 +26,8 @@
     }
 
     angular.module('umbraco').controller('Workflow.Groups.Delete.Controller',
-        ['$scope', '$rootScope', 'plmbrGroupsResource', 'navigationService', 'treeService', 'notificationsService', deleteController]);
-}());
-
+        [
+            '$scope', '$rootScope', 'plmbrGroupsResource', 'navigationService', 'treeService', 'notificationsService',
+            deleteController
+        ]);
+})();

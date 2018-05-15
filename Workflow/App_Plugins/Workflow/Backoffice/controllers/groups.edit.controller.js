@@ -1,7 +1,14 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
-    function editController($scope, $routeParams, $location, workflowGroupsResource, workflowResource, notificationsService, contentResource, navigationService) {
+    function editController($scope,
+        $routeParams,
+        $location,
+        workflowGroupsResource,
+        workflowResource,
+        notificationsService,
+        contentResource,
+        navigationService) {
 
         const getContentTypes = () => {
 
@@ -107,16 +114,16 @@
         this.save = () => {
             workflowGroupsResource.save(this.group)
                 .then(resp => {
-                    if (resp.status === 200) {
-                        notificationsService.success('SUCCESS', resp.msg);
-                        $scope.approvalGroupForm.$setPristine();
-                    } else {
-                        notificationsService.error('ERROR', resp.msg);
-                    }
-                },
-                err => {
-                    notificationsService.error('ERROR', err);
-                });
+                        if (resp.status === 200) {
+                            notificationsService.success('SUCCESS', resp.msg);
+                            $scope.approvalGroupForm.$setPristine();
+                        } else {
+                            notificationsService.error('ERROR', resp.msg);
+                        }
+                    },
+                    err => {
+                        notificationsService.error('ERROR', err);
+                    });
         };
 
         /**
@@ -154,20 +161,20 @@
 
         // declare scoped variables
         this.tabs =
-            [
-                {
-                    id: 0,
-                    label: 'Group detail',
-                    alias: 'tab0',
-                    active: true
-                },
-                {
-                    id: 1,
-                    label: 'Activity history',
-                    alias: 'tab1',
-                    active: false
-                }
-            ];
+        [
+            {
+                id: 0,
+                label: 'Group detail',
+                alias: 'tab0',
+                active: true
+            },
+            {
+                id: 1,
+                label: 'Activity history',
+                alias: 'tab1',
+                active: false
+            }
+        ];
 
         this.pagination = {
             pageNumber: 1,
@@ -185,13 +192,15 @@
     }
 
     angular.module('umbraco').controller('Workflow.Groups.Edit.Controller',
-        ['$scope',
+        [
+            '$scope',
             '$routeParams',
             '$location',
             'plmbrGroupsResource',
             'plmbrWorkflowResource',
             'notificationsService',
             'contentResource',
-            'navigationService', editController]);
-}());
+            'navigationService', editController
+        ]);
+})();
 

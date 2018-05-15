@@ -1,4 +1,4 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
     function actionController($scope, workflowResource) {
@@ -70,7 +70,7 @@
          */
         workflowResource.getAllTasksByGuid($scope.model.guid)
             .then(resp => {
-                var tasks = resp.items;//.filter(v => v.comment !== null);
+                var tasks = resp.items; //.filter(v => v.comment !== null);
 
                 // current step should only count approved tasks - maybe rejected/resubmitted into
                 this.currentStep = resp.currentStep;
@@ -91,6 +91,7 @@
             });
     }
 
-    angular.module('umbraco').controller('Workflow.Action.Controller', ['$scope', 'plmbrWorkflowResource', actionController]);
-}());
+    angular.module('umbraco')
+        .controller('Workflow.Action.Controller', ['$scope', 'plmbrWorkflowResource', actionController]);
+})();
 

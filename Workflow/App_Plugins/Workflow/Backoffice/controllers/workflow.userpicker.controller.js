@@ -1,5 +1,5 @@
 ﻿// this is almost identical to the Umbraco default, only the id property on the user object is changed to userId
-(function () {
+(() => {
     'use strict';
 
     function userPickerController($scope, usersResource, localizationService) {
