@@ -120,7 +120,6 @@
                 [node, settings, this.groups] = resp;
 
                 this.excludeNode = workflowResource.checkExclusion(settings.excludeNodes, nodeId);
-                debugger;
                 init();
             });
     }
