@@ -120,6 +120,7 @@
                 [node, settings, this.groups] = resp;
 
                 this.excludeNode = workflowResource.checkExclusion(settings.excludeNodes, nodeId);
+                debugger;
                 init();
             });
     }
@@ -127,5 +128,5 @@
     // register controller 
     angular.module('umbraco').controller('Workflow.Config.Controller',
         ['$scope', '$rootScope', '$q', 'plmbrGroupsResource', 'plmbrWorkflowResource', 'notificationsService', 'contentResource', 'navigationService', configController]);
-}());
+})();
 

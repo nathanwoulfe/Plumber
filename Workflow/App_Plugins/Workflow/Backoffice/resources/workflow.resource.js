@@ -93,6 +93,10 @@
             saveDocTypeConfig: p => request('POST', urlBase + 'config/savedoctypeconfig', p),
 
             checkExclusion: (excludedNodes, path) => {
+                if (!excludedNodes) {
+                    return false;
+                }
+
                 const excluded = excludedNodes.split(',');
                 // if any elements are shared, exclude the node from the workflow mechanism
                 // by checking the path not just the id, this becomes recursive, and the excludeNodes cascades down the tree
