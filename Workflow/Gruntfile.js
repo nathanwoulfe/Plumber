@@ -1,7 +1,6 @@
 ﻿module.exports = grunt => {
     require('load-grunt-tasks')(grunt);
     require('time-grunt')(grunt);
-    require('grunt-karma')(grunt);
 
     //cant load this with require
     grunt.loadNpmTasks('grunt-contrib-sass');
@@ -270,12 +269,6 @@
             test: 'test/assets'
         },
 
-        karma: {
-            unit: {
-                configFile: 'test/karma.conf.js'
-            }
-        },
-
         jshint: {
             dev: {
                 files: {
@@ -311,18 +304,4 @@
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 
     grunt.registerTask('dev', ['watch:dev']);
-
-    grunt.registerTask('test', 'Clean, copy test assets, test', () => {
-        var assetsDir = grunt.config.get('dest');
-        //copies over umbraco assets from --target, this must point at the /umbraco/ directory
-        if (assetsDir !== 'dist') {
-            grunt.task.run(['clean:test', 'copy:testAssets', 'karma']);
-        } else if (grunt.file.isDir('test/assets/js/')) {
-            grunt.log.oklns('Test assets found, running tests');
-            grunt.task.run(['karma']);
-        } else {
-            grunt.log.errorlns('Tests assets not found, skipping tests');
-        }
-    });
-
 };
