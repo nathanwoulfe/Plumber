@@ -88,22 +88,41 @@
     display: flex;
     text-transform: uppercase;
 
+    &.vert-centered {
+        align-items:center;
+
+        li {
+            padding:0;
+            background:0 0;
+            margin-bottom:0;
+
+            &:first-child {
+                flex:0 1 auto;
+            }
+        }
+
+        .btn {
+            width:100%;
+        }
+    }
+
     li {
+        display:flex;
         flex-basis: 20%;
         flex: 1;
         flex-wrap: wrap;
         flex-direction: column;
+        justify-content:space-between;
         background: #f3f3f5;
         border-radius: 3px;
         padding: 15px 10px;
         text-align: center;
         border: 2px solid transparent;
-        height: 100%;
         margin: 0 15px 30px;
         line-height: 1;
     }
 
-    span {
+    .jumbo {
         font-weight: bold;
         display: block;
         font-size: 3rem;
