@@ -17,8 +17,8 @@
             stop: () => { }
         };
 
-        let node = undefined;
-        let settings = undefined;
+        let node;
+        let settings;
 
         /**
          * Fetch the groups and content type data
@@ -34,13 +34,10 @@
             this.inherited = workflowResource.checkAncestorPermissions(node.path, this.groups);
 
             if (!this.excludeNode) {
-                this.activeType = this.approvalPath.length
-                    ? 'content'
-                    : this.contentTypeApprovalPath.length
-                    ? 'type'
-                    : this.inherited.length
-                    ? 'inherited'
-                    : null;
+                this.activeType =
+                    this.approvalPath.length ? 'content' :
+                    this.contentTypeApprovalPath.length ? 'type' :
+                    this.inherited.length ? 'inherited' : null;
             }
         };
 

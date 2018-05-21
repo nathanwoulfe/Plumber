@@ -40,7 +40,7 @@
                 view: 'contentpicker',
                 show: true,
                 submit: model => {
-                    if(model.selection) {
+                    if (model.selection) {
                         this.auditNode(model.selection[0]);
                     } else {
                         $scope.items = [];
@@ -52,7 +52,7 @@
                     this.overlay = null;
                 }
             };
-        }
+        };
 
         this.getAllInstances = () => {
             this.loading = true;
@@ -68,7 +68,7 @@
                 .then(resp => {
                     setPaging(resp);
                 });
-        }
+        };
 
         this.auditNode = data => {
             this.loading = true;
@@ -85,7 +85,7 @@
                 .then(resp => {
                     setPaging(resp);
                 });
-        }
+        };
 
         // go get the data
         if (node) {

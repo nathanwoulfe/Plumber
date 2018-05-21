@@ -1,7 +1,7 @@
 ﻿(() => {
     'use strict';
 
-    function dashboardController(workflowResource) {
+    function dashboardController(workflowResource, tourService) {
 
         const storeKey = 'plumberUpdatePrompt';
         const msPerDay = 1000 * 60 * 60 * 24;
@@ -10,7 +10,7 @@
         const lineChart = items => {
 
             var series = [],
-                seriesNames = [],
+                seriesNames = [], 
                 s,
                 o,
                 isTask = this.type === 'Task';
@@ -136,7 +136,7 @@
         // alert has never been dismissed, or was dismissed more than 7 days ago
         const pesterDate = localStorage.getItem(storeKey);
 
-        if (!pesterDate || moment(pesterDate).isBefore(now)) {
+        if (!pesterDate || moment(new Date(pesterDate)).isBefore(now)) {
             workflowResource.getVersion()
                 .then(resp => {
                     this.version = resp;
@@ -146,6 +146,14 @@
         const updateAlertHidden = () => {
             localStorage.setItem(storeKey, now.add(7, 'days'));
         };
+
+        // start selected tour
+        const launchTour = tourAlias => {
+            tourService.getTourByAlias(tourAlias)
+                .then(resp => {
+                    tourService.startTour(resp);
+                });
+        }
 
         // kick it off with a four-week span
         angular.extend(this, {
@@ -160,11 +168,12 @@
             totalNotRequired: 0,
 
             getForRange: getForRange,
-            updateAlertHidden: updateAlertHidden
+            updateAlertHidden: updateAlertHidden,
+            launchTour: launchTour
         });
 
         getForRange();
     }
 
-    angular.module('umbraco').controller('Workflow.AdminDashboard.Controller', ['plmbrWorkflowResource', dashboardController]);
+    angular.module('umbraco').controller('Workflow.AdminDashboard.Controller', ['plmbrWorkflowResource', 'tourService', dashboardController]);
 })();

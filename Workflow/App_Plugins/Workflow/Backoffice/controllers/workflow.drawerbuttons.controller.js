@@ -10,9 +10,9 @@
         let workflowConfigured = false;
         let dirty = false;
 
-        let user = undefined;
-        let settings = undefined;
-        let groups = undefined;
+        let user;
+        let settings;
+        let groups;
 
         const dashboardClick = editorState.current === null;
         const defaultButtons = contentEditingHelper.configureContentEditorButtons({
@@ -107,7 +107,8 @@
                 // primary button is approve when the user is in the approving group and task is not rejected
                 else if (this.canAction && !this.rejected) {
                     this.buttonGroup.defaultButton = buttons.approveButton;
-                } else if (this.userCanEdit) { // rejected tasks show the resubmit, only when the user is the original author
+                } else if (this.userCanEdit
+                ) { // rejected tasks show the resubmit, only when the user is the original author
                     this.buttonGroup.defaultButton = buttons.resubmitButton;
                 } else { // all other cases see the detail button
                     this.buttonGroup.defaultButton = buttons.detailButton;
@@ -124,7 +125,7 @@
                     this.buttonGroup.subButtons.push(buttons.cancelButton);
                 }
             }
-        }
+        };
 
         /**
          * Manages the default states for the buttons - updates when no active task, or when the content form is dirtied
@@ -134,9 +135,10 @@
             this.buttonGroup = {};
 
             if (workflowConfigured && defaultButtons.defaultButton !== null) {
-                const subButtons = saveAndPublish
-                    ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton]
-                    : [buttons.unpublishButton, buttons.saveButton];
+                const subButtons = saveAndPublish ?
+                    [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] :
+                    [buttons.unpublishButton, buttons.saveButton];
+
                 // if the content is dirty, show save. otherwise show request approval
                 this.buttonGroup = {
                     defaultButton: dirty ? buttons.saveButton : buttons.publishButton,
@@ -152,7 +154,7 @@
             if (this.active) {
                 checkUserAccess();
             }
-        }
+        };
 
         const getNodeTasks = () => {
             // only refresh if viewing a content node
@@ -161,28 +163,31 @@
                 const getPendingTasks = () => {
                     workflowResource.getNodePendingTasks(editorState.current.id)
                         .then(resp => {
-                            if (resp.items && resp.items.length) {
-                                this.active = true;
+                                if (resp.items && resp.items.length) {
+                                    this.active = true;
 
-                                // if the workflow status is rejected, the original author should be able to edit and resubmit
-                                const currentTask = resp.items[resp.items.length - 1];
-                                this.rejected = currentTask.cssStatus === 'rejected';
+                                    // if the workflow status is rejected, the original author should be able to edit and resubmit
+                                    const currentTask = resp.items[resp.items.length - 1];
+                                    this.rejected = currentTask.cssStatus === 'rejected';
 
-                                // if the task has been rejected and the current user requested the change, let them edit
-                                this.isChangeAuthor = currentTask.requestedById === user.id;
-                                this.userCanEdit = this.rejected && this.isChangeAuthor;
+                                    // if the task has been rejected and the current user requested the change, let them edit
+                                    this.isChangeAuthor = currentTask.requestedById === user.id;
+                                    this.userCanEdit = this.rejected && this.isChangeAuthor;
 
-                                checkUserAccess(currentTask);
-                            } else {
-                                this.active = false;
-                                setButtons();
-                            }
-                        }, () => { });
-                }
+                                    checkUserAccess(currentTask);
+                                } else {
+                                    this.active = false;
+                                    setButtons();
+                                }
+                            },
+                            () => {});
+                };
 
                 // check if the node is included in the workflow model
                 // groups has been fetched already
-                const nodePerms = workflowResource.checkNodePermissions(groups, editorState.current.id, editorState.current.contentTypeAlias);
+                const nodePerms = workflowResource.checkNodePermissions(groups,
+                    editorState.current.id,
+                    editorState.current.contentTypeAlias);
                 const ancestorPerms = workflowResource.checkAncestorPermissions(editorState.current.path, groups);
 
                 if (nodePerms.approvalPath.length ||
@@ -196,7 +201,7 @@
                     this.buttonGroup = defaultButtons;
                 }
             }
-        }
+        };
 
         // use this to ensure changes are saved when submitting for publish
         // event is broadcast from the buttons directive, which watches the content form
@@ -222,7 +227,7 @@
             // Build the correct path so both /#/ and #/ work.
             const redirect = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/preview/?id=' + content.id;
             previewWindow.location.href = redirect;
-        }
+        };
 
         // it all starts here
         const promises = [userService.getCurrentUser(), workflowResource.getSettings(), workflowGroupsResource.get()];

@@ -8,7 +8,7 @@
             this.approvalPath = $scope.model.type.approvalPath;
         }
 
-        const updateSortOrder = () => { }
+        const updateSortOrder = () => {};
 
         /**
          * 
@@ -21,7 +21,7 @@
             }
 
             $scope.model.type.approvalPath = this.approvalPath;
-        }
+        };
 
         /**
          * 
@@ -32,8 +32,7 @@
             $event.stopPropagation();
             this.approvalPath.splice(index, 1);
             $scope.model.type.approvalPath = this.approvalPath;
-        }
-
+        };
 
         this.sortOptions = {
             axis: 'y',
