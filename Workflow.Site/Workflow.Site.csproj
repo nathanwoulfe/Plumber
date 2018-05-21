@@ -181,6 +181,9 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Our.Umbraco.TourEditor, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Our.Umbraco.TourEditor.1.1.0\lib\net45\Our.Umbraco.TourEditor.dll</HintPath>
+    </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
@@ -301,6 +304,26 @@
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.controller.js" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.htm" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.resource.js" />
+    <Content Include="App_Plugins\TourEditor\backoffice\toureditor\create.html" />
+    <Content Include="App_Plugins\TourEditor\backoffice\toureditor\delete.html" />
+    <Content Include="App_Plugins\TourEditor\backoffice\toureditor\edit.html" />
+    <Content Include="App_Plugins\TourEditor\backoffice\toureditor\overlays\element-picker.html" />
+    <Content Include="App_Plugins\TourEditor\backoffice\toureditor\subviews\stepdetails.html" />
+    <Content Include="App_Plugins\TourEditor\backoffice\toureditor\subviews\tourdetails.html" />
+    <Content Include="App_Plugins\TourEditor\backoffice\toureditor\subviews\tourlist.html" />
+    <Content Include="App_Plugins\TourEditor\backoffice\tours\scripts\requiredinput-controller.js" />
+    <Content Include="App_Plugins\TourEditor\backoffice\tours\views\requiredinput.html" />
+    <Content Include="App_Plugins\TourEditor\scripts\controllers\create-file-controller.js" />
+    <Content Include="App_Plugins\TourEditor\scripts\controllers\delete-file-controller.js" />
+    <Content Include="App_Plugins\TourEditor\scripts\controllers\edit-file-controller.js" />
+    <Content Include="App_Plugins\TourEditor\scripts\controllers\element-picker-overlay-controller.js" />
+    <Content Include="App_Plugins\TourEditor\scripts\controllers\step-details-controller.js" />
+    <Content Include="App_Plugins\TourEditor\scripts\controllers\tour-details-controller.js" />
+    <Content Include="App_Plugins\TourEditor\scripts\controllers\tour-list-controller.js" />
+    <Content Include="App_Plugins\TourEditor\scripts\directives\valIsJson.js" />
+    <Content Include="App_Plugins\TourEditor\scripts\directives\valUniqueAlias.js" />
+    <Content Include="App_Plugins\TourEditor\scripts\resources\tour-resource.js" />
+    <Content Include="App_Plugins\TourEditor\toureditor.css" />
     <Content Include="config\grid.editors.config.js" />
     <Content Include="config\Lang\cs-CZ.user.xml" />
     <Content Include="config\Lang\da-DK.user.xml" />
@@ -357,6 +380,8 @@
     <Content Include="config\BaseRestExtensions.config" />
     <Content Include="config\BackOfficeTours\getting-started.json" />
     <Content Include="config\404handlers.config" />
+    <Content Include="App_Plugins\TourEditor\backoffice\tours\tour-editor.json" />
+    <Content Include="App_Plugins\TourEditor\package.manifest" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

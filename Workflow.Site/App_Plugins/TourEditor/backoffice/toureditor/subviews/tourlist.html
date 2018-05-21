@@ -1,0 +1,34 @@
+﻿<div ng-controller="Our.Umbraco.TourEditor.TourListController as vm">
+    <umb-box>
+        <umb-box-header title="File info"></umb-box-header>
+        <umb-box-content>
+            Filename : {{vm.filename}}.json
+        </umb-box-content>
+    </umb-box>
+    <umb-box>
+        <umb-box-header title="Tours"></umb-box-header>
+        <umb-box-content>
+            <div ui-sortable="vm.sortableOptions" ng-model="vm.tours">
+                <div ng-repeat="item in vm.tours">
+                    <umb-node-preview data-element="toureditor-tourlist" style="max-width: 100%; margin-bottom: 20px"
+                                      
+                                      name="item.name"
+                                      description="item.group"
+                                      sortable="true"
+                                      allow-edit="true"
+                                      allow-remove="true"
+                                      on-edit="vm.editTour($index)"
+                                      on-remove="vm.removeTour($index)">
+                    </umb-node-preview>
+                </div>
+            </div>
+            <a href="" data-element="toureditor-addtour"
+               style="max-width: 100%;"
+               class="umb-node-preview-add"
+               ng-click="vm.addTour()"
+               prevent-default>
+                <localize key="general_add">Add</localize>
+            </a>
+        </umb-box-content>
+    </umb-box>
+</div>

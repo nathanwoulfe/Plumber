@@ -1,0 +1,42 @@
+﻿<div ng-controller="Our.Umbraco.TourEditor.EditFileController as vm">
+    <umb-load-indicator ng-if="vm.page.loading"></umb-load-indicator>
+
+    <form name="tourFileForm"
+          ng-submit="vm.save()"
+          novalidate
+          val-form-manager
+          ng-if="!vm.page.loading">
+        
+        <umb-editor-view>
+            
+            <umb-editor-header 
+                               name="vm.data.fileName"
+                               name-locked="true"
+                               hide-icon="true"
+                               hide-description="true"
+                               hide-alias="true">
+            </umb-editor-header>
+            
+            <umb-editor-container class="form-horizontal">
+
+                <umb-editor-sub-views
+                    sub-views="vm.page.navigation"
+                    model="vm.model"
+                >
+                </umb-editor-sub-views>                              
+
+            </umb-editor-container>
+            
+            <umb-editor-footer>
+                <umb-editor-footer-content-right>
+                    <umb-button data-element="toureditor-discardtourchanges" action="vm.discardTourChanges()" label="Discard changes" type="button" ng-if="vm.page.navigation[1].active"></umb-button>
+                    <umb-button data-element="toureditor-updatetourchanges" action="vm.updateTourChanges()" label="Update tour" type="button" ng-if="vm.page.navigation[1].active" button-style="success"></umb-button>
+                    <umb-button data-element="toureditor-discardstepchanges" action="vm.discardStepChanges()" label="Discard changes" type="button" ng-if="vm.page.navigation[2].active"></umb-button>
+                    <umb-button data-element="toureditor-updatestepchanges" action="vm.updateStepChanges()" label="Update step" type="button" ng-if="vm.page.navigation[2].active" button-style="success"></umb-button>
+                    <umb-button data-element="toureditor-savetour" action="vm.saveTourFile()" label="Save" type="button" ng-if="vm.page.navigation[0].active"  button-style="success"></umb-button>
+                </umb-editor-footer-content-right>
+            </umb-editor-footer>
+
+        </umb-editor-view>
+    </form>
+</div>

@@ -1,0 +1,19 @@
+﻿<div class="tour-editor-create" ng-controller="Our.Umbraco.TourEditor.CreateFileController as vm">
+  
+    <div class="umb-pane">
+        <h5>Create tour file</h5>
+    </div>
+  
+    <div class="umb-pane">
+        <form name="createTourFile"
+              ng-submit="vm.createFile()"
+              val-form-manager>
+
+            <umb-control-group label="Enter the filename without extension" hide-label="false" class="filename-field">
+                <input type="text" data-element="toureditor-filename" name="filename" ng-model="vm.filename" class="umb-textstring textstring input-block-level" required />
+            </umb-control-group>
+
+            <button type="submit" data-element="toureditor-createfile" class="btn btn-primary"><localize key="general_create">Create</localize></button>
+        </form>
+    </div>  
+</div>

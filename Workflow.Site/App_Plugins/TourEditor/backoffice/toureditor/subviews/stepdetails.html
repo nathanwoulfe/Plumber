@@ -1,0 +1,68 @@
+﻿<div ng-controller="Our.Umbraco.TourEditor.StepDetailsController as vm">
+    <umb-box>
+        <umb-box-header title="Step settings"></umb-box-header>
+        <umb-box-content>
+            <form name="stepDetailsForm" val-form-manager ng-if="vm.step !== null">
+                <umb-property property="vm.properties.Title">
+                    <input type="text" data-element="toureditor-stepname"  ng-model="vm.step.title" class="umb-editor" required />
+                </umb-property>
+                <umb-property property="vm.properties.Content">                    
+                    <umb-editor model="vm.rte"  data-element="toureditor-stepcontent"/>
+                </umb-property>
+                <umb-property property="vm.properties.Type">
+                    <input data-element="toureditor-stepintro" type="checkbox" ng-model="vm.isIntro" />
+                </umb-property>
+                <umb-property property="vm.properties.BackDropOpacity">
+                    <umb-editor model="vm.slider" data-element="toureditor-stepbackdrop" />                   
+                </umb-property>
+                <umb-property property="vm.properties.Element" ng-if="vm.isIntro === false">
+                    <input data-element="toureditor-stepelement" type="text" ng-model="vm.step.element" class="umb-editor" ng-required="vm.step.type !== 'intro'" />
+                    <a href=""
+                       data-element="toureditor-stepelementpicker"
+                       class="umb-node-preview-add"
+                       ng-click="vm.openStepPicker(true)"
+                       prevent-default>
+                        Select existing
+                    </a>
+                </umb-property>
+                <umb-property property="vm.properties.PreventClick" ng-if="vm.isIntro === false">
+                    <input data-element="toureditor-steppreventclick" type="checkbox" ng-model="vm.step.elementPreventClick" />
+                </umb-property>
+                <umb-property property="vm.properties.Event" ng-if="vm.isIntro === false && vm.step.elementPreventClick === false">                                       
+                    <ul class="unstyled">
+                        <li ng-repeat="item in vm.eventList" data-element="toureditor-stepevent">
+                            <label class="radio">
+                                <input type="radio" name="radiobuttons-event"
+                                       value="{{item.value}}"
+                                       ng-model="vm.step.event" />
+                                {{item.label}}
+                            </label>
+                        </li>
+                    </ul>
+                </umb-property>
+                <umb-property property="vm.properties.EventElement" ng-if="vm.isIntro === false && vm.step.elementPreventClick === false && vm.step.event !== null && vm.step.event !== ''">
+                    <input data-element="toureditor-stepeventelement" type="text" ng-model="vm.step.eventElement" class="umb-editor" />
+                    <a href=""
+                       data-element="toureditor-stepeventelementpicker"
+                       class="umb-node-preview-add"
+                       ng-click="vm.openStepPicker(false)"
+                       prevent-default>
+                        Select existing
+                    </a>
+                </umb-property>               
+                <umb-property property="vm.properties.View" ng-if="vm.isIntro === false">
+                    <input data-element="toureditor-stepview" type="text" ng-model="vm.step.view" class="umb-editor" />                  
+                </umb-property>
+                <umb-property property="vm.properties.CustomProperties" ng-if="vm.isIntro === false && vm.step.view && vm.step.view !== ''">
+                    <textarea data-element="toureditor-stepcustomprop" ng-model="vm.step.customPropertiesText" val-is-json></textarea>
+                </umb-property>
+                <span ng-init="vm.form=stepDetailsForm"></span>
+            </form>
+        </umb-box-content>
+    </umb-box>
+    <umb-overlay ng-if="vm.elementPicker.show"
+                 model="vm.elementPicker"
+                 view="vm.elementPicker.view"
+                 position="right">
+    </umb-overlay>
+</div>

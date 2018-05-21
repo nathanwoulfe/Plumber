@@ -1,0 +1,96 @@
+﻿<div ng-controller="Our.Umbraco.TourEditor.TourDetailsController as vm">
+    <umb-box>
+        <umb-box-header title="Tour settings"></umb-box-header>
+        <umb-box-content>
+
+
+            <form name="detailsForm" val-form-manager ng-if="vm.tour !== null">
+
+                <umb-property property="vm.properties.Name">
+                    <input type="text" data-element="toureditor-tourname" ng-model="vm.tour.name" class="umb-editor" required />
+                </umb-property>
+
+                <umb-property property="vm.properties.Alias">
+                    <umb-generate-alias data-element="toureditor-touralias" alias="vm.tour.alias"
+                                        alias-from="vm.tour.name"
+                                        enable-lock="true" ng-if="vm.isNew"></umb-generate-alias>
+                    <input type="hidden" ng-model="vm.tour.alias" val-unique-alias="{{vm.aliases}}" ng-if="vm.isNew" />
+                    <span ng-if="!vm.isNew">{{vm.tour.alias}}</span>
+                </umb-property>
+
+                <umb-property property="vm.properties.Group">
+                    <input type="text" data-element="toureditor-group" ng-model="vm.tour.group" class="umb-editor" required />
+                    <a href=""
+                       data-element="toureditor-groupselect"
+                       class="umb-node-preview-add"
+                       ng-click="vm.openGroupPicker()"
+                       prevent-default>
+                        Select existing
+                    </a>
+                </umb-property>
+
+                <umb-property property="vm.properties.GroupOrder">
+                    <input type="number" data-element="toureditor-grouporder" ng-model="vm.tour.groupOrder" class="umb-editor" required />
+                </umb-property>
+
+                <umb-property property="vm.properties.Sections">
+                    <umb-node-preview data-element="toureditor-sections" style="max-width: 100%;"
+                                      ng-repeat="section in vm.selectedSections"
+                                      icon="section.icon"
+                                      name="section.name"
+                                      allow-remove="true"
+                                      on-remove="vm.removeSection($index, vm.selectedSections)">
+                    </umb-node-preview>                                     
+                    <input type="hidden" ng-model="vm.sectionsString" required/>
+                    <a href=""
+                       data-element="toureditor-sectionspicker"
+                       style="max-width: 100%;"
+                       class="umb-node-preview-add"
+                       ng-click="vm.openSectionPicker()"
+                       prevent-default>
+                        <localize key="general_add">Add</localize>
+                    </a>
+                </umb-property>
+                <umb-property property="vm.properties.AllowDisable">
+                    <input type="checkbox" data-element="toureditor-tourdisable" ng-model="vm.tour.allowDisable" />
+                </umb-property>
+                <span ng-init="vm.form=detailsForm"></span>
+            </form>
+        </umb-box-content>
+    </umb-box>
+    <umb-box>
+        <umb-box-header title="Tour steps"></umb-box-header>
+        <umb-box-content>
+            <div ui-sortable="vm.sortableOptions" ng-model="vm.tour.steps">
+                <umb-node-preview data-element="toureditor-steplist" style="max-width: 100%; margin-bottom: 20px"
+                                  ng-repeat="item in vm.tour.steps"
+                                  name="item.title"
+                                  sortable="true"
+                                  allow-edit="true"
+                                  allow-remove="true"
+                                  on-edit="vm.editStep($index)"
+                                  on-remove="vm.removeStep($index)"></umb-node-preview>
+
+            </div>
+            <a href=""
+               style="max-width: 100%;"
+               data-element="toureditor-addstep"
+               class="umb-node-preview-add"
+               ng-click="vm.addStep()"
+               prevent-default>
+                <localize key="general_add">Add</localize>
+            </a>
+
+        </umb-box-content>
+    </umb-box>
+    <umb-overlay ng-if="vm.sectionPicker.show"
+                 model="vm.sectionPicker"
+                 view="vm.sectionPicker.view"
+                 position="right">
+    </umb-overlay>
+    <umb-overlay ng-if="vm.groupPicker.show"
+                 model="vm.groupPicker"
+                 view="vm.groupPicker.view"
+                 position="right">
+    </umb-overlay>
+</div>

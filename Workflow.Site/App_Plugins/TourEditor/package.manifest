@@ -1,0 +1,18 @@
+﻿{
+  "javascript": [
+    "~/App_Plugins/TourEditor/scripts/controllers/create-file-controller.js",
+    "~/App_Plugins/TourEditor/scripts/controllers/delete-file-controller.js",
+    "~/App_Plugins/TourEditor/scripts/controllers/edit-file-controller.js",
+    "~/App_Plugins/TourEditor/scripts/controllers/tour-list-controller.js",
+    "~/App_Plugins/TourEditor/scripts/controllers/tour-details-controller.js",
+    "~/App_Plugins/TourEditor/scripts/controllers/step-details-controller.js",
+    "~/App_Plugins/TourEditor/scripts/controllers/element-picker-overlay-controller.js",
+    "~/App_Plugins/TourEditor/scripts/directives/valIsJson.js",
+    "~/App_Plugins/TourEditor/scripts/directives/valUniqueAlias.js",
+    "~/App_Plugins/TourEditor/scripts/resources/tour-resource.js",
+    "~/App_Plugins/TourEditor/backoffice/tours/scripts/requiredinput-controller.js"
+  ],
+  "css": [
+    "~/App_Plugins/TourEditor/toureditor.css"
+  ] 
+}

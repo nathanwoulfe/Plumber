@@ -1,0 +1,24 @@
+﻿<div ng-controller="Our.Umbraco.TourEditor.ElementPickerOverlayController as vm">
+    <umb-load-indicator ng-if="vm.isLoading"></umb-load-indicator>
+    <div ng-if="vm.isLoading === false">
+        <umb-tabs-nav model="vm.tabs"></umb-tabs-nav>
+        <umb-tabs-content>
+            <umb-tab id="tab{{tab.id}}" ng-repeat="tab in vm.tabs" rel="{{tab.id}}">
+                
+                   
+                    <ul class="umb-card-grid">
+                        <li ng-repeat="item in tab.items"
+                            data-element="toureditor-element-{{item.alias}}" 
+                            ng-click="vm.pickElement(item.element)"                                                     
+                            class="-four-in-row">
+                            <a class="umb-card-grid-item" href="" title="{{item.name}}">
+                                <i class="{{item.icon}}"></i>
+                                {{item.name}}
+                            </a>
+                        </li>
+                    </ul>
+                
+            </umb-tab>
+        </umb-tabs-content>
+    </div>
+</div>
