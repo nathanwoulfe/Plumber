@@ -50,6 +50,7 @@ namespace Workflow.Startup
                 e.Menu.Items.AddRange(items);
             } else
             {
+                e.Menu.Items[5].SeperatorBefore = true;
                 e.Menu.Items.InsertRange(5, items);
             }
         }
