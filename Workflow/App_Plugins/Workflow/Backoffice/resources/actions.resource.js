@@ -8,7 +8,7 @@
         // UI feedback for button directive
         const buttonState = (state, id) => {
             $rootScope.$emit('buttonStateChanged', { state: state, id: id });
-        }
+        };
 
         // display notification after actioning workflow task
         const notify = (d, fromDash, id) => {
@@ -21,12 +21,11 @@
                 }
                 $rootScope.$emit('workflowActioned');
                 buttonState('success', id);
-            }
-            else {
+            } else {
                 notificationsService.error('OH SNAP', d.message);
                 buttonState('error', id);
             }
-        }
+        };
 
         const service = {
 

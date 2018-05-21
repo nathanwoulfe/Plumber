@@ -3,6 +3,7 @@
 
     // create service
     function workflowResource($http, $q, umbRequestHelper) {
+
         const urlBase = '/umbraco/backoffice/api/workflow/';
 
         // are there common elements between two arrays?
@@ -155,6 +156,6 @@
     }
 
     // register service
-    angular.module('umbraco.services').factory('plmbrWorkflowResource', workflowResource);
+    angular.module('umbraco.services').factory('plmbrWorkflowResource', ['$http', '$q', 'umbRequestHelper', workflowResource]);
 
 })();
