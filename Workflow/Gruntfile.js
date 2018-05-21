@@ -182,6 +182,13 @@
                 dest: '<%= dest %>/<%= basePath %>/backoffice/lib/'
             },
 
+            tours: {
+                expand: true,
+                cwd: '<%= basePath %>/backoffice/tours/',
+                src: '**',
+                dest: '<%= dest %>/<%= basePath %>/backoffice/tours/'
+            },
+
             nuget: {
                 expand: true,
                 cwd: '<%= dest %>',
@@ -299,7 +306,7 @@
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'browserify', 'sass', 'cssmin', 'copy:config', 'copy:html', 'copy:lib', 'copy:lang']);
+    grunt.registerTask('default', ['jshint', 'concat', 'browserify', 'sass', 'cssmin', 'copy:config', 'copy:tours', 'copy:html', 'copy:lib', 'copy:lang']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 

@@ -1,0 +1,426 @@
+[
+  {
+    "name": "Approval groups",
+    "alias": "plmbrGroups",
+    "group": "Working with workflow",
+    "groupOrder": 100,
+    "allowDisable": true,
+    "requiredSections": [
+      "workflow"
+    ],
+    "steps": [
+      {
+        "title": "Introduction",
+        "content": "<p>Workflow uses groups to manage approvals - not to be confused with Umbraco's user groups, these are similar, but serve a different purpose.</p>\n<p>Workflow approval flows represent a series of groups. At each stage, a user from the assigned group can action the pending changes.</p>\n<p>Using groups means we can modify workflows without having to update configuration on multiple nodes - simply change the group membership from the Approval groups section.</p>\n<p> </p>",
+        "type": "intro",
+        "element": null,
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": "",
+        "customProperties": null
+      },
+      {
+        "title": "Go to Approval groups",
+        "content": "<p>Select the Approval groups node in the Workflow tree.</p>",
+        "type": null,
+        "element": "[data-element=\"tree-item-Approval groups\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "[data-element=\"tree-item-Approval groups\"]",
+        "customProperties": null
+      },
+      {
+        "title": "The default view",
+        "content": "<p>The default view in the Approval groups section is a dashboard displaying all current approval groups. If this is a new install, the dashboard will be empty (we'll create a group soon).</p>\n<p>The view displays:</p>\n<ul>\n<li>the group name</li>\n<li>the group members</li>\n<li>any current workflow roles</li>\n<li>a link to download an email contact list for all members</li>\n</ul>\n<p> </p>",
+        "type": null,
+        "element": "[data-element=\"editor-container\"]",
+        "elementPreventClick": true,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": null,
+        "customProperties": null
+      },
+      {
+        "title": "Create a group",
+        "content": "<p>Creating a new group follows a familiar Umbraco pattern.</p>\n<p><span>Hover the Approval groups tree and click the </span>three small dots<span> to open the </span>context menu<span>.</span></p>",
+        "type": null,
+        "element": "[data-element=\"tree-item-Approval groups\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "[data-element=\"tree-item-Approval groups\"] [data-element=\"tree-item-options\"]",
+        "customProperties": null
+      },
+      {
+        "title": "Select Add group",
+        "content": "<p>Click the first option, Add group.</p>",
+        "type": null,
+        "element": "[data-element=\"action-add\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "[data-element=\"action-add\"]",
+        "customProperties": null
+      },
+      {
+        "title": "I dub thee...",
+        "content": "<p>Name your new group - ideally something that reflects the group's role in the workflow.</p>",
+        "type": null,
+        "element": "[data-element=\"workflow-overlay__groups-name\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": "",
+        "eventElement": null,
+        "customProperties": {
+          "input": "Tour demo group"
+        }
+      },
+      {
+        "title": "Click Ok",
+        "content": "<p>Click the Ok button to make it official.</p>",
+        "type": null,
+        "element": "#dialog .btn-primary",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "#dialog .btn-primary",
+        "customProperties": null
+      },
+      {
+        "title": "Configure the new group",
+        "content": "<p>If that all went to plan, we now have a shiny new (empty) approval group named <strong>Tour demo group</strong>. </p>\n<p>Let's have a quick look at the configuration options for our new group.</p>",
+        "type": null,
+        "element": "[data-element=\"editor-container\"]",
+        "elementPreventClick": true,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": null,
+        "customProperties": null
+      },
+      {
+        "title": "Email and description",
+        "content": "<p>Workflow groups can be assigned a group email to avoid contacting all members individually. This allows all notification emails to be sent to a single inbox - for example, a central inbox for the HR department.</p>\n<p>Groups can also have a description. This value isn't used anywhere else, but exists here as a digital Post-it note to store a quick note related to the group.</p>\n<p>Both these fields are optional.</p>\n<p> </p>",
+        "type": null,
+        "element": "[data-element=\"workflow-groups__configuration\"]",
+        "elementPreventClick": true,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": null,
+        "customProperties": null
+      },
+      {
+        "title": "Workflow roles",
+        "content": "<p>This box displays the currently assigned roles for the group - since this is a new group, it has nothing assigned.</p>\n<p> </p>",
+        "type": null,
+        "element": "[data-element=\"workflow-groups__permissions\"]",
+        "elementPreventClick": true,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": null,
+        "customProperties": null
+      },
+      {
+        "title": "Group members",
+        "content": "<p>Look familiar? If you've ever added users to an Umbraco user group, you'll have no problems adding users to a Plumber workflow group.</p>\n<p>Adding and removing users here will determine who can action workflow tasks on behalf of this group.</p>\n<p>It's empty now because this is a new group - we won't worry about adding any users, but it's as simple as clicking the Add button then selecting from the list.</p>",
+        "type": null,
+        "element": "[data-element=\"workflow-groups__users\"]",
+        "elementPreventClick": true,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": null,
+        "customProperties": null
+      }
+    ]
+  },
+  {
+    "name": "Global settings",
+    "alias": "plmbrSettings",
+    "group": "Working with workflow",
+    "groupOrder": 100,
+    "allowDisable": true,
+    "requiredSections": [
+      "content",
+      "workflow"
+    ],
+    "steps": [
+      {
+        "title": "Introduction",
+        "content": "<p>This tour provides an overview of the workflow settings and how to configure Plumber to manage content approvals for your site.</p>\n<p>For more detail about how settings affect the way Plumber works and other features not covered in the tour, refer to the documentation dashboard.</p>",
+        "type": "intro",
+        "element": null,
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": "",
+        "customProperties": null
+      },
+      {
+        "title": "Go to workflow",
+        "content": "<p>Click on the workflow icon to go to the workflow section.</p>",
+        "type": null,
+        "element": "[data-element=\"section-workflow\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "[data-element=\"section-workflow\"]",
+        "customProperties": null
+      },
+      {
+        "title": "Select settings in the tree",
+        "content": "<p>Click on the settings node in the Workflow section tree</p>",
+        "type": null,
+        "element": "[data-element=\"tree-item-Settings\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "[data-element=\"tree-item-Settings\"]",
+        "customProperties": null
+      },
+      {
+        "title": "Flow type",
+        "content": "<p>The two values available in the Flow type setting determine how the change author is included in subsequent approval steps.</p>\n<p>Explicit approval flow will require all groups in the workflow approve the change, even if the original author is a member.</p>\n<p>Implicit approval flow will automatically approve steps where the original author is a member of the approval group.</p>\n<p> </p>",
+        "type": null,
+        "element": "[data-element=\"workflow-settings__flowtype\"]",
+        "elementPreventClick": true,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": null,
+        "customProperties": null
+      },
+      {
+        "title": "Exclude nodes",
+        "content": "<p>Plumber tries to be flexible - adding workflow to your site doesn't mean workflow for all pages. </p>\n<p>Select nodes here to exclude them from the workflow model and revert back to the default Umbraco permissions, for the selected node and all descendants.</p>",
+        "type": null,
+        "element": "[data-element=\"workflow-settings__exclusions\"]",
+        "elementPreventClick": true,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": null,
+        "customProperties": null
+      },
+      {
+        "title": "Email notifications",
+        "content": "<p>Workflow is pointless is users aren't aware they have pending tasks - Plumber includes an email notification system to ensure users ar kept up to date.</p>\n<p> </p>",
+        "type": null,
+        "element": "[data-element=\"workflow-settings__email\"]",
+        "elementPreventClick": true,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": null,
+        "customProperties": null
+      },
+      {
+        "title": "Content type approval flows",
+        "content": "<p>Workflows can be configured for all content of a given type - to do so, first click the Add button to open the configuration overlay.</p>",
+        "type": null,
+        "element": "[data-element=\"workflow-settings__contenttype\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "[data-element=\"workflow-settings__contenttype-add\"]",
+        "customProperties": null
+      },
+      {
+        "title": "Select a content type",
+        "content": "<p>Next, select a content type from the list.</p>",
+        "type": null,
+        "element": "[data-element=\"workflow-overlay__contenttype-types\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "change",
+        "view": null,
+        "eventElement": "[data-element=\"workflow-overlay__contenttype-types\"]",
+        "customProperties": null
+      },
+      {
+        "title": "Select an approval group",
+        "content": "<p>Select an approval group from the list then click the Add button to build the content type approval flow.</p>\n<p>Repeat this step to add multiple groups to the workflow.</p>\n<p>For now though, one group will do.</p>",
+        "type": null,
+        "element": "[data-element=\"workflow-overlay__contenttype-groups\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "change",
+        "view": null,
+        "eventElement": "[data-element=\"workflow-overlay__contenttype-groups\"]",
+        "customProperties": null
+      },
+      {
+        "title": "Add the group to the flow",
+        "content": "<p>Click the add button to confirm the group selection.</p>",
+        "type": null,
+        "element": "[data-element=\"workflow-overlay__contenttype-add\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "[data-element=\"workflow-overlay__contenttype-add\"]",
+        "customProperties": null
+      },
+      {
+        "title": "Confirm the approval flow",
+        "content": "<p>After adding the appropriate groups to the content type approval flow, click the submit button to close the overlay.</p>\n<p>Changes will need to be saved in the main settings view.</p>",
+        "type": null,
+        "element": "[data-element=\"button-overlaySubmit\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "[data-element=\"button-overlaySubmit\"]",
+        "customProperties": null
+      }
+    ]
+  },
+  {
+    "name": "Configuration",
+    "alias": "plmbrConfig",
+    "group": "Working with workflow",
+    "groupOrder": 100,
+    "allowDisable": false,
+    "requiredSections": [
+      "workflow",
+      "content"
+    ],
+    "steps": [
+      {
+        "title": "Introduction",
+        "content": "<p>While it's possible to configure Plumber using only content type approval flows, most likely you'll want to set workflows for particular branches of the content tree.</p>\n<p>This tour explores how to configure workflows for content, and shows how permissions can cascade through the tree, making for quick and easy setup.</p>",
+        "type": "intro",
+        "element": null,
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": null,
+        "customProperties": null
+      },
+      {
+        "title": "Go to Content",
+        "content": "<p>Click on the Content icon to go to the content section.</p>",
+        "type": null,
+        "element": "[data-element=\"section-content\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "[data-element=\"section-content\"]",
+        "customProperties": null
+      },
+      {
+        "title": "Select the node to update",
+        "content": "<p>Select a content node in the tree. Depending on how your site is configured, you may or may not want workflow on the root node.</p>\n<p>For now though, let's just pick the site root - hover the node in the tree and click the three dots to open the context menu.</p>",
+        "type": null,
+        "element": "[data-element=\"tree-root\"] + ul li:first-child",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "[data-element=\"tree-root\"] + ul li:first-child [data-element=\"tree-item-options\"]",
+        "customProperties": null
+      },
+      {
+        "title": "Do something else",
+        "content": "<p>We don't want to create content, we want to configure workflows - click the Do something else button at the bottom of the overlay.</p>",
+        "type": null,
+        "element": ".umb-dialog-footer .btn-info",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": ".umb-dialog-footer .btn-info",
+        "customProperties": null
+      },
+      {
+        "title": "Configure it, just a little bit *",
+        "content": "<p>Click the Workflow configuration option in the context menu.</p>\n<p>* Unfamiliar with this reference? Refer below.</p>\n<p><iframe width=\"280\" height=\"158\" src=\"https://www.youtube.com/embed/ikYGBBULC40\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>",
+        "type": null,
+        "element": "[data-element=\"action-workflowConfig\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "[data-element=\"action-workflowConfig\"]",
+        "customProperties": null
+      },
+      {
+        "title": "Make the magic happen",
+        "content": "<p>The Workflow configuration dialog is where we configure the workflow stages for the current content node. Any settings applied to the current node will be inherited by descendants.</p>\n<p>First, the content approval flow. This is the workflow set directly on the node. Try selecting a group from the dropdown, then click the Add button</p>\n<p> </p>",
+        "type": null,
+        "element": "[data-element=\"workflow-overlay__config-contentFlow\"]",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": "[data-element=\"workflow-overlay__config-contentFlow\"] .btn",
+        "customProperties": null
+      },
+      {
+        "title": "We have workflow!",
+        "content": "<p>Just like that, there's now an approval flow for this node and its descendants.</p>\n<p>Here we can see the assigned groups, the workflow stage they are responsible for, and options to edit, sort or remove the group.</p>",
+        "type": null,
+        "element": "[data-element=\"workflow-overlay__config-contentFlow\"] > div",
+        "elementPreventClick": true,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": null,
+        "customProperties": null
+      },
+      {
+        "title": "Content type flows",
+        "content": "<p>If the current node inherits a workflow from its content type (the <strong>Working with workflow - Global settings</strong> tour explains this concept), it is displayed here.</p>\n<p>It's not possible to edit the flow from this view, any edits must be made from the settings dashboard in the Workflow section.</p>\n<p>If the current node has an explicitly set approval flow (as we did in the previous step), any inherited workflow is ignored.</p>",
+        "type": null,
+        "element": "[data-element=\"workflow-overlay__config-typeFlow\"]",
+        "elementPreventClick": true,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": null,
+        "customProperties": null
+      },
+      {
+        "title": "Inherited flows",
+        "content": "<p>At the bottom of the inheritance chain (and bottom of the overlay), we find inherited workflows.</p>\n<p>These guys only apply if the node has no explicit flow set, and is not covered by a content-type approval flow. Given that, inherited flows are not editable.</p>",
+        "type": null,
+        "element": "[data-element=\"workflow-overlay__config-inheritedFlow\"]",
+        "elementPreventClick": true,
+        "backdropOpacity": 0.4,
+        "event": null,
+        "view": null,
+        "eventElement": null,
+        "customProperties": null
+      },
+      {
+        "title": "That's all she wrote",
+        "content": "<p>And that's it for configuring workflows, simple right?</p>\n<p>Users won't notice much difference when updating content, other than different buttons in the editor footer, and the prompt for a comment before submitting an approval request.</p>\n<p> </p>",
+        "type": null,
+        "element": ".umb-dialog-footer .btn",
+        "elementPreventClick": false,
+        "backdropOpacity": 0.4,
+        "event": "click",
+        "view": null,
+        "eventElement": ".umb-dialog-footer .btn",
+        "customProperties": null
+      }
+    ]
+  }
+]
