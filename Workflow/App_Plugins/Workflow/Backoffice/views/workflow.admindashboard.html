@@ -14,14 +14,30 @@
                 <div class="upgrade upgrade-current alert alert-info" ng-if="!vm.version.outOfDate">
                     <p>You're up to date, running Plumber {{ vm.version.currentVersion }}</p>
                 </div>
-
+                <hr/>
+                <ul class="chart-header vert-centered">
+                    <li>Take a tour:</li>
+                    <li><umb-button action="vm.launchTour('plmbrGroups')"
+                                    type="button"
+                                    button-style="info"
+                                    label="Approval groups"></umb-button></li>
+                    <li><umb-button action="vm.launchTour('plmbrSettings')"
+                                    type="button"
+                                    button-style="info"
+                                    label="Global settings"></umb-button></li>
+                    <li><umb-button action="vm.launchTour('plmbrConfig')"
+                                    type="button"
+                                    button-style="info"
+                                    label="Configuring workflows"></umb-button></li>
+               </ul>
+                <hr/>
                 <ul class="chart-header">
-                    <li><span ng-bind="vm.totalApproved" class="wf-highcharts-color-approved"></span>approved</li>
-                    <li ng-show="vm.type === 'Task'"><span ng-bind="vm.totalNotRequired" class="wf-highcharts-color-notreq"></span>not required</li>
-                    <li ng-show="vm.type === 'Task'"><span ng-bind="vm.totalResubmitted" class="wf-highcharts-color-resubmitted"></span>resubmitted</li>
-                    <li ng-show="vm.type === 'Task'"><span ng-bind="vm.totalRejected" class="wf-highcharts-color-rejected"></span>rejected</li>
-                    <li><span ng-bind="vm.totalCancelled" class="wf-highcharts-color-cancelled"></span>cancelled</li>
-                    <li><span ng-bind="vm.totalPending" class="wf-highcharts-color-pending"></span>pending</li>
+                    <li><span ng-bind="vm.totalApproved" class="wf-highcharts-color-approved jumbo"></span><span>approved</span></li>
+                    <li ng-show="vm.type === 'Task'"><span ng-bind="vm.totalNotRequired" class="wf-highcharts-color-notreq jumbo"></span><span>not required</span></li>
+                    <li ng-show="vm.type === 'Task'"><span ng-bind="vm.totalResubmitted" class="wf-highcharts-color-resubmitted jumbo"></span><span>resubmitted</span></li>
+                    <li ng-show="vm.type === 'Task'"><span ng-bind="vm.totalRejected" class="wf-highcharts-color-rejected jumbo"></span><span>rejected</span></li>
+                    <li><span ng-bind="vm.totalCancelled" class="wf-highcharts-color-cancelled jumbo"></span><span>cancelled</span></li>
+                    <li><span ng-bind="vm.totalPending" class="wf-highcharts-color-pending jumbo"></span><span>pending</span></li>
                 </ul>
 
                 <div class="chart-controls">

@@ -10,73 +10,51 @@
 
             <div class="umb-package-details">
                 <div class="umb-package-details__main-content">
-                    <div class="umb-box">
-                        <div class="umb-box-header">
-                            <div class="umb-box-header-title">
-                                <localize key="workflow_generalSettings">General settings</localize>
-                            </div>
-                        </div>
-                        <div class="block-form umb-box-content">
-                            <!--<umb-control-group label="@workflow_defaultApprovalGroup" description="@workflow_defaultApprovalGroupDescription">
-                                <select ng-model="vm.defaultApprover" ng-options="g.name for g in vm.groups" name="Default approval group">
-                                    <option></option>
-                                </select>
-                            </umb-control-group>-->
-
+                    <umb-box data-element="workflow-settings__flowtype">
+                        <umb-box-header title-key="workflow_generalSettings"></umb-box-header>
+                        <umb-box-content class="block-form">
                             <umb-control-group label="@workflow_flowType" description="@workflow_flowTypeDescription">
                                 <select ng-model="vm.flowType" ng-options="f as f.v for f in vm.flowTypes" name="Flow type">
                                     <option></option>
                                 </select>
                             </umb-control-group>
-                        </div>
-                    </div>
-                    <div class="umb-box">
-                        <div class="umb-box-header">
-                            <div class="umb-box-header-title">
-                                <localize key="workflow_emailSettings">Email</localize>
-                            </div>
-                        </div>
-                        <div class="block-form umb-box-content">
+                        </umb-box-content>
+                    </umb-box>
+                    <umb-box data-element="workflow-settings__email">
+                        <umb-box-header title-key="workflow_emailSettings"></umb-box-header>
+                        <umb-box-content class="block-form">
                             <umb-control-group label="@workflow_sendNotifications" description="@workflow_sendNotificationsDescription">
-                                <input type="checkbox" ng-model="vm.settings.sendNotifications" />
+                                <input type="checkbox" ng-model="vm.settings.sendNotifications"/>
                             </umb-control-group>
 
                             <umb-control-group label="@workflow_workflowEmail" description="@workflow_workflowEmailDescription">
-                                <input type="email" ng-model="vm.settings.email" />
+                                <input type="email" ng-model="vm.settings.email"/>
                             </umb-control-group>
 
                             <umb-control-group label="@workflow_baseSiteUrl" description="@workflow_baseSiteUrlDescription">
-                                <input type="text" ng-model="vm.settings.siteUrl" />
+                                <input type="text" ng-model="vm.settings.siteUrl"/>
                             </umb-control-group>
 
                             <umb-control-group label="@workflow_editSiteUrl" description="@workflow_editSiteUrlDescription">
-                                <input type="text" ng-model="vm.settings.editUrl" />
+                                <input type="text" ng-model="vm.settings.editUrl"/>
                             </umb-control-group>
-                        </div>
-                    </div>
+                        </umb-box-content>
+                    </umb-box>
                 </div>
                 <div class="umb-package-details__sidebar">
-                    <div class="umb-box">
-                        <div class="umb-box-header">
-                            <div class="umb-box-header-title">
-                                <localize key="workflow_excludeNodes">Exclusions</localize>
-                            </div>
-                        </div>
-                        <div class="block-form umb-box-content">
+                    <umb-box data-element="workflow-settings__exclusions">
+                        <umb-box-header title-key="workflow_excludeNodes"></umb-box-header>
+                        <umb-box-content class="block-form">
                             <umb-control-group description="@workflow_excludeNodesDescription">
                                 <umb-property-editor model="vm.excludeNodesModel" id="exclude-nodes-picker"></umb-property-editor>
                             </umb-control-group>
-                        </div>
-                    </div>
+                        </umb-box-content>
+                    </umb-box>
 
-                    <div class="umb-box">
-                        <div class="umb-box-header">
-                            <div class="umb-box-header-title">
-                                <localize key="workflow_contentTypeSettings">Content type approval flows</localize>
-                            </div>
-                        </div>
-                        <div class="block-form umb-box-content">
-                            <umb-control-group description="@workflow_documentFlowsDescription"> 
+                    <umb-box data-element="workflow-settings__contenttype">
+                        <umb-box-header title-key="workflow_contentTypeSettings"></umb-box-header>
+                        <umb-box-content class="block-form">
+                            <umb-control-group description="@workflow_documentFlowsDescription">
                                 <div class="umb-node-preview ui-sortable-handle" ng-repeat="node in vm.docTypes | filter:vm.hasApprovalPath | orderBy:name">
                                     <i class="umb-node-preview__icon {{ node.icon[0] === '.' ? 'icon-folder' : node.icon }}"></i>
                                     <div class="umb-node-preview__content">
@@ -88,12 +66,12 @@
                                         <a class="umb-node-preview__action umb-node-preview__action--red" title="Remove all approval steps" href="" ng-click="vm.removeDocTypeFlow(node)"><localize key="general_remove">Remove</localize></a>
                                     </div>
                                 </div>
-                                <a href="" class="umb-node-preview-add" ng-click="vm.editDocTypeFlow()" prevent-default="">
+                                <a href="" class="umb-node-preview-add" ng-click="vm.editDocTypeFlow()" prevent-default="" data-element="workflow-settings__contenttype-add">
                                     <localize key="general_add">Add</localize>
                                 </a>
                             </umb-control-group>
-                        </div>
-                    </div>
+                        </umb-box-content>
+                    </umb-box>
                 </div>
             </div>
 

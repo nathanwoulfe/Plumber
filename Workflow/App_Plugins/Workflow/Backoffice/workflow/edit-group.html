@@ -18,27 +18,23 @@
                             <div class="umb-package-details">
 
                                 <div class="umb-package-details__main-content">
-                                    <div class="umb-box">
-                                        <div class="umb-box-header">
-                                            <div class="umb-box-header-title"><localize key="workflow_config">Configuration</localize></div>
-                                        </div>
-                                        <div class="umb-box-content block-form">
+                                    <umb-box data-element="workflow-groups__configuration">
+                                        <umb-box-header title-key="workflow_config"></umb-box-header>
+                                        <umb-box-content class="block-form">
 
                                             <umb-control-group label="@general_email" description="@workflow_workflowGroupEmail">
-                                                <input type="email" ng-model="vm.group.groupEmail" name="groupEmail" />                       
+                                                <input type="email" ng-model="vm.group.groupEmail" name="groupEmail"/>
                                             </umb-control-group>
 
                                             <umb-control-group label="@workflow_groupDescription" description="@workflow_groupDescriptionDetail">
                                                 <textarea name="groupDescription" ng-model="vm.group.description" class="group-description"></textarea>
-                                            </umb-control-group>                                                                                  
+                                            </umb-control-group>
 
-                                        </div>
-                                    </div>     
-                                    <div class="umb-box permissions">
-                                        <div class="umb-box-header">
-                                            <div class="umb-box-header-title"><localize key="workflow_currentWorkflowRoles">Current workflow roles</localize></div>
-                                        </div>
-                                        <div class="umb-box-content block-form">
+                                        </umb-box-content>
+                                    </umb-box>     
+                                    <umb-box class="permissions" data-element="workflow-groups__permissions">
+                                        <umb-box-header title-key="workflow_currentWorkflowRoles"></umb-box-header>
+                                        <umb-box-content class="block-form">
                                             <umb-control-group label="@workflow_nodeApprovalFlows" description="@workflow_nodeApprovalFlowsDescription">
                                                 <umb-node-preview ng-repeat="node in vm.nodePermissions | filter: { name : '!!' }"
                                                                   style="max-width: 100%;"
@@ -57,12 +53,12 @@
                                                                   name="node.name">
                                                 </umb-node-preview>
                                             </umb-control-group>
-                                        </div>
-                                    </div>                                                                                         
+                                        </umb-box-content>
+                                    </umb-box>                                                                                         
                                 </div>                                
 
                                 <div class="umb-package-details__sidebar">
-                                    <div class="umb-package-details__section">
+                                    <div class="umb-package-details__section" data-element="workflow-groups__users">
 
                                         <div class="umb-package-details__section-title"><localize key="workflow_membership">Group members</localize></div>
 
