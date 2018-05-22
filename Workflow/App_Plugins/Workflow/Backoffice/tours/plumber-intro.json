@@ -351,7 +351,7 @@
       },
       {
         "title": "Configure it, just a little bit *",
-        "content": "<p>Click the Workflow configuration option in the context menu.</p>\n<p>* Unfamiliar with this reference? Refer below.</p>\n<p><iframe width=\"280\" height=\"158\" src=\"https://www.youtube.com/embed/ikYGBBULC40\" frameborder=\"0\" allowfullscreen=\"\"></iframe></p>",
+        "content": "<p>Click the Workflow configuration option in the context menu.</p>",
         "type": null,
         "element": "[data-element=\"action-workflowConfig\"]",
         "elementPreventClick": false,
