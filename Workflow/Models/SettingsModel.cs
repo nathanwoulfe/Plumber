@@ -10,6 +10,7 @@ namespace Workflow.Models
         public string SiteUrl { get; set; }
         public int FlowType { get; set; }
         public bool SendNotifications { get; set; }
+        public bool LockIfActive { get; set; }
     }
 
     /// <summary>

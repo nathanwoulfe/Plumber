@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Semver;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
+using Umbraco.Core.Models;
 using Umbraco.Core.Persistence.Migrations;
 using Umbraco.Web;
 using Workflow.Helpers;
@@ -20,15 +22,15 @@ namespace Workflow.Events.Handlers
         {
             var currentVersion = new SemVersion(0);
 
-            var migrations = ApplicationContext.Current.Services.MigrationEntryService.GetAll(MagicStrings.Name);
-            var latest = migrations.OrderByDescending(x => x.Version).FirstOrDefault();
+            IEnumerable<IMigrationEntry> migrations = ApplicationContext.Current.Services.MigrationEntryService.GetAll(MagicStrings.Name);
+            IMigrationEntry latest = migrations.OrderByDescending(x => x.Version).FirstOrDefault();
 
             if (null != latest)
             {
                 currentVersion = latest.Version;
             }
 
-            var targetVersion = new SemVersion(0, 7);
+            var targetVersion = new SemVersion(0, 8);
             if (targetVersion == currentVersion)
             {
                 return;

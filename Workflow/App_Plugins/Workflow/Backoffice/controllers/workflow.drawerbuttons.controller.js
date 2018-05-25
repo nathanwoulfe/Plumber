@@ -22,9 +22,14 @@
                 saveAndPublish: $scope.saveAndPublish,
                 sendToPublish: $scope.sendToPublish,
                 save: $scope.save,
-                unPublish: angular.noop
+                unPublish: $scope.unPublish
             }
         });
+
+        let defaultUnpublish;
+        if (defaultButtons.subButtons) {
+            defaultUnpublish = defaultButtons.subButtons.filter(x => x.alias === 'unpublish')[0];
+        }
 
         const saveAndPublish = defaultButtons.defaultButton && defaultButtons.defaultButton.labelKey === 'buttons_saveAndPublish';
 
@@ -101,7 +106,7 @@
 
                 this.buttonGroup = {};
 
-                if (dirty && this.userCanEdit) {
+                if (dirty && (this.userCanEdit || (this.canAction && !settings.lockIfActive))) {
                     this.buttonGroup.defaultButton = buttons.saveButton;
                 }
                 // primary button is approve when the user is in the approving group and task is not rejected
@@ -138,6 +143,11 @@
                 const subButtons = saveAndPublish ?
                     [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] :
                     [buttons.unpublishButton, buttons.saveButton];
+
+                // insert the default unpublish button into the subbutton array
+                if (saveAndPublish && defaultUnpublish) {
+                    subButtons.splice(1, 0, defaultUnpublish);
+                }
 
                 // if the content is dirty, show save. otherwise show request approval
                 this.buttonGroup = {
@@ -190,9 +200,9 @@
                     editorState.current.contentTypeAlias);
                 const ancestorPerms = workflowResource.checkAncestorPermissions(editorState.current.path, groups);
 
-                if (nodePerms.approvalPath.length ||
+                if ((nodePerms.approvalPath.length ||
                     nodePerms.contentTypeApprovalPath.length ||
-                    ancestorPerms.length && !this.excludeNode) {
+                    ancestorPerms.length) && !this.excludeNode) {
 
                     workflowConfigured = true;
                     getPendingTasks();

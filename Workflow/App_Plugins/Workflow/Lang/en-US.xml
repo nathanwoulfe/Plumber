@@ -6,7 +6,7 @@
   <area alias="workflow">
     <key alias="approveButton">Approve</key>
     <key alias="approveButtonLong">Approve changes</key>
-    <key alias="editButton">Edit</key>
+    <key alias="editButton">Go to node</key>
     <key alias="cancelButton">Cancel</key>
     <key alias="cancelButtonLong">Cancel workflow</key>
     <key alias="rejectButton">Reject changes</key>
@@ -34,6 +34,7 @@
 
     <!-- settings box titles -->
     <key alias="generalSettings">General</key>
+    <key alias="lockIfActive">Lock active content</key>
     <key alias="emailSettings">Notifications / email</key>
     <key alias="excludeNodeSettings">Exclusions</key>
     <key alias="contentTypeSettings">Content type approval flows</key>
@@ -42,6 +43,7 @@
     <key alias="defaultApprovalGroupDescription">The fallback publishing group for cases when no workflows are configured</key>
     <key alias="flowTypeDescription">Controls how the original author is managed in subsequent tasks. Explicit requires all steps be approved, including steps where the original change author is a group member. Implicit auto-approves steps where the author is a member of the approving group.
     </key>
+    <key alias="lockIfActiveDescription">Controls editing access on a content node in a workflow. Set to true to prevent edits on content while in a workflow, set to false to allow the active workflow group to make modifications to content without having to cancel the workflow process.</key>
     <key alias="sendNotificationsDescription">Should email notifications be sent to approval groups?</key>
     <key alias="workflowEmailDescription">FROM address for email notifications</key>
     <key alias="editSiteUrlDescription">Edit site URL for inclusion in email notifications (eg http://edit.mydomain.com)</key>

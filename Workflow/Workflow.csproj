@@ -52,6 +52,7 @@
     <Compile Include="Helpers\Installer.cs" />
     <Compile Include="Helpers\MagicStrings.cs" />
     <Compile Include="Helpers\Uninstaller.cs" />
+    <Compile Include="Migrations\VersionZeroEightZero.cs" />
     <Compile Include="Repositories\InstancesRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInstancesRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITasksRepository.cs" />

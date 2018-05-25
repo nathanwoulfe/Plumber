@@ -40,5 +40,9 @@ namespace Workflow.Models
         [Column("ExcludeNodes")]
         [NullSetting(NullSetting = NullSettings.Null)]
         public string ExcludeNodes { get; set; }
+
+        [Column("LockIfActive")]
+        [NullSetting(NullSetting = NullSettings.Null)]
+        public bool LockIfActive { get; set; }
     }
 }

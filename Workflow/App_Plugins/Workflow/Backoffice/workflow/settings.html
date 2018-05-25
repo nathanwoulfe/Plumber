@@ -10,13 +10,16 @@
 
             <div class="umb-package-details">
                 <div class="umb-package-details__main-content">
-                    <umb-box data-element="workflow-settings__flowtype">
+                    <umb-box>
                         <umb-box-header title-key="workflow_generalSettings"></umb-box-header>
                         <umb-box-content class="block-form">
-                            <umb-control-group label="@workflow_flowType" description="@workflow_flowTypeDescription">
+                            <umb-control-group label="@workflow_flowType" description="@workflow_flowTypeDescription" data-element="workflow-settings__flowtype">
                                 <select ng-model="vm.flowType" ng-options="f as f.v for f in vm.flowTypes" name="Flow type">
                                     <option></option>
                                 </select>
+                            </umb-control-group>
+                            <umb-control-group label="@workflow_lockIfActive" description="@workflow_lockIfActiveDescription">
+                                <input type="checkbox" ng-model="vm.settings.lockIfActive" />
                             </umb-control-group>
                         </umb-box-content>
                     </umb-box>
