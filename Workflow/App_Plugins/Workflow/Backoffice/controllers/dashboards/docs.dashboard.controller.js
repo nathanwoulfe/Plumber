@@ -1,4 +1,4 @@
-﻿(function () {
+﻿(() => {
     'use strict';
 
     /**
@@ -105,12 +105,17 @@
             this.viewState = state;
         };
 
-        workflowResource.getDocs()
+        workflowResource.getDocs() 
             .then(docs => {
-                parseDocs(docs);
+                if (docs === 'Documentation unavailable') {
+                    this.noDocs = docs;
+                    this.loaded = true;
+                } else {
+                    parseDocs(docs);
+                }
             });
     }
 
     angular.module('umbraco').controller('Workflow.DocsDashboard.Controller', ['$timeout', 'plmbrWorkflowResource', dashboardController]);
 
-}());
+})();

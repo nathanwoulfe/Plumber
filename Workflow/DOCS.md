@@ -35,6 +35,7 @@ Plumber comes pre-wired with sensible defaults, but these should be modified to 
 - **Flow type:** how should the approval flow progress? These options manage how the change author is included in the workflow:
     - **Explicit:** all steps of the workflow must be completed, and all users will be notified of tasks (including the change author)
     - **Implicit:** all steps where the original change author is NOT a member of the group must be completed. Steps where the original change author is a member of the approving group will be completed automatically, and noted in the workflow history as not required.
+- **Lock active content:** how should content in a workflow be managed? Set true or false to determine whether the approval group responsible for the active workflow step can make modifications to the content.
 - **Send notifications:** if your users are active in the backoffice, email notifications might not be required. Turn them off here.
 - **Workflow email:** Set a sender address for notification emails. This defaults to the system email as defined in umbracoSettings.config
 - **Site URL:** the URL for the public website (including schema - http[s])

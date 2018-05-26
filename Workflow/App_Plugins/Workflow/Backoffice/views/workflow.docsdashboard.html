@@ -13,6 +13,8 @@
                     </div>
                 </div>
                 
+                <div class="alert alert-warning docs-alert" ng-if="vm.noDocs"><strong ng-bind="vm.noDocs"></strong>: Please confirm you have an available internet connection</div>
+
                 <div class="umb-healthcheck" ng-if="vm.docs && vm.viewState === 'list'">
                     <div class="umb-air" ng-repeat="doc in vm.docs" ng-click="vm.openDoc(doc)">
                         <div class="umb-healthcheck-group">
@@ -47,7 +49,7 @@
 
                 </div>
                 
-                <p class="footnote">Documentation targets the latest version, and at times may include references to unreleased features. These will be noted accordingly.</p>
+                <p class="footnote">Documentation targets the latest version, and at times may include references to unreleased features or features not included in the installed version. These will be noted accordingly.</p>
 
             </umb-editor-container>
         </umb-editor-view>
