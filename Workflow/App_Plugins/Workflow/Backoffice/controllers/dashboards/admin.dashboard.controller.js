@@ -10,7 +10,7 @@
         const lineChart = items => {
 
             var series = [],
-                seriesNames = [], 
+                seriesNames = [],
                 s,
                 o,
                 isTask = this.type === 'Task';
@@ -139,7 +139,9 @@
         if (!pesterDate || moment(new Date(pesterDate)).isBefore(now)) {
             workflowResource.getVersion()
                 .then(resp => {
-                    this.version = resp;
+                    if (typeof resp === 'object') {
+                        this.version = resp;
+                    }
                 });
         }
 

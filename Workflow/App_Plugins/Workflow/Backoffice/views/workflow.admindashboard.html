@@ -3,7 +3,7 @@
         <umb-editor-view footer="false">
             <umb-editor-container>           
                 
-                <div class="upgrade alert alert-info" ng-if="vm.version.outOfDate">
+                <div class="upgrade alert alert-info" ng-if="vm.version && vm.version.outOfDate">
                     <button type="button" class="close" title="I don't care about cool new features" data-dismiss="alert" ng-click="vm.updateAlertHidden()">&times;</button>
                     <h3>You're missing out! Plumber is out of date ({{ vm.version.currentVersion }})</h3>
                     <a class="btn btn-info" href="{{ vm.version.packageUrl }}"><i class="icon icon-download"></i> Download the latest release ({{ vm.version.latestVersion }})</a>
@@ -11,7 +11,7 @@
                     <p>Release date: {{ vm.version.releaseDate }}</p>
                 </div>
                  
-                <div class="upgrade upgrade-current alert alert-info" ng-if="!vm.version.outOfDate">
+                <div class="upgrade upgrade-current alert alert-info" ng-if="!vm.version.outOfDate && vm.version">
                     <p>You're up to date, running Plumber {{ vm.version.currentVersion }}</p>
                 </div>
                 <hr/>

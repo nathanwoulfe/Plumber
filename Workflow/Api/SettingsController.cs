@@ -99,8 +99,11 @@ namespace Workflow.Api
             catch (Exception ex)
             {
                 const string error = "Error getting version information";
+
                 Log.Error(error, ex);
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
+
+                // nothing is displayed if the version isn't available
+                return Json(error);
             }
         }
 
