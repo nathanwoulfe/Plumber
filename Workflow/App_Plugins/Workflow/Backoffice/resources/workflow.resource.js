@@ -4,6 +4,8 @@
     // create service
     function workflowResource($http, $q, umbRequestHelper) {
 
+        let activityFilter;
+
         const urlBase = '/umbraco/backoffice/api/workflow/';
 
         // are there common elements between two arrays?
@@ -35,7 +37,7 @@
 
             getAllTasksForRange: days => request('GET', urls.tasks + 'range/' + days),
 
-            getAllInstances: (count, page) => request('GET', urls.instances + count + '/' + page),
+            getAllInstances: (count, page, filter) => request('GET', urls.instances + count + '/' + page + '/' + filter),
 
             getAllInstancesForRange: days => request('GET', urls.instances + 'range/' + days),
 
@@ -148,7 +150,14 @@
                 });
 
                 return resp;
-            }
+            },
+
+            // pass the activity filter between the admin and history views
+            setActivityFilter: filter => {
+                activityFilter = filter;
+            },
+
+            getActivityFilter: () => activityFilter,
 
         };
 

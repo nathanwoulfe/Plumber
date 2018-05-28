@@ -1,7 +1,7 @@
 ﻿(() => {
-    'use strict';
-
     function historyController($scope, workflowResource) {
+
+        this.activityFilter = workflowResource.getActivityFilter();
 
         this.name = 'Workflow history';
 
@@ -64,7 +64,7 @@
                 this.node = undefined;
             }
 
-            workflowResource.getAllInstances(this.pagination.perPage, this.pagination.pageNumber)
+            workflowResource.getAllInstances(this.pagination.perPage, this.pagination.pageNumber, this.activityFilter)
                 .then(resp => {
                     setPaging(resp);
                 });

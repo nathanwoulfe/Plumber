@@ -7,6 +7,11 @@
         const msPerDay = 1000 * 60 * 60 * 24;
         const now = moment();
 
+        /**
+         * Returns an array of 0s, length equal to the selected range
+         */
+        const defaultData = () => Array(this.range).fill([]).map(() => 0);
+
         const lineChart = items => {
 
             var series = [],
@@ -107,11 +112,6 @@
             this.loaded = true;
         };
 
-        /**
-         * Returns an array of 0s, length equal to the selected range
-         */
-        const defaultData = () => Array(this.range).fill([]).map(() => 0);
-
         const getForRange = () => {
             if (this.range > 0) {
 
@@ -157,6 +157,20 @@
                 });
         }
 
+        const getActivity = type => {
+            workflowResource.setActivityFilter(type);
+            //window.location = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/#/workflow/workflow/history/info';
+
+            workflowResource[this.type === 'Task' ? 'getAllTasksForRange' : 'getAllInstancesForRange'](this.range)
+                .then(resp => {
+                    if (this.type === 'Task') {
+                        this.items = resp.items.filter(i => i.statusName === type);
+                    } else {
+                        this.items = resp.items.filter(i => i.status === type);
+                    }
+                });
+        }
+
         // kick it off with a four-week span
         angular.extend(this, {
             range: 28,
@@ -171,7 +185,8 @@
 
             getForRange: getForRange,
             updateAlertHidden: updateAlertHidden,
-            launchTour: launchTour
+            launchTour: launchTour,
+            getActivity: getActivity
         });
 
         getForRange();

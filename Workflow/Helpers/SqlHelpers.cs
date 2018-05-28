@@ -71,7 +71,7 @@
                             WHERE WorkflowTaskInstance.GroupId = @0
                             ORDER BY WorkflowTaskInstance.CreatedDate DESC";
         public const string AllTasksForDateRange = @"SELECT * FROM WorkflowTaskInstance
-                            WHERE CompletedDate IS NULL OR CompletedDate >= CONVERT(DATETIME, @0)";
+                            WHERE (CompletedDate IS NULL) OR (CompletedDate >= CONVERT(DATETIME, @0))";
         public const string PendingTasks = @"SELECT * FROM WorkflowTaskInstance 
                             LEFT JOIN WorkflowInstance
                             on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
