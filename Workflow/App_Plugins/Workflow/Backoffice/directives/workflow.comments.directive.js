@@ -13,7 +13,7 @@
                 isFinalApproval: '=',
                 disabled: '='
             },
-            templateUrl: '../app_plugins/workflow/backoffice/partials/workflowCommentsTemplate.html',
+            templateUrl: '../app_plugins/workflow/backoffice/views/partials/workflowCommentsTemplate.html',
             link: scope => {
 
                 scope.limitChars = () => {

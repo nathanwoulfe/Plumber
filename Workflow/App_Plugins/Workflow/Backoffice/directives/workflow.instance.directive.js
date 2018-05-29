@@ -9,7 +9,7 @@
                 loaded: '=',
                 view: '='
             },
-            templateUrl: '../app_plugins/workflow/backoffice/partials/workflowInstanceTemplate.html',
+            templateUrl: '../app_plugins/workflow/backoffice/views/partials/workflowInstanceTemplate.html',
             link: scope => {
                 scope.detail = item => {
                     scope.instanceOverlay = workflowActionsService.detail(item);

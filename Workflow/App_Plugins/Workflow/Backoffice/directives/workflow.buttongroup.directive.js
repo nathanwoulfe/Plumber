@@ -6,7 +6,7 @@
         const directive = {
             restrict: 'E',
             replace: true,
-            templateUrl: '../app_plugins/workflow/backoffice/partials/workflowButtonGroup.html',
+            templateUrl: '../app_plugins/workflow/backoffice/views/partials/workflowButtonGroup.html',
             require: '^form',
             scope: {
                 defaultButton: '=',

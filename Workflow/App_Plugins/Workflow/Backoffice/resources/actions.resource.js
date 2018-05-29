@@ -3,7 +3,7 @@
 
     function workflowActionsService($rootScope, workflowResource, notificationsService) {
 
-        const dialogPath = '../app_plugins/workflow/backoffice/dialogs/'; 
+        const dialogPath = '../app_plugins/workflow/backoffice/views/dialogs/'; 
 
         // UI feedback for button directive
         const buttonState = (state, id) => {

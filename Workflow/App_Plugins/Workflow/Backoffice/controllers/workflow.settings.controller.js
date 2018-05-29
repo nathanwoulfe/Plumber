@@ -4,7 +4,7 @@
     function settingsController($scope, $q, workflowResource, notificationsService, workflowGroupsResource, contentResource) {
 
         const promises = [workflowResource.getSettings(), workflowResource.getContentTypes(), workflowGroupsResource.get()];
-        const overlayBase = '../app_plugins/workflow/backoffice/dialogs/';
+        const overlayBase = '../app_plugins/workflow/backoffice/views/dialogs/';
 
         this.excludeNodesModel = {
             view: 'contentpicker',

@@ -40,11 +40,11 @@
     <Compile Include="Api\ExportController.cs" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\importexport.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.contenttypeflow.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.contenttypeflow.overlay.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.contenttypeflow.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.instance.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.progressstep.directive.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowInstanceTemplate.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowProgressStepTemplate.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowInstanceTemplate.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowProgressStepTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.importexportdashboard.html" />
     <Compile Include="Events\Args\ConfigEventArgs.cs" />
     <Compile Include="Events\Args\GroupEventArgs.cs" />
@@ -128,8 +128,8 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\admin.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\log.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.userpicker.controller.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.history.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.userpicker.overlay.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.history.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.userpicker.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.buttongroup.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.comments.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.linechart.directive.js" />
@@ -139,11 +139,10 @@
     <None Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.scss" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\highcharts.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\modules\exporting.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowEditorFooterContentRight.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowButtonGroup.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowLineChart.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowCommentsTemplate.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\partials\workflowTasksTemplate.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowEditorFooterContentRight.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowButtonGroup.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowCommentsTemplate.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowTasksTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\actions.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.logsdashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\workflow\edit-group.html" />
@@ -158,9 +157,9 @@
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.admindashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.docsdashboard.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.userdashboard.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.action.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.cancel.dialog.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.submit.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.action.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.cancel.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.submit.dialog.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\workflow\approval-groups.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\workflow\settings.html" />
     <Content Include="App_Plugins\Workflow\Lang\en-US.xml" />
@@ -192,7 +191,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\groups.edit.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\approval-groups\delete.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\groups.resource.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\dialogs\workflow.config.dialog.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.config.dialog.html" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="businesslogic, Version=1.0.6634.25793, Culture=neutral, processorArchitecture=MSIL">

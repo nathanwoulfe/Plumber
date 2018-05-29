@@ -21,6 +21,8 @@ namespace Workflow.Startup
                 || Convert.ToInt32(e.NodeId) == Constants.System.Root 
                 || Convert.ToInt32(e.NodeId) == Constants.System.RecycleBinContent) return;
 
+            const string dialogPath = "/App_Plugins/workflow/Backoffice/views/dialogs/";
+
             var utility = new Utility();
 
             int menuLength = e.Menu.Items.Count;
@@ -29,7 +31,7 @@ namespace Workflow.Startup
             var items = new Umbraco.Web.Models.Trees.MenuItemList();
 
             var i = new Umbraco.Web.Models.Trees.MenuItem("workflowHistory", "Workflow history");
-            i.LaunchDialogView("/App_Plugins/workflow/Backoffice/dialogs/workflow.history.dialog.html", "Workflow history: " + nodeName);
+            i.LaunchDialogView(dialogPath + "workflow.history.dialog.html", "Workflow history: " + nodeName);
             i.AdditionalData.Add("width", "800px");
             i.SeperatorBefore = true;
             i.Icon = "directions-alt";
@@ -39,7 +41,7 @@ namespace Workflow.Startup
             if (currentUser.IsAdmin())
             {
                 i = new Umbraco.Web.Models.Trees.MenuItem("workflowConfig", "Workflow configuration");
-                i.LaunchDialogView("/App_Plugins/workflow/Backoffice/dialogs/workflow.config.dialog.html", "Workflow configuration: " + nodeName);
+                i.LaunchDialogView(dialogPath + "workflow.config.dialog.html", "Workflow configuration: " + nodeName);
                 i.Icon = "path";
 
                 items.Add(i);

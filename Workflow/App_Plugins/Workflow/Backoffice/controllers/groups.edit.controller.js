@@ -92,7 +92,7 @@
          */
         this.openUserPicker = () => {
             this.userPicker = {
-                view: '../app_plugins/workflow/backoffice/dialogs/workflow.userpicker.overlay.html',
+                view: '../app_plugins/workflow/backoffice/views/dialogs/workflow.userpicker.overlay.html',
                 selection: this.group.users,
                 show: true,
                 submit: model => {

@@ -9,7 +9,7 @@
                 task: '=',
                 count: '='
             },
-            templateUrl: '../app_plugins/workflow/backoffice/partials/workflowProgressStepTemplate.html',
+            templateUrl: '../app_plugins/workflow/backoffice/views/partials/workflowProgressStepTemplate.html',
             link: scope => {
                 scope.width = `${100 / scope.count}%`;
 
