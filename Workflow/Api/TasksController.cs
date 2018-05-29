@@ -102,12 +102,41 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> taskInstances = _tasksService.GetAllTasksForDateRange(DateTime.Now.AddDays(days * -1));
+                List<WorkflowTaskInstancePoco> taskInstances = 
+                    _tasksService.GetAllTasksForDateRange(DateTime.Now.AddDays(days * -1));
+
+                return Json(new
+                {
+                    items = taskInstances
+                }, ViewHelpers.CamelCase);
+            }
+            catch (Exception ex)
+            {
+                const string msg = "Error getting tasks for date range";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
+            }
+        }
+
+        /// <summary>
+        /// Returns all tasks
+        /// </summary>
+        /// <returns></returns>        
+        [HttpGet]
+        [Route("filteredRange/{days:int}/{filter?}/{count:int?}/{page:int?}")]
+        public IHttpActionResult GetFilteredPagedTasksForDateRange(int days, string filter = "", int? count = null, int? page = null)
+        {
+            try
+            {
+                List<WorkflowTask> taskInstances =
+                    _tasksService.GetFilteredPagedTasksForDateRange(DateTime.Now.AddDays(days * -1), count, page, filter);
 
                 return Json(new
                 {
                     items = taskInstances,
-                    total = taskInstances.Count
+                    count,
+                    page,
+                    filter
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)

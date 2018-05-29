@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web.Http;
@@ -37,7 +38,35 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowInstance> workflowInstances = _instancesService.Get(page, count, null);
+                List<WorkflowInstance> workflowInstances = _instancesService.Get(page, count);
+
+                return Json(new
+                {
+                    items = workflowInstances,
+                    totalPages = (int)Math.Ceiling(_instancesService.CountAll() / count),
+                    page,
+                    count
+                }, ViewHelpers.CamelCase);
+            }
+            catch (Exception e)
+            {
+                const string error = "Error getting workflow instances";
+                Log.Error(error, e);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e, error));
+            }
+        }
+
+        /// <summary>
+        /// Returns all workflow instances, with their tasks for the given node id
+        /// </summary>
+        /// <returns></returns>        
+        [HttpGet]
+        [Route("{nodeId:int}/{count:int}/{page:int}")]
+        public IHttpActionResult GetAllInstancesByNodeId(int nodeId, int count, int page)
+        {
+            try
+            {
+                List<WorkflowInstance> workflowInstances = _instancesService.GetByNodeId(nodeId, page, count);
 
                 return Json(new
                 {
@@ -61,11 +90,11 @@ namespace Workflow.Api
         /// <returns></returns>        
         [HttpGet]
         [Route("range/{days:int}")]
-        public IHttpActionResult GetAllInstancesForDateRange(int days)
+        public IHttpActionResult GetAllInstancesForRange(int days)
         {
             try
             {
-                List<WorkflowInstance> instances = _instancesService.Get(null, null, DateTime.Now.AddDays(days * -1));
+                List<WorkflowInstance> instances = _instancesService.GetAllInstancesForDateRange(DateTime.Now.AddDays(days * -1));
 
                 return Json(new
                 {
@@ -80,5 +109,35 @@ namespace Workflow.Api
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e, error));
             }
         }
+
+        /// <summary>
+        /// Returns all tasks
+        /// </summary>
+        /// <returns></returns>        
+        [HttpGet]
+        [Route("filteredRange/{days:int}/{filter?}/{count:int?}/{page:int?}")]
+        public IHttpActionResult GetFilteredPagedInstancesForDateRange(int days, string filter = "", int? count = null, int? page = null)
+        {
+            try
+            {
+                List<WorkflowInstance> instances =
+                    _instancesService.GetFilteredPagedInstancesForDateRange(DateTime.Now.AddDays(days * -1), count, page, filter);
+
+                return Json(new
+                {
+                    items = instances,
+                    count,
+                    page,
+                    filter
+                }, ViewHelpers.CamelCase);
+            }
+            catch (Exception ex)
+            {
+                const string msg = "Error getting tasks for date range";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
+            }
+        }
+
     }
 }

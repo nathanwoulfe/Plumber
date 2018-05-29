@@ -127,6 +127,18 @@ namespace Workflow.Repositories
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldest"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public List<WorkflowTaskInstancePoco> GetFilteredPagedTasksForDateRange(DateTime oldest, string filter)
+        {
+            int filterVal = !string.IsNullOrEmpty(filter) ? (int)Enum.Parse(typeof(TaskStatus), filter) : -1;
+            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.FilteredTasksForDateRange, oldest, filterVal);
+        }
+
+        /// <summary>
         /// Get all tasks created by the given user
         /// </summary>
         /// <param name="id">The user id</param>

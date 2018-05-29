@@ -109,13 +109,13 @@ namespace Workflow.Services
                     Type = typeDescription,
                     NodeId = instance.NodeId,
                     InstanceGuid = instance.Guid,
-                    ApprovalGroupId = taskInstance.UserGroup.GroupId,
+                    ApprovalGroupId = taskInstance.UserGroup?.GroupId,
                     NodeName = instanceNodeName,
                     RequestedBy = instance.AuthorUser.Name,
                     RequestedById = instance.AuthorUser.Id,
                     RequestedOn = taskInstance.CreatedDate.ToString(),
-                    ApprovalGroup = taskInstance.UserGroup.Name,
-                    Comments = useInstanceFromTask ? instance.AuthorComment : taskInstance.Comment,
+                    ApprovalGroup = taskInstance.UserGroup?.Name,
+                    Comment = useInstanceFromTask ? instance.AuthorComment : taskInstance.Comment,
                     ActiveTask = taskInstance.StatusName,
                     Permissions = _configService.GetRecursivePermissionsForNode(instance.Node),
                     CurrentStep = taskInstance.ApprovalStep
@@ -147,6 +147,27 @@ namespace Workflow.Services
         {
             List<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllTasksForDateRange(oldest);
             return taskInstances;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldest"></param>
+        /// <param name="count"></param>
+        /// <param name="page"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public List<WorkflowTask> GetFilteredPagedTasksForDateRange(DateTime oldest, int? count, int? page, string filter = "")
+        {
+            List<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetFilteredPagedTasksForDateRange(oldest, filter);
+
+            // todo - fetch only required data, don't do paging here
+            List<WorkflowTask> workflowTaskInstances = ConvertToWorkflowTaskList(
+                page.HasValue && count.HasValue ?
+                    taskInstances.Skip((page.Value - 1) * count.Value).Take(count.Value).ToList() :
+                    taskInstances);
+
+            return workflowTaskInstances;
         }
 
         /// <summary>

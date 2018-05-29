@@ -58,15 +58,72 @@ namespace Workflow.Services
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<WorkflowInstance> Get(int? page = 0, int? count = null, DateTime? oldest = null)
+        public List<WorkflowInstance> Get(int? page = 0, int? count = null)
         {
-            List<WorkflowInstancePoco> instances = oldest.HasValue ? _repo.GetAllInstancesForDateRange(oldest.Value) : _repo.GetAllInstances();
+            List<WorkflowInstancePoco> instances = _repo.GetAllInstances();
+            
+            // todo - fetch only required data, don't do paging here
+            instances = page.HasValue && count.HasValue
+                ? instances.Skip((page.Value - 1) * count.Value).Take(count.Value).ToList()
+                : instances;
+
+            List<WorkflowInstance> workflowInstances = ConvertToWorkflowInstanceList(instances);
+
+            return workflowInstances;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldest"></param>
+        /// <returns></returns>
+        public List<WorkflowInstance> GetAllInstancesForDateRange(DateTime? oldest)
+        {
+            List<WorkflowInstancePoco> instances = _repo.GetAllInstancesForDateRange(oldest.Value);
+            List<WorkflowInstance> workflowInstances = ConvertToWorkflowInstanceList(instances);
+
+            return workflowInstances;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <param name="page"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public List<WorkflowInstance> GetByNodeId(int nodeId, int? page, int? count)
+        {
+            List<WorkflowInstancePoco> instances = _repo.GetAllInstancesForNode(nodeId);
 
             // todo - fetch only required data, don't do paging here
-            List<WorkflowInstance> workflowInstances = ConvertToWorkflowInstanceList(
-                page.HasValue && count.HasValue ?
-                instances.Skip((page.Value - 1) * count.Value).Take(count.Value).ToList() :
-                instances);
+            instances = page.HasValue && count.HasValue
+                ? instances.Skip((page.Value - 1) * count.Value).Take(count.Value).ToList()
+                : instances;
+
+            List<WorkflowInstance> workflowInstances = ConvertToWorkflowInstanceList(instances);
+
+            return workflowInstances;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldest"></param>
+        /// <param name="count"></param>
+        /// <param name="page"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public List<WorkflowInstance> GetFilteredPagedInstancesForDateRange(DateTime oldest, int? count, int? page, string filter = "")
+        {
+            List<WorkflowInstancePoco> instances = _repo.GetFilteredPagedInstancesForDateRange(oldest, filter);
+
+            // todo - fetch only required data, don't do paging here
+            instances = page.HasValue && count.HasValue
+                ? instances.Skip((page.Value - 1) * count.Value).Take(count.Value).ToList()
+                : instances;
+
+            List<WorkflowInstance> workflowInstances = ConvertToWorkflowInstanceList(instances);
 
             return workflowInstances;
         }
@@ -81,27 +138,30 @@ namespace Workflow.Services
             List<WorkflowInstance> workflowInstances = new List<WorkflowInstance>();
 
             if (instances == null || instances.Count <= 0)
-                return workflowInstances.OrderByDescending(x => x.RequestedOn).ToList();
+                return workflowInstances.OrderByDescending(x => x.CreatedDate).ToList();
 
             foreach (WorkflowInstancePoco instance in instances)
             {
                 var model = new WorkflowInstance
                 {
                     Type = instance.TypeDescription,
+                    InstanceGuid = instance.Guid,
                     Status = instance.StatusName,
                     CssStatus = instance.StatusName.ToLower().Split(' ')[0],
                     NodeId = instance.NodeId,
                     NodeName = instance.Node.Name,
                     RequestedBy = instance.AuthorUser.Name,
-                    RequestedOn = instance.CreatedDate,
-                    CompletedOn = instance.CompletedDate,
-                    Tasks = _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), true, instance)
+                    RequestedOn = instance.CreatedDate.ToString(),
+                    CreatedDate = instance.CreatedDate,
+                    CompletedDate = instance.CompletedDate,
+                    Comment = instance.AuthorComment,
+                    Tasks = _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), false, instance)
                 };
 
                 workflowInstances.Add(model);
             }
 
-            return workflowInstances.OrderByDescending(x => x.RequestedOn).ToList();
+            return workflowInstances.OrderByDescending(x => x.CreatedDate).ToList();
         }
 
         /// <summary>

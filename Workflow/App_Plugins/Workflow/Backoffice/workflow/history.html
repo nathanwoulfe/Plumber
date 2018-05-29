@@ -1,4 +1,4 @@
-﻿<form class="form-horizontal" ng-controller="Workflow.History.Controller as vm" novalidate>
+﻿<form class="form-horizontal workflow" ng-controller="Workflow.History.Controller as vm" novalidate>
     <umb-editor-view footer="false">
         <umb-editor-header name="vm.name"
                            name-locked="true"
@@ -14,7 +14,7 @@
                     <a class="btn" href="#" ng-click="vm.selectNode()" prevent-default>
                         Select node
                     </a>
-                    <a class="btn" href="#" ng-show="!vm.instanceView" ng-click="vm.getAllInstances()" prevent-default>
+                    <a class="btn" href="#" ng-show="vm.view !== 'instance'" ng-click="vm.getAllInstances()" prevent-default>
                         Show all
                     </a>
                 </umb-editor-sub-header-left>
@@ -24,20 +24,27 @@
                 </umb-editor-sub-header-right>
             </umb-editor-sub-header>
             <div>
-                <div ng-show="!vm.instanceView">
+                <div ng-show="vm.view === 'node'">
                     <h4>Workflow data for: <a ng-href="/umbraco#/content/content/edit/{{ vm.node.id }}">{{ vm.node.name }}</a></h4>
+                    <wf-instance items="vm.items" loaded="vm.nodeInstancesLoaded" view="vm.view"></wf-instance>
                 </div>
 
-                <wf-history items="vm.items" instance-view="vm.instanceView"></wf-history>
+                <div ng-show="vm.view.indexOf('activity') === 0">
+                    <h4>Workflow data for task status: {{ vm.activityFilter.filter }} (Last {{ vm.activityFilter.range }} days)</h4>
+                    <wf-instance items="vm.items" loaded="vm.activityLoaded" view="vm.view"></wf-instance>
+                </div>
+                
+                <div ng-show="vm.view === 'instance'">
+                    <wf-instance items="vm.items" loaded="vm.instancesLoaded" view="vm.view"></wf-instance>
+                </div>
 
                 <div class="flex justify-center">
-                    <umb-pagination 
-                        ng-if="vm.pagination.totalPages > 1"
-                        page-number="vm.pagination.pageNumber"
-                        total-pages="vm.pagination.totalPages"
-                        on-next="vm.pagination.goToPage"
-                        on-prev="vm.pagination.goToPage"
-                        on-go-to-page="vm.pagination.goToPage">
+                    <umb-pagination ng-if="vm.pagination.totalPages > 1"
+                                    page-number="vm.pagination.pageNumber"
+                                    total-pages="vm.pagination.totalPages"
+                                    on-next="vm.pagination.goToPage"
+                                    on-prev="vm.pagination.goToPage"
+                                    on-go-to-page="vm.pagination.goToPage">
                     </umb-pagination>
                 </div>
 

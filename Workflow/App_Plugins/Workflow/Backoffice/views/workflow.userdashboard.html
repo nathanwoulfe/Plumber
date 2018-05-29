@@ -3,13 +3,9 @@
         <umb-editor-view footer="false" umb-tabs>
             <umb-editor-container>
 
-                <div class="umb-box">
-                    <div class="umb-box-header">
-                        <div class="umb-box-header-title">
-                            Tasks requiring my approval
-                        </div>
-                    </div>
-                    <div class="block-form umb-box-content">
+                <umb-box>
+                    <umb-box-header title-key="workflow_myTasks"></umb-box-header>
+                    <umb-box-content class="block-form">
                         <wf-tasks items="vm.tasks" loaded="vm.loaded[0]" type="0"></wf-tasks>
                         <div class="flex justify-center">
                             <umb-pagination ng-if="vm.taskPagination.totalPages > 1"
@@ -20,16 +16,11 @@
                                             on-go-to-page="vm.taskPagination.goToPage">
                             </umb-pagination>
                         </div>
-                    </div>
-                </div>
-
-                <div class="umb-box">
-                    <div class="umb-box-header">
-                        <div class="umb-box-header-title">
-                            My submissions
-                        </div>
-                    </div>
-                    <div class="block-form umb-box-content">
+                    </umb-box-content>
+                </umb-box>
+                <umb-box>
+                    <umb-box-header title-key="workflow_mySubmissions"></umb-box-header>
+                    <umb-box-content class="block-form">
                         <wf-tasks items="vm.submissions" loaded="vm.loaded[1]" type="1"></wf-tasks>
                         <div class="flex justify-center">
                             <umb-pagination ng-if="vm.submissionPagination.totalPages > 1"
@@ -40,16 +31,11 @@
                                             on-go-to-page="vm.submissionPagination.goToPage">
                             </umb-pagination>
                         </div>
-                    </div>
-                </div>
-
-                <div class="umb-box" ng-if="vm.adminUser" >
-                    <div class="umb-box-header">
-                        <div class="umb-box-header-title">
-                            Workflow administration
-                        </div>
-                    </div>
-                    <div class="block-form umb-box-content">
+                    </umb-box-content>
+                </umb-box>
+                <umb-box ng-if="vm.adminUser">
+                    <umb-box-header title-key="workflow_workflowAdministration"></umb-box-header>
+                    <umb-box-content class="block-form">
                         <wf-tasks items="vm.activeTasks" loaded="vm.loaded[2]" type="1"></wf-tasks>
                         <div class="flex justify-center">
                             <umb-pagination ng-if="vm.adminPagination.totalPages > 1"
@@ -60,11 +46,8 @@
                                             on-go-to-page="vm.adminPagination.goToPage">
                             </umb-pagination>
                         </div>
-                    </div>
-                </div>
-
-
-
+                    </umb-box-content>
+                </umb-box>
 
                 <umb-overlay ng-if="vm.workflowOverlay.show"
                              model="vm.workflowOverlay"

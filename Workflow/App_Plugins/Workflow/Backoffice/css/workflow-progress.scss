@@ -9,8 +9,12 @@
 }
 
 .umb-table-row:hover ~ .workflow-progress {
-    background:#f3f3f5;
-    border-top-color:#f3f3f5;
+    background: #f3f3f5;
+    border-top-color: #f3f3f5;
+}
+
+.table-cell--narrow {
+    flex:0 0 50px;
 }
 
 .progress-step {
@@ -34,70 +38,38 @@
         right: 0;
     }
 
-    &.done {
-        .tooltip-done {
-            display: block;
-        }
+    $states: 'done', 'notrequired', 'cancelled', 'current', 'rejected', 'resubmitted';
+    $colors: $umbGreen, $pending, $danger, $umbPurple, $warning, $warning;
+    $count: 6;
 
-        &::before, &::after, .marker, .tooltip::after {
-            background: $umbGreen;
-        }
+    @for $i from 1 through $count {
 
-        .tooltip {
-            border-color: $umbGreen;
-            color:$umbGreen;
-        }
-    }
+        $state: nth($states, $i);
+        $color: nth($colors, $i);
 
-    &.current {
-        .tooltip-current {
-            display: block;
-        }
+        &.#{$state} {
+            .tooltip-#{$state} {
+                display: block;
+            }
 
-        .marker, .tooltip::after {
-            background: $umbPurple;
-        }
+            .marker, .tooltip::after {
+                background: $color;
+            }
 
-        &::before {
-            background: linear-gradient(90deg, $umbGreen, $umbPurple);
-        }
+            .tooltip {
+                border-color: $color;
+                color: $color;
+            }
 
-        &::after {
-            background: linear-gradient(90deg, $umbPurple, #d9d9d9);
-        }
+            &::before {
+                background: linear-gradient(90deg, #d9d9d9, $color);
+            }
 
-        .tooltip {
-            border-color: $umbPurple;
-            color: $umbPurple;
+            &::after {
+                background: linear-gradient(90deg, $color, #d9d9d9);
+            }
         }
-    }
-
-    &.rejected {
-        .tooltip-current {
-            display: none;
-        }
-
-        .tooltip-rejected {
-            display: block;
-        }
-
-        .marker, .tooltip::after {
-            background: $warning;
-        }
-
-        &::before {
-            background: linear-gradient(90deg, $umbGreen, $warning);
-        }
-
-        &::after {
-            background: linear-gradient(90deg, $warning, #d9d9d9);
-        }
-
-        .tooltip {
-            border-color: $warning;
-            color:$warning;
-        }
-    }
+    }    
 }
 
 .marker {
@@ -124,6 +96,10 @@
         padding: 5px;
         color: #817f85;
         border: 1px solid #d9d9d9;
+
+        > span {
+            text-transform:uppercase;
+        }
 
         &::after {
             content: '';

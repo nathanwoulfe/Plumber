@@ -33,9 +33,16 @@ namespace Workflow.Repositories.Interfaces
 
         /// <summary>
         /// Get all workflow instances, regardless of status
-        /// </summary>
+        /// </summary>       
         /// <returns></returns>
         List<WorkflowInstancePoco> GetAllInstances();
+
+        /// <summary>
+        /// Get all workflow instances, regardless of status, for the given node id
+        /// </summary>       
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        List<WorkflowInstancePoco> GetAllInstancesForNode(int nodeId);
 
         /// <summary>
         /// Get all instances created after the provided date
@@ -51,6 +58,14 @@ namespace Workflow.Repositories.Interfaces
         /// <param name="status"></param>
         /// <returns></returns>
         IEnumerable<WorkflowInstancePoco> GetInstancesForNodeByStatus(int node, IEnumerable<int> status = null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldest"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        List<WorkflowInstancePoco> GetFilteredPagedInstancesForDateRange(DateTime oldest, string filter);
 
         /// <summary>
         /// Gets the instances corresponding to the guid

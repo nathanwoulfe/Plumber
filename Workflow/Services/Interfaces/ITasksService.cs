@@ -19,6 +19,8 @@ namespace Workflow.Services.Interfaces
         List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status);
 
         List<WorkflowTaskInstancePoco> GetAllTasksForDateRange(DateTime oldest);
+        List<WorkflowTask> GetFilteredPagedTasksForDateRange(DateTime oldest, int? count, int? page, string filter = "");
+
         List<WorkflowTaskInstancePoco> GetTasksByNodeId(int id);
 
         void InsertTask(WorkflowTaskInstancePoco poco);

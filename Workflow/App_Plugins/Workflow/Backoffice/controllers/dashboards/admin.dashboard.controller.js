@@ -72,8 +72,8 @@
 
                     s = series.filter(ss => ss.name === statusName)[0];
 
-                    s.data[this.range - now.diff(moment(isTask ? v.completedDate : v.completedOn), 'days')] += 1;
-                    created.data[this.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn), 'days')] += 1;
+                    s.data[this.range - now.diff(moment(v.completedDate), 'days')] += 1;
+                    created.data[this.range - now.diff(moment(v.createdDate), 'days')] += 1;
 
                     if (statusName === 'Approved') {
                         this.totalApproved += 1;
@@ -93,7 +93,7 @@
                     }
 
                 } else {
-                    const index = this.range - now.diff(moment(isTask ? v.createdDate : v.requestedOn), 'days');
+                    const index = this.range - now.diff(moment(v.createdDate), 'days');
                     created.data[index < 0 ? 0 : index] += 1;
                     this.totalPending += 1;
                 }
@@ -157,18 +157,9 @@
                 });
         }
 
-        const getActivity = type => {
-            workflowResource.setActivityFilter(type);
-            //window.location = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/#/workflow/workflow/history/info';
-
-            workflowResource[this.type === 'Task' ? 'getAllTasksForRange' : 'getAllInstancesForRange'](this.range)
-                .then(resp => {
-                    if (this.type === 'Task') {
-                        this.items = resp.items.filter(i => i.statusName === type);
-                    } else {
-                        this.items = resp.items.filter(i => i.status === type);
-                    }
-                });
+        const getActivity = filter => {
+            workflowResource.setActivityFilter({ type: this.type, filter: filter, range: this.range });
+            window.location = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/#/workflow/workflow/history/info';
         }
 
         // kick it off with a four-week span

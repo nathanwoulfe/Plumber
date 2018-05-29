@@ -33,11 +33,11 @@
                 <hr/>
                 <ul class="chart-header">
                     <li ng-click="vm.getActivity('Approved')"><span ng-bind="vm.totalApproved" class="wf-highcharts-color-approved jumbo"></span><span>approved</span></li>
-                    <li ng-show="vm.type === 'Task'" ng-click="vm.getActivity('Not Required')"><span ng-bind="vm.totalNotRequired" class="wf-highcharts-color-notreq jumbo"></span><span>not required</span></li>
+                    <li ng-show="vm.type === 'Task'" ng-click="vm.getActivity('NotRequired')"><span ng-bind="vm.totalNotRequired" class="wf-highcharts-color-notreq jumbo"></span><span>not required</span></li>
                     <li ng-show="vm.type === 'Task'" ng-click="vm.getActivity('Resubmitted')"><span ng-bind="vm.totalResubmitted" class="wf-highcharts-color-resubmitted jumbo"></span><span>resubmitted</span></li>
                     <li ng-show="vm.type === 'Task'" ng-click="vm.getActivity('Rejected')"><span ng-bind="vm.totalRejected" class="wf-highcharts-color-rejected jumbo"></span><span>rejected</span></li>
                     <li ng-click="vm.getActivity('Cancelled')"><span ng-bind="vm.totalCancelled" class="wf-highcharts-color-cancelled jumbo"></span><span>cancelled</span></li>
-                    <li ng-click="vm.getActivity('Pending Approval')"><span ng-bind="vm.totalPending" class="wf-highcharts-color-pending jumbo"></span><span>pending</span></li>
+                    <li ng-click="vm.getActivity('PendingApproval')"><span ng-bind="vm.totalPending" class="wf-highcharts-color-pending jumbo"></span><span>pending</span></li>
                 </ul>
 
                 <div class="chart-controls">

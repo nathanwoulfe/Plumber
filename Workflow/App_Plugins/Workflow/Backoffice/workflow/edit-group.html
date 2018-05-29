@@ -89,8 +89,8 @@
                                 <select id="per-page" ng-model="vm.pagination.perPage" ng-options="n for n in vm.perPage()" ng-change="vm.pagination.goToPage(1)"></select>
                             </umb-editor-sub-header-content-right>
                         </umb-editor-sub-header>
-
-                        <wf-history items="vm.tasks" instance-view="false" group-history-view="true"></wf-history>
+                        
+                        <wf-instance items="vm.tasks" loaded="vm.tasksLoaded" view="vm.view"></wf-instance>
 
                         <div class="flex justify-center">
                             <umb-pagination ng-if="vm.pagination.totalPages > 1"

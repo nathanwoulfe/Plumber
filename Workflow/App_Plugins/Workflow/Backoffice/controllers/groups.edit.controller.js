@@ -1,5 +1,4 @@
 ﻿(() => {
-    'use strict';
 
     function editController($scope,
         $routeParams,
@@ -9,6 +8,8 @@
         notificationsService,
         contentResource,
         navigationService) {
+
+        this.view = '';
 
         const getContentTypes = () => {
 
@@ -53,6 +54,9 @@
                     this.tasks = resp.items;
                     this.pagination.pageNumber = resp.page;
                     this.pagination.totalPages = resp.totalPages;
+
+                    this.tasksLoaded = true;
+                    this.view = 'group';
                 });
         };
 

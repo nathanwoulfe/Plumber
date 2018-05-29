@@ -1,7 +1,7 @@
 ﻿namespace Workflow.Helpers
 {
     public class SqlHelpers
-    {        
+    {
         // settings
         public const string GetSettings = @"SELECT * FROM WorkflowSettings";
 
@@ -33,8 +33,22 @@
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
                             ORDER BY WorkflowInstance.CreatedDate DESC";
+        public const string AllInstancesForNode = @"SELECT * FROM WorkflowInstance 
+                            LEFT JOIN WorkflowTaskInstance
+                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
+                            LEFT JOIN WorkflowUserGroups
+                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
+                            WHERE WorkflowInstance.NodeId = @0
+                            ORDER BY WorkflowInstance.CreatedDate DESC";
         public const string AllInstancesForDateRange = @"SELECT * FROM WorkflowInstance
                             WHERE CompletedDate IS NULL OR CompletedDate >= CONVERT(DATETIME, @0)";
+        public const string FilteredInstancesForDateRange = @"SELECT * FROM WorkflowInstance
+                            LEFT JOIN WorkflowTaskInstance
+                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
+                            LEFT JOIN WorkflowUserGroups
+                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
+                            WHERE (WorkflowInstance.CompletedDate IS NULL OR WorkflowInstance.CompletedDate >= CONVERT(DATETIME, @0))
+                            AND (@1 = -1 OR WorkflowInstance.Status = @1)";
 
         // tasks
         public const string CountGroupTasks = @"SELECT COUNT(*) FROM WorkflowTaskInstance WHERE GroupId = @0";
@@ -71,7 +85,14 @@
                             WHERE WorkflowTaskInstance.GroupId = @0
                             ORDER BY WorkflowTaskInstance.CreatedDate DESC";
         public const string AllTasksForDateRange = @"SELECT * FROM WorkflowTaskInstance
-                            WHERE (CompletedDate IS NULL) OR (CompletedDate >= CONVERT(DATETIME, @0))";
+                            WHERE (CompletedDate IS NULL OR CompletedDate >= CONVERT(DATETIME, @0))";
+        public const string FilteredTasksForDateRange = @"SELECT * FROM WorkflowTaskInstance
+                            LEFT JOIN WorkflowInstance
+                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid                           
+                            LEFT JOIN WorkflowUserGroups
+                            on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
+                            WHERE (WorkflowTaskInstance.CompletedDate IS NULL OR WorkflowTaskInstance.CompletedDate >= CONVERT(DATETIME, @0))
+                            AND (@1 = -1 OR WorkflowTaskInstance.Status = @1)";
         public const string PendingTasks = @"SELECT * FROM WorkflowTaskInstance 
                             LEFT JOIN WorkflowInstance
                             on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid
@@ -85,7 +106,7 @@
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
                             WHERE WorkflowInstance.NodeId = @0
-                            ORDER BY WorkflowTaskInstance.CreatedDate DESC";                                                                
+                            ORDER BY WorkflowTaskInstance.CreatedDate DESC";
         public const string TasksAndGroupByInstanceId = @"SELECT * FROM WorkflowTaskInstance 
                             LEFT JOIN WorkflowUserGroups
                             ON WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId

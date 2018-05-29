@@ -25,9 +25,9 @@
             // api call for tasks created by the current user
             workflowResource.getSubmissionsForUser(this.currentUser.id,
                     this.submissionPagination.perPage,
-                    this.submissionPagination.pageNumber)
+                    this.submissionPagination.pageNumber) 
                 .then(resp => {
-                        this.submissions = resp.items;
+                        this.submissions = resp.items; 
                         this.submissionPagination.pageNumber = resp.page;
                         this.submissionPagination.totalPages = resp.total / resp.count;
                         this.loaded[1] = true;

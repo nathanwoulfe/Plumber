@@ -16,6 +16,7 @@
                 // type = 0, 1
                 // 0 -> full button set
                 // 1 -> cancel, edit - this is reversed if the task is rejected
+                // 2 -> no buttons
                 const buttons = {
                     approveButton: {
                         labelKey: 'workflow_approveButton',
@@ -51,16 +52,20 @@
                     [buttons.cancelButton]
                 ];
 
-                $scope.buttonGroup = {
-                    defaultButton: $scope.type === 0 ? buttons.approveButton : buttons.cancelButton,
-                    subButtons: subButtons[$scope.type]
-                };
+                if ($scope.type !== 2) {
+                    $scope.buttonGroup = {
+                        defaultButton: $scope.type === 0 ? buttons.approveButton : buttons.cancelButton,
+                        subButtons: subButtons[$scope.type]
+                    };
+                } else {
+                    $scope.noActions = true;
+                }
 
                 // when the items arrive, if it's my subs or admin list, and the last task was rejected
                 // flip the order of the cancel and edit buttons
                 $scope.$watch('items',
                     newVal => {
-                        if (newVal.length && $scope.type === 1) {
+                        if (newVal && newVal.length && $scope.type === 1) {
                             const currentTask = newVal[newVal.length - 1];
 
                             if (currentTask.cssStatus === 'rejected') {

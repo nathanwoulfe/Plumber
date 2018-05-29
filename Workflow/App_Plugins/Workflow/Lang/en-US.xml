@@ -31,6 +31,9 @@
     <key alias="config">Configuration</key>
     <key alias="currentWorkflowRoles">Current workflow roles</key>
     <key alias="excludeNodes">Exclude nodes</key>
+    <key alias="myTasks">Tasks requiring my approval</key>
+    <key alias="mySubmissions">My submissions</key>
+    <key alias="workflowAdministration">Workflow administration</key>
 
     <!-- settings box titles -->
     <key alias="generalSettings">General</key>

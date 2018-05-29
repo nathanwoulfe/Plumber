@@ -1,5 +1,4 @@
 ﻿(() => {
-    'use strict';
 
     function actionController($scope, workflowResource) {
         this.limit = 250;
@@ -20,7 +19,7 @@
          * @returns {} 
          */
         this.getRequestedOn = date => {
-            var d = new moment(date).utc();
+            const d = new moment(date).utc();
             return d.format(d.minutes() === 0 ? dateFormatNoMinute : dateFormat);
         };
 
@@ -60,6 +59,10 @@
             if (task.status === 4) {
                 return 'next-media';
             }
+            // not required
+            if (task.status === 5) {
+                return 'stop';
+            }
 
             return '';
         };
@@ -70,7 +73,7 @@
          */
         workflowResource.getAllTasksByGuid($scope.model.guid)
             .then(resp => {
-                var tasks = resp.items; //.filter(v => v.comment !== null);
+                const tasks = resp.items;
 
                 // current step should only count approved tasks - maybe rejected/resubmitted into
                 this.currentStep = resp.currentStep;

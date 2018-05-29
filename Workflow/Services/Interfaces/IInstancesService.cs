@@ -9,7 +9,11 @@ namespace Workflow.Services.Interfaces
         IEnumerable<WorkflowInstancePoco> GetAll();
         IEnumerable<WorkflowInstancePoco> GetForNodeByStatus(int nodeId, IEnumerable<int> status);
 
-        List<WorkflowInstance> Get(int? page, int? count, DateTime? oldest);
+        List<WorkflowInstance> Get(int? page, int? count);
+        List<WorkflowInstance> GetByNodeId(int nodeId, int? page, int? count);
+        List<WorkflowInstance> GetAllInstancesForDateRange(DateTime? oldest);
+        List<WorkflowInstance> GetFilteredPagedInstancesForDateRange(DateTime oldest, int? count, int? page, string filter = "");
+
         WorkflowInstancePoco GetByGuid(Guid guid);
 
         int CountPending();

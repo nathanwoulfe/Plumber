@@ -1,0 +1,54 @@
+﻿<div ng-controller="Workflow.DrawerButtons.Controller as vm" class="workflow workflow-button-drawer" ng-cloak>
+
+    <div class="active-banner" ng-if="vm.active && !vm.userCanEdit">
+        <p>Document is currently in a workflow</p>
+    </div>
+
+    <div class="active-banner" ng-if="vm.active && vm.userCanEdit">
+        <p>Previous changes were rejected</p>
+    </div>
+
+    <umb-button ng-if="page.listViewPath"
+                type="link"
+                href="#{{page.listViewPath}}"
+                label="Return to list"
+                label-key="buttons_returnToList">
+    </umb-button>
+
+    <umb-button ng-if="!page.isNew"
+                type="button"
+                action="(vm.active ? vm.preview(content) : preview(content))"
+                state="page.buttonGroupState"
+                label="Preview">
+    </umb-button>
+
+    <umb-button ng-if="page.isNew"
+                type="button"
+                action="save(content)"
+                state="page.buttonGroupState"
+                label="Save">
+    </umb-button>
+
+    <umb-button-group ng-show="defaultButton && vm.excludeNode || page.trashed"
+                      default-button="defaultButton"
+                      sub-buttons="subButtons"
+                      state="page.buttonGroupState"
+                      direction="up"
+                      float="right">
+    </umb-button-group>
+
+    <workflow-button-group ng-show="!page.isNew && !vm.excludeNode"
+                           default-button="vm.buttonGroup.defaultButton"
+                           sub-buttons="vm.buttonGroup.subButtons"
+                           direction="up"
+                           item="vm.task"
+                           drawer="true"
+                           float="right">
+    </workflow-button-group>
+
+    <umb-overlay ng-if="vm.workflowOverlay.show"
+                 model="vm.workflowOverlay"
+                 view="vm.workflowOverlay.view"
+                 position="right">
+    </umb-overlay>
+</div>

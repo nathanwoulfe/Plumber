@@ -66,7 +66,19 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="WorkflowInstancePoco"/></returns>
         public List<WorkflowInstancePoco> GetAllInstances()
         {
-            return _database.Fetch<WorkflowInstancePoco, WorkflowTaskInstancePoco, UserGroupPoco, WorkflowInstancePoco>(new UserToGroupForInstanceRelator().MapIt, SqlHelpers.AllInstances);
+            return _database.Fetch<WorkflowInstancePoco, WorkflowTaskInstancePoco, UserGroupPoco, WorkflowInstancePoco>
+                (new UserToGroupForInstanceRelator().MapIt, SqlHelpers.AllInstances);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        public List<WorkflowInstancePoco> GetAllInstancesForNode(int nodeId)
+        {
+            return _database.Fetch<WorkflowInstancePoco, WorkflowTaskInstancePoco, UserGroupPoco, WorkflowInstancePoco>
+                (new UserToGroupForInstanceRelator().MapIt, SqlHelpers.AllInstancesForNode, nodeId);
         }
 
         /// <summary>
@@ -77,6 +89,19 @@ namespace Workflow.Repositories
         public List<WorkflowInstancePoco> GetAllInstancesForDateRange(DateTime oldest)
         {
             return _database.Fetch<WorkflowInstancePoco>(SqlHelpers.AllInstancesForDateRange, oldest);
+        }
+
+        /// <summary>
+        /// Get all workflow instances created after the given date
+        /// </summary>
+        /// <param name="oldest">The creation date of the oldest instances to return</param>
+        /// <param name="filter"></param>
+        /// <returns>A list of objects of type <see cref="WorkflowInstancePoco"/></returns>
+        public List<WorkflowInstancePoco> GetFilteredPagedInstancesForDateRange(DateTime oldest, string filter)
+        {
+            int filterVal = !string.IsNullOrEmpty(filter) ? (int)Enum.Parse(typeof(WorkflowStatus), filter) : -1;
+            return _database.Fetch<WorkflowInstancePoco, WorkflowTaskInstancePoco, UserGroupPoco, WorkflowInstancePoco>
+                (new UserToGroupForInstanceRelator().MapIt, SqlHelpers.FilteredInstancesForDateRange, oldest, filterVal);
         }
 
         /// <summary>

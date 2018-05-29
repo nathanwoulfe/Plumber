@@ -37,9 +37,23 @@
 
             getAllTasksForRange: days => request('GET', urls.tasks + 'range/' + days),
 
-            getAllInstances: (count, page, filter) => request('GET', urls.instances + count + '/' + page + '/' + filter),
+            getFilteredTasksForRange: (days, filter, count, page) => request('GET', urls.tasks + 'filteredRange/'
+                + days
+                + (filter ? `/${filter}` : '')
+                + (count ? `/${count}` : '')
+                + (page ? `/${page}` : '')),
+
+            getAllInstances: (count, page, filter) => request('GET', urls.instances + count + '/' + page + '/' + (filter || '')),
 
             getAllInstancesForRange: days => request('GET', urls.instances + 'range/' + days),
+
+            getAllInstancesForNode: (nodeId, count, page) => request('GET', urls.instances + nodeId + '/' + count + '/' + page),
+
+            getFilteredInstancesForRange: (days, filter, count, page) => request('GET', urls.instances + 'filteredRange/'
+                + days
+                + (filter ? `/${filter}` : '')
+                + (count ? `/${count}` : '')
+                + (page ? `/${page}` : '')),
 
             getAllTasksForGroup: (groupId, count, page) => request('GET', urls.tasks + 'group/' + groupId + '/' + count + '/' + page),
 
