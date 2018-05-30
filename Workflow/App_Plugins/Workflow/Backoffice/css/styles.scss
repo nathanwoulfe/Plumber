@@ -3,6 +3,7 @@
 @import "../lib/highcharts/highcharts.scss";
 
 .workflow {
+    color:#303033;
 
     hr {
         clear: both;
@@ -157,7 +158,7 @@
     .task-detail-btn {
         padding: 0;
         background: 0 0;
-        margin-right: 10px;
+        margin-right: 10px;        
 
         &:hover {
             background: #fff;
@@ -182,6 +183,10 @@
         > div {
             margin-left: 5px;
         } 
+    }
+
+    .umb-table-cell .umb-overlay {
+        cursor:default;
     }
 
     .no-sub-button .umb-button__button {

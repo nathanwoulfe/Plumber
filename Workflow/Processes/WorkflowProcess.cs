@@ -108,10 +108,11 @@ namespace Workflow.Processes
                     Comment = comment,
                     CompletedDate = DateTime.Now,
                     Status = (int) TaskStatus.Resubmitted,
-                    WorkflowInstanceGuid = Instance.Guid
+                    WorkflowInstanceGuid = Instance.Guid,
                 };
 
                 _tasksService.InsertTask(resubmitTask);
+                Instance.TaskInstances.Add(resubmitTask);
 
                 // when approving a task for a rejected workflow, create the new task with the same approval step as the rejected task
                 // update the rejected task status to resubmitted
@@ -121,8 +122,6 @@ namespace Workflow.Processes
 
                 WorkflowTaskInstancePoco rejectedTask = Instance.TaskInstances.Last(x => x.TaskStatus == TaskStatus.Rejected);
                 rejectedTask.Status = (int) TaskStatus.Resubmitted;
-                rejectedTask.Type = (int) TaskType.Rejected;
-
                 _tasksService.UpdateTask(rejectedTask);
             }
             else
@@ -153,7 +152,7 @@ namespace Workflow.Processes
             {
                 Instance = instance;
 
-                if (Instance.WorkflowStatus == WorkflowStatus.PendingApproval)
+                if (Instance.WorkflowStatus == WorkflowStatus.PendingApproval || Instance.WorkflowStatus == WorkflowStatus.Rejected || Instance.WorkflowStatus == WorkflowStatus.Resubmitted)
                 {
                     // if pending, update to approved or rejected
                     ProcessApprovalAction(action, userId, comment);
@@ -283,7 +282,10 @@ namespace Workflow.Processes
         private void ProcessApprovalAction(WorkflowAction action, int userId, string comment)
         {
             // tasks are ordered by approval step, so could probably take the last, but best to also check for the correct status.
-            WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.LastOrDefault(x => x.TaskStatus != TaskStatus.Approved);
+            // todo - not sure this is correct. lastordefault could likely just be first, as will only be a single task
+            WorkflowTaskInstancePoco taskInstance = action == WorkflowAction.Approve
+                ? Instance.TaskInstances.LastOrDefault(x => x.TaskStatus != TaskStatus.Approved)
+                : Instance.TaskInstances.First();
 
             if (taskInstance == null) return;
 

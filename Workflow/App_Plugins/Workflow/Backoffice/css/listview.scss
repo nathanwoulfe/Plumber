@@ -68,11 +68,11 @@
 }
 
 /* colours will be available for all elements in the .workspace namespace */
-.pending {
-    color: $pending;
+.pending, .pending-approval {
+    color: $umbPurple;
 
     .umb-table-body__icon {
-        color: $pending;
+        color: $umbPurple;
     }
 }
 
@@ -84,15 +84,16 @@
     color: $danger;
 }
 
+.not-required {
+    color:$pending;
+}
+
 .rejected, .resubmitted {
     color: $warning;
-
-    i, a {
-        color: $warning;
-    }
 }
 
 .action-dialog {
+
     .not-required {
         color:$pending;
     }

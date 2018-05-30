@@ -18,14 +18,20 @@
                     <span class="counter">Stage {{ $index + 1 }}</span>
                 </div>
                 <div class="history-tasks">
-                    <div class="history-task" ng-repeat="t in taskCollection">
+                    <div class="history-task" ng-repeat="t in taskCollection | orderBy: 'id'">
                         <i class="icon icon-{{ vm.getIconName(t) }} {{ vm.getStatusName(t) | lowercase }}"></i>
-                        <div ng-if="t.status !== 4 && t.status !== 3">
+                        <!-- todo - this is horrible. fix it -->
+                        <div ng-if="t.type === 2">
+                            Resubmitted by {{t.actionedByUser.name}}<br />
+                            on {{ vm.getRequestedOn(t.completedDate) }} <br />
+                            Comment: {{ t.comment }}
+                        </div>
+                        <div ng-if="t.status !== 4 && t.status !== 3 && t.type !== 2">
                             <span ng-bind="vm.getStatusName(t)"></span> by <strong ng-bind="t.userGroup.name"></strong> ({{t.actionedByUser.name}})<br />
                             on {{ vm.getRequestedOn(t.completedDate) }} <br />
                             Comment: {{ t.comment }}
                         </div>
-                        <div ng-if="t.status === 3 && model.detail === true">
+                        <div ng-if="t.status === 3">
                             Pending approval by <strong ng-bind="t.userGroup.name"></strong>
                         </div>
                         <div ng-if="t.status === 4">

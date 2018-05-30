@@ -59,7 +59,10 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<WorkflowTask> GetPendingTasks(IEnumerable<int> status, int count, int page)
         {
-            IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetPendingTasks(status);
+            IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetPendingTasks(status)
+                .GroupBy(x => x.WorkflowInstanceGuid)
+                .Select(x => x.First());
+
             List<WorkflowTask> tasks = ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
 
             return tasks;
@@ -134,7 +137,10 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetAllPendingTasks(IEnumerable<int> status)
         {
-            List<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllPendingTasks(status);
+            List<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllPendingTasks(status)
+                .GroupBy(x => x.WorkflowInstanceGuid)
+                .Select(x => x.First()).ToList();
+
             return taskInstances;
         }
 
@@ -189,7 +195,9 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status)
         {
-            return _tasksRepo.GetTaskSubmissionsForUser(id, status);
+            return _tasksRepo.GetTaskSubmissionsForUser(id, status)
+                .GroupBy(x => x.WorkflowInstanceGuid)
+                .Select(x => x.First()).ToList();
         }
 
         /// <summary>

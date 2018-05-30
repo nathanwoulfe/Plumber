@@ -15,7 +15,7 @@
 
         /**
          * Parses the requestedOn date into a UI fiendly version
-         * @param {} date 
+         * @param {} date  
          * @returns {} 
          */
         this.getRequestedOn = date => {

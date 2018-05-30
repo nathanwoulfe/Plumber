@@ -13,7 +13,7 @@ install:
   - set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe;C:\Ruby22\bin;%PATH%
   - cmd: gem install sass
   - cmd: npm install -g grunt-cli
-  - cmd: set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=rc
+  - cmd: set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
   - cmd: set UMBRACO_PACKAGE_MIN_VERSION=7.7.0
   - cmd: cd BuildPackage
   - cmd: Build.bat
@@ -43,8 +43,8 @@ deploy:
     
   - provider: GitHub
     tag: v0.8.0
-    release: Release 0.8.0
-    description: "Adds setting to allow current workflow group to modify active content."
+    release: Release 0.8.0-beta
+    description: "The post-Codegarden release: consistent display for history, links from chart header to filtered history, multiple rejections work correctly, dialogs are consistent, project structure improvements, tours, improved handling of failed docs load"
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
