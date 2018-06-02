@@ -1,5 +1,5 @@
 # version format
-version: 0.8.0.{build}
+version: 0.8.1.{build}
 
 image: Visual Studio 2017
 
@@ -42,8 +42,8 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v0.8.0
-    release: Release 0.8.0-beta
+    tag: v0.8.1
+    release: Release 0.8.1-beta
     description: "The post-Codegarden release: consistent display for history, links from chart header to filtered history, multiple rejections work correctly, dialogs are consistent, project structure improvements, tours, improved handling of failed docs load"
     force_update: true
     auth_token:
