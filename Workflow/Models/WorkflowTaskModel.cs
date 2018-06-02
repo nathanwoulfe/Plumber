@@ -21,9 +21,6 @@ namespace Workflow.Models
         public string RequestedBy { get; set; }
         public string RequestedOn { get; set; }
         public string Comment { get; set; }
-        public string ApprovedBy { get; set; }
-        public string ApprovedOn { get; set; }
-        public string ApprovalComment { get; set; }
         public string ApprovalGroup { get; set; }
         public string ActiveTask { get; set; }
 

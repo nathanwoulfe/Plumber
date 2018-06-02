@@ -1,8 +1,8 @@
 ﻿<div class="umb-panel workflow">
     <div class="umb-dashboard" ng-controller="Workflow.AdminDashboard.Controller as vm">
         <umb-editor-view footer="false">
-            <umb-editor-container>           
-                
+            <umb-editor-container>
+
                 <div class="upgrade alert alert-info" ng-if="vm.version && vm.version.outOfDate">
                     <button type="button" class="close" title="I don't care about cool new features" data-dismiss="alert" ng-click="vm.updateAlertHidden()">&times;</button>
                     <h3>You're missing out! Plumber is out of date ({{ vm.version.currentVersion }})</h3>
@@ -10,45 +10,52 @@
                     <p>Release notes: {{ vm.version.releaseNotes }}</p>
                     <p>Release date: {{ vm.version.releaseDate }}</p>
                 </div>
-                 
+
                 <div class="upgrade upgrade-current alert alert-info" ng-if="!vm.version.outOfDate && vm.version">
                     <p>You're up to date, running Plumber {{ vm.version.currentVersion }}</p>
                 </div>
-                <hr/>
+                <hr />
                 <ul class="chart-header vert-centered">
                     <li>Take a tour:</li>
-                    <li><umb-button action="vm.launchTour('plmbrGroups')"
+                    <li>
+                        <umb-button action="vm.launchTour('plmbrGroups')"
                                     type="button"
                                     button-style="info"
-                                    label="Approval groups"></umb-button></li>
-                    <li><umb-button action="vm.launchTour('plmbrSettings')"
+                                    label="Approval groups"></umb-button>
+                    </li>
+                    <li>
+                        <umb-button action="vm.launchTour('plmbrSettings')"
                                     type="button"
                                     button-style="info"
-                                    label="Global settings"></umb-button></li>
-                    <li><umb-button action="vm.launchTour('plmbrConfig')"
+                                    label="Global settings"></umb-button>
+                    </li>
+                    <li>
+                        <umb-button action="vm.launchTour('plmbrConfig')"
                                     type="button"
                                     button-style="info"
-                                    label="Configuring workflows"></umb-button></li>
-               </ul>
-                <hr/>
-                <ul class="chart-header">
-                    <li ng-click="vm.getActivity('Approved')"><span ng-bind="vm.totalApproved" class="wf-highcharts-color-approved jumbo"></span><span>approved</span></li>
-                    <li ng-show="vm.type === 'Task'" ng-click="vm.getActivity('NotRequired')"><span ng-bind="vm.totalNotRequired" class="wf-highcharts-color-notreq jumbo"></span><span>not required</span></li>
-                    <li ng-show="vm.type === 'Task'" ng-click="vm.getActivity('Resubmitted')"><span ng-bind="vm.totalResubmitted" class="wf-highcharts-color-resubmitted jumbo"></span><span>resubmitted</span></li>
-                    <li ng-show="vm.type === 'Task'" ng-click="vm.getActivity('Rejected')"><span ng-bind="vm.totalRejected" class="wf-highcharts-color-rejected jumbo"></span><span>rejected</span></li>
-                    <li ng-click="vm.getActivity('Cancelled')"><span ng-bind="vm.totalCancelled" class="wf-highcharts-color-cancelled jumbo"></span><span>cancelled</span></li>
-                    <li ng-click="vm.getActivity('PendingApproval')"><span ng-bind="vm.totalPending" class="wf-highcharts-color-pending jumbo"></span><span>pending</span></li>
+                                    label="Configuring workflows"></umb-button>
+                    </li>
                 </ul>
+                <hr />
 
                 <div class="chart-controls">
                     <umb-control-group label="@workflow_dateRange">
-                        <input type="number" name="date-range" ng-model="vm.range" ng-change="vm.getForRange()" ng-model-options="{ debounce: 300 }" no-dirty-check/>
+                        <input type="number" name="date-range" ng-model="vm.range" ng-change="vm.getForRange()" ng-model-options="{ debounce: 300 }" no-dirty-check />
                     </umb-control-group>
                     <umb-control-group label="@workflow_viewType">
                         <select name="view-type" ng-model="vm.type" ng-options="o for o in ['Task', 'Instance']" ng-change="vm.getForRange()" no-dirty-check></select>
                     </umb-control-group>
                 </div>
-                
+
+                <ul class="chart-header">
+                    <li ng-click="vm.getActivity('Approved')"><span ng-bind="vm.totalApproved" class="wf-highcharts-color-approved jumbo"></span><span>approved</span></li>
+                    <li ng-show="vm.type === 'Task'" ng-click="vm.getActivity('NotRequired', 'Not required')"><span ng-bind="vm.totalNotRequired" class="wf-highcharts-color-notreq jumbo"></span><span>not required</span></li>
+                    <li ng-show="vm.type === 'Task'" ng-click="vm.getActivity('Resubmitted')"><span ng-bind="vm.totalResubmitted" class="wf-highcharts-color-resubmitted jumbo"></span><span>resubmitted</span></li>
+                    <li ng-show="vm.type === 'Task'" ng-click="vm.getActivity('Rejected')"><span ng-bind="vm.totalRejected" class="wf-highcharts-color-rejected jumbo"></span><span>rejected</span></li>
+                    <li ng-click="vm.getActivity('Cancelled')"><span ng-bind="vm.totalCancelled" class="wf-highcharts-color-cancelled jumbo"></span><span>cancelled</span></li>
+                    <li ng-click="vm.getActivity('PendingApproval', 'Pending approval')"><span ng-bind="vm.totalPending" class="wf-highcharts-color-pending jumbo"></span><span>pending</span></li>
+                </ul>
+
                 <wf-line-chart series="vm.series" ready="vm.loaded" ng-class="{ 'chart-loading' : !vm.loaded }"></wf-line-chart>
 
             </umb-editor-container>

@@ -176,6 +176,13 @@
         }
     }
 
+    &-history {
+        .umb-editor-sub-header,
+        .chart-controls.umb-property {
+            margin-bottom:0;
+        }
+    }
+
     &.workflow-button-drawer {
         display: flex;
         align-items: center;

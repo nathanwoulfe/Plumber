@@ -120,8 +120,8 @@ namespace Workflow.Processes
                 WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(Instance.NodeId);
                 ApproveOrContinue(taskInstance, userId);
 
-                WorkflowTaskInstancePoco rejectedTask = Instance.TaskInstances.Last(x => x.TaskStatus == TaskStatus.Rejected);
-                rejectedTask.Status = (int) TaskStatus.Resubmitted;
+                WorkflowTaskInstancePoco rejectedTask = Instance.TaskInstances.First(x => x.TaskStatus == TaskStatus.Rejected);
+                rejectedTask.Status = (int)TaskStatus.Resubmitted;
                 _tasksService.UpdateTask(rejectedTask);
             }
             else
@@ -215,7 +215,7 @@ namespace Workflow.Processes
                 Instance.CompletedDate = DateTime.Now;
                 Instance.Status = (int)WorkflowStatus.Cancelled;
 
-                WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.Last();
+                WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.First();
                 if (taskInstance != null)
                 {
                     // Cancel the task and workflow instances
@@ -281,11 +281,7 @@ namespace Workflow.Processes
         /// <param name="comment"></param>
         private void ProcessApprovalAction(WorkflowAction action, int userId, string comment)
         {
-            // tasks are ordered by approval step, so could probably take the last, but best to also check for the correct status.
-            // todo - not sure this is correct. lastordefault could likely just be first, as will only be a single task
-            WorkflowTaskInstancePoco taskInstance = action == WorkflowAction.Approve
-                ? Instance.TaskInstances.LastOrDefault(x => x.TaskStatus != TaskStatus.Approved)
-                : Instance.TaskInstances.First();
+            WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.First();
 
             if (taskInstance == null) return;
 

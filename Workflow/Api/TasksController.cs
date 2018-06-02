@@ -266,8 +266,11 @@ namespace Workflow.Api
             try
             {
                 List<WorkflowTaskInstancePoco> taskInstances = type == 0
-                    ? _tasksService.GetAllPendingTasks(new List<int> { (int)TaskStatus.PendingApproval })
-                    : _tasksService.GetTaskSubmissionsForUser(userId, new List<int> { (int)TaskStatus.PendingApproval, (int)TaskStatus.Rejected });
+                    ? _tasksService.GetAllPendingTasks(new List<int>
+                            {(int) TaskStatus.PendingApproval, (int) TaskStatus.Rejected })
+                    : _tasksService.GetTaskSubmissionsForUser(userId, new List<int>
+                        {(int) TaskStatus.PendingApproval, (int) TaskStatus.Rejected});
+                            
 
                 if (type == 0)
                 {
@@ -276,10 +279,12 @@ namespace Workflow.Api
                         taskInstance.UserGroup = await _groupService.GetPopulatedUserGroupAsync(taskInstance.UserGroup.GroupId);
                     }
 
-                    taskInstances = taskInstances.Where(x => x.UserGroup.IsMember(userId)).ToList();
+                    taskInstances = taskInstances.Where(x => 
+                        x.UserGroup.IsMember(userId) ||
+                        (x.Status == (int) TaskStatus.Rejected && x.WorkflowInstance.AuthorUserId == userId)).ToList();
                 }
 
-                List<WorkflowTask> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
+                List<WorkflowTask> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList(), false);
 
                 return Json(new
                 {

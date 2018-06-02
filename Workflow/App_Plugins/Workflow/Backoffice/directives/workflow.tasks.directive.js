@@ -1,7 +1,5 @@
 ﻿(() => {
-    'use strict';
-
-    function tasks($location, userService, workflowActionsService) {
+    function tasks($location, workflowActionsService) {
 
         const directive = {
             restrict: 'AEC',
@@ -36,7 +34,7 @@
                         handler: item => {
                             $scope.$parent.vm.workflowOverlay = workflowActionsService.cancel(item, true);
                         }
-                    },                
+                    },
                     rejectButton: {
                         labelKey: 'workflow_rejectButton',
                         cssClass: 'warning',
@@ -61,23 +59,17 @@
                     $scope.noActions = true;
                 }
 
-                // when the items arrive, if it's my subs or admin list, and the last task was rejected
+                // when the items arrive, if a task was rejected
                 // flip the order of the cancel and edit buttons
                 $scope.$watch('items',
                     newVal => {
-                        if (newVal && newVal.length && $scope.type === 1) {
-                            const currentTask = newVal[newVal.length - 1];
-
-                            if (currentTask.cssStatus === 'rejected') {
-
-                                userService.getCurrentUser()
-                                    .then(userResp => {
-                                        if (userResp.id === currentTask.requestedById) {
-                                            $scope.buttonGroup.defaultButton = buttons.editButton;
-                                            $scope.buttonGroup.subButtons = [buttons.cancelButton];
-                                        }
-                                    });
-                            }
+                        if (newVal && newVal.length && $scope.type === 0) {
+                            $scope.items.forEach(i => {
+                                if (i.cssStatus === 'rejected') {
+                                    $scope.buttonGroup.defaultButton = buttons.editButton;
+                                    $scope.buttonGroup.subButtons = [buttons.cancelButton];
+                                }
+                            });
                         }
                     });
             }
@@ -86,6 +78,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('wfTasks', ['$location', 'userService', 'plmbrActionsService', tasks]);
+    angular.module('umbraco.directives').directive('wfTasks', ['$location', 'plmbrActionsService', tasks]);
 
 })();

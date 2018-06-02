@@ -106,6 +106,14 @@
         }
     }
 
+    &.has-steps {
+        margin:0 -5px;
+
+        li {
+            margin: 0 5px 20px;
+        }
+    }
+
     li {
         display:flex;
         flex-basis: 20%;
@@ -122,6 +130,16 @@
         line-height: 1;
     }
 
+    .progress-step {
+        &::before, &::after {
+            display:none;
+        }
+
+        .marker {
+            margin-bottom:10px;
+        }
+    }
+
     .jumbo {
         font-weight: bold;
         display: block;
@@ -134,8 +152,12 @@
     justify-content: center;
     margin-bottom: 30px;
 
+    .workflow-history & {
+        margin-bottom:0;
+    }
+
     label {
-        width: 100px;
+        width: 120px;
     }
 
     .umb-property {

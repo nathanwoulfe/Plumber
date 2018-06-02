@@ -324,8 +324,9 @@ namespace Workflow.Api
 
             if (tasks.Any())
             {
-                // ordering by approval step is most logical
-                instance.TaskInstances = tasks.OrderBy(t => t.ApprovalStep).ToList();
+                // ordering by descending id to allow for cases with multiple rejections
+                // most recent will be highest id, obviously...
+                instance.TaskInstances = tasks.OrderByDescending(t => t.Id).ToList();
             }
 
             return instance;

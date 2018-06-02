@@ -155,12 +155,18 @@
                 .then(resp => {
                     tourService.startTour(resp);
                 });
-        }
+        };
 
-        const getActivity = filter => {
-            workflowResource.setActivityFilter({ type: this.type, filter: filter, range: this.range });
-            window.location = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/#/workflow/workflow/history/info';
-        }
+        const getActivity = (filter, friendly) => {
+            workflowResource.setActivityFilter({
+                type: this.type,
+                filter: filter,
+                range: this.range,
+                friendly: friendly
+            });
+            window.location = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath +
+                '/#/workflow/workflow/history/info';
+        };
 
         // kick it off with a four-week span
         angular.extend(this, {

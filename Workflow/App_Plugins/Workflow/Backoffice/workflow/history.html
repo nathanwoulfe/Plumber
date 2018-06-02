@@ -1,4 +1,4 @@
-﻿<form class="form-horizontal workflow" ng-controller="Workflow.History.Controller as vm" novalidate>
+﻿<form class="form-horizontal workflow workflow-history" ng-controller="Workflow.History.Controller as vm" novalidate>
     <umb-editor-view footer="false">
         <umb-editor-header name="vm.name"
                            name-locked="true"
@@ -16,13 +16,23 @@
                     </a>
                     <a class="btn" href="#" ng-show="vm.view !== 'instance'" ng-click="vm.getAllInstances()" prevent-default>
                         Show all
-                    </a>
+                    </a> 
                 </umb-editor-sub-header-left>
-                <umb-editor-sub-header-right>
-                    <label for="per-page">Items per page</label>
-                    <select id="per-page" ng-model="vm.pagination.perPage" ng-options="n for n in vm.perPage()" ng-change="vm.pagination.goToPage(1)"></select>
+                <umb-editor-sub-header-right> 
+                    <umb-control-group label="Per page" class="chart-controls">
+                        <select id="per-page" ng-model="vm.pagination.perPage" ng-options="n for n in vm.perPage()" ng-change="vm.pagination.goToPage(1)"></select>
+                    </umb-control-group>
                 </umb-editor-sub-header-right>
             </umb-editor-sub-header>
+
+            <ul class="chart-header has-steps">
+                <li class="progress-step done"><div class="marker"></div> Approved</li>
+                <li class="progress-step notrequired"><div class="marker"></div> Not required</li>
+                <li class="progress-step rejected"><div class="marker"></div> Rejected</li>
+                <li class="progress-step resubmitted"><div class="marker"></div> Resubmitted</li>
+                <li class="progress-step cancelled"><div class="marker"></div> Cancelled</li>
+                <li class="progress-step current"><div class="marker"></div> Current</li>
+            </ul>
             <div>
                 <div ng-show="vm.view === 'node'">
                     <h4>Workflow data for: <a ng-href="/umbraco#/content/content/edit/{{ vm.node.id }}">{{ vm.node.name }}</a></h4>
@@ -30,15 +40,15 @@
                 </div>
 
                 <div ng-show="vm.view.indexOf('activity') === 0">
-                    <h4>Workflow data for task status: {{ vm.activityFilter.filter }} (Last {{ vm.activityFilter.range }} days)</h4>
+                    <h4>Workflow data for task status: {{ vm.activityFilter.friendly || vm.activityFilter.filter }} (Last {{ vm.activityFilter.range }} days)</h4>
                     <wf-instance items="vm.items" loaded="vm.activityLoaded" view="vm.view"></wf-instance>
                 </div>
                 
                 <div ng-show="vm.view === 'instance'">
                     <wf-instance items="vm.items" loaded="vm.instancesLoaded" view="vm.view"></wf-instance>
                 </div>
-
-                <div class="flex justify-center">
+                 
+                <div class="flex justify-center" ng-show="vm.items">
                     <umb-pagination ng-if="vm.pagination.totalPages > 1"
                                     page-number="vm.pagination.pageNumber"
                                     total-pages="vm.pagination.totalPages"

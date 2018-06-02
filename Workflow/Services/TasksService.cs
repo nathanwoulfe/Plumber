@@ -59,7 +59,7 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<WorkflowTask> GetPendingTasks(IEnumerable<int> status, int count, int page)
         {
-            IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetPendingTasks(status)
+            IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllPendingTasks(status)
                 .GroupBy(x => x.WorkflowInstanceGuid)
                 .Select(x => x.First());
 
@@ -108,6 +108,7 @@ namespace Workflow.Services
                 var item = new WorkflowTask
                 {
                     Status = taskInstance.StatusName,
+                    TaskId = taskInstance.Id,
                     CssStatus = taskInstance.StatusName.ToLower().Split(' ')[0],
                     Type = typeDescription,
                     NodeId = instance.NodeId,
