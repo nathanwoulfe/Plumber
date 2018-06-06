@@ -109,7 +109,7 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Update_Node_Config_And_Event_Is_Raised()
         {
-            _configService.Updated += (sender, args) =>
+            ConfigService.Updated += (sender, args) =>
             {
                 Assert.NotNull(args);
             };
@@ -150,7 +150,7 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Update_ContentType_Config_And_Event_Is_Raised()
         {
-            _configService.Updated += (sender, args) =>
+            ConfigService.Updated += (sender, args) =>
             {
                 Assert.NotNull(args);
             };

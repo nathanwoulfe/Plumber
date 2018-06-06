@@ -46,6 +46,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowInstanceTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowProgressStepTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.importexportdashboard.html" />
+    <Compile Include="Events\Args\SettingsEventArgs.cs" />
     <Compile Include="Events\Args\ConfigEventArgs.cs" />
     <Compile Include="Events\Args\GroupEventArgs.cs" />
     <Compile Include="Events\Args\TaskEventArgs.cs" />

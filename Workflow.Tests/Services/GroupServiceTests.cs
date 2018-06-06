@@ -35,7 +35,7 @@ namespace Workflow.Tests.Services
         [Fact]
         public async void Can_Create_Group_And_Event_Is_Raised()
         {
-            _groupService.Created += (sender, args) =>
+            GroupService.Created += (sender, args) =>
             {
                 Assert.NotNull(args);
             };
@@ -49,7 +49,7 @@ namespace Workflow.Tests.Services
         [Fact]
         public async void Can_Update_Group_And_Event_Is_Raised()
         {
-            _groupService.Updated += (sender, args) =>
+            GroupService.Updated += (sender, args) =>
             {
                 Assert.NotNull(args);
             };
@@ -143,7 +143,7 @@ namespace Workflow.Tests.Services
             IEnumerable<UserGroupPoco> groups = await _groupService.GetUserGroupsAsync();
             int groupId = groups.First().GroupId;
 
-            _groupService.Deleted += (sender, args) =>
+            GroupService.Deleted += (sender, args) =>
             {
                 Assert.NotNull(args);
                 Assert.Equal(groupId, args.GroupId);

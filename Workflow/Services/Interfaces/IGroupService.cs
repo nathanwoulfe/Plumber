@@ -16,9 +16,5 @@ namespace Workflow.Services.Interfaces
         Task<IEnumerable<UserGroupPoco>> GetUserGroupsAsync();
 
         Task DeleteUserGroupAsync(int groupId);
-
-        event EventHandler<GroupEventArgs> Created;
-        event EventHandler<GroupDeletedEventArgs> Deleted;
-        event EventHandler<GroupEventArgs> Updated;
     }
 }

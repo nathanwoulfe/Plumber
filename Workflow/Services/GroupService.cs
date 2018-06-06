@@ -14,9 +14,9 @@ namespace Workflow.Services
     {
         private readonly IPocoRepository _repo;
 
-        public event EventHandler<GroupEventArgs> Created;
-        public event EventHandler<GroupEventArgs> Updated;
-        public event EventHandler<GroupDeletedEventArgs> Deleted;
+        public static event EventHandler<GroupEventArgs> Created;
+        public static event EventHandler<GroupEventArgs> Updated;
+        public static event EventHandler<GroupDeletedEventArgs> Deleted;
 
         public GroupService() : this(new PocoRepository())
         {
@@ -96,7 +96,7 @@ namespace Workflow.Services
 
             _repo.DeleteUsersFromGroup(existingPoco.GroupId);
 
-            foreach (var user in poco.Users)
+            foreach (User2UserGroupPoco user in poco.Users)
                 _repo.AddUserToGroup(user);
 
             _repo.UpdateUserGroup(poco);

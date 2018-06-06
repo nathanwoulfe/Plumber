@@ -14,8 +14,8 @@ namespace Workflow.Services
         private readonly IConfigService _configService;
         private readonly ITasksRepository _tasksRepo;
 
-        public event EventHandler<TaskEventArgs> Created;
-        public event EventHandler<TaskEventArgs> Updated;
+        public static event EventHandler<TaskEventArgs> Created;
+        public static event EventHandler<TaskEventArgs> Updated;
 
         public TasksService()
             : this(

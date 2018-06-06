@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Workflow.Events.Args;
 using Workflow.Models;
 
 namespace Workflow.Services.Interfaces
@@ -25,8 +24,5 @@ namespace Workflow.Services.Interfaces
 
         void InsertTask(WorkflowTaskInstancePoco poco);
         void UpdateTask(WorkflowTaskInstancePoco poco);
-
-        event EventHandler<TaskEventArgs> Created;
-        event EventHandler<TaskEventArgs> Updated;
     }
 }

@@ -30,7 +30,7 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Insert_Task_And_Raise_Event()
         {
-            _service.Created += (sender, args) =>
+            TasksService.Created += (sender, args) =>
             {
                 Assert.NotNull(args);
                 Assert.IsAssignableFrom<WorkflowTaskInstancePoco>(args.Task);
@@ -50,7 +50,7 @@ namespace Workflow.Tests.Services
         {
             const string comment = "Comment has been updated";
 
-            _service.Updated += (sender, args) =>
+            TasksService.Updated += (sender, args) =>
             {
                 Assert.NotNull(args);
                 Assert.IsAssignableFrom<WorkflowTaskInstancePoco>(args.Task);

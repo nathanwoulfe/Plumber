@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Umbraco.Core;
-using Umbraco.Core.Logging;
 using Umbraco.Core.Models;
-using Umbraco.Web;
 using Workflow.Events.Args;
 using Workflow.Models;
 using Workflow.Repositories;
@@ -19,7 +16,7 @@ namespace Workflow.Services
     public class ConfigService : IConfigService
     {
         private readonly IPocoRepository _repo;
-        public event EventHandler<ConfigEventArgs> Updated;
+        public static event EventHandler<ConfigEventArgs> Updated;
 
         public ConfigService()
             : this(new PocoRepository())
