@@ -11,17 +11,23 @@ namespace Workflow.Tests.WebDriver
     public class EditorTests
     {
         private readonly ChromeDriver _driver;
+        private readonly ChromeDriverFixture _fixture;
 
         public EditorTests(ChromeDriverFixture fixture)
         {
             _driver = fixture.Driver;
+            _fixture = fixture;
+
             fixture.EditorLogin();
         }
 
         [Fact]
         public void Editor_Cant_Access_Workflow_Section()
         {
-            Assert.Throws<NoSuchElementException>(() => _driver.FindElementByCssSelector("[data-element*='section-workflow']"));
+            _fixture.Wait(".sections");
+
+            Assert.Throws<NoSuchElementException>(() => 
+                _driver.FindElement(By.CssSelector("li[data-element='section-workflow']")));
         }
 
         [Fact]
@@ -29,8 +35,7 @@ namespace Workflow.Tests.WebDriver
         {
             _driver.Url = "http://localhost:56565/umbraco#/content/content/edit/1089";
 
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.ClassName("workflow-button-drawer")));
+            _fixture.Wait(".workflow-button-drawer");
             Assert.Throws<NoSuchElementException>(() => _driver.FindElementByLinkText("Save and publish"));
         }
 

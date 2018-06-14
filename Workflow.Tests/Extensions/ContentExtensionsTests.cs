@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Chauffeur.TestingTools;
+﻿using Chauffeur.TestingTools;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
@@ -17,20 +12,17 @@ namespace Workflow.Tests.Extensions
 {
     public class ContentExtensionsTests : UmbracoHostTestBase
     {
-        private readonly Workflow.Helpers.Utility _utility;
         private readonly IContentService _contentService;
         private readonly IContentTypeService _contentTypeService;
-        private readonly IConfigService _configService;
-        private readonly UmbracoContext _context;
 
         public ContentExtensionsTests()
         {
             Host.Run(new[] { "install y" }).Wait();
             Scaffold.Tables();
 
-            _context = Scaffold.EnsureContext();
+            UmbracoContext context = Scaffold.EnsureContext();
             
-            _configService = new ConfigService();
+            IConfigService configService = new ConfigService();
 
             _contentService = ApplicationContext.Current.Services.ContentService;
             _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;

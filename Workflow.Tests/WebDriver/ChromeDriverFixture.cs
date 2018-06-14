@@ -27,13 +27,14 @@ namespace Workflow.Tests.WebDriver
 
         private void Login(string user, string pass)
         {
+            Wait(".form");
+
             Driver.FindElementByName("username").SendKeys(user);
             Driver.FindElementByName("password").SendKeys(pass);
 
             Driver.FindElementByTagName("button").Click();
 
-            var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(2));
-            wait.Until(ExpectedConditions.ElementExists(By.TagName("section")));
+            Wait("section");
         }
 
         public void EditorLogin()
@@ -44,6 +45,12 @@ namespace Workflow.Tests.WebDriver
         public void AdminLogin()
         {
             Login(AdminUser, AdminPassword);
+        }
+
+        public void Wait(string css)
+        {
+            var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
         }
 
         /// <summary>
