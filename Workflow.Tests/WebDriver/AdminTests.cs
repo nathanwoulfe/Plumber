@@ -21,7 +21,7 @@ namespace Workflow.Tests.WebDriver
         [Fact]
         public void Admin_Can_Access_Workflow_Section()
         { 
-            _fixture.Wait(".sections");
+            _fixture.Wait("ul.sections");
 
             IWebElement element = _driver.FindElement(By.CssSelector("li[data-element='section-workflow']"));
             Assert.NotNull(element);
@@ -31,7 +31,7 @@ namespace Workflow.Tests.WebDriver
         public void Admin_Can_Save_And_Publish()
         {
             _driver.Url = "http://localhost:56565/umbraco#/content/content/edit/1089";
-            _fixture.Wait(".workflow-button-drawer");
+            _fixture.Wait("div.workflow-button-drawer");
 
             Assert.Throws<NoSuchElementException>(() => _driver.FindElementByLinkText("Save and publish"));
         }

@@ -1,9 +1,6 @@
-﻿using System;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
 using Xunit;
-using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 
 namespace Workflow.Tests.WebDriver
 {
@@ -24,7 +21,7 @@ namespace Workflow.Tests.WebDriver
         [Fact]
         public void Editor_Cant_Access_Workflow_Section()
         {
-            _fixture.Wait(".sections");
+            _fixture.Wait("ul.sections");
 
             Assert.Throws<NoSuchElementException>(() => 
                 _driver.FindElement(By.CssSelector("li[data-element='section-workflow']")));
@@ -35,7 +32,7 @@ namespace Workflow.Tests.WebDriver
         {
             _driver.Url = "http://localhost:56565/umbraco#/content/content/edit/1089";
 
-            _fixture.Wait(".workflow-button-drawer");
+            _fixture.Wait("div.workflow-button-drawer");
             Assert.Throws<NoSuchElementException>(() => _driver.FindElementByLinkText("Save and publish"));
         }
 
