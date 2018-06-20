@@ -17,16 +17,18 @@ namespace Workflow.Startup
         private static void ContentTreeController_MenuRendering(Umbraco.Web.Trees.TreeControllerBase sender, Umbraco.Web.Trees.MenuRenderingEventArgs e)
         {
             // only add context menu to content nodes, exclude the root and recycle bin
+            int nodeId = Convert.ToInt32(e.NodeId);
+
             if (sender.TreeAlias != Constants.Trees.Content 
-                || Convert.ToInt32(e.NodeId) == Constants.System.Root 
-                || Convert.ToInt32(e.NodeId) == Constants.System.RecycleBinContent) return;
+                || nodeId == Constants.System.Root 
+                || nodeId == Constants.System.RecycleBinContent) return;
 
             const string dialogPath = "/App_Plugins/workflow/Backoffice/views/dialogs/";
 
             var utility = new Utility();
 
             int menuLength = e.Menu.Items.Count;
-            string nodeName = utility.GetNodeName(int.Parse(e.NodeId));
+            string nodeName = utility.GetNodeName(nodeId);
             IUser currentUser = UmbracoContext.Current.Security.CurrentUser;
             var items = new Umbraco.Web.Models.Trees.MenuItemList();
 
@@ -47,7 +49,7 @@ namespace Workflow.Startup
                 items.Add(i);
             }
 
-            if (menuLength < 5)
+            if (menuLength <= 5)
             {
                 e.Menu.Items.AddRange(items);
             } else
