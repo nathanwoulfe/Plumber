@@ -128,6 +128,9 @@ namespace Workflow.Helpers
                                         "</tab>" +
                                         "</section>";
 
+                // logs and io dash are added in a migration
+                // todo -> move back here for v1. This will be a breaking change for pre-0.7.0 installs
+
                 //Get the main root <dashboard> node
                 var dashboardNode = dashboardXml.SelectSingleNode("//dashBoard");
 
