@@ -27,10 +27,19 @@ https://ci.appveyor.com/project/nathanwoulfe/umbracoworkflow/build/artifacts
 
 ## Workflow.Site
 
-Login for the test site:
+Logins for the test site:
 
-**Username**: test@mail.com<br />
-**Password**: password
+**Username**: EditorUser@mail.com<br />
+**Password**: JOP{H#kG
+
+**Username**: AdminUser@mail.com<br />
+**Password**: tzX)TSiA
+
+Users have different permissions - admin has the full set, editor is much more limited.
+
+Other user accounts exist in the site, as do a range of workflow configurations.
+
+The database is my development environment, so I'll likely introduce breaking changes (password, users deleted etc), but will try to remember not to remove the two listed above.
 
 ## Like it? Love it? 
 
