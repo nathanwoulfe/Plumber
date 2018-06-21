@@ -16,8 +16,10 @@
                                 treeService.loadNodeChildren({
                                     node: $scope.$parent.currentNode.parent(),
                                     section: 'workflow'
-                                }).then(() => {
-                                    window.location = `/umbraco/#/workflow/workflow/edit-group/${resp.id}`;
+                                })
+                                .then(() => {
+                                    window.location = `${Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath}/#/workflow/workflow/edit-group/${resp.id}`;
+                                
                                     navigationService.hideNavigation();
                                 });
 

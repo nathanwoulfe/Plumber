@@ -3,7 +3,7 @@
 
     function workflowGroupsResource($http, $q, umbRequestHelper) {
 
-        const urlBase = '/umbraco/backoffice/api/workflow/groups/';
+        const urlBase = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/backoffice/api/workflow/groups/';
 
         const request = (method, url, data) =>
             umbRequestHelper.resourcePromise(
