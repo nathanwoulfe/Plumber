@@ -12,6 +12,8 @@
             alias: 'excludeNodesPicker',
             config: {
                 multiPicker: '1',
+                maxNumber: null,
+                minNumber: null,
                 idType: 'id',
                 showEditButton: '0',
                 showOpenButton: '0',

@@ -14,7 +14,7 @@
                         <umb-box-header title-key="workflow_generalSettings"></umb-box-header>
                         <umb-box-content class="block-form">
                             <umb-control-group label="@workflow_flowType" description="@workflow_flowTypeDescription" data-element="workflow-settings__flowtype">
-                                <select ng-model="vm.flowType" ng-options="f as f.v for f in vm.flowTypes" name="Flow type">
+                                <select ng-model="vm.flowType" class="umb-editor" ng-options="f as f.v for f in vm.flowTypes" name="Flow type">
                                     <option></option>
                                 </select>
                             </umb-control-group>
@@ -31,15 +31,15 @@
                             </umb-control-group>
 
                             <umb-control-group label="@workflow_workflowEmail" description="@workflow_workflowEmailDescription">
-                                <input type="email" ng-model="vm.settings.email"/>
+                                <input type="email" class="umb-editor" ng-model="vm.settings.email"/>
                             </umb-control-group>
 
                             <umb-control-group label="@workflow_baseSiteUrl" description="@workflow_baseSiteUrlDescription">
-                                <input type="text" ng-model="vm.settings.siteUrl"/>
+                                <input type="text" class="umb-editor" ng-model="vm.settings.siteUrl"/>
                             </umb-control-group>
 
                             <umb-control-group label="@workflow_editSiteUrl" description="@workflow_editSiteUrlDescription">
-                                <input type="text" ng-model="vm.settings.editUrl"/>
+                                <input type="text" class="umb-editor" ng-model="vm.settings.editUrl"/>
                             </umb-control-group>
                         </umb-box-content>
                     </umb-box>
