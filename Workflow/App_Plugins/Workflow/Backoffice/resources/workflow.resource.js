@@ -6,7 +6,7 @@
 
         let activityFilter;
 
-        const urlBase = '/umbraco/backoffice/api/workflow/';
+        const urlBase = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/backoffice/api/workflow/';
 
         // are there common elements between two arrays?
         const common = (arr1, arr2) => arr1.some(el => arr2.indexOf(el) > -1);

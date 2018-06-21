@@ -56,7 +56,7 @@ namespace Workflow.Helpers
                                         "<area>content</area>" +
                                         "</areas>" +
                                         "<tab caption=\"Workflow\">" +
-                                        "<control>/app_plugins/workflow/backoffice/views/workflow.userdashboard.html</control>" +
+                                        "<control>../app_plugins/workflow/backoffice/views/workflow.userdashboard.html</control>" +
                                         "</tab>" +
                                         "</section>";
 
@@ -121,10 +121,10 @@ namespace Workflow.Helpers
                                         "<area>workflow</area>" +
                                         "</areas>" +
                                         "<tab caption=\"Overview\">" +
-                                        "<control>/app_plugins/workflow/backoffice/views/workflow.admindashboard.html</control>" +
+                                        "<control>../app_plugins/workflow/backoffice/views/workflow.admindashboard.html</control>" +
                                         "</tab>" +
                                         "<tab caption=\"Documentation\">" +
-                                        "<control>/app_plugins/workflow/backoffice/views/workflow.docsdashboard.html</control>" +
+                                        "<control>../app_plugins/workflow/backoffice/views/workflow.docsdashboard.html</control>" +
                                         "</tab>" +
                                         "</section>";
 
