@@ -17,11 +17,11 @@ namespace Workflow.Startup
         private static void ContentTreeController_MenuRendering(Umbraco.Web.Trees.TreeControllerBase sender, Umbraco.Web.Trees.MenuRenderingEventArgs e)
         {
             // only add context menu to content nodes, exclude the root and recycle bin
+            if (sender.TreeAlias != Constants.Trees.Content) return;
+
             int nodeId = Convert.ToInt32(e.NodeId);
 
-            if (sender.TreeAlias != Constants.Trees.Content 
-                || nodeId == Constants.System.Root 
-                || nodeId == Constants.System.RecycleBinContent) return;
+            if (nodeId == Constants.System.Root || nodeId == Constants.System.RecycleBinContent) return;
 
             const string dialogPath = "/App_Plugins/workflow/Backoffice/views/dialogs/";
 
