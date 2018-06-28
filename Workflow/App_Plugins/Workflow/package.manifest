@@ -40,7 +40,6 @@
 
   ],
   css: [
-		"~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.css",
 		"~/App_Plugins/workflow/backoffice/css/styles.css"
     ]
 }
