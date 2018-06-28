@@ -15,8 +15,9 @@
                 label-key="buttons_returnToList">
     </umb-button>
 
-    <umb-button ng-if="!page.isNew"
+    <umb-button ng-if="!page.isNew" 
                 type="button"
+                button-style="info" 
                 action="(vm.active ? vm.preview(content) : preview(content))"
                 state="page.buttonGroupState"
                 label="Preview">

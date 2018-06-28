@@ -5,7 +5,7 @@
             request: req => {
                 if (req.url.toLowerCase().indexOf('footer-content-right') !== -1) {
                     if (location.href.indexOf('content') !== -1) {
-                        req.url = '../app_plugins/workflow/backoffice/partials/umbEditorFooterContentRight.html';
+                        req.url = '../app_plugins/workflow/backoffice/views/partials/workflowEditorFooterContentRight.html';
                     }
                 }
                 return req || $q.when(req);
