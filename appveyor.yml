@@ -1,5 +1,5 @@
 # version format
-version: 0.8.3.{build}
+version: 0.8.4.{build}
 
 image: Visual Studio 2017
 
@@ -42,8 +42,8 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v0.8.3
-    release: Release 0.8.3-rc
+    tag: v0.8.4
+    release: Release 0.8.4-rc
     description: "Little buggy bits and tidying up. Demo site works again, which is nice."
     force_update: true
     auth_token:
