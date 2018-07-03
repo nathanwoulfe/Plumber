@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading;
-using Chauffeur.TestingTools;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using Xunit;
 
@@ -11,22 +9,24 @@ using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 
 namespace Workflow.Tests
 {
-    public class ChromeDriverFixture : UmbracoHostTestBase, IDisposable
+    public class ChromeDriverFixture : IDisposable
     {
         public readonly ChromeDriver Driver;
+
+        private const string BaseUrl = "http://localhost:56565/umbraco";
+        public const string GroupsDashUrl = BaseUrl + "#/workflow/workflow/approval-groups/info";
 
         public const string EditorUser = "EditorUser@mail.com";
         public const string AdminUser = "AdminUser@mail.com";
         public const string EditorPassword = "JOP{H#kG";
         public const string AdminPassword = "tzX)TSiA";
 
-        public const string BaseUrl = "http://localhost:56565";
 
         public ChromeDriverFixture()
         {
             Driver = new ChromeDriver
             {
-                Url = BaseUrl + "/umbraco"
+                Url = BaseUrl
             };
 
             Driver.Manage().Window.Maximize();
@@ -70,12 +70,6 @@ namespace Workflow.Tests
         public IWebElement DataElement(string selector, string cascade = "")
         {
             return Driver.FindElement(By.CssSelector($"[data-element='{selector}'] {cascade}"));
-        }
-
-        public Actions Hover(IWebElement element) 
-        {
-            var action = new Actions(Driver);
-            return action.MoveToElement(element);
         }
 
         /// <summary>
