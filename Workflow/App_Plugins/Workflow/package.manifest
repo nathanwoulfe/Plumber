@@ -34,6 +34,7 @@
     "~/App_Plugins/workflow/backoffice/resources/actions.resource.js",
     "~/App_Plugins/workflow/backoffice/resources/groups.resource.js",
     "~/App_Plugins/workflow/backoffice/resources/workflow.resource.js",
+    "~/App_Plugins/workflow/backoffice/resources/hub.resource.js",
 
     "~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.js",
     "~/App_Plugins/workflow/backoffice/lib/highcharts/modules/exporting.js"

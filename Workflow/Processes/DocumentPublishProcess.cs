@@ -8,6 +8,7 @@ using Umbraco.Core.Services;
 using Workflow.Events.Args;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Notifications;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
 
@@ -21,7 +22,7 @@ namespace Workflow.Processes
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IContentService _contentService;
         private readonly IInstancesService _instancesService;
-        private readonly Notifications _notifications;
+        private readonly Emailer _emailer;
         private readonly Utility _utility;
 
         public static event EventHandler<InstanceEventArgs> Completed;
@@ -30,17 +31,17 @@ namespace Workflow.Processes
             : this(
                 ApplicationContext.Current.Services.ContentService,
                 new InstancesService(),
-                new Notifications(),
+                new Emailer(),
                 new Utility()
                 )
         {
         }
 
-        private DocumentPublishProcess(IContentService contentService, IInstancesService instancesService, Notifications notifications, Utility utility)
+        private DocumentPublishProcess(IContentService contentService, IInstancesService instancesService, Emailer emailer, Utility utility)
         {
             _contentService = contentService;
             _instancesService = instancesService;
-            _notifications = notifications;
+            _emailer = emailer;
             _utility = utility;
 
             Type = WorkflowType.Publish;
@@ -95,7 +96,7 @@ namespace Workflow.Processes
 
             _instancesService.UpdateInstance(Instance);
 
-            _notifications.Send(Instance, EmailType.ApprovedAndCompleted);
+            _emailer.Send(Instance, EmailType.ApprovedAndCompleted);
             Completed?.Invoke(this, new InstanceEventArgs(Instance, "PublishNow"));
         }
 
@@ -111,7 +112,7 @@ namespace Workflow.Processes
                 Instance.CompletedDate = DateTime.Now;
                 _instancesService.UpdateInstance(Instance);
 
-                _notifications.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
+                _emailer.Send(Instance, EmailType.ApprovedAndCompletedForScheduler);
 
                 Completed?.Invoke(this, new InstanceEventArgs(Instance, "PublishAt"));
 

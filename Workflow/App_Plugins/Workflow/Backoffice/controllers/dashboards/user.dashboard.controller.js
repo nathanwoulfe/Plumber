@@ -1,7 +1,7 @@
 ﻿(() => {
     'use strict';
 
-    function dashboardController($scope, $rootScope, $routeParams, workflowResource, authResource, notificationsService) {
+    function dashboardController($scope, $rootScope, $routeParams, workflowResource, authResource, notificationsService, plumberHub) {
 
         let notify = null;
 
@@ -79,6 +79,35 @@
             }
         };
 
+        plumberHub.initHub(hub => {
+            hub.on('workflowStarted', data => {
+                debugger;
+                console.log(data);
+            });
+
+            hub.on('taskApproved', data => {
+                debugger;
+                console.log(data);
+            });
+
+            hub.on('taskCancelled', data => {
+                debugger;
+                console.log(data);
+            });
+
+            hub.on('taskResubmitted', data => {
+                debugger;
+                console.log(data);
+            });
+
+            hub.on('taskRejected', data => {
+                debugger;
+                console.log(data);
+            });
+
+            hub.start();
+        });
+
         // expose some bits
         angular.extend(this,
             {
@@ -130,5 +159,5 @@
 
     // register controller 
     angular.module('umbraco').controller('Workflow.UserDashboard.Controller',
-        ['$scope', '$rootScope', '$routeParams', 'plmbrWorkflowResource', 'authResource', 'notificationsService', dashboardController]);
+        ['$scope', '$rootScope', '$routeParams', 'plmbrWorkflowResource', 'authResource', 'notificationsService', 'plumberHub', dashboardController]);
 })();

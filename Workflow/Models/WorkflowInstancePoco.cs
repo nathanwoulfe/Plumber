@@ -155,6 +155,6 @@ namespace Workflow.Models
         public string EmailTypeName(EmailType type)
         {
             return _utility.PascalCaseToTitleCase(type.ToString());
-        }
+        }       
     }
 }
