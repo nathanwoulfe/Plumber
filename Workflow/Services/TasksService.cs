@@ -119,7 +119,7 @@ namespace Workflow.Services
                     RequestedById = instance.AuthorUser.Id,
                     RequestedOn = taskInstance.CreatedDate.ToString(),
                     ApprovalGroup = taskInstance.UserGroup?.Name,
-                    Comment = useInstanceFromTask ? instance.AuthorComment : taskInstance.Comment,
+                    Comment = useInstanceFromTask || string.IsNullOrEmpty(taskInstance.Comment) ? instance.AuthorComment : taskInstance.Comment,
                     ActiveTask = taskInstance.StatusName,
                     Permissions = _configService.GetRecursivePermissionsForNode(instance.Node),
                     CurrentStep = taskInstance.ApprovalStep

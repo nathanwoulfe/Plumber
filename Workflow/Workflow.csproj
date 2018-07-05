@@ -41,7 +41,6 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\importexport.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.contenttypeflow.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\signalr\jquery.signalr-2.2.1.min.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\notifications.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\hub.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.contenttypeflow.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.instance.directive.js" />

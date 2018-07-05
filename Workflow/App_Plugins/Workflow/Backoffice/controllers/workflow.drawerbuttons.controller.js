@@ -1,7 +1,7 @@
 ﻿(() => {
     'use strict';
 
-    function controller($scope, $rootScope, $q, $timeout, $window, userService, workflowResource, workflowGroupsResource, workflowActionsService, contentEditingHelper, angularHelper, contentResource, editorState, $routeParams, notificationsService) {
+    function controller($scope, $rootScope, $q, $window, userService, workflowResource, workflowGroupsResource, workflowActionsService, contentEditingHelper, editorState, $routeParams, plumberHub) {
 
         this.active = false;
         this.excludeNode = false;
@@ -219,14 +219,28 @@
             dirty = data;
             setButtons();
         });
+       
+        // subscribe to signalr magick for button state
+        // events are raised in ActionController - doesn't matter what they return, only care that they are raised
+        // as it indicates a change of state for the button
+        plumberHub.initHub(hub => {
+            hub.on('workflowStarted', () => {
+                getNodeTasks();
+            });
 
-        // ensures dash/buttons refresh
-        $rootScope.$on('workflowActioned', () => {
-            getNodeTasks();
-        });
+            hub.on('taskCancelled', () => {
+                getNodeTasks();
+            });
 
-        $rootScope.$on('configUpdated', () => {
-            getNodeTasks();
+            hub.on('taskApproved', () => {
+                getNodeTasks();
+            });
+
+            hub.on('taskRejected', () => {
+                getNodeTasks();
+            });
+
+            hub.start();
         });
 
         // preview should not save, if the content is in a workflow
@@ -255,16 +269,13 @@
         ['$scope',
             '$rootScope',
             '$q',
-            '$timeout',
             '$window',
             'userService',
             'plmbrWorkflowResource',
             'plmbrGroupsResource',
             'plmbrActionsService',
             'contentEditingHelper',
-            'angularHelper',
-            'contentResource',
             'editorState',
             '$routeParams',
-            'notificationsService', controller]);
+            'plumberHub', controller]);
 })();

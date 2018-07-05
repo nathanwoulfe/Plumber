@@ -282,7 +282,7 @@ namespace Workflow.Processes
         /// <param name="comment"></param>
         private void ProcessApprovalAction(WorkflowAction action, int userId, string comment)
         {
-            WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.First();
+            WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.First(ti => ti.CompletedDate == null);
 
             if (taskInstance == null) return;
 

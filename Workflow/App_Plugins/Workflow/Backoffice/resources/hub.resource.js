@@ -8,13 +8,7 @@
         function initHub(callback) {
             if ($.connection == undefined) {
 
-                // we have to load this way, because the 
-                // asset service won't reconise the 
-                // umbraco call, as it has not extension
-                // so we do them our selves and then 
-                // wait for them all to resolve. 
-
-                var promises = [];
+                const promises = [];
                 scripts.forEach(script => {
                     promises.push(assetsService.loadJs(script));
                 });

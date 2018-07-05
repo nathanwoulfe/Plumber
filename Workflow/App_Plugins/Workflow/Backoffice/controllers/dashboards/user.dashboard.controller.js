@@ -8,33 +8,33 @@
         const getPending = () => {
             // api call for tasks assigned to the current user
             workflowResource.getApprovalsForUser(this.currentUser.id,
-                    this.taskPagination.perPage,
-                    this.taskPagination.pageNumber)
+                this.taskPagination.perPage,
+                this.taskPagination.pageNumber)
                 .then(resp => {
-                        this.tasks = resp.items;
-                        this.taskPagination.pageNumber = resp.page;
-                        this.taskPagination.totalPages = resp.total / resp.count;
-                        this.loaded[0] = true;
-                    },
-                    err => {
-                        notify(err);
-                    });
+                    this.tasks = resp.items;
+                    this.taskPagination.pageNumber = resp.page;
+                    this.taskPagination.totalPages = resp.total / resp.count;
+                    this.loaded[0] = true;
+                },
+                err => {
+                    notify(err);
+                });
         };
 
         const getSubmissions = () => {
             // api call for tasks created by the current user
             workflowResource.getSubmissionsForUser(this.currentUser.id,
-                    this.submissionPagination.perPage,
-                    this.submissionPagination.pageNumber) 
-                .then(resp => {
-                        this.submissions = resp.items; 
-                        this.submissionPagination.pageNumber = resp.page;
-                        this.submissionPagination.totalPages = resp.total / resp.count;
-                        this.loaded[1] = true;
-                    },
-                    err => {
-                        notify(err);
-                    });
+                this.submissionPagination.perPage,
+                this.submissionPagination.pageNumber)
+                .then(resp => { 
+                    this.submissions = resp.items;
+                    this.submissionPagination.pageNumber = resp.page;
+                    this.submissionPagination.totalPages = resp.total / resp.count;
+                    this.loaded[1] = true;
+                },
+                err => {
+                    notify(err);
+                });
         };
 
         const getAdmin = () => {
@@ -42,14 +42,14 @@
             if (this.adminUser) {
                 workflowResource.getPendingTasks(this.adminPagination.perPage, this.adminPagination.pageNumber)
                     .then(resp => {
-                            this.activeTasks = resp.items;
-                            this.adminPagination.pageNumber = resp.page;
-                            this.adminPagination.totalPages = resp.totalPages;
-                            this.loaded[2] = true;
-                        },
-                        err => {
-                            notify(err);
-                        });
+                        this.activeTasks = resp.items;
+                        this.adminPagination.pageNumber = resp.page;
+                        this.adminPagination.totalPages = resp.totalPages;
+                        this.loaded[2] = true;
+                    },
+                    err => {
+                        notify(err);
+                    });
             }
         };
 
@@ -79,30 +79,57 @@
             }
         };
 
+        const addTask = task => {
+            const permission = task.permissions.filter(p => p.groupId === task.approvalGroupId);
+
+            // these are independent and can all be true
+            if (permission.length && permission[0].userGroup.usersSummary.indexOf(`|${this.currentUser.id}|`) !== -1) {
+                this.tasks.push(task);
+            }
+
+            if (task.requestedById === this.currentUser.id) {
+                this.submissions.push(task);
+            }
+
+            if (this.adminUser) {
+                this.activeTasks.push(task);
+            }
+        };
+        
+        const removeTask = task => {
+            const taskId = task.taskId;
+
+            this.tasks.splice(this.tasks.findIndex(i => i.taskId === taskId), 1);
+
+            this.submissions.splice(this.tasks.findIndex(i => i.taskId === taskId), 1);
+
+            if (this.adminUser) {
+                this.activeTasks.splice(this.tasks.findIndex(i => i.taskId === taskId), 1);
+            }
+        };
+
+        // subscribe to signalr magick
         plumberHub.initHub(hub => {
             hub.on('workflowStarted', data => {
-                debugger;
-                console.log(data);
-            });
-
-            hub.on('taskApproved', data => {
-                debugger;
-                console.log(data);
+                addTask(data);
             });
 
             hub.on('taskCancelled', data => {
-                debugger;
-                console.log(data);
+                removeTask(data);
             });
 
-            hub.on('taskResubmitted', data => {
-                debugger;
-                console.log(data);
+            hub.on('taskApproved', data => {
+                // add the newest task
+                addTask(data[0]);
+                // remove the previous tasks
+                removeTask(data.splice(1));
             });
 
             hub.on('taskRejected', data => {
-                debugger;
-                console.log(data);
+                // add the newest task
+                addTask(data[0]);
+                // remove the previous tasks
+                removeTask(data.splice(1));
             });
 
             hub.start();
