@@ -18,7 +18,7 @@
 
                 $scope.detail = item => {
                     $scope.$parent.vm.workflowOverlay = workflowActionsService.detail(item);
-                }
+                };
 
                 const buttons = {
                     approveButton: {

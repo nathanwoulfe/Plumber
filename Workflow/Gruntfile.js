@@ -298,7 +298,7 @@
                     globals: {},
                     force: true,
                     loopfunc: true,
-                    ignores: ['**/highcharts.js', '**/exporting.js']
+                    ignores: ['**/lib/**/*.js']
                 }
             }
         }

@@ -60,7 +60,7 @@
         return {
             initHub: initHub
         };
-    };
+    }
 
     angular.module('umbraco.resources').factory('plumberHub', ['$rootScope', '$q', 'assetsService', plumberHub]);
 

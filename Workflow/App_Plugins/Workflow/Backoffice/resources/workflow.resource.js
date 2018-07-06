@@ -49,11 +49,11 @@
 
             getAllInstancesForNode: (nodeId, count, page) => request('GET', urls.instances + nodeId + '/' + count + '/' + page),
 
-            getFilteredInstancesForRange: (days, filter, count, page) => request('GET', urls.instances + 'filteredRange/'
-                + days
-                + (filter ? `/${filter}` : '')
-                + (count ? `/${count}` : '')
-                + (page ? `/${page}` : '')),
+            getFilteredInstancesForRange: (days, filter, count, page) => request('GET', urls.instances + 'filteredRange/' +
+                days +
+                (filter ? `/${filter}` : '') +
+                (count ? `/${count}` : '') +
+                (page ? `/${page}` : '')),
 
             getAllTasksForGroup: (groupId, count, page) => request('GET', urls.tasks + 'group/' + groupId + '/' + count + '/' + page),
 
