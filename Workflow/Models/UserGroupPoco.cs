@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
 using Workflow.Helpers;
@@ -15,45 +16,55 @@ namespace Workflow.Models
 
         [Column("GroupId")]
         [PrimaryKeyColumn(AutoIncrement = true)]
+        [JsonProperty("groupId")]
         public int GroupId { get; set; }
 
         [Column("Description")]
         [NullSetting(NullSetting = NullSettings.Null)]
+        [JsonProperty("description")]
         public string Description { get; set; }
 
         [Column("Name")]
         [NullSetting(NullSetting = NullSettings.NotNull)]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
         [Column("Alias")]
         [NullSetting(NullSetting = NullSettings.NotNull)]
+        [JsonProperty("alias")]
         public string Alias { get; set; }
 
         [Column("GroupEmail")]
         [NullSetting(NullSetting = NullSettings.Null)]
+        [JsonProperty("groupEmail")]
         public string GroupEmail { get; set; }
 
         [Column("Deleted")]
-        [NullSetting(NullSetting = NullSettings.NotNull)]        
+        [NullSetting(NullSetting = NullSettings.NotNull)]
+        [JsonProperty("deleted")]
         public bool Deleted { get; set; }
 
         [ResultColumn]
+        [JsonProperty("permissions")]
         public List<UserGroupPermissionsPoco> Permissions { get; set; }
 
         [ResultColumn]
+        [JsonProperty("users")]
         public List<User2UserGroupPoco> Users { get; set; }
 
-        public UserGroupPoco() {
-            Users = new List<User2UserGroupPoco>();
-            Permissions = new List<UserGroupPermissionsPoco>();
-        }
-
         [ResultColumn]
+        [JsonProperty("usersSummary")]
         public string UsersSummary {
             get
             {
                 return string.Concat("|", string.Join("|", Users.Select(u => u.UserId)), "|");
             }
+        }
+
+        public UserGroupPoco()
+        {
+            Users = new List<User2UserGroupPoco>();
+            Permissions = new List<UserGroupPermissionsPoco>();
         }
 
         public bool IsMember(int userId)

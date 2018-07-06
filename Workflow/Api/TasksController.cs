@@ -342,13 +342,13 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> tasks = _tasksService.GetTasksWithGroupByInstanceGuid(guid);
+                List<WorkflowTaskInstancePoco> taskInstances = _tasksService.GetTasksWithGroupByInstanceGuid(guid);
                 WorkflowInstancePoco instance = _instancesService.GetByGuid(guid);
 
                 return Json(new
                 {
-                    items = tasks,
-                    currentStep = tasks.Count(x => x.TaskStatus.In(TaskStatus.Approved, TaskStatus.NotRequired)) + 1, // value is for display, so zero-index isn't friendly
+                    items = _tasksService.ConvertToWorkflowTaskList(taskInstances, instance: instance),
+                    currentStep = taskInstances.Count(x => x.TaskStatus.In(TaskStatus.Approved, TaskStatus.NotRequired)) + 1, // value is for display, so zero-index isn't friendly
                     totalSteps = instance.TotalSteps
                 }, ViewHelpers.CamelCase);
             }

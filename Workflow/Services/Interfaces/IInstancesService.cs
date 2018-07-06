@@ -12,6 +12,7 @@ namespace Workflow.Services.Interfaces
         List<WorkflowInstance> Get(int? page, int? count);
         List<WorkflowInstance> GetByNodeId(int nodeId, int? page, int? count);
         List<WorkflowInstance> GetAllInstancesForDateRange(DateTime? oldest);
+        List<WorkflowInstance> ConvertToWorkflowInstanceList(List<WorkflowInstancePoco> instance);
         List<WorkflowInstance> GetFilteredPagedInstancesForDateRange(DateTime oldest, int? count, int? page, string filter = "");
 
         WorkflowInstancePoco GetByGuid(Guid guid);

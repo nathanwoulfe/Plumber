@@ -1,40 +1,40 @@
 ﻿(() => {
     'use strict';
 
-    function dashboardController($scope, $rootScope, $routeParams, workflowResource, authResource, notificationsService) {
+    function dashboardController($scope, $rootScope, $routeParams, workflowResource, authResource, notificationsService, plumberHub) {
 
         let notify = null;
 
         const getPending = () => {
             // api call for tasks assigned to the current user
             workflowResource.getApprovalsForUser(this.currentUser.id,
-                    this.taskPagination.perPage,
-                    this.taskPagination.pageNumber)
+                this.taskPagination.perPage,
+                this.taskPagination.pageNumber)
                 .then(resp => {
-                        this.tasks = resp.items;
-                        this.taskPagination.pageNumber = resp.page;
-                        this.taskPagination.totalPages = resp.total / resp.count;
-                        this.loaded[0] = true;
-                    },
-                    err => {
-                        notify(err);
-                    });
+                    this.tasks = resp.items;
+                    this.taskPagination.pageNumber = resp.page;
+                    this.taskPagination.totalPages = resp.total / resp.count;
+                    this.loaded[0] = true;
+                },
+                err => {
+                    notify(err);
+                });
         };
 
         const getSubmissions = () => {
             // api call for tasks created by the current user
             workflowResource.getSubmissionsForUser(this.currentUser.id,
-                    this.submissionPagination.perPage,
-                    this.submissionPagination.pageNumber) 
-                .then(resp => {
-                        this.submissions = resp.items; 
-                        this.submissionPagination.pageNumber = resp.page;
-                        this.submissionPagination.totalPages = resp.total / resp.count;
-                        this.loaded[1] = true;
-                    },
-                    err => {
-                        notify(err);
-                    });
+                this.submissionPagination.perPage,
+                this.submissionPagination.pageNumber)
+                .then(resp => { 
+                    this.submissions = resp.items;
+                    this.submissionPagination.pageNumber = resp.page;
+                    this.submissionPagination.totalPages = resp.total / resp.count;
+                    this.loaded[1] = true;
+                },
+                err => {
+                    notify(err);
+                });
         };
 
         const getAdmin = () => {
@@ -42,14 +42,14 @@
             if (this.adminUser) {
                 workflowResource.getPendingTasks(this.adminPagination.perPage, this.adminPagination.pageNumber)
                     .then(resp => {
-                            this.activeTasks = resp.items;
-                            this.adminPagination.pageNumber = resp.page;
-                            this.adminPagination.totalPages = resp.totalPages;
-                            this.loaded[2] = true;
-                        },
-                        err => {
-                            notify(err);
-                        });
+                        this.activeTasks = resp.items;
+                        this.adminPagination.pageNumber = resp.page;
+                        this.adminPagination.totalPages = resp.totalPages;
+                        this.loaded[2] = true;
+                    },
+                    err => {
+                        notify(err);
+                    });
             }
         };
 
@@ -78,6 +78,52 @@
                 notificationsService.error('OH SNAP!', d.message);
             }
         };
+
+        const addTask = task => {
+            const permission = task.permissions.filter(p => p.groupId === task.approvalGroupId);
+
+            // these are independent and can all be true
+            if (permission.length && permission[0].userGroup.usersSummary.indexOf(`|${this.currentUser.id}|`) !== -1) {
+                this.tasks.push(task);
+            }
+
+            if (task.requestedById === this.currentUser.id) {
+                this.submissions.push(task);
+            }
+
+            if (this.adminUser) {
+                this.activeTasks.push(task);
+            }
+        };
+        
+        const removeTask = task => {
+            const taskId = task.taskId;
+
+            this.tasks.splice(this.tasks.findIndex(i => i.taskId === taskId), 1);
+
+            this.submissions.splice(this.tasks.findIndex(i => i.taskId === taskId), 1);
+
+            if (this.adminUser) {
+                this.activeTasks.splice(this.tasks.findIndex(i => i.taskId === taskId), 1);
+            }
+        };
+
+        // subscribe to signalr magick
+        plumberHub.initHub(hub => {
+
+            ['workflowStarted', 'taskCancelled'].forEach(e => {
+                addTask(e);
+            });
+
+            ['taskApproved', 'taskRejected'].forEach(e => {
+                // add the newest task
+                addTask(e[0]);
+                // remove the previous tasks
+                removeTask(e.splice(1));
+            });
+
+            hub.start();
+        });
 
         // expose some bits
         angular.extend(this,
@@ -130,5 +176,5 @@
 
     // register controller 
     angular.module('umbraco').controller('Workflow.UserDashboard.Controller',
-        ['$scope', '$rootScope', '$routeParams', 'plmbrWorkflowResource', 'authResource', 'notificationsService', dashboardController]);
+        ['$scope', '$rootScope', '$routeParams', 'plmbrWorkflowResource', 'authResource', 'notificationsService', 'plumberHub', dashboardController]);
 })();

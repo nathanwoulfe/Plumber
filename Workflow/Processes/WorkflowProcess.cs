@@ -9,6 +9,7 @@ using Workflow.Events.Args;
 using Workflow.Extensions;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Notifications;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
 using TaskStatus = Workflow.Models.TaskStatus;
@@ -26,7 +27,7 @@ namespace Workflow.Processes
         private readonly ISettingsService _settingsService;
         private readonly ITasksService _tasksService;
 
-        private readonly Notifications _notifications;
+        private readonly Emailer _emailer;
         private readonly Utility _utility;
         private readonly WorkflowSettingsPoco _settings;
 
@@ -44,7 +45,7 @@ namespace Workflow.Processes
             _settingsService = new SettingsService();
             _tasksService = new TasksService();
 
-            _notifications = new Notifications();
+            _emailer = new Emailer();
             _utility = new Utility();
             _settings = _settingsService.GetSettings();
         }
@@ -229,7 +230,7 @@ namespace Workflow.Processes
 
                 // Send the notification
                 _instancesService.UpdateInstance(Instance);
-                _notifications.Send(Instance, EmailType.WorkflowCancelled);
+                _emailer.Send(Instance, EmailType.WorkflowCancelled);
 
                 // emit an event
                 Cancelled?.Invoke(this, new InstanceEventArgs(Instance));
@@ -281,7 +282,7 @@ namespace Workflow.Processes
         /// <param name="comment"></param>
         private void ProcessApprovalAction(WorkflowAction action, int userId, string comment)
         {
-            WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.First();
+            WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.First(ti => ti.CompletedDate == null);
 
             if (taskInstance == null) return;
 
@@ -312,7 +313,7 @@ namespace Workflow.Processes
             // Send the email after we've done the updates.
             if (emailRequired)
             {
-                _notifications.Send(Instance, emailType.Value);
+                _emailer.Send(Instance, emailType.Value);
             }
 
             _tasksService.UpdateTask(taskInstance);
@@ -436,7 +437,7 @@ namespace Workflow.Processes
             taskInstance.Status = (int)TaskStatus.PendingApproval;
             Instance.Status = (int)WorkflowStatus.PendingApproval;
 
-            _notifications.Send(Instance, EmailType.ApprovalRequest);
+            _emailer.Send(Instance, EmailType.ApprovalRequest);
 
             _tasksService.UpdateTask(taskInstance);
         }

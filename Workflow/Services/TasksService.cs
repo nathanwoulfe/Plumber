@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Workflow.Events.Args;
+using Workflow.Extensions;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Repositories.Interfaces;
@@ -103,26 +104,34 @@ namespace Workflow.Services
                 instance = useInstanceFromTask ? taskInstance.WorkflowInstance : instance;
 
                 string instanceNodeName = instance.Node?.Name ?? "NODE NO LONGER EXISTS";
-                string typeDescription = instance.TypeDescription;
 
                 var item = new WorkflowTask
                 {
-                    Status = taskInstance.StatusName,
-                    TaskId = taskInstance.Id,
-                    CssStatus = taskInstance.StatusName.ToLower().Split(' ')[0],
-                    Type = typeDescription,
-                    NodeId = instance.NodeId,
                     InstanceGuid = instance.Guid,
-                    ApprovalGroupId = taskInstance.UserGroup?.GroupId,
+                    TaskId = taskInstance.Id,
+
+                    Type = instance.TypeDescription,
+                    TypeId = instance.Type,
+                    CurrentStep = taskInstance.ApprovalStep,
+
+                    Status = taskInstance.Status,
+                    StatusName = taskInstance.StatusName,
+                    CssStatus = taskInstance.StatusName.ToLower().Replace(' ', '-'),
+
+                    NodeId = instance.NodeId,
                     NodeName = instanceNodeName,
-                    RequestedBy = instance.AuthorUser.Name,
+
                     RequestedById = instance.AuthorUser.Id,
-                    RequestedOn = taskInstance.CreatedDate.ToString(),
+                    RequestedBy = instance.AuthorUser.Name,
+                    RequestedOn = taskInstance.CreatedDate.ToFriendlyDate(),
+                    Comment = useInstanceFromTask || string.IsNullOrEmpty(taskInstance.Comment) ? instance.AuthorComment : taskInstance.Comment,
+
+                    ApprovalGroupId = taskInstance.UserGroup?.GroupId,
                     ApprovalGroup = taskInstance.UserGroup?.Name,
-                    Comment = useInstanceFromTask ? instance.AuthorComment : taskInstance.Comment,
-                    ActiveTask = taskInstance.StatusName,
-                    Permissions = _configService.GetRecursivePermissionsForNode(instance.Node),
-                    CurrentStep = taskInstance.ApprovalStep
+                    CompletedBy = taskInstance.ActionedByUser?.Name,
+                    CompletedOn = taskInstance.CompletedDate?.ToFriendlyDate(),
+
+                    Permissions = _configService.GetRecursivePermissionsForNode(instance.Node)
                 };
 
                 workflowItems.Add(item);

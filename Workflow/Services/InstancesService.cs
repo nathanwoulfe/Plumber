@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
+using Workflow.Extensions;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Repositories.Interfaces;
@@ -151,7 +152,7 @@ namespace Workflow.Services
                     NodeId = instance.NodeId,
                     NodeName = instance.Node.Name,
                     RequestedBy = instance.AuthorUser.Name,
-                    RequestedOn = instance.CreatedDate.ToString(),
+                    RequestedOn = instance.CreatedDate.ToFriendlyDate(),
                     CreatedDate = instance.CreatedDate,
                     CompletedDate = instance.CompletedDate,
                     Comment = instance.AuthorComment,

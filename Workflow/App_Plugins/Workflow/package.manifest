@@ -28,12 +28,15 @@
     "~/App_Plugins/workflow/backoffice/directives/workflow.instance.directive.js",
     "~/App_Plugins/workflow/backoffice/directives/workflow.progressstep.directive.js",
 
+    "~/App_Plugins/workflow/backoffice/filters/workflow.iconName.filter.js",
+
     "~/App_Plugins/workflow/backoffice/interceptors/workflow.config.interceptors.js",
     "~/App_Plugins/workflow/backoffice/interceptors/workflow.drawerbuttons.interceptor.js",
 
     "~/App_Plugins/workflow/backoffice/resources/actions.resource.js",
     "~/App_Plugins/workflow/backoffice/resources/groups.resource.js",
     "~/App_Plugins/workflow/backoffice/resources/workflow.resource.js",
+    "~/App_Plugins/workflow/backoffice/resources/hub.resource.js",
 
     "~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.js",
     "~/App_Plugins/workflow/backoffice/lib/highcharts/modules/exporting.js"

@@ -40,11 +40,13 @@
     <Compile Include="Api\ExportController.cs" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\importexport.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.contenttypeflow.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\filters\workflow.iconName.filter.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\lib\signalr\jquery.signalr-2.2.1.min.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\resources\hub.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.contenttypeflow.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.instance.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.progressstep.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowInstanceTemplate.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowProgressStepTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.importexportdashboard.html" />
     <Compile Include="Events\Args\SettingsEventArgs.cs" />
     <Compile Include="Events\Args\ConfigEventArgs.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="Events\Args\TaskEventArgs.cs" />
     <Compile Include="Events\Args\InstanceEventArgs.cs" />
     <Compile Include="Events\EventArgsBase.cs" />
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
     <Compile Include="Helpers\Installer.cs" />
@@ -86,6 +89,7 @@
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\TasksService.cs" />
     <Compile Include="Startup\CreateTables.cs" />
+    <Compile Include="Notifications\PlumberHub.cs" />
     <Compile Include="Startup\StringConstraint.cs" />
     <Compile Include="Startup\UmbracoStartup.cs" />
     <Compile Include="Startup\WebApiConfig.cs" />
@@ -100,7 +104,7 @@
     <Compile Include="Models\SettingsPoco.cs" />
     <Compile Include="Repositories\PocoRepository.cs" />
     <Compile Include="Helpers\SqlHelpers.cs" />
-    <Compile Include="Notifications.cs" />
+    <Compile Include="Notifications\Emailer.cs" />
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Processes\DocumentPublishProcess.cs" />
     <Compile Include="Helpers\Utility.cs" />
@@ -142,7 +146,6 @@
     <Content Include="App_Plugins\Workflow\Backoffice\lib\highcharts\modules\exporting.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowEditorFooterContentRight.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowButtonGroup.html" />
-    <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowCommentsTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowTasksTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\actions.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.logsdashboard.html" />

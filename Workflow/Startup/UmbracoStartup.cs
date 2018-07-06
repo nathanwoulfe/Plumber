@@ -1,8 +1,13 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Web;
 using System.Web.Configuration;
+using umbraco;
 using umbraco.cms.businesslogic.packager;
 using Umbraco.Core;
 using Umbraco.Core.Models.Membership;
+using Umbraco.Web.UI.JavaScript;
 using Workflow.Helpers;
 
 namespace Workflow.Startup
@@ -45,6 +50,22 @@ namespace Workflow.Startup
 
             //Add OLD Style Package Event
             InstalledPackage.BeforeDelete += InstalledPackage_BeforeDelete;
+
+            ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
+        }
+
+        /// <summary>
+        /// Add workflow-specific values to the servervariables dictionary
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void ServerVariablesParser_Parsing(object sender, Dictionary<string, object> e)
+        {
+            e.Add("workflow", new Dictionary<string, object>
+            {
+                { "pluginPath", "/app_plugins/workflow/backoffice/" },
+                { "apiBasePath", "/umbraco/backoffice/api/workflow/" }
+            });
         }
 
         /// <summary>

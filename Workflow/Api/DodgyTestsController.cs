@@ -5,6 +5,7 @@ using System.Web.Http;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Notifications;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
 
@@ -14,13 +15,13 @@ namespace Workflow.Api
     public class DodgyTestsController : UmbracoAuthorizedApiController
     {
         private readonly IInstancesService _instancesService;
-        private readonly Notifications _notifications;
+        private readonly Emailer _emailer;
         private readonly Utility _utility;
 
         public DodgyTestsController()
         {
             _instancesService = new InstancesService();
-            _notifications = new Notifications();
+            _emailer = new Emailer();
             _utility = new Utility();
         }
 
@@ -41,7 +42,7 @@ namespace Workflow.Api
 
                 var node = _utility.GetPublishedContent(1078);
 
-                _notifications.Send(instance, (EmailType)emailType);
+                _emailer.Send(instance, (EmailType)emailType);
 
                 return node.Name;
             }

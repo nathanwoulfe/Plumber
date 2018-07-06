@@ -10,17 +10,55 @@
     }
 }
 
+.task-detail-btn {
+    padding: 0;
+    background: 0 0;
+    margin-right: 10px;
+
+    &:hover {
+        background: #fff;
+    }
+
+    svg {
+        width: 25px;
+        vertical-align: sub;
+    }
+
+    path {
+        fill: $umbPurple;
+    }
+}
+
 .umb-table-cell {
+
+    &__7 {
+        flex-basis: 7%;
+        max-width: 7%;
+    }
+
+    &__fixed-170 {
+        flex: 0 0 170px;
+    }
+
+    &__15 {
+        flex-basis: 15%;
+        max-width: 15%;
+    }
+
+    &.show-overflow {
+        overflow: visible;
+
+        > * {
+            overflow: visible;
+        }
+    }
+
     ul {
         margin: 0;
     }
 
-    &.show-overflow {
-        overflow:visible;
-        flex: 0 0 150px;
-        > * {
-            overflow: visible;  
-        }
+    .umb-overlay {
+        cursor: default;
     }
 }
 
@@ -48,6 +86,8 @@
 
 .table-row-outer {
     .umb-table-row {
+        cursor:default;
+
         &:not(:first-child) {
             border-top: none;
 
@@ -70,10 +110,6 @@
 /* colours will be available for all elements in the .workspace namespace */
 .pending, .pending-approval {
     color: $umbPurple;
-
-    .umb-table-body__icon {
-        color: $umbPurple;
-    }
 }
 
 .approved {

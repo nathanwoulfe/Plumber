@@ -6,11 +6,14 @@ using System.Net;
 using System.Reflection;
 using System.Web.Http;
 using log4net;
+using Microsoft.AspNet.SignalR;
+using Umbraco.Core;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Web;
 using Umbraco.Web.WebApi;
 using Workflow.Models;
 using Workflow.Helpers;
+using Workflow.Notifications;
 using Workflow.Processes;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
@@ -27,6 +30,7 @@ namespace Workflow.Api
 
         private readonly IInstancesService _instancesService;
         private readonly ITasksService _tasksService;
+        private readonly IHubContext _hubContext;
 
         private readonly Utility _utility;
 
@@ -36,6 +40,7 @@ namespace Workflow.Api
             _tasksService = new TasksService();
 
             _utility = new Utility();
+            _hubContext = GlobalHost.ConnectionManager.GetHubContext<PlumberHub>();
         }
 
         public ActionsController(UmbracoContext umbracoContext) : base(umbracoContext)
@@ -44,6 +49,7 @@ namespace Workflow.Api
             _tasksService = new TasksService();
 
             _utility = new Utility();
+            _hubContext = GlobalHost.ConnectionManager.GetHubContext<PlumberHub>();
         }
 
         /// <summary>
@@ -89,6 +95,12 @@ namespace Workflow.Api
                 }
 
                 Log.Info(msg);
+
+                // broadcast the new task back to the client to update dashboards etc
+                // needs to be converted from a poco to remove unused properties and force camelCase
+                _hubContext.Clients.All.WorkflowStarted(
+                    _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance: instance)
+                    .FirstOrDefault());
 
                 return Json(new
                 {
@@ -158,6 +170,9 @@ namespace Workflow.Api
 
                 Log.Info(logMsg);
 
+                _hubContext.Clients.All.TaskApproved(
+                    _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance: instance));
+
                 return Json(new
                 {
                     message = msg,
@@ -199,6 +214,9 @@ namespace Workflow.Api
 
                 Log.Info($"{instance.TypeDescription} request for {instance.Node.Name} [{instance.NodeId}] was rejected by {currentUser.Name}");
 
+                _hubContext.Clients.All.TaskRejected(
+                    _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance: instance));
+
                 return Json(new
                 {
                     message = instance.TypeDescription + " request has been rejected.",
@@ -239,6 +257,10 @@ namespace Workflow.Api
 
                 Log.Info($"{instance.TypeDescription} request for {instance.Node.Name} [{instance.NodeId}] was cancelled by {currentUser.Name}");
 
+                _hubContext.Clients.All.TaskCancelled(
+                    _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance: instance)
+                        .LastOrDefault());
+
                 return Json(new
                 {
                     status = 200,
@@ -277,6 +299,9 @@ namespace Workflow.Api
                 );
 
                 Log.Info($"{instance.TypeDescription} request for {instance.Node.Name} [{instance.NodeId}] was resubmitted by {currentUser.Name}");
+
+                _hubContext.Clients.All.TaskResubmitted(
+                    _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance: instance));
 
                 return Json(new
                 {

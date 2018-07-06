@@ -32,6 +32,7 @@
         pkg: grunt.file.readJSON('package.json'),
         dest: grunt.option('target') || '../dist',
         basePath: 'App_Plugins/Workflow',
+        backoffice: 'App_Plugins/Workflow/backoffice',
         banner:
             '*! <%= pkg.title || pkg.name %> - v<%= packageVersion() %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
             '<%= pkg.homepage ? " * " + pkg.homepage + "\\n" : "" %>' +
@@ -42,12 +43,12 @@
         concat: {
             dist: {
                 src: [
-                    '<%= basePath %>/backoffice/controllers/**/*.js',
-                    '<%= basePath %>/backoffice/directives/*.js',
-                    '<%= basePath %>/backoffice/interceptors/*.js',
-                    '<%= basePath %>/backoffice/resources/*.js'
+                    '<%= backoffice %>/controllers/**/*.js',
+                    '<%= backoffice %>/directives/*.js',
+                    '<%= backoffice %>/interceptors/*.js',
+                    '<%= backoffice %>/resources/*.js'
                 ],
-                dest: '<%= basePath %>/backoffice/workflow.es6',
+                dest: '<%= backoffice %>/workflow.es6',
                 nonull: true,
                 options: {
                     banner: '/<%= banner %>/\n\n'
@@ -59,7 +60,7 @@
         sass: {
             dist: {
                 files: {
-                    '<%= basePath %>/backoffice/css/styles.css': ['<%= basePath %>/backoffice/css/styles.scss']
+                    '<%= backoffice %>/css/styles.css': ['<%= backoffice %>/css/styles.scss']
                 },
             }
         },
@@ -68,15 +69,15 @@
             target: {
                 files: [{
                     expand: true,
-                    cwd: '<%= basePath %>/backoffice/css',
+                    cwd: '<%= backoffice %>/css',
                     src: 'styles.css',
-                    dest: '<%= dest %>/<%= basePath %>/backoffice/css',
+                    dest: '<%= dest %>/<%= backoffice %>/css',
                     ext: '.min.css'
                 }]
             },
             add_banner: {
                 files: { 
-                    '<%= dest %>/<%= basePath %>/backoffice/css/styles.min.css': ['<%= dest %>/<%= basePath %>/backoffice/css/styles.min.css']
+                    '<%= dest %>/<%= backoffice %>/css/styles.min.css': ['<%= dest %>/<%= backoffice %>/css/styles.min.css']
                 }
             }
         },
@@ -85,7 +86,7 @@
             dist: {
                 files: {
                     // destination for transpiled js : source js
-                    '<%= dest %>/<%= basePath %>/backoffice/js/workflow.js': '<%= basePath %>/backoffice/workflow.es6'
+                    '<%= dest %>/<%= backoffice %>/js/workflow.js': '<%= backoffice %>/workflow.es6'
                 },
                 options: {
                     transform: [['babelify', { presets: 'env' }]],
@@ -101,25 +102,25 @@
 
             // dev watches everything, copies everything
             dev: {
-                files: ['<%= basePath %>/**/*'],
-                tasks: ['sass:dist', 'copy:dev'],
+                files: ['<%= backoffice %>/**/*'],
+                tasks: ['sass:dist', 'copy:dev', 'copy:configDev'],
                 options: {
                     livereload: true
                 }
             },
 
             css: {
-                files: ['<%= basePath %>/**/*.scss'],
+                files: ['<%= backoffice %>/**/*.scss'],
                 tasks: ['sass:dist']
             },
 
             js: {
-                files: ['<%= basePath %>/**/*.js'],
-                tasks: ['concat:dist']
+                files: ['<%= backoffice %>/**/*.js'],
+                tasks: ['copy:js']
             },
 
             html: {
-                files: ['<%= basePath %>/**/*.html'],
+                files: ['<%= backoffice %>/**/*.html'],
                 tasks: ['copy:views']
             },
 
@@ -132,15 +133,14 @@
                 files: ['<%= basePath %>/lang/**'],
                 tasks: ['copy:lang']
             }
-
         },
 
         copy: {
             dev: {
                 expand: true,
-                cwd: '<%= basePath %>/',
+                cwd: '<%= backoffice %>/',
                 src: '**/*',
-                dest: '../workflow.site/<%= basePath %>/',
+                dest: '../workflow.site/<%= backoffice %>/',
             },
 
             config: {
@@ -148,23 +148,28 @@
                 dest: '<%= dest %>/<%= basePath %>/package.manifest',
             },
 
+            configDev: {
+                src: '<%= basePath %>/package.manifest',
+                dest: '../workflow.site/<%= basePath %>/package.manifest',
+            },
+
             css: {
-                src: '<%= basePath %>/backoffice/css/styles.css',
-                dest: '<%= dest %>/<%= basePath %>/backoffice/css/styles.min.css', // yes, it's not minified, but the build task will overwrite it later
+                src: '<%= backoffice %>/css/styles.css',
+                dest: '<%= dest %>/<%= backoffice %>/css/styles.min.css', // yes, it's not minified, but the build task will overwrite it later
             },
 
             js: {
                 expand: true,
-                cwd: '<%= basePath %>/backoffice/',
+                cwd: '<%= backoffice %>/',
                 src: '**/*.js',
-                dest: '<%= dest %>/<%= basePath %>/backoffice/',
+                dest: '<%= dest %>/<%= backoffice %>/',
             },
 
             html: {
                 expand: true,
-                cwd: '<%= basePath %>/backoffice/',
+                cwd: '<%= backoffice %>/',
                 src: '**/*.html',
-                dest: '<%= dest %>/<%= basePath %>/backoffice/',
+                dest: '<%= dest %>/<%= backoffice %>/',
             },
 
             lang: {
@@ -176,16 +181,16 @@
 
             lib: {
                 expand: true,
-                cwd: '<%= basePath %>/backoffice/lib/',
+                cwd: '<%= backoffice %>/lib/',
                 src: '**',
-                dest: '<%= dest %>/<%= basePath %>/backoffice/lib/'
+                dest: '<%= dest %>/<%= backoffice %>/lib/'
             },
 
             tours: {
                 expand: true,
-                cwd: '<%= basePath %>/backoffice/tours/',
+                cwd: '<%= backoffice %>/tours/',
                 src: '**',
-                dest: '<%= dest %>/<%= basePath %>/backoffice/tours/'
+                dest: '<%= dest %>/<%= backoffice %>/tours/'
             },
 
             nuget: {
@@ -293,7 +298,7 @@
                     globals: {},
                     force: true,
                     loopfunc: true,
-                    ignores: ['**/highcharts.js', '**/exporting.js']
+                    ignores: ['**/lib/**/*.js']
                 }
             }
         }

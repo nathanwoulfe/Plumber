@@ -1,10 +1,9 @@
-﻿{   
-    javascript: [
-        '~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.js',
-        '~/App_Plugins/workflow/backoffice/lib/highcharts/modules/exporting.js',
-        '~/App_Plugins/workflow/backoffice/js/workflow.js'
-    ],
-    css: [
-		'~/App_Plugins/workflow/backoffice/css/styles.min.css'
-    ]
+﻿{
+  javascript: [
+    "~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.js",
+    "~/App_Plugins/workflow/backoffice/lib/highcharts/modules/exporting.js"
+  ],
+  css: [
+    "~/App_Plugins/workflow/backoffice/css/styles.min.css"
+  ]
 }
