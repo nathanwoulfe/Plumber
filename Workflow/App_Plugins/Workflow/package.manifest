@@ -28,6 +28,8 @@
     "~/App_Plugins/workflow/backoffice/directives/workflow.instance.directive.js",
     "~/App_Plugins/workflow/backoffice/directives/workflow.progressstep.directive.js",
 
+    "~/App_Plugins/workflow/backoffice/filters/workflow.iconName.filter.js",
+
     "~/App_Plugins/workflow/backoffice/interceptors/workflow.config.interceptors.js",
     "~/App_Plugins/workflow/backoffice/interceptors/workflow.drawerbuttons.interceptor.js",
 

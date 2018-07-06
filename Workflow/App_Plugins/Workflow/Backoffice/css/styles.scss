@@ -3,7 +3,7 @@
 @import "../lib/highcharts/highcharts.scss";
 
 .workflow {
-    color:#303033;
+    color: #303033;
 
     hr {
         clear: both;
@@ -28,29 +28,36 @@
         height: 200px;
 
         &.group-description {
-            width: auto; 
+            width: auto;
         }
     }
 
-    .badge { 
-        border-radius:2px;
-        background:$umbGreen;  
-        font-weight:400;
-        transform:translateY(-2px);
-        text-shadow:none;
+    .publish {
+        color:$umbGreen;
+    }
+    .unpublish {
+        color:$umbraco;
+    }
+
+    .badge {
+        border-radius: 2px;
+        background: $umbGreen;
+        font-weight: 400;
+        transform: translateY(-2px);
+        text-shadow: none;
     }
 
     h6.badge {
-        display:block;
-        text-align:center;
-        padding:4px 9px;
+        display: block;
+        text-align: center;
+        padding: 4px 9px;
     }
 
     .flow-select {
         margin-bottom: 0;
     }
 
-    .umb-box { 
+    .umb-box {
         .umb-node-preview {
             min-width: 100%;
         }
@@ -79,7 +86,7 @@
         border-radius: 3px;
 
         &-current p {
-            margin-bottom:0;
+            margin-bottom: 0;
         }
 
         .btn {
@@ -155,31 +162,16 @@
         }
     }
 
-    .task-detail-btn {
-        padding: 0;
-        background: 0 0;
-        margin-right: 10px;        
-
-        &:hover {
-            background: #fff;
-        }
-
-        svg {
-            width: 25px;
-            vertical-align: sub;
-        }
-    }
-    
-    &-settings  {
+    &-settings {
         .umb-node-preview, .umb-node-preview-add {
-            max-width:none;
+            max-width: none;
         }
     }
 
     &-history {
         .umb-editor-sub-header,
         .chart-controls.umb-property {
-            margin-bottom:0;
+            margin-bottom: 0;
         }
     }
 
@@ -189,19 +181,14 @@
 
         > div {
             margin-left: 5px;
-        } 
-    }
-
-    .umb-table-cell .umb-overlay {
-        cursor:default;
+        }
     }
 
     .no-sub-button .umb-button__button {
-        border-radius:3px;
-    } 
-
+        border-radius: 3px;
+    }
     // import scss partials
-    @import "highcharts"; 
+    @import "highcharts";
     @import "listview";
     @import "workflow-progress";
     @import "docs-dashboard";

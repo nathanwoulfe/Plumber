@@ -223,22 +223,34 @@
         // subscribe to signalr magick for button state
         // events are raised in ActionController - doesn't matter what they return, only care that they are raised
         // as it indicates a change of state for the button
+        const hubEvent = id => {
+            if (!dashboardClick && id === editorState.current.id) {
+                getNodeTasks();
+            }
+        };
+
         plumberHub.initHub(hub => {
-            hub.on('workflowStarted', () => {
-                getNodeTasks();
+            ['workflowStarted', 'taskCancelled', 'taskApproved', 'taskRejected'].forEach(e => {
+                hub.on(e, data => {
+                    hubEvent(data.nodeId);
+                });
             });
 
-            hub.on('taskCancelled', () => {
-                getNodeTasks();
-            });
+            //hub.on('workflowStarted', data => {
+            //    hubEvent(data.nodeId);
+            //});
 
-            hub.on('taskApproved', () => {
-                getNodeTasks();
-            });
+            //hub.on('taskCancelled', data => {
+            //    hubEvent(data.nodeId); 
+            //});
 
-            hub.on('taskRejected', () => {
-                getNodeTasks();
-            });
+            //hub.on('taskApproved', data => {
+            //    hubEvent(data.nodeId);
+            //});
+
+            //hub.on('taskRejected', data => {
+            //    hubEvent(data.nodeId);
+            //});
 
             hub.start();
         });

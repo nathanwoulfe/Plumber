@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Workflow.Models
 {
     /// <summary>
-    /// 
+    /// A UI-ready sub-set of properties from the WorkflowTaskPoco
     /// </summary>
     public class WorkflowTask
     {
@@ -29,8 +29,14 @@ namespace Workflow.Models
         [JsonProperty("type")]
         public string Type { get; set; }
 
+        [JsonProperty("typeId")]
+        public int TypeId { get; set; }
+
         [JsonProperty("status")]
-        public string Status { get; set; }
+        public int Status { get; set; }
+
+        [JsonProperty("statusName")]
+        public string StatusName { get; set; }
 
         [JsonProperty("cssStatus")]
         public string CssStatus { get; set; }
@@ -50,8 +56,11 @@ namespace Workflow.Models
         [JsonProperty("approvalGroup")]
         public string ApprovalGroup { get; set; }
 
-        [JsonProperty("activeTask")]
-        public string ActiveTask { get; set; }
+        [JsonProperty("completedBy")]
+        public string CompletedBy { get; set; }
+
+        [JsonProperty("completedOn")]
+        public string CompletedOn { get; set; }
 
 
         [JsonProperty("permissions")]
