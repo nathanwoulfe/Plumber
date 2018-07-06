@@ -1,5 +1,13 @@
 ﻿(() => {
-    'use strict';    
+
+    const template = `
+                <div>
+                    <p ng-bind="intro"></p>
+                    <label for="comments">
+                        {{ labelText }} <span ng-bind="info"></span>
+                    </label>
+                    <textarea no-dirty-check id="comments" ng-model="comment" ng-change="limitChars()"></textarea>
+                </div>`;
 
     function comments() {
 
@@ -13,16 +21,7 @@
                 isFinalApproval: '=',
                 disabled: '='
             },
-            template: `
-                <div>
-                    <p ng-bind="intro"></p>
-                    <label for="comments">
-                        {{ labelText }} <span ng-bind="info"></span>
-                    </label>
-                    <textarea no-dirty-check id="comments" ng-model="comment" ng-change="limitChars()"></textarea>
-                </div>`,
-            
-            //'../app_plugins/workflow/backoffice/views/partials/workflowCommentsTemplate.html',
+            template: template,
             link: scope => {
 
                 scope.limitChars = () => {

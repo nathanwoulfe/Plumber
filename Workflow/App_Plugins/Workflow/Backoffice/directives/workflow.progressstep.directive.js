@@ -1,5 +1,14 @@
 ﻿(() => {
 
+    const template = `
+        <div class="progress-step {{ css[0] }}" ng-style="{ 'width' : width }">
+            <span class="marker"></span>
+            <span class="tooltip">
+                <span class="tooltip-{{ css[0] }}" ng-bind="css[1]"></span>
+                {{ task.approvalGroup }}
+            </span>
+        </div>`;
+
     function progressStep() {
 
         const directive = {
@@ -9,14 +18,7 @@
                 task: '=',
                 count: '='
             },
-            template: `
-                <div class="progress-step {{ css[0] }}" ng-style="{ 'width' : width }">
-                    <span class="marker"></span>
-                    <span class="tooltip">
-                        <span class="tooltip-{{ css[0] }}" ng-bind="css[1]"></span>
-                        {{ task.approvalGroup }}
-                    </span>
-                </div>`,
+            template: template,
             link: scope => {
                 scope.width = `${100 / scope.count}%`;
 

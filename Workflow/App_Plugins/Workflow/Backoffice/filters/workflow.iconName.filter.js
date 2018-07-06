@@ -7,28 +7,29 @@
      */
     function iconName() {
         return function (task) {
+            let response = '';
             //rejected
             if ((task.typeId === 1 || task.typeId === 3) && task.status === 7 || task.status === 2) {
-                return 'delete';
+                response = 'delete';
             }
             // resubmitted or approved
             if (task.typeId === 2 && task.status === 7 || task.status === 1) {
-                return 'check';
+                response = 'check';
             }
             // pending
             if (task.status === 3) {
-                return 'record';
+                response = 'record';
             }
             // not required
             if (task.status === 4) {
-                return 'next-media';
+                response = 'next-media';
             }
             // not required
             if (task.status === 5) {
-                return 'stop';
+                response = 'stop';
             }
 
-            return '';
+            return response;
         };
     }
 

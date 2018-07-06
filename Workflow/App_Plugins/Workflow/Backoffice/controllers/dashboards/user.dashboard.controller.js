@@ -110,26 +110,16 @@
 
         // subscribe to signalr magick
         plumberHub.initHub(hub => {
-            hub.on('workflowStarted', data => {
-                addTask(data);
+
+            ['workflowStarted', 'taskCancelled'].forEach(e => {
+                addTask(e);
             });
 
-            hub.on('taskCancelled', data => {
-                removeTask(data);
-            });
-
-            hub.on('taskApproved', data => {
+            ['taskApproved', 'taskRejected'].forEach(e => {
                 // add the newest task
-                addTask(data[0]);
+                addTask(e[0]);
                 // remove the previous tasks
-                removeTask(data.splice(1));
-            });
-
-            hub.on('taskRejected', data => {
-                // add the newest task
-                addTask(data[0]);
-                // remove the previous tasks
-                removeTask(data.splice(1));
+                removeTask(e.splice(1));
             });
 
             hub.start();
