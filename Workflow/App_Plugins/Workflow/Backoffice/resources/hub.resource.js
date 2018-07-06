@@ -1,9 +1,11 @@
-﻿angular.module('umbraco.resources').factory('plumberHub',
-    function ($rootScope, $q, assetsService) {
+﻿(() => {
+
+    function plumberHub($rootScope, $q, assetsService) {
 
         const scripts = [
             '../App_Plugins/workflow/backoffice/lib/signalr/jquery.signalr-2.2.1.min.js',
-            '/umbraco/backoffice/signalr/hubs'];
+            '/umbraco/backoffice/signalr/hubs'
+        ];
 
         function initHub(callback) {
             if ($.connection == undefined) {
@@ -17,8 +19,7 @@
                     .then(() => {
                         hubSetup(callback);
                     });
-            }
-            else {
+            } else {
                 hubSetup(callback);
             }
         }
@@ -32,18 +33,18 @@
                     $.connection.hub.start();
                 },
                 on: (eventName, callback) => {
-                    proxy.on(eventName, result => {
-                        $rootScope.$apply(() => {
-                            if (callback) {
-                                callback(result);
-                            }
+                    proxy.on(eventName,
+                        result => {
+                            $rootScope.$apply(() => {
+                                if (callback) {
+                                    callback(result);
+                                }
+                            });
                         });
-                    });
                 },
                 invoke: (methodName, callback) => {
                     proxy.invoke(methodName)
                         .done(result => {
-
                             $rootScope.$apply(() => {
                                 if (callback) {
                                     callback(result);
@@ -59,4 +60,8 @@
         return {
             initHub: initHub
         };
-    });
+    };
+
+    angular.module('umbraco.resources').factory('plumberHub', ['$rootScope', '$q', 'assetsService', plumberHub]);
+
+})();
