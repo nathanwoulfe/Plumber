@@ -4,7 +4,6 @@ using Moq;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
-using Umbraco.Web;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
@@ -17,15 +16,13 @@ namespace Workflow.Tests.Services
         private readonly IConfigService _configService;
         private readonly IContentService _contentService;
         private readonly IContentTypeService _contentTypeService;
-        private readonly UmbracoContext _context;
 
         public ConfigServiceTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.Tables();
 
-            _context = Scaffold.EnsureContext();
-            
+            Scaffold.Run();
+
             _configService = new ConfigService();
 
             _contentService = ApplicationContext.Current.Services.ContentService;

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Chauffeur.TestingTools;
 using Newtonsoft.Json.Linq;
+using OpenQA.Selenium;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
@@ -24,23 +26,22 @@ namespace Workflow.Tests.Api
         private readonly IInstancesService _instancesService;
         private readonly IConfigService _configService;
 
-        private readonly UmbracoContext _context;
         private readonly IContentService _contentService;
         private readonly IContentTypeService _contentTypeService;
 
         public TasksControllerTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.Tables();
 
-            _context = Scaffold.EnsureContext();
+            Scaffold.Run();
+
             _contentService = ApplicationContext.Current.Services.ContentService;
             _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
             _tasksService = new TasksService();
             _instancesService = new InstancesService();
             _configService = new ConfigService();
 
-            _tasksController = new TasksController(_context)
+            _tasksController = new TasksController
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
@@ -52,7 +53,7 @@ namespace Workflow.Tests.Api
         {
             // chasing coverage - make sure constructors are all accessible
             Assert.NotNull(new TasksController());
-            Assert.NotNull(new TasksController(_context, new UmbracoHelper(_context)));
+            Assert.NotNull(new TasksController(UmbracoContext.Current, new UmbracoHelper(UmbracoContext.Current)));
         }
 
         [Fact]
@@ -77,12 +78,10 @@ namespace Workflow.Tests.Api
         }
 
         [Fact]
-        public async void Get_Pending_Tasks_Response_Is_Error_When_No_Node()
+        public async void Get_Pending_Tasks_Response_Is_Zero_When_No_Node()
         {
-            // get an error if the node doesn't exist
-            object content = await _tasksController.GetNodePendingTasks(666).GetContent();
-            Assert.Equal("NullReferenceException", (string)content.Get("ExceptionType"));
-            Assert.Equal(MagicStrings.ErrorGettingPendingTasksForNode.Replace("{id}", "666"), (string)content.Get("ExceptionMessage"));
+            JObject content = await _tasksController.GetNodePendingTasks(666).GetContent();
+            Assert.Equal(0, content.Value<int>("total"));
         }
 
         [Fact]

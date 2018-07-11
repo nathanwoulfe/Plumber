@@ -1,11 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Chauffeur.TestingTools;
-using Moq;
-using Umbraco.Core;
-using Umbraco.Core.Models;
-using Umbraco.Core.Services;
-using Umbraco.Web;
+﻿using Chauffeur.TestingTools;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
@@ -16,16 +9,16 @@ namespace Workflow.Tests.Services
     public class ImportExportServiceTests : UmbracoHostTestBase
     {
         private readonly IImportExportService _importExportService;
-        private readonly UmbracoContext _context;
 
         public ImportExportServiceTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.Tables();
 
-            _context = Scaffold.EnsureContext();
+            Scaffold.Run();
 
             _importExportService = new ImportExportService();
+
+            // service import is implicitly tested in the scaffold method
         }
 
         [Fact]

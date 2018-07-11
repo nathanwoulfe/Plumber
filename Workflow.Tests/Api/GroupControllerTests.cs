@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Results;
 using Chauffeur.TestingTools;
-using GDev.Umbraco.Test;
 using Umbraco.Web;
 using Workflow.Api;
 using Workflow.Helpers;
@@ -18,20 +17,18 @@ namespace Workflow.Tests.Api
     public class GroupControllerTests : UmbracoHostTestBase
     {
         private readonly GroupsController _groupsController;
-        private readonly ContextMocker _mocker;
         private readonly IGroupService _groupService;
 
         public GroupControllerTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.Tables();
+
+            Scaffold.Run();
 
             // not testing this, but need it for quickly creating groups
             _groupService = new GroupService();
 
-            _mocker = new ContextMocker();
-
-            _groupsController = new GroupsController(_mocker.UmbracoContextMock)
+            _groupsController = new GroupsController(UmbracoContext.Current)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
@@ -43,7 +40,7 @@ namespace Workflow.Tests.Api
         {
             // chasing coverage - make sure constructors are all accessible
             Assert.NotNull(new GroupsController());
-            Assert.NotNull(new GroupsController(_mocker.UmbracoContextMock, new UmbracoHelper(_mocker.UmbracoContextMock)));
+            Assert.NotNull(new GroupsController(UmbracoContext.Current, new UmbracoHelper(UmbracoContext.Current)));
         }
 
         [Fact]

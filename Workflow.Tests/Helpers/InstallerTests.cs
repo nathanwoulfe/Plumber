@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Chauffeur.TestingTools;
-using GDev.Umbraco.Test;
+﻿using Chauffeur.TestingTools;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
@@ -20,9 +13,7 @@ namespace Workflow.Tests.Helpers
         public InstallerTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.Tables();
-
-            var mocker = new ContextMocker();
+            Scaffold.Run();
 
             _sectionService = ApplicationContext.Current.Services.SectionService;
         }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Chauffeur.TestingTools;
-using Umbraco.Web;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
@@ -14,14 +13,11 @@ namespace Workflow.Tests.Services
         private readonly ITasksService _service;
         private readonly IInstancesService _instancesService;
 
-        private readonly UmbracoContext _context;
-
         public TasksServiceTests()
         {
             Host.Run(new[] {"install y"}).Wait();
-            Scaffold.Tables();
 
-            _context = Scaffold.EnsureContext();
+            Scaffold.Run();
 
             _service = new TasksService();
             _instancesService = new InstancesService();
@@ -37,8 +33,6 @@ namespace Workflow.Tests.Services
             };
 
             int count = _service.CountPendingTasks();
-
-            WorkflowTaskInstancePoco task = Scaffold.Task();
 
             _service.InsertTask(Scaffold.Task());
 
