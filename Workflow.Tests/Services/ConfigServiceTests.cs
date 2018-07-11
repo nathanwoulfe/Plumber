@@ -5,7 +5,6 @@ using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
 using Umbraco.Web;
-using Workflow.Extensions;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
@@ -58,7 +57,7 @@ namespace Workflow.Tests.Services
             Assert.Empty(_configService.GetPermissionsForNode(9999));
             
             // this one has a permission, so should return something
-            var permissions = _configService.GetPermissionsForNode(1089);
+            List<UserGroupPermissionsPoco> permissions = _configService.GetPermissionsForNode(1089);
             Assert.NotEmpty(permissions);
         }
 
@@ -77,7 +76,6 @@ namespace Workflow.Tests.Services
         {
             Scaffold.Config();
             Scaffold.ContentType(_contentTypeService);
-            var type = _contentTypeService.GetContentType("textpage");
 
             var mock = new MockRepository(MockBehavior.Default);
             Mock<IPublishedContent> content = mock.Create<IPublishedContent>();
