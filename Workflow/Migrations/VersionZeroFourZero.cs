@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Persistence.Migrations;
@@ -10,7 +11,7 @@ using Workflow.Services.Interfaces;
 
 namespace Workflow.Migrations
 {
-	[Migration("0.4.0", 1, MagicStrings.Name)]
+    [Migration("0.4.0", 1, MagicStrings.Name)]
     public class VersionZeroFourZero : MigrationBase
     {
         private static readonly IInstancesService InstancesService = new InstancesService();
@@ -28,28 +29,31 @@ namespace Workflow.Migrations
             //Don't exeucte if the column is already there
             ColumnInfo[] columns = SqlSyntax.GetColumnsInSchema(Context.Database).ToArray();
 
-            if (columns.Any(x => x.TableName.InvariantEquals("WorkflowInstance") && x.ColumnName.InvariantEquals("CompletedDate")) == false)
-            {
-                Create.Column("CompletedDate").OnTable("WorkflowInstance").AsDateTime().Nullable();
-            }
+            if (columns.Any(x => x.TableName.InvariantEquals("WorkflowInstance") && x.ColumnName.InvariantEquals("CompletedDate"))) return;
+
+            // column doesn't exist, add it and populate the completed date for any existing instances
+
+            Create.Column("CompletedDate").OnTable("WorkflowInstance").AsDateTime().Nullable();
 
             // once the column has been added, check for any instances where status is not active, find the last task, and set complete date to match
             // this only impacts on charting, but allows more complete history as instances didn't previously store a completion date
 
-            var instances = InstancesService.GetAll()
-                .OrderByDescending(x => x.CreatedDate)
-                .Where(x => x.Status != (int)WorkflowStatus.PendingApproval && x.Status != (int)WorkflowStatus.NotRequired)
+            List<WorkflowInstancePoco> instances = InstancesService.GetAll()
+                .Where(x => x.Status == (int)WorkflowStatus.Approved || x.Status == (int)WorkflowStatus.Cancelled)
                 .ToList();
 
-            foreach (var instance in instances)
+            if (!instances.Any()) return;
+
+            foreach (WorkflowInstancePoco instance in instances)
             {
-                var finalTask = instance.TaskInstances.LastOrDefault();
-                if (null != finalTask)
-                {
-                    instance.CompletedDate = finalTask.CompletedDate;
-                    Context.Database.Update(instance);
-                }
+                if (!instance.TaskInstances.Any()) continue;
+
+                WorkflowTaskInstancePoco finalTask = instance.TaskInstances.OrderBy(x => x.Id).Last();
+
+                instance.CompletedDate = finalTask.CompletedDate;
+                Context.Database.Update(instance);
             }
+
         }
     }
 }
