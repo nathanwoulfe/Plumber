@@ -2,10 +2,7 @@
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
-using Umbraco.Web;
 using Workflow.Extensions;
-using Workflow.Services;
-using Workflow.Services.Interfaces;
 using Xunit;
 
 namespace Workflow.Tests.Extensions
@@ -18,11 +15,8 @@ namespace Workflow.Tests.Extensions
         public ContentExtensionsTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.Tables();
 
-            UmbracoContext context = Scaffold.EnsureContext();
-            
-            IConfigService configService = new ConfigService();
+            Scaffold.Run();
 
             _contentService = ApplicationContext.Current.Services.ContentService;
             _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;

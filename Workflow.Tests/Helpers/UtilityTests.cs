@@ -11,34 +11,33 @@ using Workflow.Repositories;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
 using Xunit;
+using WorkflowUtility = Workflow.Helpers.Utility;
 
 namespace Workflow.Tests.Helpers
 {
     public class UtilityTests : UmbracoHostTestBase
     {
-        private readonly Workflow.Helpers.Utility _utility;
+        private readonly WorkflowUtility _utility;
         private readonly IContentService _contentService;
         private readonly IContentTypeService _contentTypeService;
         private readonly IConfigService _configService;
-        private readonly UmbracoContext _context;
 
         public UtilityTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.Tables();
 
-            _context = Scaffold.EnsureContext();
+            Scaffold.Run();
 
             _contentService = ApplicationContext.Current.Services.ContentService;
             _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
             _configService = new ConfigService();
 
-            _utility = new Workflow.Helpers.Utility(
+            _utility = new WorkflowUtility(
                 new PocoRepository(),
                 ApplicationContext.Current.Services.UserService,
                 _contentTypeService,
                 _contentService,
-                _context);
+                UmbracoContext.Current);
         }
 
         [Fact]
@@ -108,7 +107,7 @@ namespace Workflow.Tests.Helpers
         [Fact]
         public void Can_Get_Current_User()
         {
-            var id = _context.Security.CurrentUser.Id;
+            int id = UmbracoContext.Current.Security.CurrentUser.Id;
 
             IUser user = _utility.GetCurrentUser();
             Assert.NotNull(user);

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Chauffeur.TestingTools;
-using GDev.Umbraco.Test;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Repositories.Interfaces;
@@ -18,9 +17,8 @@ namespace Workflow.Tests.Repositories
         public ImportExportRepositoryTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.Tables();
 
-            var context = new ContextMocker();
+            Scaffold.Run();
 
             _repo = new ImportExportRepository();
         }

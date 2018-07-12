@@ -21,6 +21,15 @@ namespace Workflow.Tests
 {
     public static class Scaffold
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void Run()
+        {
+            Tables();
+            EnsureContext();
+        }
+
         public static void Tables()
         {
             // ensure required tables exist
@@ -35,11 +44,11 @@ namespace Workflow.Tests
 
         }
 
-        public static UmbracoContext EnsureContext()
+        public static void EnsureContext()
         {
             if (UmbracoContext.Current != null)
             {
-                return UmbracoContext.Current;
+                return;
             }
 
             var request = new SimpleWorkerRequest("", "", "", null, new StringWriter());
@@ -53,7 +62,7 @@ namespace Workflow.Tests
 
             webSecurity.Setup(x => x.CurrentUser).Returns(currentUser);
 
-            return UmbracoContext.EnsureContext(
+            UmbracoContext.EnsureContext(
                 httpContext,
                 ApplicationContext.Current,
                 webSecurity.Object,

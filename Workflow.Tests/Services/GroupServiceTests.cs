@@ -18,7 +18,8 @@ namespace Workflow.Tests.Services
         public GroupServiceTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.Tables();
+
+            Scaffold.Run();
 
             // even though it's not being used, this needs to stay
             _mocker = new ContextMocker();

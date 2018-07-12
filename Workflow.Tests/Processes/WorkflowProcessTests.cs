@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Chauffeur.TestingTools;
-using GDev.Umbraco.Test;
+﻿using Chauffeur.TestingTools;
 using Workflow.Models;
 using Workflow.Processes;
 using Xunit;
@@ -16,9 +10,8 @@ namespace Workflow.Tests.Processes
         public WorkflowProcessTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.Tables();
 
-            var _mocker = new ContextMocker();
+            Scaffold.Run();
         }
 
         [Fact]

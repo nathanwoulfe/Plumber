@@ -3,9 +3,9 @@ using System.Net.Http;
 using System.Runtime.Caching;
 using System.Web.Http;
 using Chauffeur.TestingTools;
-using GDev.Umbraco.Test;
 using Newtonsoft.Json.Linq;
 using Umbraco.Core;
+using Umbraco.Web;
 using Workflow.Api;
 using Workflow.Helpers;
 using Workflow.Models;
@@ -20,11 +20,10 @@ namespace Workflow.Tests.Api
         public SettingsControllerTests()
         {
             Host.Run(new[] { "install y" }).Wait();
-            Scaffold.Tables();
 
-            var mocker = new ContextMocker();
+            Scaffold.Run();
 
-            _settingsController = new SettingsController(mocker.UmbracoContextMock)
+            _settingsController = new SettingsController(UmbracoContext.Current)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
