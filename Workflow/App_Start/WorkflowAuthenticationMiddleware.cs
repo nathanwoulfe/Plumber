@@ -11,6 +11,7 @@ using Umbraco.Core;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Security;
+using Workflow.Helpers;
 
 namespace Workflow
 {
@@ -25,15 +26,17 @@ namespace Workflow
         public override async Task Invoke(IOwinContext context)
         {
             IOwinRequest request = context.Request;
-            if (request.Uri.AbsolutePath.StartsWith("/workflow-preview/"))
+            if (request.Uri.AbsolutePath.StartsWith(MagicStrings.PreviewRouteBase))
             {
                 string userId = request.Uri.Segments[3].Trim('/');
                 IUser user = ApplicationContext.Current.Services.UserService.GetUserById(int.Parse(userId));
 
                 UserData userData = GetUserData(user);
-                string userDataString = JsonConvert.SerializeObject(userData);
 
-                HttpCookie authCookie = CreateAuthCookie(user.Name, userDataString, GlobalSettings.TimeOutInMinutes, 1440,
+                HttpCookie authCookie = CreateAuthCookie(
+                    user.Name, 
+                    JsonConvert.SerializeObject(userData), 
+                    GlobalSettings.TimeOutInMinutes,
                     UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName,
                     UmbracoConfig.For.UmbracoSettings().Security.AuthCookieDomain);
 
@@ -70,7 +73,7 @@ namespace Workflow
 
         //borrowed from Umbraco - see source for code comments in CreateAuthTicketAndCookie
         private static HttpCookie CreateAuthCookie(string username, string userData,
-            int loginTimeoutMins, int minutesPersisted, string cookieName, string cookieDomain)
+            int loginTimeoutMins, string cookieName, string cookieDomain)
         {
             var ticket = new FormsAuthenticationTicket(4, username, DateTime.Now,
                 DateTime.Now.AddMinutes(loginTimeoutMins), true, userData, "/");
@@ -78,7 +81,7 @@ namespace Workflow
             string hash = FormsAuthentication.Encrypt(ticket);
             var cookie = new HttpCookie(cookieName, hash)
             {
-                Expires = DateTime.Now.AddMinutes(minutesPersisted),
+                Expires = DateTime.Now.AddMinutes(loginTimeoutMins),
                 Domain = cookieDomain,
                 Path = "/"
             };

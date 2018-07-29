@@ -8,7 +8,6 @@ using Umbraco.Core;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Web;
 using Umbraco.Web.UI.JavaScript;
-using Workflow.Controllers;
 using Workflow.Helpers;
 using Installer = Workflow.Helpers.Installer;
 

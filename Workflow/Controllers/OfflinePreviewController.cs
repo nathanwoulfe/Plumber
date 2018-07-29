@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using umbraco.BusinessLogic;
 using umbraco.presentation.preview;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.IO;
-using Umbraco.Core.Models.Membership;
 using Umbraco.Web;
 using Umbraco.Web.Models;
 using Umbraco.Web.Mvc;
-using Workflow.Extensions;
-using Workflow.Helpers;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
 using User = umbraco.BusinessLogic.User;
@@ -41,7 +37,7 @@ namespace Workflow.Controllers
             {
                 XmlContent = _previewService.Fetch(realGuid)
             };
-
+            
             pc.ActivatePreviewCookie();
             
             // TODO -> refactor

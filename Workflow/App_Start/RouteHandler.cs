@@ -4,8 +4,9 @@ using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 using Umbraco.Web.Mvc;
+using Workflow.Helpers;
 
-namespace Workflow.Controllers
+namespace Workflow
 {
     public class RouteHandler : UmbracoVirtualNodeRouteHandler
     {
@@ -15,7 +16,7 @@ namespace Workflow.Controllers
 
             string path = requestContext.HttpContext.Request.Url.GetAbsolutePathDecoded();
 
-            if (!path.StartsWith("/workflow-preview/")) return null;
+            if (!path.StartsWith(MagicStrings.PreviewRouteBase)) return null;
 
             string[] segments = path.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
 
@@ -25,7 +26,6 @@ namespace Workflow.Controllers
             }
 
             IPublishedContent node = umbracoContext.ContentCache.GetById(int.Parse(segments[1]));
-
             return node;
         }
     }

@@ -26,5 +26,6 @@
         public const string HttpResponseException = "HttpResponseException";
 
         public const string PreviewUserName = "WorkflowPreview";
+        public const string PreviewRouteBase = "/workflow-preview/";
     }
 }
