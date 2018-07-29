@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Web.Http;
 using log4net;
 using Microsoft.AspNet.SignalR;
-using Umbraco.Core;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Web;
 using Umbraco.Web.WebApi;
@@ -30,6 +29,7 @@ namespace Workflow.Api
 
         private readonly IInstancesService _instancesService;
         private readonly ITasksService _tasksService;
+        private readonly IPreviewService _previewService;
         private readonly IHubContext _hubContext;
 
         private readonly Utility _utility;
@@ -38,6 +38,7 @@ namespace Workflow.Api
         {
             _instancesService = new InstancesService();
             _tasksService = new TasksService();
+            _previewService = new PreviewService();
 
             _utility = new Utility();
             _hubContext = GlobalHost.ConnectionManager.GetHubContext<PlumberHub>();
@@ -47,6 +48,7 @@ namespace Workflow.Api
         {
             _instancesService = new InstancesService();
             _tasksService = new TasksService();
+            _previewService = new PreviewService();
 
             _utility = new Utility();
             _hubContext = GlobalHost.ConnectionManager.GetHubContext<PlumberHub>();
@@ -74,7 +76,8 @@ namespace Workflow.Api
                     process = new DocumentUnpublishProcess();
                 }
 
-                WorkflowInstancePoco instance = process.InitiateWorkflow(int.Parse(model.NodeId), _utility.GetCurrentUser().Id, model.Comment);
+                IUser currentUser = _utility.GetCurrentUser();
+                WorkflowInstancePoco instance = process.InitiateWorkflow(int.Parse(model.NodeId), currentUser.Id, model.Comment);
 
                 string msg = string.Empty;
 
@@ -101,6 +104,8 @@ namespace Workflow.Api
                 _hubContext.Clients.All.WorkflowStarted(
                     _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance: instance)
                     .FirstOrDefault());
+
+                _previewService.Generate(instance.NodeId, instance.Guid);
 
                 return Json(new
                 {

@@ -385,6 +385,12 @@
     <Content Include="config\BaseRestExtensions.config" />
     <Content Include="config\BackOfficeTours\getting-started.json" />
     <Content Include="config\404handlers.config" />
+    <Content Include="Views\Home.cshtml" />
+    <Content Include="Views\Partials\Grid\Fanoe.cshtml" />
+    <Content Include="Views\TextPage.cshtml" />
+    <Content Include="Views\BlogOverview.cshtml" />
+    <Content Include="Views\BlogPost.cshtml" />
+    <Content Include="Views\Master.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <title>Preview</title>
+        <link href="/app_plugins/workflow/backoffice/css/styles.css" rel="stylesheet" type="text/css" />
+        <meta name="robots" content="noindex, nofollow">
+    </head>
+    <body id="canvasdesignerPanel" ng-controller="workflow.preview.controller" class="workflow workflow-preview">
+
+        <iframe id="resultFrame" ng-src="{{ pageUrl }}" frameborder="0" iframe-is-loaded></iframe>
+
+        <script src="/app_plugins/workflow/backoffice/lib/rgrove-lazyload/lazyload.js"></script>
+        <script src="/app_plugins/workflow/backoffice/preview/preview.loader.js"></script>
+    </body>
+</html>
+

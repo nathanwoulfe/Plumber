@@ -24,5 +24,7 @@
         public const string SettingsNotUpdated = "Could not save settings";
 
         public const string HttpResponseException = "HttpResponseException";
+
+        public const string PreviewUserName = "WorkflowPreview";
     }
 }

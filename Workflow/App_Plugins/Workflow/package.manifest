@@ -14,12 +14,12 @@
     "~/App_Plugins/workflow/backoffice/controllers/workflow.action.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.cancel.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.config.controller.js",
+    "~/App_Plugins/workflow/backoffice/controllers/workflow.contenttypeflow.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.drawerbuttons.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.history.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.settings.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.submit.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/workflow.userpicker.controller.js",
-    "~/App_Plugins/workflow/backoffice/controllers/workflow.contenttypeflow.controller.js",
 
     "~/App_Plugins/workflow/backoffice/directives/workflow.buttongroup.directive.js",
     "~/App_Plugins/workflow/backoffice/directives/workflow.comments.directive.js",

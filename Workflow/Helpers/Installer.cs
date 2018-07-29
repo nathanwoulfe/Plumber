@@ -2,16 +2,18 @@
 using System.Web.Hosting;
 using System.Xml;
 using Umbraco.Core;
+using Umbraco.Core.Models.Membership;
+using Umbraco.Core.Services;
 
 namespace Workflow.Helpers
 {
     public class Installer
     {
-        /// <summary>
+        /// <summary>W
         /// Adds the application/custom section to Umbraco
         /// </summary>
         /// <param name="applicationContext"></param>
-        public bool AddSection(ApplicationContext applicationContext)
+        public static bool AddSection(ApplicationContext applicationContext)
         {
             //Get SectionService
             var sectionService = applicationContext.Services.SectionService;
@@ -30,7 +32,7 @@ namespace Workflow.Helpers
             return false;
         }
 
-        public bool AddContentSectionDashboard()
+        public static bool AddContentSectionDashboard()
         {
             var saveFile = false;
             const string dashboardPath = "~/config/dashboard.config";
@@ -96,10 +98,10 @@ namespace Workflow.Helpers
         /// <summary>
         /// Adds the required XML to the dashboard.config file
         /// </summary>
-        public bool AddSectionDashboard()
+        public static bool AddSectionDashboard(string path = null)
         {
             var saveFile = false;
-            const string dashboardPath = "~/config/dashboard.config";
+            string dashboardPath = path ?? "~/config/dashboard.config";
 
             //Path to the file resolved
             var dashboardFilePath = HostingEnvironment.MapPath(dashboardPath);

@@ -2,6 +2,7 @@
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
+using Workflow.Helpers;
 using Xunit;
 
 namespace Workflow.Tests.Helpers
@@ -30,22 +31,19 @@ namespace Workflow.Tests.Helpers
 
             Assert.Null(_sectionService.GetByAlias("workflow"));
 
-            var install = new Workflow.Helpers.Installer();
-            Assert.True(install.AddSection(ApplicationContext.Current));
+            Assert.True(Installer.AddSection(ApplicationContext.Current));
         }
 
         [Fact]
         public void Can_Add_Section_Dashboard()
         {
-            var install = new Workflow.Helpers.Installer();
-            Assert.True(install.AddSectionDashboard());
+            Assert.True(Installer.AddSectionDashboard("~/bin/Debug/config/dashboard.config"));
         }
 
         [Fact]
         public void Can_Add_Content_Section_Dashboard()
         {
-            var install = new Workflow.Helpers.Installer();
-            Assert.True(install.AddContentSectionDashboard());
+            Assert.True(Installer.AddContentSectionDashboard());
         }
     }
 }
