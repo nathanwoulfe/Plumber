@@ -39,6 +39,11 @@ namespace Workflow.Models
         [JsonProperty("groupEmail")]
         public string GroupEmail { get; set; }
 
+        [Column("OfflineApproval")]
+        [NullSetting(NullSetting = NullSettings.NotNull)]
+        [JsonProperty("offlineApproval")]
+        public bool OfflineApproval { get; set; }
+
         [Column("Deleted")]
         [NullSetting(NullSetting = NullSettings.NotNull)]
         [JsonProperty("deleted")]

@@ -69,6 +69,7 @@
     <Compile Include="Helpers\MagicStrings.cs" />
     <Compile Include="Helpers\Uninstaller.cs" />
     <Compile Include="Migrations\VersionZeroEightZero.cs" />
+    <Compile Include="Migrations\VersionZeroNineZero.cs" />
     <Compile Include="Models\WorkflowInstanceModel.cs" />
     <Compile Include="Repositories\InstancesRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInstancesRepository.cs" />
