@@ -95,6 +95,17 @@ namespace Workflow.Repositories
         }
 
         /// <summary>
+        /// Get a single task by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public WorkflowTaskInstancePoco Get(int id)
+        {
+            return _database
+                .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco>(SqlHelpers.GetTask, id).FirstOrDefault();
+        }
+
+        /// <summary>
         /// Get all tasks for the given group id
         /// </summary>
         /// <param name="groupId">Id of group to query</param>

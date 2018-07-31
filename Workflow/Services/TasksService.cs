@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Umbraco.Core;
 using Workflow.Events.Args;
 using Workflow.Extensions;
 using Workflow.Models;
@@ -196,7 +197,7 @@ namespace Workflow.Services
             List<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetTasksByNodeId(id);
             return taskInstances;
         }
-
+    
         /// <summary>
         /// 
         /// </summary>
@@ -218,6 +219,17 @@ namespace Workflow.Services
         public List<WorkflowTaskInstancePoco> GetTasksWithGroupByInstanceGuid(Guid guid)
         {
             return _tasksRepo.GetTasksAndGroupByInstanceId(guid);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public WorkflowTask GetTask(int id)
+        {
+            WorkflowTaskInstancePoco task =_tasksRepo.Get(id);
+            return ConvertToWorkflowTaskList(task.AsEnumerableOfOne().ToList()).FirstOrDefault();
         }
 
         /// <summary>
