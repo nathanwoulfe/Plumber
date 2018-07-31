@@ -29,7 +29,6 @@ namespace Workflow.Api
 
         private readonly IInstancesService _instancesService;
         private readonly ITasksService _tasksService;
-        private readonly IPreviewService _previewService;
         private readonly IHubContext _hubContext;
 
         private readonly Utility _utility;
@@ -38,7 +37,6 @@ namespace Workflow.Api
         {
             _instancesService = new InstancesService();
             _tasksService = new TasksService();
-            _previewService = new PreviewService();
 
             _utility = new Utility();
             _hubContext = GlobalHost.ConnectionManager.GetHubContext<PlumberHub>();
@@ -48,7 +46,6 @@ namespace Workflow.Api
         {
             _instancesService = new InstancesService();
             _tasksService = new TasksService();
-            _previewService = new PreviewService();
 
             _utility = new Utility();
             _hubContext = GlobalHost.ConnectionManager.GetHubContext<PlumberHub>();
@@ -104,8 +101,6 @@ namespace Workflow.Api
                 _hubContext.Clients.All.WorkflowStarted(
                     _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance: instance)
                     .FirstOrDefault());
-
-                _previewService.Generate(instance.NodeId, instance.Guid);
 
                 return Json(new
                 {

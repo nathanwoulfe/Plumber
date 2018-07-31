@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Xml;
+using System.Threading.Tasks;
 
 namespace Workflow.Services.Interfaces
 {
@@ -8,9 +8,8 @@ namespace Workflow.Services.Interfaces
     /// </summary>
     public interface IPreviewService
     {
-        void Generate(int nodeId, Guid workflowInstanceGuid);
-        void Delete(Guid workflowInstanceGuid);
+        void Generate(int nodeId, int userId, Guid workflowInstanceGuid);
 
-        XmlDocument Fetch(Guid workflowInstanceGuid);
+        Task<bool> Validate(int nodeId, int userId, int taskId, Guid workflowInstanceGuid);
     }
 }

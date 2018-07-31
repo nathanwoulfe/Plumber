@@ -33,6 +33,8 @@ namespace Workflow
 
                 UserData userData = GetUserData(user);
 
+                HttpContext.Current.Request.Cookies.Remove(UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName);
+
                 HttpCookie authCookie = CreateAuthCookie(
                     user.Name, 
                     JsonConvert.SerializeObject(userData), 
@@ -57,7 +59,7 @@ namespace Workflow
 
         private UserData GetUserData(IUser user)
         {
-            return _userData ?? (_userData = new UserData(Guid.NewGuid().ToString())
+            return new UserData(Guid.NewGuid().ToString())
             {
                 Username = user.Username,
                 Id = user.Id,
@@ -68,7 +70,7 @@ namespace Workflow
                 StartContentNodes = user.StartContentIds,
                 StartMediaNodes = user.StartMediaIds,
                 SecurityStamp = user.SecurityStamp
-            });
+            };
         }
 
         //borrowed from Umbraco - see source for code comments in CreateAuthTicketAndCookie

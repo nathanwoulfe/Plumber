@@ -20,7 +20,8 @@ namespace Workflow
 
             string[] segments = path.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
 
-            if (segments.Length != 4)
+            // domain // workflow-preview // node // user // task // guid
+            if (segments.Length != 5)
             {
                 return null;
             }

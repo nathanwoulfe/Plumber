@@ -27,5 +27,6 @@
 
         public const string PreviewUserName = "WorkflowPreview";
         public const string PreviewRouteBase = "/workflow-preview/";
+        public const string PreviewFileFolder = "/app_plugins/workflow/preview";
     }
 }

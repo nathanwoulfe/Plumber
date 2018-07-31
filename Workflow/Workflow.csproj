@@ -38,14 +38,17 @@
     <Compile Include="Api\InstancesController.cs" />
     <Compile Include="Api\LogsController.cs" />
     <Compile Include="Api\ExportController.cs" />
+    <Content Include="App_Plugins\Workflow\Backoffice\app.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\importexport.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.contenttypeflow.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\rgrove-lazyload\lazyload.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\preview\app.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\preview\preview.loader.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\preview\workflow.preview.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\filters\workflow.iconName.filter.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\signalr\jquery.signalr-2.2.1.min.js" />
-    <Content Include="App_Plugins\Workflow\Backoffice\preview\workflow.preview.html" />
+    <None Include="App_Plugins\Workflow\Backoffice\preview\workflow.preview.cshtml" />
+    <Content Include="App_Plugins\Workflow\Backoffice\preview\workflow.preview.services.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\hub.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.contenttypeflow.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.instance.directive.js" />
@@ -189,6 +192,7 @@
     <None Include="App_Plugins\Workflow\Backoffice\css\listview.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\workflow-progress.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\_variables.scss" />
+    <None Include="App_Plugins\Workflow\Backoffice\preview\styles.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\tours\plumber-intro.json" />
     <None Include="App_Plugins\Workflow\dist.manifest" />
     <None Include="App_Plugins\Workflow\package.manifest" />

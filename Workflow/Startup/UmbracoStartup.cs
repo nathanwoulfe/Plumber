@@ -56,13 +56,14 @@ namespace Workflow.Startup
             // requests to this route are authenticated automatically against the WorkflowPreview user
             RouteTable.Routes.MapUmbracoRoute(
                 "OfflinePreviewRoute",
-                "workflow-preview/{nodeId}/{userId}/{guid}",
+                "workflow-preview/{nodeId}/{userId}/{taskid}/{guid}",
                 new
                 {
                     controller = "OfflinePreview",
                     action = "Index",
                     nodeId = UrlParameter.Optional,
                     userId = UrlParameter.Optional,
+                    taskId = UrlParameter.Optional,
                     guid = UrlParameter.Optional
                 },
                 new RouteHandler());

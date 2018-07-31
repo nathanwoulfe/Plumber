@@ -49,7 +49,7 @@
                     '<%= backoffice %>/interceptors/*.js',
                     '<%= backoffice %>/resources/*.js'
                 ],
-                dest: '<%= backoffice %>/workflow.js',
+                dest: '<%= backoffice %>/workflow.es6',
                 nonull: true,
                 options: {
                     banner: '/<%= banner %>/\n\n'
@@ -88,7 +88,7 @@
             dist: {
                 files: {
                     // destination for transpiled js : source js
-                    '<%= dest %>/<%= backoffice %>/js/workflow.js': '<%= backoffice %>/workflow.js'
+                    '<%= dest %>/<%= backoffice %>/js/workflow.js': '<%= backoffice %>/workflow.es6'
                 },
                 options: {
                     transform: [['babelify', { presets: 'env' }]],
@@ -170,7 +170,7 @@
             html: {
                 expand: true,
                 cwd: '<%= backoffice %>/',
-                src: '**/*.html',
+                src: '**/*.*html',
                 dest: '<%= dest %>/<%= backoffice %>/',
             },
 
@@ -306,9 +306,10 @@
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'browserify', 'sass', 'cssmin', 'copy:config', 'copy:tours', 'copy:html', 'copy:lib', 'copy:lang']);
+    grunt.registerTask('default', ['jshint', 'concat', 'browserify:dist', 'sass', 'cssmin', 'copy:config', 'copy:tours', 'copy:html', 'copy:lib', 'copy:lang']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 
     grunt.registerTask('dev', ['watch:dev']);
+
 };
