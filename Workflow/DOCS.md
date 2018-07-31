@@ -127,6 +127,20 @@ This feature is intended for use in situations where the approval group membersh
 
 Offline approval does require a user exist in the backoffice, and be assigned to a workflow group - just like any other workflow participant.
 
+#### Configuration
+
+Offline approval requires modifications to the processing pipeline, by way of an OWIN middleware task. This task is responsible for 'virtually' authenticating a user, or at least, making Umbraco believe there is an authenticated user.
+
+There are two options for making this work - the easy way, and the not as easy way, both of which require code change on your server.
+
+The easy way is to simply update your site's web.config file to register the Plumber OWIN startup class:
+
+`<add key="owin:appStartup" value="WorkflowOwinStartup" /> // replaces 'UmbracoStandardOwinStartup'`
+
+The not-as-simple way is to register the Plumber OWIN startup class in an existing OWIN startup class - you'll need to register the `WorkflowAuthenticationMiddleware` class:
+
+`app.Use<WorkflowAuthenticationMiddleware>();`
+
 ### Events
 
 Plumber raises events in a similar fashion to Umbraco - if you're familiar with Umbraco's events, Plumber won't have any surprises.
