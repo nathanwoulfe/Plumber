@@ -41,7 +41,7 @@ Plumber comes pre-wired with sensible defaults, but these should be modified to 
 - **Site URL:** the URL for the public website (including schema - http[s])
 - **Edit site URL:** the URL for the editing environment (including schema - http[s])
 - **Exclude nodes:** nodes selected here are excluded from the workflow engine and will be published per the configured Umbraco user permissions
-- **Document-type approvals:** configure workflows to be applied to all content of the selected document type. Refer to xx for details on approval flow types
+- **Document-type approvals:** configure workflows to be applied to all content of the selected document type. Refer to [Approval flow types](#approval-flow-types) for more information
 
 ### Upgrades
 
@@ -61,8 +61,9 @@ Add users to approval groups to determine which users will be responsible for ap
 
 - **Group email:** sometimes it's more appropriate to send workflow notifications to a generic inbox rather than the individual group members. Add a value here to do exactly that.
 - **Description:** it isn't used anywhere other than the group view. It's a note to remind you why the group exists.
+- **Offline approval:** allow this group to approve changes without logging in to the Backoffice. Refer to [Offline approval](#offline-approval) for more information.
 
-### Approval flow types
+### Approval flow types<a name="approval-flow-types"></a>
 
 Approval flows come in three flavours: explicit, inherited and document-type.
 
@@ -113,6 +114,18 @@ Plumber overrides Umbraco's user/group publishing permissions. Provided the user
 In cases where the content is already in a workflow, a notification is displayed next to the button set. Plumber also ensures modified content is saved before submitting for publish approval by watching for changes on the content form, then updating the visible button as appropriate.
 
 For nodes where the workflow has been disabled, the default Umbraco options are displayed.
+
+### Offline approval - v0.9.0+
+
+Groups can optional be given permission to action workflow tasks without logging in to Umbraco.
+
+By setting the Offline Approval checkbox to true on the edit group view, all email notifications sent to members of the group will include a personalized link to a preview page.
+
+The preview page exposes the current saved page, with the options to approve or reject the change. It is not possible to edit the content or cancel the workflow from the offline preview.
+
+This feature is intended for use in situations where the approval group membership is a single user who would not otherwise be using Umbraco - for example, a manager may want to approve media releases before publishing, but does not othewise need access to Umbraco.
+
+Offline approval does require a user exist in the backoffice, and be assigned to a workflow group - just like any other workflow participant.
 
 ### Events
 
