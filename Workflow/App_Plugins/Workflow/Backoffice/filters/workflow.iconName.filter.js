@@ -33,6 +33,6 @@
         };
     }
 
-    angular.module('umbraco').filter('iconName', iconName);
+    angular.module('plumber.filters').filter('iconName', iconName);
 
 })();

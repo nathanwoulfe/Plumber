@@ -146,7 +146,7 @@
         return service;
     }
 
-    angular.module('umbraco.services').factory('plmbrActionsService',
+    angular.module('plumber.services').factory('plmbrActionsService',
         ['$rootScope', 'plmbrWorkflowResource', 'notificationsService', workflowActionsService]);
 
 })();

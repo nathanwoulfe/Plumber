@@ -156,7 +156,7 @@
         this.hasApprovalPath = d => d.approvalPath !== undefined;
     }
 
-    angular.module('umbraco').controller('Workflow.Settings.Controller',
+    angular.module('plumber').controller('Workflow.Settings.Controller',
         ['$scope', '$q', 'plmbrWorkflowResource', 'notificationsService', 'plmbrGroupsResource', 'contentResource', settingsController]);
 
 })();

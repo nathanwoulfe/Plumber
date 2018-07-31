@@ -80,19 +80,22 @@
         };
 
         const addTask = task => {
-            const permission = task.permissions.filter(p => p.groupId === task.approvalGroupId);
+            if (task && task.permissions) {
+                const permission = task.permissions.filter(p => p.groupId === task.approvalGroupId);
 
-            // these are independent and can all be true
-            if (permission.length && permission[0].userGroup.usersSummary.indexOf(`|${this.currentUser.id}|`) !== -1) {
-                this.tasks.push(task);
-            }
+                // these are independent and can all be true
+                if (permission.length &&
+                    permission[0].userGroup.usersSummary.indexOf(`|${this.currentUser.id}|`) !== -1) {
+                    this.tasks.push(task);
+                }
 
-            if (task.requestedById === this.currentUser.id) {
-                this.submissions.push(task);
-            }
+                if (task.requestedById === this.currentUser.id) {
+                    this.submissions.push(task);
+                }
 
-            if (this.adminUser) {
-                this.activeTasks.push(task);
+                if (this.adminUser) {
+                    this.activeTasks.push(task);
+                }
             }
         };
         
@@ -175,6 +178,6 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.UserDashboard.Controller',
+    angular.module('plumber').controller('Workflow.UserDashboard.Controller',
         ['$scope', '$rootScope', '$routeParams', 'plmbrWorkflowResource', 'authResource', 'notificationsService', 'plumberHub', dashboardController]);
 })();

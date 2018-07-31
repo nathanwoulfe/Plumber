@@ -189,5 +189,5 @@
         getForRange();
     }
 
-    angular.module('umbraco').controller('Workflow.AdminDashboard.Controller', ['plmbrWorkflowResource', 'tourService', dashboardController]);
+    angular.module('plumber').controller('Workflow.AdminDashboard.Controller', ['plmbrWorkflowResource', 'tourService', dashboardController]);
 })();

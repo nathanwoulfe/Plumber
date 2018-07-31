@@ -179,6 +179,6 @@
     }
 
     // register service
-    angular.module('umbraco.services').factory('plmbrWorkflowResource', ['$http', '$q', 'umbRequestHelper', workflowResource]);
+    angular.module('plumber.services').factory('plmbrWorkflowResource', ['$http', '$q', 'umbRequestHelper', workflowResource]);
 
 })();

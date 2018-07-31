@@ -130,6 +130,6 @@
         }
     }
 
-    angular.module('umbraco').controller('Workflow.History.Controller', ['$scope', 'plmbrWorkflowResource', historyController]);
+    angular.module('plumber').controller('Workflow.History.Controller', ['$scope', 'plmbrWorkflowResource', historyController]);
 
 })();

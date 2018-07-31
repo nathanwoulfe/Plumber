@@ -1,5 +1,8 @@
 ﻿{
   javascript: [
+
+    "~/App_Plugins/workflow/backoffice/app.js",
+
     "~/App_Plugins/workflow/backoffice/controllers/dashboards/admin.dashboard.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/dashboards/docs.dashboard.controller.js",
     "~/App_Plugins/workflow/backoffice/controllers/dashboards/groups.dashboard.controller.js",
@@ -40,7 +43,6 @@
 
     "~/App_Plugins/workflow/backoffice/lib/highcharts/highcharts.js",
     "~/App_Plugins/workflow/backoffice/lib/highcharts/modules/exporting.js"
-
   ],
   css: [
 		"~/App_Plugins/workflow/backoffice/css/styles.css"

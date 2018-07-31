@@ -16,5 +16,5 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.Cancel.Controller', ['$scope', cancelController]);
+    angular.module('plumber').controller('Workflow.Cancel.Controller', ['$scope', cancelController]);
 })();

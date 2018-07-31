@@ -83,6 +83,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('wfTasks', ['$location', 'plmbrActionsService', tasks]);
+    angular.module('plumber.directives').directive('wfTasks', ['$location', 'plmbrActionsService', tasks]);
 
 })();

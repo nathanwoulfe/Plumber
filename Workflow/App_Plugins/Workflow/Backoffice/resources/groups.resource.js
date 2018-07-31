@@ -44,6 +44,6 @@
         return service;
     }
 
-    angular.module('umbraco.services').factory('plmbrGroupsResource', ['$http', '$q', 'umbRequestHelper', workflowGroupsResource]);
+    angular.module('plumber.services').factory('plmbrGroupsResource', ['$http', '$q', 'umbRequestHelper', workflowGroupsResource]);
 
 })();

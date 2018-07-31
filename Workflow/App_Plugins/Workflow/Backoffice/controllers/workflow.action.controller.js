@@ -31,7 +31,7 @@
             });
     }
 
-    angular.module('umbraco')
+    angular.module('plumber')
         .controller('Workflow.Action.Controller', ['$scope', 'plmbrWorkflowResource', actionController]);
 })();
 

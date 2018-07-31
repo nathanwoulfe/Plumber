@@ -45,6 +45,6 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.ContentTypeFlow.Controller', ['$scope', contentTypeFlowController]);
+    angular.module('plumber').controller('Workflow.ContentTypeFlow.Controller', ['$scope', contentTypeFlowController]);
 })();
 

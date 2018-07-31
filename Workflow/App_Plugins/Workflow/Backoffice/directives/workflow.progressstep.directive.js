@@ -32,6 +32,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('wfProgressStep', progressStep);
+    angular.module('plumber.directives').directive('wfProgressStep', progressStep);
 
 })();

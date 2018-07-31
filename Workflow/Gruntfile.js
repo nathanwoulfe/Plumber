@@ -43,12 +43,13 @@
         concat: {
             dist: {
                 src: [
+                    '<%= backoffice %>/app.js',
                     '<%= backoffice %>/controllers/**/*.js',
                     '<%= backoffice %>/directives/*.js',
                     '<%= backoffice %>/interceptors/*.js',
                     '<%= backoffice %>/resources/*.js'
                 ],
-                dest: '<%= backoffice %>/workflow.es6',
+                dest: '<%= backoffice %>/workflow.js',
                 nonull: true,
                 options: {
                     banner: '/<%= banner %>/\n\n'
@@ -60,7 +61,8 @@
         sass: {
             dist: {
                 files: {
-                    '<%= backoffice %>/css/styles.css': ['<%= backoffice %>/css/styles.scss']
+                    '<%= backoffice %>/css/styles.css': ['<%= backoffice %>/css/styles.scss'],
+                    '<%= backoffice %>/preview/styles.css': ['<%= backoffice %>/preview/styles.scss']
                 },
             }
         },
@@ -86,7 +88,7 @@
             dist: {
                 files: {
                     // destination for transpiled js : source js
-                    '<%= dest %>/<%= backoffice %>/js/workflow.js': '<%= backoffice %>/workflow.es6'
+                    '<%= dest %>/<%= backoffice %>/js/workflow.js': '<%= backoffice %>/workflow.js'
                 },
                 options: {
                     transform: [['babelify', { presets: 'env' }]],

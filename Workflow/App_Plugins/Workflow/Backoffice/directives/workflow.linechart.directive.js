@@ -74,6 +74,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('wfLineChart', lineChart);
+    angular.module('plumber.directives').directive('wfLineChart', lineChart);
 
 })();
