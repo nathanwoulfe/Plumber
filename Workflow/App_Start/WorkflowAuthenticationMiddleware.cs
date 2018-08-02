@@ -26,7 +26,7 @@ namespace Workflow
         public override async Task Invoke(IOwinContext context)
         {
             IOwinRequest request = context.Request;
-            if (request.Uri.AbsolutePath.StartsWith(MagicStrings.PreviewRouteBase) && request.Uri.Segments.Length == 5) 
+            if (request.Uri.AbsolutePath.StartsWith(MagicStrings.PreviewRouteBase) && request.Uri.Segments.Length == 6) 
             {
                 string[] segments = request.Uri.Segments;
 
