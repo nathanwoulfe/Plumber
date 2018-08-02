@@ -7,7 +7,7 @@
     <link href="/app_plugins/workflow/backoffice/preview/styles.css" rel="stylesheet" type="text/css" />
     <meta name="robots" content="noindex, nofollow">
 </head>
-<body ng-controller="workflow.preview.controller as vm" class="workflow workflow-preview">
+<body ng-controller="workflow.preview.controller as vm" class="workflow workflow-preview" ng-class="{ 'loaded': frameLoaded }">
 
     <div ng-if="vm.invalid" class="alert-wrapper">
         <div class="alert alert-error"><strong>Invalid request</strong> The requested URL does not map to a valid workflow process. The task may have already been completed, or the requesting user does not have permission to action the task.</div>
@@ -25,6 +25,8 @@
                  view="vm.workflowOverlay.view"
                  position="right">
     </umb-overlay>
+
+    <umb-load-indicator ng-show="!frameLoaded"></umb-load-indicator>
 
     <umb-notifications></umb-notifications>
 
