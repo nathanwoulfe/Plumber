@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using umbraco.BusinessLogic;
@@ -31,7 +30,6 @@ namespace Workflow.Controllers
                 HttpCookie umbContextCookie =
                     Request.Cookies[UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName];
 
-
                 _previewService.Generate(nodeId, userId, guid);
 
                 StateHelper.Cookies.UserContext.SetValue(umbContextCookie?.Value);
@@ -52,7 +50,7 @@ namespace Workflow.Controllers
                 Response.Cookies.Add(cookie);
             }
 
-            return File("/app_plugins/workflow/backoffice/preview/workflow.preview.cshtml", "text/html");
+            return File("/app_plugins/workflow/backoffice/preview/workflow.preview.html", "text/html");
         }
     }
 }

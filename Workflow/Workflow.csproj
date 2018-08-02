@@ -47,7 +47,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\preview\workflow.preview.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\filters\workflow.iconName.filter.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\signalr\jquery.signalr-2.2.1.min.js" />
-    <None Include="App_Plugins\Workflow\Backoffice\preview\workflow.preview.cshtml" />
+    <Content Include="App_Plugins\Workflow\Backoffice\preview\workflow.preview.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\preview\workflow.preview.services.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\hub.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.contenttypeflow.overlay.html" />

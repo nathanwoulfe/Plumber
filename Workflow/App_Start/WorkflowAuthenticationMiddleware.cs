@@ -26,9 +26,11 @@ namespace Workflow
         public override async Task Invoke(IOwinContext context)
         {
             IOwinRequest request = context.Request;
-            if (request.Uri.AbsolutePath.StartsWith(MagicStrings.PreviewRouteBase))
+            if (request.Uri.AbsolutePath.StartsWith(MagicStrings.PreviewRouteBase) && request.Uri.Segments.Length == 5) 
             {
-                string userId = request.Uri.Segments[3].Trim('/');
+                string[] segments = request.Uri.Segments;
+
+                string userId = segments[3].Trim('/');
                 IUser user = ApplicationContext.Current.Services.UserService.GetUserById(int.Parse(userId));
 
                 UserData userData = GetUserData(user);
@@ -36,7 +38,8 @@ namespace Workflow
                 HttpContext.Current.Request.Cookies.Remove(UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName);
 
                 HttpCookie authCookie = CreateAuthCookie(
-                    user.Name, 
+                    user.Name,
+                    segments[2].Trim('/'),
                     JsonConvert.SerializeObject(userData), 
                     GlobalSettings.TimeOutInMinutes,
                     UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName,
@@ -74,18 +77,18 @@ namespace Workflow
         }
 
         //borrowed from Umbraco - see source for code comments in CreateAuthTicketAndCookie
-        private static HttpCookie CreateAuthCookie(string username, string userData,
+        private static HttpCookie CreateAuthCookie(string username, string nodeId, string userData,
             int loginTimeoutMins, string cookieName, string cookieDomain)
         {
             var ticket = new FormsAuthenticationTicket(4, username, DateTime.Now,
-                DateTime.Now.AddMinutes(loginTimeoutMins), true, userData, "/");
+                DateTime.Now.AddMinutes(loginTimeoutMins), true, userData, $"/{nodeId}");
 
             string hash = FormsAuthentication.Encrypt(ticket);
             var cookie = new HttpCookie(cookieName, hash)
             {
                 Expires = DateTime.Now.AddMinutes(loginTimeoutMins),
                 Domain = cookieDomain,
-                Path = "/"
+                Path = $"/{nodeId}"
             };
 
             if (GlobalSettings.UseSSL)

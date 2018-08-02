@@ -53,7 +53,6 @@ namespace Workflow.Startup
             ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
 
             // add route for offline-preview
-            // requests to this route are authenticated automatically against the WorkflowPreview user
             RouteTable.Routes.MapUmbracoRoute(
                 "OfflinePreviewRoute",
                 "workflow-preview/{nodeId}/{userId}/{taskid}/{guid}",
