@@ -37,7 +37,7 @@ namespace Workflow.Tests.Helpers
         [Fact]
         public void Can_Add_Section_Dashboard()
         {
-            Assert.True(Installer.AddSectionDashboard("~/bin/Debug/config/dashboard.config"));
+            Assert.True(Installer.AddSectionDashboard());
         }
 
         [Fact]

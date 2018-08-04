@@ -2,6 +2,7 @@
 using System.Web.Hosting;
 using System.Xml;
 using Umbraco.Core;
+using Umbraco.Core.IO;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Services;
 
@@ -35,16 +36,11 @@ namespace Workflow.Helpers
         public static bool AddContentSectionDashboard()
         {
             var saveFile = false;
-            const string dashboardPath = "~/config/dashboard.config";
 
             //Path to the file resolved
-            var dashboardFilePath = HostingEnvironment.MapPath(dashboardPath);
+            var dashboardXml = XmlHelper.OpenAsXmlDocument(SystemFiles.DashboardConfig);
 
-            //Load settings.config XML file
-            var dashboardXml = new XmlDocument();
-            if (dashboardFilePath == null) return false;
-
-            dashboardXml.Load(dashboardFilePath);
+            if (dashboardXml == null) return false;
 
             // Section Node
             var findSection = dashboardXml.SelectSingleNode("//section [@alias='WorkflowContentDashboardSection']");
@@ -88,7 +84,7 @@ namespace Workflow.Helpers
             if (saveFile)
             {
                 //Save the XML file
-                dashboardXml.Save(dashboardFilePath);
+                dashboardXml.Save(IOHelper.MapPath(SystemFiles.DashboardConfig));
                 return true;
             }
 
@@ -98,18 +94,14 @@ namespace Workflow.Helpers
         /// <summary>
         /// Adds the required XML to the dashboard.config file
         /// </summary>
-        public static bool AddSectionDashboard(string path = null)
+        public static bool AddSectionDashboard()
         {
             var saveFile = false;
-            string dashboardPath = path ?? "~/config/dashboard.config";
 
-            //Path to the file resolved
-            var dashboardFilePath = HostingEnvironment.MapPath(dashboardPath);
+            var dashboardXml = XmlHelper.OpenAsXmlDocument(SystemFiles.DashboardConfig);
 
             //Load settings.config XML file
-            var dashboardXml = new XmlDocument();
-            if (dashboardFilePath == null) return false;
-            dashboardXml.Load(dashboardFilePath);
+            if (dashboardXml == null) return false;
 
             // Section Node
             var findSection = dashboardXml.SelectSingleNode("//section [@alias='WorkflowDashboardSection']");
@@ -159,7 +151,7 @@ namespace Workflow.Helpers
             if (saveFile)
             {
                 //Save the XML file
-                dashboardXml.Save(dashboardFilePath);
+                dashboardXml.Save(IOHelper.MapPath(SystemFiles.DashboardConfig));
                 return true;
             }
 
