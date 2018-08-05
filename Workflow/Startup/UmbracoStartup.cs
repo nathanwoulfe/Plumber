@@ -93,11 +93,9 @@ namespace Workflow.Startup
             //Check which package is being uninstalled
             if (sender.Data.Name != MagicStrings.Name) return;
 
-            var uninstall = new Uninstaller();
-
             //Start Uninstall - clean up process...
-            uninstall.RemoveSection();
-            uninstall.RemoveSectionDashboard();
+            Uninstaller.RemoveSection();
+            Uninstaller.RemoveSectionDashboard();
 
             //Remove AppSetting key when all done
             Configuration webConfig = WebConfigurationManager.OpenWebConfiguration("/");

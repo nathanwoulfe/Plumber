@@ -243,15 +243,16 @@
     <Compile Include="AsyncExtensions.cs" />
     <Compile Include="Api\GroupControllerTests.cs" />
     <Compile Include="ChromeDriverFixture.cs" />
+    <Compile Include="Extensions\DateTimeExtensionsTests.cs" />
+    <Compile Include="Extensions\EnumExtensionsTests.cs" />
     <Compile Include="Integration\GroupTests.cs" />
     <Compile Include="Integration\UserAccessTests.cs" />
     <Content Include="Config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Compile Include="Extensions\ContentExtensionsTests.cs" />
-    <Compile Include="Helpers\InstallerTests.cs" />
+    <Compile Include="Helpers\InstallerUninstallerTests.cs" />
     <Compile Include="Helpers\UtilityTests.cs" />
-    <Compile Include="Processes\WorkflowProcessTests.cs" />
     <Compile Include="Repositories\ImportExportRepositoryTests.cs" />
     <Compile Include="Repositories\PocoRepositoryTests.cs" />
     <Compile Include="Services\SettingsServiceTests.cs" />

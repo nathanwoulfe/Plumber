@@ -165,7 +165,7 @@ namespace Workflow.Tests
             };
         }
 
-        private static T ReadFromJsonFile<T>(string filePath) where T : new()
+        public static T ReadFromJsonFile<T>(string filePath) where T : new()
         {
             TextReader reader = null;
             try

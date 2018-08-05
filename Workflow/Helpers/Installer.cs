@@ -1,14 +1,11 @@
 ﻿using System.Linq;
-using System.Web.Hosting;
 using System.Xml;
 using Umbraco.Core;
 using Umbraco.Core.IO;
-using Umbraco.Core.Models.Membership;
-using Umbraco.Core.Services;
 
 namespace Workflow.Helpers
 {
-    public class Installer
+    public static class Installer
     {
         /// <summary>W
         /// Adds the application/custom section to Umbraco
