@@ -10,6 +10,10 @@ using Workflow.Models;
 using Workflow.Services.Interfaces;
 using TaskStatus = Workflow.Models.TaskStatus;
 
+// Document and User are obsolete - disables Resharper warning
+// alternative is to rebuild a local version of PreviewContent...
+#pragma warning disable 618
+
 namespace Workflow.Services
 {
     public class PreviewService : IPreviewService
@@ -30,7 +34,6 @@ namespace Workflow.Services
 
         public void Generate(int nodeId, int userId, Guid workflowInstanceGuid)
         {
-            // yes, these are obsolete but this is how preview works...
             var user = new User(userId);
             var d = new Document(nodeId);
             var pc = new PreviewContent(user, workflowInstanceGuid, false);

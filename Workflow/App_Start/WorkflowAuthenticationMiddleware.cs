@@ -17,8 +17,6 @@ namespace Workflow
 {
     internal class WorkflowAuthenticationMiddleware : OwinMiddleware
     {
-        private UserData _userData;
-
         public WorkflowAuthenticationMiddleware(OwinMiddleware next) : base(next)
         {
         }
@@ -35,7 +33,7 @@ namespace Workflow
 
                 UserData userData = GetUserData(user);
 
-                HttpContext.Current.Request.Cookies.Remove(UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName);
+                Utility.ExpireCookie(UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName);
 
                 HttpCookie authCookie = CreateAuthCookie(
                     user.Name,

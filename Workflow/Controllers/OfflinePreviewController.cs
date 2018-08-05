@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Web;
 using System.Web.Mvc;
-using umbraco.BusinessLogic;
+using Umbraco.Core;
 using Umbraco.Core.Configuration;
 using Umbraco.Web.Models;
 using Umbraco.Web.Mvc;
+using Workflow.Helpers;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
 
@@ -21,7 +22,7 @@ namespace Workflow.Controllers
 
         public ActionResult Index(RenderModel model, int nodeId, int userId, int taskId, Guid guid)
         {
-            Request.Cookies.Remove("Workflow_Preview");
+            Utility.ExpireCookie("Workflow_Preview");
 
             if (_previewService.Validate(nodeId, userId, taskId, guid).Result)
             {
@@ -32,22 +33,16 @@ namespace Workflow.Controllers
 
                 _previewService.Generate(nodeId, userId, guid);
 
-                StateHelper.Cookies.UserContext.SetValue(umbContextCookie?.Value);
+                Utility.SetCookie(UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName,
+                    umbContextCookie?.Value);
             }
             else
             {
-                StateHelper.Cookies.UserContext.Clear();
-                StateHelper.Cookies.Preview.Clear();
+                Utility.ExpireCookie(UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName);
+                Utility.ExpireCookie(Constants.Web.PreviewCookieName);
 
                 // add a cookie to indicate that the preview request was invalid
-                var cookie = new HttpCookie("Workflow_Preview", "0")
-                {
-                    Path = Request.Url.AbsolutePath,
-                    Expires = DateTime.Now.AddDays(30),
-                    HttpOnly = false
-                };
-
-                Response.Cookies.Add(cookie);
+                Utility.SetCookie("Workflow_Preview", "0", false);
             }
 
             return File("/app_plugins/workflow/backoffice/preview/workflow.preview.html", "text/html");

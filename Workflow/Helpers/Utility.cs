@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
+using System.Web;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
@@ -157,6 +158,56 @@ namespace Workflow.Helpers
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        /// <summary />
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="httpOnly"></param>
+        /// <param name="daysToPersist"></param>
+        public static void SetCookie(string key, string value, bool httpOnly = true, double daysToPersist = 30d)
+        {
+            HttpContext context = HttpContext.Current;
+
+            var cookie = new HttpCookie(key, value)
+            {
+                Expires = DateTime.Now.AddDays(daysToPersist),
+                HttpOnly = httpOnly
+            };
+
+            context.Response.Cookies.Set(cookie);
+
+            cookie = context.Request.Cookies[key];
+
+            if (cookie != null)
+            {
+                cookie.Value = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cookieName"></param>
+        public static void ExpireCookie(string cookieName)
+        {
+            HttpContext http = HttpContext.Current;
+
+            //remove from the request
+            http.Request.Cookies.Remove(cookieName);
+
+            //expire from the response
+            HttpCookie angularCookie = http.Response.Cookies[cookieName];
+            if (angularCookie != null)
+            {
+                //this will expire immediately and be removed from the browser
+                angularCookie.Expires = DateTime.Now.AddYears(-1);
+            }
+            else
+            {
+                //ensure there's def an expired cookie
+                http.Response.Cookies.Add(new HttpCookie(cookieName) { Expires = DateTime.Now.AddYears(-1) });
             }
         }
     }
