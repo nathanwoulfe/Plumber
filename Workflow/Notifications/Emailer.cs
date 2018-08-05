@@ -22,10 +22,15 @@ namespace Workflow.Notifications
 
         private readonly Utility _utility;
 
-        private const string EmailApprovalRequestString = "Dear {0},<br/><br/>Please review the following page for {5} approval: <a href=\"{1}\">{2}</a><br/><br/>Comment: {3}<br/><br/>Thanks,<br/>{4}";
+        private const string EmailApprovalRequestString = "Dear {0},<br/><br/>Please review the following page for {5} approval: <a href=\"{1}\">{2}</a><br/><br/>Comment: {3}<br/><br/>{6}Thanks,<br/>{4}";
         private const string EmailApprovedString = "Dear {0},<br/><br/>The following document's workflow has been approved and the document {3}: <a href=\"{1}\">{2}</a><br/>";
         private const string EmailRejectedString = "Dear {0},<br/><br/>The {5} workflow was rejected by {4}: <a href=\"{1}\">{2}</a><br/><br/>Comment: {3}";
         private const string EmailCancelledString = "Dear {0},<br/><br/>{1} workflow has been cancelled for the following page: <a href=\"{2}\">{3}</a> by {4}.<br/><br/>Reason: {5}.";
+
+        private const string EmailOfflineApprovalString = "<a href=\"{0}/workflow-preview/{1}/{2}/{3}/{4}\">Offline approval</a> is permitted for this change (no login required).<br/><br/>";
+
+        private const string EmailBody = "<!DOCTYPE HTML SYSTEM><html><head><title>{0}</title></head><body><font face=\"verdana\" size=\"2\">{1}</font></body></html>";
+
 
         public Emailer()
         {
@@ -95,8 +100,7 @@ namespace Workflow.Notifications
                         to = finalTask.UserGroup.PreferredEmailAddresses();
                         body = string.Format(EmailApprovalRequestString,
                             to.Count > 1 ? "Umbraco user" : finalTask.UserGroup.Name, docUrl, docTitle, instance.AuthorComment,
-                            instance.AuthorUser.Name, instance.TypeDescription);
-
+                            instance.AuthorUser.Name, instance.TypeDescription, string.Empty);
                         break;
 
                     case EmailType.ApprovalRejection:
@@ -159,21 +163,44 @@ namespace Workflow.Notifications
                 if (!to.Any()) return;
 
                 var client = new SmtpClient();
-                var msg = new MailMessage();
+                var msg = new MailMessage
+                {
+                    Subject = BuildEmailSubject(emailType, instance),
+                    IsBodyHtml = true,
+                };
+
 
                 if (!string.IsNullOrEmpty(systemEmailAddress))
                 {
                     msg.From = new MailAddress(systemEmailAddress);
                 }
 
-                string subject = BuildEmailSubject(emailType, instance);
+                // if offline is permitted, email group members individually as we need the user id in the url
+                if (emailType == EmailType.ApprovalRequest && finalTask.UserGroup.OfflineApproval)
+                {
+                    foreach (User2UserGroupPoco user in finalTask.UserGroup.Users)
+                    {
+                        string offlineString = string.Format(EmailOfflineApprovalString, settings.SiteUrl, instance.NodeId,
+                            user.UserId, finalTask.Id, instance.Guid);
 
-                msg.To.Add(string.Join(",", to.Distinct()));
-                msg.Subject = subject;
-                msg.Body = $"<!DOCTYPE HTML SYSTEM><html><head><title>{subject}</title></head><body><font face=\"verdana\" size=\"2\">{body}</font></body></html>";
-                msg.IsBodyHtml = true;
+                        body = string.Format(EmailApprovalRequestString,
+                            user.User.Name, docUrl, docTitle, instance.AuthorComment,
+                            instance.AuthorUser.Name, instance.TypeDescription, offlineString);
+                 
+                        msg.To.Clear();
+                        msg.To.Add(user.User.Email);
+                        msg.Body = string.Format(EmailBody, msg.Subject, body);
 
-                client.Send(msg);
+                        client.Send(msg);
+                    }
+                }
+                else
+                {
+                    msg.To.Add(string.Join(",", to.Distinct()));
+                    msg.Body = string.Format(EmailBody, msg.Subject, body);
+
+                    client.Send(msg);
+                }
             }
             catch (Exception e)
             {

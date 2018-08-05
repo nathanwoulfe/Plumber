@@ -17,8 +17,6 @@ namespace Workflow.Tests.Services
             Scaffold.Run();
 
             _importExportService = new ImportExportService();
-
-            // service import is implicitly tested in the scaffold method
         }
 
         [Fact]
@@ -30,7 +28,10 @@ namespace Workflow.Tests.Services
         [Fact]
         public async void Can_Export_All()
         {
-            Scaffold.Config();
+            var model = Scaffold.ReadFromJsonFile<ImportExportModel>(@"Config.json");
+            bool import = await _importExportService.Import(model);
+
+            Assert.True(import);
 
             ImportExportModel export = await _importExportService.Export();
 

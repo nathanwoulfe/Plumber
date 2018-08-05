@@ -62,6 +62,30 @@ namespace Workflow.Api
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("get/{id:int}")]
+        public IHttpActionResult GetTask(int id)
+        {
+            try
+            {
+                return Json(new
+                {
+                    task = _tasksService.GetTask(id)
+                }, ViewHelpers.CamelCase);
+            }
+            catch (Exception ex)
+            {
+                string msg = $"Error getting task {id}";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
+            }
+        }
+
+        /// <summary>
         /// Returns all tasks currently in workflow processes
         /// </summary>
         /// <returns></returns>        

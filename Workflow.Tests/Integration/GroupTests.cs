@@ -22,7 +22,7 @@ namespace Workflow.Tests.Integration
             _fixture = fixture;
         }
 
-        [Fact, Priority(1)]
+        [Fact(Skip = "Ignore Selenium tests"), Priority(1)]
         public void AdminCanAccessGroups()
         {
             _fixture.Login(ChromeDriverFixture.AdminUser, ChromeDriverFixture.AdminPassword);
@@ -34,7 +34,7 @@ namespace Workflow.Tests.Integration
             Assert.True(ex == null);
         }
 
-        [Fact, Priority(2)]
+        [Fact(Skip = "Ignore Selenium tests"), Priority(2)]
         public void AdminCanCreateGroup()
         {
             Thread.Sleep(500);

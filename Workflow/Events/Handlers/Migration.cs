@@ -30,7 +30,7 @@ namespace Workflow.Events.Handlers
                 currentVersion = latest.Version;
             }
 
-            var targetVersion = new SemVersion(0, 8);
+            var targetVersion = new SemVersion(0, 9);
             if (targetVersion == currentVersion)
             {
                 return;

@@ -43,6 +43,7 @@
         concat: {
             dist: {
                 src: [
+                    '<%= backoffice %>/app.js',
                     '<%= backoffice %>/controllers/**/*.js',
                     '<%= backoffice %>/directives/*.js',
                     '<%= backoffice %>/interceptors/*.js',
@@ -60,7 +61,8 @@
         sass: {
             dist: {
                 files: {
-                    '<%= backoffice %>/css/styles.css': ['<%= backoffice %>/css/styles.scss']
+                    '<%= backoffice %>/css/styles.css': ['<%= backoffice %>/css/styles.scss'],
+                    '<%= backoffice %>/preview/styles.css': ['<%= backoffice %>/preview/styles.scss']
                 },
             }
         },
@@ -168,7 +170,7 @@
             html: {
                 expand: true,
                 cwd: '<%= backoffice %>/',
-                src: '**/*.html',
+                src: '**/*.*html',
                 dest: '<%= dest %>/<%= backoffice %>/',
             },
 
@@ -304,9 +306,10 @@
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'browserify', 'sass', 'cssmin', 'copy:config', 'copy:tours', 'copy:html', 'copy:lib', 'copy:lang']);
+    grunt.registerTask('default', ['jshint', 'concat', 'browserify:dist', 'sass', 'cssmin', 'copy:config', 'copy:tours', 'copy:html', 'copy:lib', 'copy:lang']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 
     grunt.registerTask('dev', ['watch:dev']);
+
 };

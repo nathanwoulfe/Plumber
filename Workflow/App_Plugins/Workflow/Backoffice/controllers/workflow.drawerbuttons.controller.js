@@ -277,8 +277,9 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.DrawerButtons.Controller',
-        ['$scope',
+    angular.module('plumber').controller('Workflow.DrawerButtons.Controller',
+        [
+            '$scope',
             '$rootScope',
             '$q',
             '$window',

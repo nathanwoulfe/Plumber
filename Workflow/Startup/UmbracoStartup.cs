@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
-using System.Web;
 using System.Web.Configuration;
-using umbraco;
+using System.Web.Mvc;
+using System.Web.Routing;
 using umbraco.cms.businesslogic.packager;
 using Umbraco.Core;
 using Umbraco.Core.Models.Membership;
+using Umbraco.Web;
 using Umbraco.Web.UI.JavaScript;
 using Workflow.Helpers;
+using Installer = Workflow.Helpers.Installer;
 
 namespace Workflow.Startup
 {
@@ -23,16 +24,14 @@ namespace Workflow.Startup
 
             if (string.IsNullOrEmpty(installAppSetting) || installAppSetting != true.ToString())
             {
-                var install = new Helpers.Installer();
-
                 //Check to see if section needs to be added
-                install.AddSection(context);
+                Installer.AddSection(context);
 
                 //Add Section Dashboard XML
-                install.AddSectionDashboard();
+                Installer.AddSectionDashboard();
 
                 //Add Content dashboard XML
-                install.AddContentSectionDashboard();
+                Installer.AddContentSectionDashboard();
 
                 // Grant the admin group access to the worfklow section
                 //since the app is starting, we don't have a current user. Safest assumption is the installer was an admin
@@ -52,6 +51,22 @@ namespace Workflow.Startup
             InstalledPackage.BeforeDelete += InstalledPackage_BeforeDelete;
 
             ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
+
+            // add route for offline-preview
+            RouteTable.Routes.MapUmbracoRoute(
+                "OfflinePreviewRoute",
+                "workflow-preview/{nodeId}/{userId}/{taskid}/{guid}",
+                new
+                {
+                    controller = "OfflinePreview",
+                    action = "Index",
+                    nodeId = UrlParameter.Optional,
+                    userId = UrlParameter.Optional,
+                    taskId = UrlParameter.Optional,
+                    guid = UrlParameter.Optional
+                },
+                new RouteHandler());
+
         }
 
         /// <summary>
@@ -78,11 +93,9 @@ namespace Workflow.Startup
             //Check which package is being uninstalled
             if (sender.Data.Name != MagicStrings.Name) return;
 
-            var uninstall = new Uninstaller();
-
             //Start Uninstall - clean up process...
-            uninstall.RemoveSection();
-            uninstall.RemoveSectionDashboard();
+            Uninstaller.RemoveSection();
+            Uninstaller.RemoveSectionDashboard();
 
             //Remove AppSetting key when all done
             Configuration webConfig = WebConfigurationManager.OpenWebConfiguration("/");

@@ -116,6 +116,6 @@
             });
     }
 
-    angular.module('umbraco').controller('Workflow.DocsDashboard.Controller', ['$timeout', 'plmbrWorkflowResource', dashboardController]);
+    angular.module('plumber').controller('Workflow.DocsDashboard.Controller', ['$timeout', 'plmbrWorkflowResource', dashboardController]);
 
 })();

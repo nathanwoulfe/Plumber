@@ -243,17 +243,20 @@
     <Compile Include="AsyncExtensions.cs" />
     <Compile Include="Api\GroupControllerTests.cs" />
     <Compile Include="ChromeDriverFixture.cs" />
+    <Compile Include="Extensions\DateTimeExtensionsTests.cs" />
+    <Compile Include="Extensions\EnumExtensionsTests.cs" />
     <Compile Include="Integration\GroupTests.cs" />
     <Compile Include="Integration\UserAccessTests.cs" />
     <Content Include="Config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Compile Include="Extensions\ContentExtensionsTests.cs" />
-    <Compile Include="Helpers\InstallerTests.cs" />
+    <Compile Include="Helpers\InstallerUninstallerTests.cs" />
     <Compile Include="Helpers\UtilityTests.cs" />
-    <Compile Include="Processes\WorkflowProcessTests.cs" />
     <Compile Include="Repositories\ImportExportRepositoryTests.cs" />
     <Compile Include="Repositories\PocoRepositoryTests.cs" />
+    <Compile Include="Services\SettingsServiceTests.cs" />
+    <Compile Include="Services\InstancesServiceTests.cs" />
     <Compile Include="Services\TasksServiceTests.cs" />
     <Compile Include="Services\ImportExportServicesTests.cs" />
     <Compile Include="Services\ConfigServiceTests.cs" />
@@ -264,11 +267,68 @@
     <Compile Include="Scaffold.cs" />
     <Compile Include="TestPriority.cs" />
     <Compile Include="Utility.cs" />
+    <Content Include="config\grid.editors.config.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="App_Data\TEMP\PluginCache\umbraco-plugins.6BZXQF2.hash" />
     <None Include="App_Data\TEMP\PluginCache\umbraco-plugins.6BZXQF2.list" />
+    <Content Include="config\404handlers.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\applications.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\BaseRestExtensions.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\ClientDependency.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\Dashboard.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\EmbeddedMedia.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\ExamineIndex.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\ExamineSettings.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\feedProxy.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\FileSystemProviders.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\HealthChecks.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\HealthChecks.Release.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\metablogConfig.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\scripting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\tinyMceConfig.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\trees.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="config\umbracoSettings.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -284,6 +344,9 @@
       <Project>{C16349CB-04C0-4319-AA8F-14C43548E57D}</Project>
       <Name>Workflow</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\config\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />

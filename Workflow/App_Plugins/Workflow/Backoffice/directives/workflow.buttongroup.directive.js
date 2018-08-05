@@ -48,6 +48,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('workflowButtonGroup', ['$rootScope', 'angularHelper', 'editorState', 'plmbrActionsService', buttonGroupDirective]);
+    angular.module('plumber.directives').directive('workflowButtonGroup', ['$rootScope', 'angularHelper', 'editorState', 'plmbrActionsService', buttonGroupDirective]);
 
 })();

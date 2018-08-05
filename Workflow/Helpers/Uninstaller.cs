@@ -1,15 +1,14 @@
-﻿using System.Web.Hosting;
-using System.Xml;
-using Umbraco.Core;
+﻿using Umbraco.Core;
+using Umbraco.Core.IO;
 
 namespace Workflow.Helpers
 {
-    public class Uninstaller
+    public static class Uninstaller
     {
         /// <summary>
         /// Removes the custom app/section from Umbraco
         /// </summary>
-        public void RemoveSection()
+        public static void RemoveSection()
         {
             //Get the Umbraco Service's Apis
             var services = ApplicationContext.Current.Services;
@@ -27,28 +26,21 @@ namespace Workflow.Helpers
         /// <summary>
         /// Removes the XML for the Section Dashboard from the XML file
         /// </summary>
-        public void RemoveSectionDashboard()
+        public static void RemoveSectionDashboard()
         {
             var saveFile = false;
 
-            //Open up language file
-            //umbraco/config/lang/en.xml
-            const string dashboardPath = "~/config/dashboard.config";
-
             //Path to the file resolved
-            var dashboardFilePath = HostingEnvironment.MapPath(dashboardPath);
+            var dashboardXml = XmlHelper.OpenAsXmlDocument(SystemFiles.DashboardConfig);
 
-            //Load settings.config XML file
-            var dashboardXml = new XmlDocument();
-            if (dashboardFilePath == null) return;
+            if (dashboardXml == null) return;
 
-            dashboardXml.Load(dashboardFilePath);
 
             // Dashboard Root Node
             // <dashboard>
             var dashboardNode = dashboardXml.SelectSingleNode("//dashBoard");
 
-            var findSectionKey = dashboardNode?.SelectSingleNode("./section [@alias='WorkflowDashboardSection']");
+            var findSectionKey = dashboardNode?.SelectSingleNode("//section [@alias='WorkflowContentDashboardSection']");
 
             if (findSectionKey != null)
             {
@@ -59,11 +51,14 @@ namespace Workflow.Helpers
                 saveFile = true;
             }
 
-            var contentTab = dashboardNode?.SelectSingleNode("//tab[@caption='Workflow']");
+            findSectionKey = dashboardNode?.SelectSingleNode("//section [@alias='WorkflowDashboardSection']");
 
-            if (contentTab != null)
+            if (findSectionKey != null)
             {
-                contentTab.ParentNode?.RemoveChild(contentTab);
+                //Let's remove the key from XML...
+                dashboardNode.RemoveChild(findSectionKey);
+
+                //Save the file flag to true
                 saveFile = true;
             }
 
@@ -71,7 +66,7 @@ namespace Workflow.Helpers
             if (!saveFile) return;
 
             //Save the XML file
-            dashboardXml.Save(dashboardFilePath);
+            dashboardXml.Save(IOHelper.MapPath(SystemFiles.DashboardConfig));
         }
     }
 }

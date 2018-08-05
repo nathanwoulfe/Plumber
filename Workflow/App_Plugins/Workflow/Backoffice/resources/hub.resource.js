@@ -62,6 +62,6 @@
         };
     }
 
-    angular.module('umbraco.resources').factory('plumberHub', ['$rootScope', '$q', 'assetsService', plumberHub]);
+    angular.module('plumber.services').factory('plumberHub', ['$rootScope', '$q', 'assetsService', plumberHub]);
 
 })();

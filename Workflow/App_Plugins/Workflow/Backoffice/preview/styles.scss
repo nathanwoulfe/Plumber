@@ -1,0 +1,70 @@
+﻿@import "../css/_variables.scss";
+
+// offline preview
+.workflow-preview {
+    margin: 0;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+    display: flex;
+
+    // cloak elements while loading
+    &.loaded {
+        .umb-editor-drawer, .alert-wrapper {
+            display: flex;
+        }
+    }
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background: none;
+    }
+
+    .alert {
+        margin: auto auto 0;
+        padding: 8px 14px;
+        position: relative;
+        z-index: 1060;
+
+        &-wrapper {
+            display: none;
+
+            &::before {
+                display: block;
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background: rgba($danger,.5);
+                z-index: 1050;
+            }
+        }
+    }
+
+    .umb-editor-drawer {
+        z-index: 3050;
+        height: auto;
+        padding: 10px 20px;
+        background: $gray;
+        border-top: 1px solid #b3afbd;
+        margin-top: auto;
+        flex: 1 0 31px;
+        display: none;
+        justify-content: center;
+    }
+
+    .btn {
+        &-approve {
+            background: #35c786;
+            color: #fff;
+        }
+    }
+}

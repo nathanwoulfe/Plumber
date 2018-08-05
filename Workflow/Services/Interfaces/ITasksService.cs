@@ -22,6 +22,8 @@ namespace Workflow.Services.Interfaces
 
         List<WorkflowTaskInstancePoco> GetTasksByNodeId(int id);
 
+        WorkflowTask GetTask(int id);
+
         void InsertTask(WorkflowTaskInstancePoco poco);
         void UpdateTask(WorkflowTaskInstancePoco poco);
     }

@@ -24,5 +24,9 @@
         public const string SettingsNotUpdated = "Could not save settings";
 
         public const string HttpResponseException = "HttpResponseException";
+
+        public const string PreviewUserName = "WorkflowPreview";
+        public const string PreviewRouteBase = "/workflow-preview/";
+        public const string PreviewFileFolder = "/app_plugins/workflow/preview";
     }
 }

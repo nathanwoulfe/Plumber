@@ -45,6 +45,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('wfComments', comments);
+    angular.module('plumber.directives').directive('wfComments', comments);
 
 })();

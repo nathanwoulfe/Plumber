@@ -27,6 +27,6 @@
         return directive;
     }
 
-    angular.module('umbraco.directives').directive('wfInstance', ['plmbrActionsService', instances]);
+    angular.module('plumber.directives').directive('wfInstance', ['plmbrActionsService', instances]);
 
 })();

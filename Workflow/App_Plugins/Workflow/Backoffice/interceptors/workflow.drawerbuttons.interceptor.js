@@ -13,5 +13,5 @@
         };
     }
 
-    angular.module('umbraco').factory('drawerButtonsInterceptor', ['$q', interceptor]);
+    angular.module('plumber').factory('drawerButtonsInterceptor', ['$q', interceptor]);
 })();

@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Web.Http;
 using log4net;
 using Microsoft.AspNet.SignalR;
-using Umbraco.Core;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Web;
 using Umbraco.Web.WebApi;
@@ -74,7 +73,8 @@ namespace Workflow.Api
                     process = new DocumentUnpublishProcess();
                 }
 
-                WorkflowInstancePoco instance = process.InitiateWorkflow(int.Parse(model.NodeId), _utility.GetCurrentUser().Id, model.Comment);
+                IUser currentUser = _utility.GetCurrentUser();
+                WorkflowInstancePoco instance = process.InitiateWorkflow(int.Parse(model.NodeId), currentUser.Id, model.Comment);
 
                 string msg = string.Empty;
 

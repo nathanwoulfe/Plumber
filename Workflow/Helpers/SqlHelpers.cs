@@ -50,6 +50,10 @@
                             AND (@1 = -1 OR WorkflowInstance.Status = @1)";
 
         // tasks
+        public const string GetTask = @"SELECT * FROM WorkflowTaskInstance 
+                            LEFT JOIN WorkflowInstance
+                            on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid   
+                            WHERE WorkflowTaskInstance.Id = @0";
         public const string CountGroupTasks = @"SELECT COUNT(*) FROM WorkflowTaskInstance WHERE GroupId = @0";
         public const string CountPendingTasks = @"SELECT COUNT(*) FROM WorkflowTaskInstance WHERE Status = 3";
         public const string SubmissionsForUser = @"SELECT * FROM WorkflowTaskInstance 

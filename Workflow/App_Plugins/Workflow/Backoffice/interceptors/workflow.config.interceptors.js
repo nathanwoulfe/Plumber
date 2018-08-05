@@ -4,7 +4,7 @@
 (() => {
     'use strict';
 
-    angular.module('umbraco')
+    angular.module('plumber')
         .config(function($httpProvider) {
             $httpProvider.interceptors.push('drawerButtonsInterceptor');
         });

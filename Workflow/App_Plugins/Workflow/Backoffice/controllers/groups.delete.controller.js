@@ -25,7 +25,7 @@
         };
     }
 
-    angular.module('umbraco').controller('Workflow.Groups.Delete.Controller',
+    angular.module('plumber').controller('Workflow.Groups.Delete.Controller',
         [
             '$scope', '$rootScope', 'plmbrGroupsResource', 'navigationService', 'treeService', 'notificationsService',
             deleteController

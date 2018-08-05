@@ -63,6 +63,8 @@
 
             getNodePendingTasks: id => request('GET', urls.tasks + 'node/pending/' + id),
 
+            getTasks: id => request('GET', url.tasks + 'get/' + id),
+
 
             /* workflow actions */
             initiateWorkflow: (nodeId, comment, publish) =>
@@ -179,6 +181,6 @@
     }
 
     // register service
-    angular.module('umbraco.services').factory('plmbrWorkflowResource', ['$http', '$q', 'umbRequestHelper', workflowResource]);
+    angular.module('plumber.services').factory('plmbrWorkflowResource', ['$http', '$q', 'umbRequestHelper', workflowResource]);
 
 })();

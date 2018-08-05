@@ -8,5 +8,5 @@
             });
     };
 
-    angular.module('umbraco').controller('Workflow.Submit.Controller', ['$scope', submitController]);
+    angular.module('plumber').controller('Workflow.Submit.Controller', ['$scope', submitController]);
 })();

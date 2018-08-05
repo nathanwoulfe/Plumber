@@ -195,7 +195,7 @@
         getHistory();
     }
 
-    angular.module('umbraco').controller('Workflow.Groups.Edit.Controller',
+    angular.module('plumber').controller('Workflow.Groups.Edit.Controller',
         [
             '$scope',
             '$routeParams',

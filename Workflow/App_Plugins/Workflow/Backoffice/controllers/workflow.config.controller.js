@@ -122,7 +122,7 @@
     }
 
     // register controller 
-    angular.module('umbraco').controller('Workflow.Config.Controller',
+    angular.module('plumber').controller('Workflow.Config.Controller',
         ['$scope', '$rootScope', '$q', 'plmbrGroupsResource', 'plmbrWorkflowResource', 'notificationsService', 'contentResource', 'navigationService', configController]);
 })();
 

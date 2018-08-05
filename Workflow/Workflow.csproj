@@ -38,16 +38,27 @@
     <Compile Include="Api\InstancesController.cs" />
     <Compile Include="Api\LogsController.cs" />
     <Compile Include="Api\ExportController.cs" />
+    <Content Include="App_Plugins\Workflow\Backoffice\app.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\importexport.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.contenttypeflow.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\lib\rgrove-lazyload\lazyload.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\preview\app.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\preview\preview.loader.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\preview\workflow.preview.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\filters\workflow.iconName.filter.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\signalr\jquery.signalr-2.2.1.min.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\preview\workflow.preview.html" />
+    <Content Include="App_Plugins\Workflow\Backoffice\preview\workflow.preview.services.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\resources\hub.resource.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.contenttypeflow.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.instance.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.progressstep.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowInstanceTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.importexportdashboard.html" />
+    <Compile Include="App_Start\WorkflowAuthenticationMiddleware.cs" />
+    <Compile Include="App_Start\WorkflowOwinStartup.cs" />
+    <Compile Include="Controllers\OfflinePreviewController.cs" />
+    <Compile Include="App_Start\RouteHandler.cs" />
     <Compile Include="Events\Args\SettingsEventArgs.cs" />
     <Compile Include="Events\Args\ConfigEventArgs.cs" />
     <Compile Include="Events\Args\GroupEventArgs.cs" />
@@ -61,6 +72,7 @@
     <Compile Include="Helpers\MagicStrings.cs" />
     <Compile Include="Helpers\Uninstaller.cs" />
     <Compile Include="Migrations\VersionZeroEightZero.cs" />
+    <Compile Include="Migrations\VersionZeroNineZero.cs" />
     <Compile Include="Models\WorkflowInstanceModel.cs" />
     <Compile Include="Repositories\InstancesRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInstancesRepository.cs" />
@@ -84,8 +96,10 @@
     <Compile Include="Services\Interfaces\IGroupService.cs" />
     <Compile Include="Services\GroupService.cs" />
     <Compile Include="Services\InstancesService.cs" />
+    <Compile Include="Services\Interfaces\IPreviewService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
     <Compile Include="Services\Interfaces\ITasksService.cs" />
+    <Compile Include="Services\PreviewService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\TasksService.cs" />
     <Compile Include="Startup\CreateTables.cs" />
@@ -178,6 +192,7 @@
     <None Include="App_Plugins\Workflow\Backoffice\css\listview.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\workflow-progress.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\css\_variables.scss" />
+    <None Include="App_Plugins\Workflow\Backoffice\preview\styles.scss" />
     <None Include="App_Plugins\Workflow\Backoffice\tours\plumber-intro.json" />
     <None Include="App_Plugins\Workflow\dist.manifest" />
     <None Include="App_Plugins\Workflow\package.manifest" />
@@ -198,6 +213,12 @@
     <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.config.dialog.html" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4">
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
+    </Reference>
     <Reference Include="businesslogic, Version=1.0.6684.15729, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\UmbracoCms.Core.7.10.4\lib\net45\businesslogic.dll</HintPath>
     </Reference>
@@ -272,6 +293,10 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
     <Reference Include="Semver, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Semver.2.0.4\lib\net452\Semver.dll</HintPath>
     </Reference>
@@ -292,6 +317,7 @@
       <HintPath>..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Threading.Tasks.Dataflow, Version=4.6.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Dataflow.4.7.0\lib\portable-net45+win8+wpa81\System.Threading.Tasks.Dataflow.dll</HintPath>
       <Private>True</Private>
@@ -310,6 +336,9 @@
     <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
     </Reference>
     <Reference Include="System.XML" />
     <Reference Include="TidyNet, Version=1.0.0.0, Culture=neutral">

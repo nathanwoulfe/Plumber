@@ -42,6 +42,7 @@ namespace Workflow.Tests.Services
             Scaffold.Config();
 
             List<UserGroupPermissionsPoco> allPermissions = _configService.GetAll();
+
             Assert.NotEmpty(allPermissions);
         }
 

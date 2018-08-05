@@ -58,5 +58,5 @@
 
     }
 
-    angular.module('umbraco').controller('Workflow.Log.Controller', ['plmbrWorkflowResource', logController]);
+    angular.module('plumber').controller('Workflow.Log.Controller', ['plmbrWorkflowResource', logController]);
 })();

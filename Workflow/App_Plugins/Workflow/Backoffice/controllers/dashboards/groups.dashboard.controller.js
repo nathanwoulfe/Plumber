@@ -24,6 +24,6 @@
         this.init();
     }
 
-    angular.module('umbraco').controller('Workflow.Groups.Dashboard.Controller', ['$rootScope', 'plmbrGroupsResource', dashboardController]);
+    angular.module('plumber').controller('Workflow.Groups.Dashboard.Controller', ['$rootScope', 'plmbrGroupsResource', dashboardController]);
 
 }());

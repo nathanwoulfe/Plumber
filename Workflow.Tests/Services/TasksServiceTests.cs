@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Chauffeur.TestingTools;
 using Workflow.Models;
 using Workflow.Services;
@@ -171,23 +172,63 @@ namespace Workflow.Tests.Services
         public void Can_Get_Pending_Workflow_Tasks()
         {
             Scaffold.Config();
-            const int nodeId = 1055;
 
             List<WorkflowTask> result = _service.GetPendingTasks(new[] { 1, 2, 3 }, 10, 1);
             Assert.NotNull(result);
             Assert.Empty(result);
 
-            Guid guid = Guid.NewGuid();
+            var i = 0;
+            while (i < 5)
+            {
+                _service.InsertTask(Scaffold.Task());
+                i += 1;
+            }
 
-            _instancesService.InsertInstance(Scaffold.Instance(guid, 1, nodeId));
-            _service.InsertTask(Scaffold.Task(guid, DateTime.Now.AddDays(-4), 2, 1, 1));
-            _service.InsertTask(Scaffold.Task(guid, DateTime.Now.AddDays(-1), 3, 2, 1));
-            _service.InsertTask(Scaffold.Task(guid, DateTime.Now, 3, 3));
+            List<WorkflowTask> result2 = _service.GetPendingTasks(new[] {1, 2, 3}, 10, 1);
 
-            result = _service.GetPendingTasks(new[] {1, 2, 3}, 10, 1);
+            Assert.NotNull(result2);
+            Assert.Equal(i, result2.Count);
+        }
 
-            Assert.NotNull(result);
-            Assert.Equal(3, result.Count);
+        [Fact]
+        public void Can_Get_Task_By_id()
+        {
+            Scaffold.Config();
+
+            _service.InsertTask(Scaffold.Task());
+
+            List<WorkflowTask> tasks = _service.GetPendingTasks(new[] {1, 2, 3}, 10, 1);
+            int id = tasks.First().TaskId;
+
+            WorkflowTask task = _service.GetTask(id);
+
+            Assert.NotNull(task);
+            Assert.Equal(id, task.TaskId);
+        }
+
+        /// <summary>
+        /// Filter is a taskstatus int, as a string. Not sure why...
+        /// </summary>
+        [Fact]
+        public void Can_Get_Paged_Filtered_Tasks()
+        {
+            Scaffold.Config();
+
+            _service.InsertTask(Scaffold.Task());
+            _service.InsertTask(Scaffold.Task());
+            _service.InsertTask(Scaffold.Task());
+            _service.InsertTask(Scaffold.Task());
+            _service.InsertTask(Scaffold.Task(new Guid(), DateTime.Now, 2, 1, 1));
+
+            List<WorkflowTask> tasks = _service.GetFilteredPagedTasksForDateRange(DateTime.Now.AddDays(-2), 2, 1);
+
+            Assert.NotEmpty(tasks);
+            Assert.Equal(2, tasks.Count);
+
+            tasks = _service.GetFilteredPagedTasksForDateRange(DateTime.Now.AddDays(-2), 1, 1, "1");
+
+            Assert.NotEmpty(tasks);
+            Assert.Single(tasks);
         }
     }
 }
