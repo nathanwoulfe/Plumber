@@ -205,5 +205,30 @@ namespace Workflow.Tests.Services
             Assert.NotNull(task);
             Assert.Equal(id, task.TaskId);
         }
+
+        /// <summary>
+        /// Filter is a taskstatus int, as a string. Not sure why...
+        /// </summary>
+        [Fact]
+        public void Can_Get_Paged_Filtered_Tasks()
+        {
+            Scaffold.Config();
+
+            _service.InsertTask(Scaffold.Task());
+            _service.InsertTask(Scaffold.Task());
+            _service.InsertTask(Scaffold.Task());
+            _service.InsertTask(Scaffold.Task());
+            _service.InsertTask(Scaffold.Task(new Guid(), DateTime.Now, 2, 1, 1));
+
+            List<WorkflowTask> tasks = _service.GetFilteredPagedTasksForDateRange(DateTime.Now.AddDays(-2), 2, 1);
+
+            Assert.NotEmpty(tasks);
+            Assert.Equal(2, tasks.Count);
+
+            tasks = _service.GetFilteredPagedTasksForDateRange(DateTime.Now.AddDays(-2), 1, 1, "1");
+
+            Assert.NotEmpty(tasks);
+            Assert.Single(tasks);
+        }
     }
 }
