@@ -18,11 +18,13 @@
 
             for (let b = 0; b < e.length; b++) {
                 const f = e[b].match(a);
-                f && d.push(f[1]);
+                if (f) {
+                    d.push(f[1]);
+                }
             }
 
             return d;
-        }
+        };
 
         // if the cookie exists, the request is invalid 
         this.invalid = getCookie('Workflow_Preview').length > 0;
@@ -44,7 +46,7 @@
                 };
             }
         }
-    };
+    }
 
     angular.module('plumber').controller('workflow.preview.controller', ['workflowPreviewService', 'plmbrWorkflowResource', ctrl])
 
@@ -52,12 +54,13 @@
         function () {
             return {
                 restrict: 'A',
-                link: function (scope, element) {
-                    element.load(function () {
+                link: function(scope, element) {
+                    element.load(function() {
                         const iframe = element.context.contentWindow || element.context.contentDocument;
 
-                        if (iframe && iframe.document.getElementById('umbracoPreviewBadge'))
+                        if (iframe && iframe.document.getElementById('umbracoPreviewBadge')) {
                             iframe.document.getElementById('umbracoPreviewBadge').style.display = 'none';
+                        }
 
                         if (!document.getElementById('resultFrame').contentWindow.refreshLayout) {
                             scope.frameLoaded = true;
@@ -65,7 +68,7 @@
                         }
                     });
                 }
-            }
+            };
         });
 
 })();
