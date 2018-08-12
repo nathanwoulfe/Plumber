@@ -30,7 +30,7 @@ namespace Workflow.Tests
             EnsureContext();
         }
 
-        public static void Tables()
+        private static void Tables()
         {
             // ensure required tables exist
             DatabaseSchemaHelper persistenceHelper = Persistence.Helper();
@@ -44,7 +44,7 @@ namespace Workflow.Tests
 
         }
 
-        public static void EnsureContext()
+        private static void EnsureContext()
         {
             if (UmbracoContext.Current != null)
             {

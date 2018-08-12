@@ -43,6 +43,23 @@ namespace Workflow.Tests.Api
             Assert.NotNull(result);
             Assert.NotNull(result["currentVersion"]);
             Assert.NotNull(result["latestVersion"]);
+
+            // get from cache
+            dynamic result2 = await _settingsController.GetVersion().GetContent();
+            Assert.NotNull(result2);
+            Assert.NotNull(result2["currentVersion"]);
+            Assert.NotNull(result2["latestVersion"]);
+        }
+
+        [Fact]
+        public async void Get_Generic_Error_If_Docs_Unavailable()
+        {
+            MemoryCache cache = MemoryCache.Default;
+            cache[MagicStrings.VersionKey] = Utility.RandomString();
+
+            dynamic result = await _settingsController.GetVersion().GetContent();
+            Assert.NotNull(result);
+            Assert.Equal(MagicStrings.ErrorGettingVersion, result);
         }
 
         [Fact]

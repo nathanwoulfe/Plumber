@@ -17,8 +17,6 @@ namespace Workflow.Repositories
     public class PocoRepository : IPocoRepository
     {
         private readonly UmbracoDatabase _database;
-        private readonly IContentService _contentService;
-        //private readonly Utility _utility;
 
         public PocoRepository() : this(ApplicationContext.Current)
         {
@@ -27,9 +25,6 @@ namespace Workflow.Repositories
         private PocoRepository(ApplicationContext current)
         {
             _database = current.DatabaseContext.Database;
-            _contentService = current.Services.ContentService;
-
-            // _utility = new Utility();
         }
 
         /// <summary>

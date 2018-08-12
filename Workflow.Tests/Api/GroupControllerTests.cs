@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
 using Chauffeur.TestingTools;
@@ -75,6 +77,16 @@ namespace Workflow.Tests.Api
             object result = await (await _groupsController.Put(group)).GetContent();
 
             Assert.Equal(MagicStrings.GroupUpdated.Replace("{name}", "PublisherUpdated"), result.Get("msg"));
+        }
+
+        [Fact]
+        public async void Cannot_Update_Group_With_Invalid_Model()
+        {
+            Scaffold.Config();
+
+            object result = await(await _groupsController.Put(null)).GetContent();
+
+            Assert.Equal(MagicStrings.ErrorUpdatingGroup, result.Get("ExceptionMessage"));
         }
 
         [Fact]

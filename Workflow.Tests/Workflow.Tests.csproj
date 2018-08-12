@@ -253,6 +253,7 @@
     <Compile Include="Extensions\ContentExtensionsTests.cs" />
     <Compile Include="Helpers\InstallerUninstallerTests.cs" />
     <Compile Include="Helpers\UtilityTests.cs" />
+    <Compile Include="Processes\DocumentPublishProcessTests.cs" />
     <Compile Include="Repositories\ImportExportRepositoryTests.cs" />
     <Compile Include="Repositories\PocoRepositoryTests.cs" />
     <Compile Include="Services\SettingsServiceTests.cs" />

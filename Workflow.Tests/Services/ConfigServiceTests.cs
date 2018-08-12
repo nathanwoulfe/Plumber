@@ -5,6 +5,7 @@ using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
 using Workflow.Models;
+using Workflow.Repositories;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
 using Xunit;
@@ -23,7 +24,7 @@ namespace Workflow.Tests.Services
 
             Scaffold.Run();
 
-            _configService = new ConfigService();
+            _configService = new ConfigService(new PocoRepository());
 
             _contentService = ApplicationContext.Current.Services.ContentService;
             _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
@@ -37,7 +38,7 @@ namespace Workflow.Tests.Services
         }
 
         [Fact]
-        public void Can_Get_All()
+        public void Can_Get_All_Permissions()
         {
             Scaffold.Config();
 

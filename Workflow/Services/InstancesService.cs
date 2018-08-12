@@ -150,7 +150,7 @@ namespace Workflow.Services
                     Status = instance.StatusName,
                     CssStatus = instance.StatusName.ToLower().Split(' ')[0],
                     NodeId = instance.NodeId,
-                    NodeName = instance.Node.Name,
+                    NodeName = instance.Node?.Name,
                     RequestedBy = instance.AuthorUser.Name,
                     RequestedOn = instance.CreatedDate.ToFriendlyDate(),
                     CreatedDate = instance.CreatedDate,

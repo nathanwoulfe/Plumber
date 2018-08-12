@@ -41,12 +41,12 @@ namespace Workflow.Api
             _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
         }
 
-        public SettingsController(UmbracoContext umbracoContext, UmbracoHelper umbracoHelper) : base(umbracoContext,
-            umbracoHelper)
-        {
-            _settingsService = new SettingsService();
-            _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
-        }
+        //public SettingsController(UmbracoContext umbracoContext, UmbracoHelper umbracoHelper) : base(umbracoContext,
+        //    umbracoHelper)
+        //{
+        //    _settingsService = new SettingsService();
+        //    _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
+        //}
 
         /// <summary>
         /// Get an object with info about the installed version and latest release from GitHub
@@ -98,12 +98,10 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                const string error = "Error getting version information";
-
-                Log.Error(error, ex);
+                Log.Error(MagicStrings.ErrorGettingVersion, ex);
 
                 // nothing is displayed if the version isn't available
-                return Json(error);
+                return Json(MagicStrings.ErrorGettingVersion);
             }
         }
 
@@ -176,9 +174,8 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                const string error = "Could not get settings";
-                Log.Error(error, ex);
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
+                Log.Error(MagicStrings.ErrorGettingSettings, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, MagicStrings.ErrorGettingSettings));
             }
         }
 

@@ -23,7 +23,7 @@ namespace Workflow.Services
         {
         }
 
-        private ConfigService(IPocoRepository repo)
+        public ConfigService(IPocoRepository repo)
         {
             _repo = repo;
         }

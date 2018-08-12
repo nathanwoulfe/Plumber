@@ -132,10 +132,9 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                const string msg = "An error occurred updating the user group";
-                Log.Error(msg, ex);
+                Log.Error(MagicStrings.ErrorUpdatingGroup, ex);
 
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, MagicStrings.ErrorUpdatingGroup));
             }
 
             // feedback to the browser
@@ -161,9 +160,8 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                const string msg = "Error deleting user group";
-                Log.Error(msg, ex);
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
+                Log.Error(MagicStrings.ErrorDeletingGroup, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, MagicStrings.ErrorDeletingGroup));
             }
 
             // gone.
