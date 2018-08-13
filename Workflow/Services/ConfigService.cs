@@ -120,12 +120,16 @@ namespace Workflow.Services
             if (node == null) return null;
             int nodeId = node.Id;
 
-            while (true)
+            var cont = true;
+            while (cont)
             {
                 // check the node for set permissions
                 // return them if they exist, otherwise check for content type, then the parent if none set for the type
-                List<UserGroupPermissionsPoco> permissions = _repo.PermissionsForNode(node.Id, 0);
-                if (permissions.Any()) return permissions;
+                List<UserGroupPermissionsPoco> permissions = _repo.PermissionsForNode(node.Id);
+                if (permissions.Any())
+                {
+                    return permissions;
+                }
 
                 if (nodeId == node.Id)
                 {
@@ -137,7 +141,11 @@ namespace Workflow.Services
                 {
                     node = node.Parent;
                 }
+
+                cont = false;
             }
+
+            return null;
         }
     }
 }
