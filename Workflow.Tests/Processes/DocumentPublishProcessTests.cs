@@ -21,13 +21,13 @@ namespace Workflow.Tests.Processes
             Scaffold.Run();
         }
 
-        [Fact]
-        public void Can_Publish_Now()
-        {
-            WorkflowInstancePoco instance = Scaffold.Instance(Guid.NewGuid(), 1);
+        //[Fact]
+        //public void Can_Publish_Now()
+        //{
+        //    WorkflowInstancePoco instance = Scaffold.Instance(Guid.NewGuid(), 1);
 
-            var process = new DocumentPublishProcess();
+        //    var process = new DocumentPublishProcess();
             
-        }
+        //}
     }
 }

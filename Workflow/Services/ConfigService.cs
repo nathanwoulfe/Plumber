@@ -82,7 +82,9 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<UserGroupPermissionsPoco> GetAll()
         {
-            return _repo.GetAllPermissions();
+            List<UserGroupPermissionsPoco> permissions = _repo.GetAllPermissions();
+
+            return permissions;
         }
 
         /// <summary>
