@@ -256,6 +256,7 @@
     <Compile Include="Processes\DocumentPublishProcessTests.cs" />
     <Compile Include="Repositories\ImportExportRepositoryTests.cs" />
     <Compile Include="Repositories\PocoRepositoryTests.cs" />
+    <Compile Include="Services\PreviewServiceTests.cs" />
     <Compile Include="Services\SettingsServiceTests.cs" />
     <Compile Include="Services\InstancesServiceTests.cs" />
     <Compile Include="Services\TasksServiceTests.cs" />

@@ -139,7 +139,7 @@ namespace Workflow.Services
             List<WorkflowInstance> workflowInstances = new List<WorkflowInstance>();
 
             if (instances == null || instances.Count <= 0)
-                return workflowInstances.OrderByDescending(x => x.CreatedDate).ToList();
+                return workflowInstances;
 
             foreach (WorkflowInstancePoco instance in instances)
             {
@@ -151,7 +151,7 @@ namespace Workflow.Services
                     CssStatus = instance.StatusName.ToLower().Split(' ')[0],
                     NodeId = instance.NodeId,
                     NodeName = instance.Node?.Name,
-                    RequestedBy = instance.AuthorUser.Name,
+                    RequestedBy = instance.AuthorUser?.Name,
                     RequestedOn = instance.CreatedDate.ToFriendlyDate(),
                     CreatedDate = instance.CreatedDate,
                     CompletedDate = instance.CompletedDate,

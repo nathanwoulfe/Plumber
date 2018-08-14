@@ -42,11 +42,25 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Get_All_Permissions()
         {
-            Scaffold.Config();
+            // add a permission so something is returned...
+            var poco = new UserGroupPermissionsPoco
+            {
+                ContentTypeId = 1060,
+                GroupId = 3,
+                Permission = 0
+            };
+
+            _configService.UpdateContentTypeConfig(new Dictionary<int, List<UserGroupPermissionsPoco>>
+            {
+                { 0, new List<UserGroupPermissionsPoco> { poco } },
+                { 1, new List<UserGroupPermissionsPoco> { poco } },
+                { 2, new List<UserGroupPermissionsPoco> { poco } }
+            });
 
             List<UserGroupPermissionsPoco> allPermissions = _configService.GetAll();
 
             Assert.NotEmpty(allPermissions);
+            Assert.Equal(3, allPermissions.Count);
         }
 
         [Fact]

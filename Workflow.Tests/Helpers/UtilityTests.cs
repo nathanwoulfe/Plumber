@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Chauffeur.TestingTools;
+using GDev.Umbraco.Test;
+using Moq;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Services;
 using Umbraco.Web;
+using Umbraco.Web.Security;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Services;
@@ -22,11 +25,14 @@ namespace Workflow.Tests.Helpers
         private readonly IContentTypeService _contentTypeService;
         private readonly IConfigService _configService;
 
+        private readonly int? _currentUserId = 666;
+
         public UtilityTests()
         {
             Host.Run(new[] { "install y" }).Wait();
 
-            Scaffold.Run();
+            Scaffold.Tables();
+            Scaffold.EnsureContext(_currentUserId);
 
             _contentService = ApplicationContext.Current.Services.ContentService;
             _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
@@ -107,11 +113,9 @@ namespace Workflow.Tests.Helpers
         [Fact]
         public void Can_Get_Current_User()
         {
-            int id = UmbracoContext.Current.Security.CurrentUser.Id;
-
             IUser user = _utility.GetCurrentUser();
             Assert.NotNull(user);
-            Assert.Equal(id, user.Id);
+            Assert.Equal(_currentUserId, user.Id);
         }
 
         [Theory]

@@ -48,6 +48,7 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="nodeId"></param>
         /// <param name="userId"></param>
+        /// <param name="taskId"></param>
         /// <param name="guid"></param>
         public async Task<bool> Validate(int nodeId, int userId, int taskId, Guid guid)
         {
@@ -59,7 +60,7 @@ namespace Workflow.Services
             }
 
             // only interested in last active task
-            WorkflowTaskInstancePoco activeTask = taskInstances.OrderBy(t => t.Id).Last(t => t.TaskStatus.In(TaskStatus.PendingApproval, TaskStatus.Rejected));
+            WorkflowTaskInstancePoco activeTask = taskInstances.OrderBy(t => t.Id).LastOrDefault(t => t.TaskStatus.In(TaskStatus.PendingApproval, TaskStatus.Rejected));
 
             if (activeTask == null)
             {

@@ -26,6 +26,15 @@ namespace Workflow.Tests.Services
         }
 
         [Fact]
+        public async void Can_Import_Config()
+        {
+            var model = Scaffold.ReadFromJsonFile<ImportExportModel>(@"Config.json");
+            bool import = await _importExportService.Import(model);
+
+            Assert.True(import);
+        }
+
+        [Fact]
         public async void Can_Export_All()
         {
             var model = Scaffold.ReadFromJsonFile<ImportExportModel>(@"Config.json");

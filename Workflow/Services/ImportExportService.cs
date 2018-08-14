@@ -34,19 +34,13 @@ namespace Workflow.Services
         /// <returns></returns>
         public Task<ImportExportModel> Export()
         {
-            var model = new ImportExportModel();
-
-            try
+            var model = new ImportExportModel
             {
-                model.Settings = _repo.ExportSettings();
-                model.UserGroups = _repo.ExportUserGroups();
-                model.User2UserGroup = _repo.ExportUser2UserGroups();
-                model.UserGroupPermissions = _repo.ExportUserGroupPermissions();
-            }
-            catch (Exception e)
-            {
-                _log.Error(GetType(), e.Message, e);
-            }
+                Settings = _repo.ExportSettings(),
+                UserGroups = _repo.ExportUserGroups(),
+                User2UserGroup = _repo.ExportUser2UserGroups(),
+                UserGroupPermissions = _repo.ExportUserGroupPermissions()
+            };
 
             return Task.FromResult(model);
         }

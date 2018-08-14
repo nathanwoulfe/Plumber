@@ -16,11 +16,14 @@ using Umbraco.Web.Routing;
 using Umbraco.Web.Security;
 using Workflow.Models;
 using Workflow.Services;
+using Workflow.Services.Interfaces;
 
 namespace Workflow.Tests
 {
     public static class Scaffold
     {
+        private static readonly IInstancesService InstancesService = new InstancesService();
+
         /// <summary>
         /// 
         /// </summary>
@@ -30,7 +33,7 @@ namespace Workflow.Tests
             EnsureContext();
         }
 
-        private static void Tables()
+        public static void Tables()
         {
             // ensure required tables exist
             DatabaseSchemaHelper persistenceHelper = Persistence.Helper();
@@ -44,12 +47,14 @@ namespace Workflow.Tests
 
         }
 
-        private static void EnsureContext()
+        public static void EnsureContext(int? id = null)
         {
             if (UmbracoContext.Current != null)
             {
                 return;
             }
+
+            int currentUserId = id ?? Utility.RandomInt();
 
             var request = new SimpleWorkerRequest("", "", "", null, new StringWriter());
             var httpContext = new HttpContextWrapper( new HttpContext(request));
@@ -58,7 +63,7 @@ namespace Workflow.Tests
             var currentUser = Mock.Of<IUser>(u =>
                     u.IsApproved
                     && u.Name == Utility.RandomString()
-                    && u.Id == Utility.RandomInt());
+                    && u.Id == currentUserId);
 
             webSecurity.Setup(x => x.CurrentUser).Returns(currentUser);
 
@@ -139,7 +144,30 @@ namespace Workflow.Tests
             };
         }
 
-        public static WorkflowInstancePoco Instance(Guid guid, int type, int nodeId = 1073, int authorUserId = 0)
+        /// <summary>
+        /// Quickly scaffold a set of instances with arbitrary values and no tasks
+        /// This method adds the instances to the db
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="type"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static IEnumerable<WorkflowInstancePoco> Instances(int count, int type = 1, int status = (int)WorkflowStatus.PendingApproval, int? nodeId = null)
+        {
+            List<WorkflowInstancePoco> response = new List<WorkflowInstancePoco>();
+
+            for (var i = 0; i < count; i++)
+            {
+                WorkflowInstancePoco instance = Instance(Guid.NewGuid(), type, nodeId ?? Utility.RandomInt(), Utility.RandomInt(), status);
+
+                InstancesService.InsertInstance(instance);
+                response.Add(instance);
+            }
+
+            return response;
+        }
+
+        public static WorkflowInstancePoco Instance(Guid guid, int type, int nodeId = 1073, int authorUserId = 0, int status = (int)WorkflowStatus.PendingApproval)
         {
             return new WorkflowInstancePoco
             {
@@ -148,7 +176,8 @@ namespace Workflow.Tests
                 AuthorComment = Utility.RandomString(),
                 NodeId = nodeId,
                 CreatedDate = DateTime.Now,
-                Type = type
+                Type = type,
+                Status = status
             };
         }
 

@@ -122,8 +122,8 @@ namespace Workflow.Services
                     NodeId = instance.NodeId,
                     NodeName = instanceNodeName,
 
-                    RequestedById = instance.AuthorUser.Id,
-                    RequestedBy = instance.AuthorUser.Name,
+                    RequestedById = instance.AuthorUserId,
+                    RequestedBy = instance.AuthorUser?.Name,
                     RequestedOn = taskInstance.CreatedDate.ToFriendlyDate(),
                     Comment = useInstanceFromTask || string.IsNullOrEmpty(taskInstance.Comment) ? instance.AuthorComment : taskInstance.Comment,
 
