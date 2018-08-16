@@ -87,7 +87,7 @@
                 files: [{
                     expand: true,
                     cwd: '<%= backoffice %>/css',
-                    src: 'styles.css',
+                    src: '*.css',
                     dest: '<%= dest %>/<%= backoffice %>/css',
                     ext: '.min.css'
                 }]
