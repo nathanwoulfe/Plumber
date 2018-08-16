@@ -54,6 +54,21 @@
                 options: {
                     banner: '/<%= banner %>/\n\n'
                 }
+            },
+            preview: {
+                src: [
+                    '<%= backoffice %>/preview/app.js',
+                    '<%= backoffice %>/preview/workflow.preview.services.js',
+                    '<%= backoffice %>/preview/workflow.preview.controller.js',
+                    '<%= backoffice %>/controllers/workflow.action.controller.js',
+                    '<%= backoffice %>/filters/workflow.iconName.filter.js',
+                    '<%= backoffice %>/directives/workflow.comments.directive.js'
+                ],
+                dest: '<%= backoffice %>/preview.es6',
+                nonull: true,
+                options: {
+                    banner: '/<%= banner %>/\n\n'
+                }
             }
         },
 
@@ -62,7 +77,7 @@
             dist: {
                 files: {
                     '<%= backoffice %>/css/styles.css': ['<%= backoffice %>/css/styles.scss'],
-                    '<%= backoffice %>/preview/styles.css': ['<%= backoffice %>/preview/styles.scss']
+                    '<%= backoffice %>/css/preview.css': ['<%= backoffice %>/preview/styles.scss']
                 },
             }
         },
@@ -79,7 +94,8 @@
             },
             add_banner: {
                 files: { 
-                    '<%= dest %>/<%= backoffice %>/css/styles.min.css': ['<%= dest %>/<%= backoffice %>/css/styles.min.css']
+                    '<%= dest %>/<%= backoffice %>/css/styles.min.css': ['<%= dest %>/<%= backoffice %>/css/styles.min.css'],
+                    '<%= dest %>/<%= backoffice %>/css/preview.min.css': ['<%= dest %>/<%= backoffice %>/css/preview.min.css']
                 }
             }
         },
@@ -88,7 +104,8 @@
             dist: {
                 files: {
                     // destination for transpiled js : source js
-                    '<%= dest %>/<%= backoffice %>/js/workflow.js': '<%= backoffice %>/workflow.es6'
+                    '<%= dest %>/<%= backoffice %>/js/workflow.js': '<%= backoffice %>/workflow.es6',
+                    '<%= dest %>/<%= backoffice %>/js/preview.js': '<%= backoffice %>/preview.es6'
                 },
                 options: {
                     transform: [['babelify', { presets: 'env' }]],
@@ -155,16 +172,21 @@
                 dest: '../workflow.site/<%= basePath %>/package.manifest',
             },
 
-            css: {
-                src: '<%= backoffice %>/css/styles.css',
-                dest: '<%= dest %>/<%= backoffice %>/css/styles.min.css', // yes, it's not minified, but the build task will overwrite it later
-            },
+            //css: {
+            //    src: '<%= backoffice %>/css/styles.css',
+            //    dest: '<%= dest %>/<%= backoffice %>/css/styles.min.css', // yes, it's not minified, but the build task will overwrite it later
+            //},
 
             js: {
                 expand: true,
                 cwd: '<%= backoffice %>/',
                 src: '**/*.js',
                 dest: '<%= dest %>/<%= backoffice %>/',
+            },
+
+            loader: {
+                src: '<%= backoffice %>/preview/preview.loader.prod.js',
+                dest: '<%= dest %>/<%= backoffice %>/preview/preview.loader.js'
             },
 
             html: {
@@ -306,7 +328,7 @@
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'concat', 'browserify:dist', 'sass', 'cssmin', 'copy:config', 'copy:tours', 'copy:html', 'copy:lib', 'copy:lang']);
+    grunt.registerTask('default', ['jshint', 'concat:dist', 'concat:preview', 'browserify:dist', 'sass', 'cssmin', 'copy:loader', 'copy:config', 'copy:tours', 'copy:html', 'copy:lib', 'copy:lang']);
     grunt.registerTask('nuget', ['clean', 'default', 'copy:nuget', 'template:nuspec', 'mkdir:pkg', 'nugetpack']);
     grunt.registerTask('package', ['clean', 'default', 'copy:umbraco', 'copy:umbracoBin', 'mkdir:pkg', 'umbracoPackage']);
 

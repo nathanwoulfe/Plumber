@@ -43,6 +43,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.contenttypeflow.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\rgrove-lazyload\lazyload.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\preview\app.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\preview\preview.loader.prod.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\preview\preview.loader.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\preview\workflow.preview.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\filters\workflow.iconName.filter.js" />
