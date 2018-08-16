@@ -2,6 +2,7 @@
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Web;
+using umbraco;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
@@ -162,23 +163,25 @@ namespace Workflow.Helpers
         }
 
         /// <summary />
-        /// <param name="key"></param>
+        /// <param name="name"></param>
         /// <param name="value"></param>
+        /// <param name="path"></param>
         /// <param name="httpOnly"></param>
         /// <param name="daysToPersist"></param>
-        public static void SetCookie(string key, string value, bool httpOnly = true, double daysToPersist = 30d)
+        public static void SetCookie(string name, string value, string path = "/", bool httpOnly = true)
         {
             HttpContext context = HttpContext.Current;
 
-            var cookie = new HttpCookie(key, value)
+            var cookie = new HttpCookie(name, value)
             {
-                Expires = DateTime.Now.AddDays(daysToPersist),
-                HttpOnly = httpOnly
+                Expires = DateTime.Now.AddMinutes(GlobalSettings.TimeOutInMinutes),
+                HttpOnly = httpOnly,
+                Path = path
             };
 
             context.Response.Cookies.Set(cookie);
 
-            cookie = context.Request.Cookies[key];
+            cookie = context.Request.Cookies[name];
 
             if (cookie != null)
             {

@@ -44,6 +44,7 @@ namespace Workflow
                     UmbracoConfig.For.UmbracoSettings().Security.AuthCookieDomain);
 
                 HttpContext.Current.Request.Cookies.Add(authCookie);
+                HttpContext.Current.Items.Add("authCookie", authCookie.Value);
 
                 var identity = new UmbracoBackOfficeIdentity(userData);
 

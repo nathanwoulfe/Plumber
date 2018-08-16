@@ -34,7 +34,7 @@ namespace Workflow.Controllers
                 _previewService.Generate(nodeId, userId, guid);
 
                 Utility.SetCookie(UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName,
-                    umbContextCookie?.Value);
+                    HttpContext.Items["authCookie"] as string, $"/{nodeId}");
             }
             else
             {
@@ -42,7 +42,7 @@ namespace Workflow.Controllers
                 Utility.ExpireCookie(Constants.Web.PreviewCookieName);
 
                 // add a cookie to indicate that the preview request was invalid
-                Utility.SetCookie("Workflow_Preview", "0", false);
+                Utility.SetCookie("Workflow_Preview", "0", httpOnly: false);
             }
 
             return File("/app_plugins/workflow/backoffice/preview/workflow.preview.html", "text/html");
