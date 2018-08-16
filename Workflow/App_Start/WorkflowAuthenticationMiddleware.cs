@@ -39,12 +39,11 @@ namespace Workflow
                     user.Name,
                     segments[2].Trim('/'),
                     JsonConvert.SerializeObject(userData), 
-                    GlobalSettings.TimeOutInMinutes,
                     UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName,
                     UmbracoConfig.For.UmbracoSettings().Security.AuthCookieDomain);
 
                 HttpContext.Current.Request.Cookies.Add(authCookie);
-                HttpContext.Current.Items.Add("authCookie", authCookie.Value);
+                HttpContext.Current.Items.Add(UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName, authCookie.Value);
 
                 var identity = new UmbracoBackOfficeIdentity(userData);
 
@@ -76,16 +75,15 @@ namespace Workflow
         }
 
         //borrowed from Umbraco - see source for code comments in CreateAuthTicketAndCookie
-        private static HttpCookie CreateAuthCookie(string username, string nodeId, string userData,
-            int loginTimeoutMins, string cookieName, string cookieDomain)
+        private static HttpCookie CreateAuthCookie(string username, string nodeId, string userData, string cookieName, string cookieDomain)
         {
             var ticket = new FormsAuthenticationTicket(4, username, DateTime.Now,
-                DateTime.Now.AddMinutes(loginTimeoutMins), true, userData, $"/{nodeId}");
+                DateTime.Now.AddMinutes(GlobalSettings.TimeOutInMinutes), true, userData, $"/{nodeId}");
 
             string hash = FormsAuthentication.Encrypt(ticket);
             var cookie = new HttpCookie(cookieName, hash)
             {
-                Expires = DateTime.Now.AddMinutes(loginTimeoutMins),
+                Expires = DateTime.Now.AddMinutes(GlobalSettings.TimeOutInMinutes),
                 Domain = cookieDomain,
                 Path = $"/{nodeId}"
             };

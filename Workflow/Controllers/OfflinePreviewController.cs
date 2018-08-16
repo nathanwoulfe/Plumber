@@ -29,7 +29,7 @@ namespace Workflow.Controllers
                 _previewService.Generate(nodeId, userId, guid);
 
                 Utility.SetCookie(UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName,
-                    HttpContext.Items["authCookie"] as string, $"/{nodeId}");
+                    HttpContext.Items[UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName] as string, $"/{nodeId}");
             }
             else
             {
