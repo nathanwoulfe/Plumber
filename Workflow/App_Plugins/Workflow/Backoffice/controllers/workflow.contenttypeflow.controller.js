@@ -20,7 +20,7 @@
                 this.approvalPath = [this.selectedApprovalGroup];
             }
 
-            $scope.model.type.approvalPath = this.approvalPath;
+            $scope.model.approvalPath = this.approvalPath;
         };
 
         /**
@@ -31,7 +31,7 @@
         this.remove = ($event, index) => {
             $event.stopPropagation();
             this.approvalPath.splice(index, 1);
-            $scope.model.type.approvalPath = this.approvalPath;
+            $scope.model.approvalPath = this.approvalPath;
         };
 
         this.sortOptions = {

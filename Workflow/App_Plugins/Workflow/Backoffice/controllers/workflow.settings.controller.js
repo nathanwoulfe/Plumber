@@ -136,10 +136,14 @@
                 submit: model => {
 
                     // map the updated approval path back onto the doctypes collection 
-                    if (model.type.approvalPath.length) {
+                    if (model.approvalPath.length) {
+
+                        // multi has a value when adding - can add more than one
+                        const ids = model.type ? [model.type.id] : model.multi.map(t => t.id); 
+
                         this.docTypes.forEach(v => {
-                            if (v.id === model.type.id) {
-                                v.approvalPath = model.type.approvalPath;
+                            if (ids.indexOf(v.id) !== -1) {
+                                v.approvalPath = model.approvalPath;
                             }
                         });
                     }

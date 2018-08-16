@@ -4,16 +4,16 @@
     </umb-load-indicator>
     
     <div ng-if="!model.type">
-        <h6>Select content type</h6>
-        <select class="flow-select" ng-if="!model.type" ng-model="model.type" ng-options="g as g.name for g in model.types" data-element="workflow-overlay__contenttype-types">
+        <h6>Select content type/s:</h6>
+        <select multiple class="flow-select" ng-model="model.multi" ng-options="g as g.name for g in model.types" data-element="workflow-overlay__contenttype-types">
             <option selected disabled>--- Select content type ---</option>
         </select>
     </div>
     
     <h5 ng-if="model.type">Editing flow for: {{ model.type.name }}</h5>
 
-    <div ng-if="model.type">
-        <h6>Select workflow group</h6>
+    <div ng-if="model.type || model.multi">
+        <h6>Select workflow group:</h6>
         <select class="flow-select" ng-model="vm.selectedApprovalGroup" ng-options="g as g.name for g in model.groups" data-element="workflow-overlay__contenttype-groups">
             <option selected disabled>--- Add ---</option>
         </select>
