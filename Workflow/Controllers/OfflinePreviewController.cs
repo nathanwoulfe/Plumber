@@ -26,11 +26,6 @@ namespace Workflow.Controllers
 
             if (_previewService.Validate(nodeId, userId, taskId, guid).Result)
             {
-                // auth cookie disappears somewhere in the prevew generator
-                // so store it here then reapply later...
-                HttpCookie umbContextCookie =
-                    Request.Cookies[UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName];
-
                 _previewService.Generate(nodeId, userId, guid);
 
                 Utility.SetCookie(UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName,
