@@ -8,6 +8,8 @@ namespace Workflow.Tests
         private static readonly Random Random = new Random();
         private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
+        public const int CurrentUserId = 666;
+
         public static int RandomInt()
         {
             return Random.Next();

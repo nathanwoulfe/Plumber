@@ -47,14 +47,12 @@ namespace Workflow.Tests
 
         }
 
-        public static void EnsureContext(int? id = null)
+        public static void EnsureContext()
         {
             if (UmbracoContext.Current != null)
             {
                 return;
             }
-
-            int currentUserId = id ?? Utility.RandomInt();
 
             var request = new SimpleWorkerRequest("", "", "", null, new StringWriter());
             var httpContext = new HttpContextWrapper( new HttpContext(request));
@@ -63,7 +61,7 @@ namespace Workflow.Tests
             var currentUser = Mock.Of<IUser>(u =>
                     u.IsApproved
                     && u.Name == Utility.RandomString()
-                    && u.Id == currentUserId);
+                    && u.Id == Utility.CurrentUserId);
 
             webSecurity.Setup(x => x.CurrentUser).Returns(currentUser);
 
