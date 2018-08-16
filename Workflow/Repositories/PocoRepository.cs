@@ -3,7 +3,6 @@ using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Persistence;
-using Umbraco.Core.Services;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Relators;
@@ -52,17 +51,6 @@ namespace Workflow.Repositories
 
             return wsp;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        //public UserGroupPermissionsPoco GetDefaultUserGroupPermissions(int id)
-        //{
-        //    UserGroupPermissionsPoco permissions = _database.Fetch<UserGroupPermissionsPoco>(SqlHelpers.UserGroupBasic, id).FirstOrDefault();
-        //    return permissions;
-        //}
 
         /// <summary>
         /// Get all user groups and their associated permissions and user groups
@@ -132,7 +120,8 @@ namespace Workflow.Repositories
 
         public List<UserGroupPermissionsPoco> GetAllPermissions()
         {
-            return _database.Fetch<UserGroupPermissionsPoco>("SELECT * FROM WorkflowUserGroupPermissions");
+            List<UserGroupPermissionsPoco> permissions = _database.Fetch<UserGroupPermissionsPoco>("SELECT * FROM WorkflowUserGroupPermissions");
+            return permissions;
         }
 
         /// <summary>

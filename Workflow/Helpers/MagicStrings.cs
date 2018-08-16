@@ -2,7 +2,6 @@
 {
     public static class MagicStrings
     {
-        public const string NoNode = "Node does not exist";
         public const string Name = "Plumber";
 
         public const string VersionKey = "plumberVersion";
@@ -29,6 +28,9 @@
         public const string ErrorGettingSettings = "Error getting settings";
 
         public const string HttpResponseException = "HttpResponseException";
+
+        public const string NoNode = "Node does not exist";
+        public const string NoContentType = "Content type does not exist";
 
         public const string PreviewUserName = "WorkflowPreview";
         public const string PreviewRouteBase = "/workflow-preview/";
