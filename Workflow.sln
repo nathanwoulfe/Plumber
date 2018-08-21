@@ -19,6 +19,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workflow.Tests", "Workflow.Tests\Workflow.Tests.csproj", "{21A46292-3291-4474-8EE3-88F8AF433C71}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{CBCF62B8-02B9-4D6D-B79A-4214471BF6AF}"
+	ProjectSection(SolutionItems) = preProject
+		BuildPackage\Build.bat = BuildPackage\Build.bat
+		BuildPackage\LocalBuild.bat = BuildPackage\LocalBuild.bat
+		BuildPackage\package.nuspec = BuildPackage\package.nuspec
+		BuildPackage\package.proj = BuildPackage\package.proj
+		BuildPackage\Package.xml = BuildPackage\Package.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

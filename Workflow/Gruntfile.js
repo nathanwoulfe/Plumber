@@ -87,7 +87,7 @@
                 files: [{
                     expand: true,
                     cwd: '<%= backoffice %>/css',
-                    src: '*.css',
+                    src: ['*.css', '!*.min.css'],
                     dest: '<%= dest %>/<%= backoffice %>/css',
                     ext: '.min.css'
                 }]
@@ -129,7 +129,7 @@
             },
 
             css: {
-                files: ['<%= backoffice %>/**/*.scss'],
+                files: ['<%= backoffice %>/css/*.scss', '<%= backoffice %>/preview/*.scss'],
                 tasks: ['sass:dist']
             },
 
