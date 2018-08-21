@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Umbraco.Core.Models;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
 using Workflow.Helpers;
@@ -12,12 +11,6 @@ namespace Workflow.Models
     public class UserGroupPermissionsPoco
     {
         private readonly Utility _utility = new Utility();
-        private readonly IContentType _contentType;
-
-        public UserGroupPermissionsPoco()
-        {
-            _contentType = ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId) : null; 
-        }
 
         [Column("Id")]
         [PrimaryKeyColumn(AutoIncrement = true)]
@@ -50,11 +43,11 @@ namespace Workflow.Models
 
         [ResultColumn]
         [JsonProperty("contentTypeName")]
-        public string ContentTypeName => _contentType != null ? _contentType.Name : MagicStrings.NoContentType;
+        public string ContentTypeName => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId)?.Name : MagicStrings.NoContentType;
 
         [ResultColumn]
         [JsonProperty("contentTypeAlias")]
-        public string ContentTypeAlias => _contentType != null ? _contentType.Alias : MagicStrings.NoContentType;
+        public string ContentTypeAlias => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId)?.Alias : MagicStrings.NoContentType;
 
         [ResultColumn]
         [JsonProperty("userGroup")]
