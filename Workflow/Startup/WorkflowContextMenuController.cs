@@ -3,7 +3,6 @@ using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Web;
-using Workflow.Helpers;
 
 namespace Workflow.Startup
 {
@@ -25,10 +24,8 @@ namespace Workflow.Startup
 
             const string dialogPath = "/App_Plugins/workflow/Backoffice/views/dialogs/";
 
-            var utility = new Utility();
-
             int menuLength = e.Menu.Items.Count;
-            string nodeName = utility.GetNodeName(nodeId);
+            string nodeName = UmbracoContext.Current.ContentCache.GetById(nodeId).Name;
             IUser currentUser = UmbracoContext.Current.Security.CurrentUser;
             var items = new Umbraco.Web.Models.Trees.MenuItemList();
 
