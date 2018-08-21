@@ -8,68 +8,6 @@
     font-family: Lato,Helvetica Neue,Helvetica,Arial,sans-serif; // umbraco defaults
 }
 
-.wf-highcharts-color-approved {
-    fill: $success;
-    color: $success;
-
-    .highcharts-point {
-        fill: $success;
-        color: $success;
-    }
-}
-
-.wf-highcharts-color-cancelled {
-    fill: $danger;
-    color: $danger;
-
-    .highcharts-point {
-        fill: $danger;
-        color: $danger;
-    }
-}
-
-.wf-highcharts-color-resubmitted {
-    fill: $pending;
-    color: $pending;
-
-    .highcharts-point {
-        fill: $pending;
-        color: $pending;
-    }
-}
-
-.wf-highcharts-color-rejected {
-    fill: $warning;
-    color: $warning;
-
-    .highcharts-point {
-        fill: $warning;
-        color: $warning;
-    }
-}
-
-.wf-highcharts-color-notreq,
-.wf-highcharts-color-not-required {
-    fill: #8085e9;
-    color: #8085e9;
-
-    .highcharts-point {
-        fill: #8085e9;
-        color: #8085e9;
-    }
-}
-
-.highcharts-color-5,
-.wf-highcharts-color-total {
-    stroke: #666;
-    fill:#666;
-
-    .highcharts-point {
-        stroke: #666;
-        fill:#666;
-    }
-}
-
 .highcharts-legend-item {
     text {
         font-weight: normal;
