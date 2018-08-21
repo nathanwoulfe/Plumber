@@ -47,7 +47,8 @@
                     '<%= backoffice %>/controllers/**/*.js',
                     '<%= backoffice %>/directives/*.js',
                     '<%= backoffice %>/interceptors/*.js',
-                    '<%= backoffice %>/resources/*.js'
+                    '<%= backoffice %>/resources/*.js',
+                    '<%= backoffice %>/filters/*.js'
                 ],
                 dest: '<%= backoffice %>/workflow.es6',
                 nonull: true,
