@@ -62,6 +62,7 @@ namespace Workflow.Services
         public List<WorkflowTask> GetPendingTasks(IEnumerable<int> status, int count, int page)
         {
             IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllPendingTasks(status)
+                .Where(x => x.WorkflowInstance.Active)
                 .GroupBy(x => x.WorkflowInstanceGuid)
                 .Select(x => x.First());
 
@@ -149,8 +150,10 @@ namespace Workflow.Services
         public List<WorkflowTaskInstancePoco> GetAllPendingTasks(IEnumerable<int> status)
         {
             List<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllPendingTasks(status)
+                .Where(x => x.WorkflowInstance.Active)
                 .GroupBy(x => x.WorkflowInstanceGuid)
-                .Select(x => x.First()).ToList();
+                .Select(x => x.First())
+                .ToList();
 
             return taskInstances;
         }
@@ -207,8 +210,10 @@ namespace Workflow.Services
         public List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status)
         {
             return _tasksRepo.GetTaskSubmissionsForUser(id, status)
+                .Where(x => x.WorkflowInstance.Active)
                 .GroupBy(x => x.WorkflowInstanceGuid)
-                .Select(x => x.First()).ToList();
+                .Select(x => x.First())
+                .ToList();
         }
 
         /// <summary>

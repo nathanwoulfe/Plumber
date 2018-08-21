@@ -166,33 +166,37 @@
             }
         };
 
+        /**
+         * 
+         */
+        const getPendingTasks = () => {
+            workflowResource.getNodePendingTasks(editorState.current.id)
+                .then(resp => {
+                    if (resp.items && resp.items.length) {
+                        this.active = true;
+
+                        // if the workflow status is rejected, the original author should be able to edit and resubmit
+                        const currentTask =
+                            resp.items.reduce((prev, current) => (prev.taskId > current.taskId) ? prev : current);
+
+                        this.rejected = currentTask.cssStatus === 'rejected';
+
+                        // if the task has been rejected and the current user requested the change, let them edit
+                        this.isChangeAuthor = currentTask.requestedById === user.id;
+                        this.userCanEdit = this.rejected && this.isChangeAuthor;
+
+                        checkUserAccess(currentTask);
+                    } else {
+                        this.active = false;
+                        setButtons();
+                    }
+                },
+                () => { });
+        };
+
         const getNodeTasks = () => {
             // only refresh if viewing a content node
             if (editorState.current && !editorState.current.trashed) {
-
-                const getPendingTasks = () => {
-                    workflowResource.getNodePendingTasks(editorState.current.id)
-                        .then(resp => {
-                                if (resp.items && resp.items.length) {
-                                    this.active = true;
-
-                                    // if the workflow status is rejected, the original author should be able to edit and resubmit
-                                    const currentTask = resp.items[resp.items.length - 1];
-                                    this.rejected = currentTask.cssStatus === 'rejected';
-
-                                    // if the task has been rejected and the current user requested the change, let them edit
-                                    this.isChangeAuthor = currentTask.requestedById === user.id;
-                                    this.userCanEdit = this.rejected && this.isChangeAuthor;
-
-                                    checkUserAccess(currentTask);
-                                } else {
-                                    this.active = false;
-                                    setButtons();
-                                }
-                            },
-                            () => {});
-                };
-
                 // check if the node is included in the workflow model
                 // groups has been fetched already
                 const nodePerms = workflowResource.checkNodePermissions(groups,
@@ -219,41 +223,44 @@
             dirty = data;
             setButtons();
         });
-       
+
+        // ensures dash/buttons refresh
+        $rootScope.$on('workflowActioned', () => {
+            getNodeTasks();
+        });
+
+        $rootScope.$on('configUpdated', () => {
+            getNodeTasks();
+        });
+
         // subscribe to signalr magick for button state
         // events are raised in ActionController - doesn't matter what they return, only care that they are raised
         // as it indicates a change of state for the button
-        const hubEvent = id => {
-            if (!dashboardClick && id === editorState.current.id) {
-                getNodeTasks();
-            }
-        };
+        //const hubEvent = id => {
+        //    if (!dashboardClick && id === editorState.current.id) {
+        //        getNodeTasks();
+        //    }
+        //};
 
-        plumberHub.initHub(hub => {
-            ['workflowStarted', 'taskCancelled', 'taskApproved', 'taskRejected'].forEach(e => {
-                hub.on(e, data => {
-                    hubEvent(data.nodeId);
-                });
-            });
+        //plumberHub.initHub(hub => {
+        //    hub.on('workflowStarted', data => {
+        //        hubEvent(data.nodeId);
+        //    });
 
-            //hub.on('workflowStarted', data => {
-            //    hubEvent(data.nodeId);
-            //});
+        //    hub.on('taskCancelled', data => {
+        //        hubEvent(data.nodeId);
+        //    });
 
-            //hub.on('taskCancelled', data => {
-            //    hubEvent(data.nodeId); 
-            //});
+        //    hub.on('taskApproved', data => {
+        //        hubEvent(data.nodeId);
+        //    });
 
-            //hub.on('taskApproved', data => {
-            //    hubEvent(data.nodeId);
-            //});
+        //    hub.on('taskRejected', data => {
+        //        hubEvent(data.nodeId);
+        //    });
 
-            //hub.on('taskRejected', data => {
-            //    hubEvent(data.nodeId);
-            //});
-
-            hub.start();
-        });
+        //    hub.start();
+        //});
 
         // preview should not save, if the content is in a workflow
         this.preview = content => {

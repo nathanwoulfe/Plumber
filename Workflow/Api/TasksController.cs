@@ -6,6 +6,7 @@ using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Umbraco.Core;
 using Umbraco.Web;
 using Umbraco.Web.WebApi;
 using Workflow.Extensions;
@@ -226,21 +227,13 @@ namespace Workflow.Api
 
             try
             {
-                List<WorkflowTaskInstancePoco> taskInstances = _tasksService.GetTasksByNodeId(id);
-                if (!taskInstances.Any() || taskInstances.Last().TaskStatus == TaskStatus.Cancelled)
-                {
-                    return Json(new
-                    {
-                        total = 0
-                    }, ViewHelpers.CamelCase);
-                }
-                   
-                taskInstances = taskInstances.Where(t => t.TaskStatus.In(TaskStatus.PendingApproval, TaskStatus.Rejected)).ToList();
+                WorkflowTaskInstancePoco currentTask = _tasksService.GetTasksByNodeId(id).FirstOrDefault();
 
                 return Json(new
                 {
-                    items = taskInstances.Any() ? _tasksService.ConvertToWorkflowTaskList(taskInstances) : new List<WorkflowTask>(),
-                    total = taskInstances.Count
+                    items = currentTask != null && currentTask.TaskStatus.In(TaskStatus.PendingApproval, TaskStatus.Rejected) ? 
+                        _tasksService.ConvertToWorkflowTaskList(new List<WorkflowTaskInstancePoco> { currentTask }) : 
+                        new List<WorkflowTask>()
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
@@ -289,11 +282,13 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> taskInstances = type == 0
+                List<WorkflowTaskInstancePoco> taskInstances = (type == 0
                     ? _tasksService.GetAllPendingTasks(new List<int>
                             {(int) TaskStatus.PendingApproval, (int) TaskStatus.Rejected })
                     : _tasksService.GetTaskSubmissionsForUser(userId, new List<int>
-                        {(int) TaskStatus.PendingApproval, (int) TaskStatus.Rejected});
+                        {(int) TaskStatus.PendingApproval, (int) TaskStatus.Rejected}))
+                    .Where(x => x.WorkflowInstance.Active)
+                    .ToList();
                             
 
                 if (type == 0)
@@ -305,7 +300,7 @@ namespace Workflow.Api
 
                     taskInstances = taskInstances.Where(x => 
                         x.UserGroup.IsMember(userId) ||
-                        (x.Status == (int) TaskStatus.Rejected && x.WorkflowInstance.AuthorUserId == userId)).ToList();
+                        x.Status == (int) TaskStatus.Rejected && x.WorkflowInstance.AuthorUserId == userId).ToList();
                 }
 
                 List<WorkflowTask> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList(), false);

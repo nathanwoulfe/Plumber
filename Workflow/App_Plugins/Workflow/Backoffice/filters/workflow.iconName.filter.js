@@ -9,11 +9,11 @@
         return function (task) {
             let response = '';
             //rejected
-            if ((task.typeId === 1 || task.typeId === 3) && task.status === 7 || task.status === 2) {
+            if (task.status === 2) {
                 response = 'delete';
             }
             // resubmitted or approved
-            if (task.typeId === 2 && task.status === 7 || task.status === 1) {
+            if (task.status === 7 || task.status === 1) {
                 response = 'check';
             }
             // pending
@@ -23,6 +23,10 @@
             // not required
             if (task.status === 4) {
                 response = 'next-media';
+            }
+            // error
+            if (task.status === 6) {
+                response = 'thumbs-down';
             }
             // not required
             if (task.status === 5) {

@@ -121,9 +121,9 @@ namespace Workflow.Processes
                 WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(Instance.NodeId);
                 ApproveOrContinue(taskInstance, userId);
 
-                WorkflowTaskInstancePoco rejectedTask = Instance.TaskInstances.First(x => x.TaskStatus == TaskStatus.Rejected);
-                rejectedTask.Status = (int)TaskStatus.Resubmitted;
-                _tasksService.UpdateTask(rejectedTask);
+                //WorkflowTaskInstancePoco rejectedTask = Instance.TaskInstances.First(x => x.TaskStatus == TaskStatus.Rejected);
+                //rejectedTask.Status = (int)TaskStatus.Resubmitted;
+                //_tasksService.UpdateTask(rejectedTask);
             }
             else
             {

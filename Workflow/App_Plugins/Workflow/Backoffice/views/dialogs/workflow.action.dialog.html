@@ -20,22 +20,22 @@
                 <div class="history-tasks">
                     <div class="history-task" ng-repeat="t in taskCollection | orderBy: 'id'">
                         <i class="icon icon-{{ t | iconName }} {{ t.cssStatus }}"></i>
-                        <!-- todo - this is horrible. fix it -->
-                        <div ng-if="t.typeId === 2">
-                            Resubmitted by {{ t.completedBy }}<br />
-                            on {{ t.completedOn }} <br />
-                            Comment: {{ t.comment }}
-                        </div>
-                        <div ng-if="t.status !== 4 && t.status !== 3 && t.typeId !== 2">
-                            <span ng-bind="t.statusName"></span> by <strong ng-bind="t.approvalGroup"></strong> ({{ t.completedBy }})<br />
-                            on {{ t.completedOn }} <br />
-                            Comment: {{ t.comment }}
-                        </div>
-                        <div ng-if="t.status === 3">
-                            Pending approval by <strong ng-bind="t.approvalGroup"></strong>
-                        </div>
-                        <div ng-if="t.status === 4">
-                            {{ t.comment }}
+                        <div ng-switch on="t.status">
+                            <div ng-switch-when="7">
+                                Resubmitted by {{ t.completedBy }} on {{ t.completedOn }} <br />
+                                Comment: {{ t.comment }}
+                            </div>
+                            <div ng-switch-when="3">
+                                Pending approval by <strong ng-bind="t.approvalGroup"></strong>
+                            </div>
+                            <div ng-switch-when="4">
+                                {{ t.comment }}
+                            </div>
+                            <div ng-switch-default>
+                                <span ng-bind="t.statusName"></span> by <strong ng-bind="t.approvalGroup"></strong> ({{ t.completedBy }}) on {{ t.completedOn }} <br />
+                                Comment: {{ t.comment }}
+                            </div>
+
                         </div>
                     </div>
                 </div>
