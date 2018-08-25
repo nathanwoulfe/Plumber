@@ -105,7 +105,11 @@ namespace Workflow.Services
             {
                 instance = useInstanceFromTask ? taskInstance.WorkflowInstance : instance;
 
-                string instanceNodeName = instance.Node?.Name ?? "NODE NO LONGER EXISTS";
+                // ignore workflows where node has been deleted
+                if (instance.Node == null || instance.Node.Path.Contains(Constants.System.RecycleBinContentString))
+                {
+                    continue;
+                }
 
                 var item = new WorkflowTask
                 {
@@ -121,7 +125,7 @@ namespace Workflow.Services
                     CssStatus = taskInstance.StatusName.ToLower().Replace(' ', '-'),
 
                     NodeId = instance.NodeId,
-                    NodeName = instanceNodeName,
+                    NodeName = instance.Node.Name,
 
                     RequestedById = instance.AuthorUserId,
                     RequestedBy = instance.AuthorUser?.Name,
