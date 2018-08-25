@@ -22,10 +22,15 @@ namespace Workflow.Startup
 
             if (nodeId == Constants.System.Root || nodeId == Constants.System.RecycleBinContent) return;
 
+            IPublishedContent node = UmbracoContext.Current.ContentCache.GetById(nodeId);
+
+            if (node == null) return;
+
             const string dialogPath = "/App_Plugins/workflow/Backoffice/views/dialogs/";
 
             int menuLength = e.Menu.Items.Count;
-            string nodeName = UmbracoContext.Current.ContentCache.GetById(nodeId).Name;
+
+            string nodeName = node.Name;
             IUser currentUser = UmbracoContext.Current.Security.CurrentUser;
             var items = new Umbraco.Web.Models.Trees.MenuItemList();
 
