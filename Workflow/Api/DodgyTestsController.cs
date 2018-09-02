@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Http;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
@@ -16,13 +14,11 @@ namespace Workflow.Api
     {
         private readonly IInstancesService _instancesService;
         private readonly Emailer _emailer;
-        private readonly Utility _utility;
 
         public DodgyTestsController()
         {
             _instancesService = new InstancesService();
             _emailer = new Emailer();
-            _utility = new Utility();
         }
 
         /// <summary>
@@ -40,11 +36,9 @@ namespace Workflow.Api
             {
                 WorkflowInstancePoco instance = _instancesService.GetByGuid(instanceGuid);
 
-                var node = _utility.GetPublishedContent(1078);
-
                 _emailer.Send(instance, (EmailType)emailType);
 
-                return node.Name;
+                return $"Notifications sent for { instance.Id }. Check the mail pickup folder.";
             }
             catch (Exception e)
             {
