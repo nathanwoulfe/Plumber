@@ -139,5 +139,36 @@ namespace Workflow.Api
             }
         }
 
+        /// <summary>
+        /// Check if the current node is already in a workflow process
+        /// </summary>
+        /// <param name="ids">The node/s to check</param>
+        /// <returns>An arrat of bool indicating the workflow status (true -> workflow active)</returns>
+        [HttpGet]
+        [Route("status/{ids}")]
+        public IHttpActionResult GetStatus(string ids)
+        {
+            try
+            {
+                string[] stringArray = ids.Split(',');
+                IEnumerable<int> intArray = stringArray
+                    .Select(s => int.TryParse(s, out int x) ? x : 0)
+                    .Where(x => x > 0);
+
+                Dictionary<int, bool> nodes = _instancesService.IsActive(intArray);
+
+                return Json(new
+                {
+                    nodes
+                }, ViewHelpers.CamelCase);
+            }
+            catch (Exception ex)
+            {
+                string msg = $"Error getting status for node id: {string.Join(",", ids)}";
+                Log.Error(msg, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
+            }
+        }
+
     }
 }

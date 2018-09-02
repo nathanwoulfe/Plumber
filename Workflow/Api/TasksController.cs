@@ -6,7 +6,6 @@ using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Umbraco.Core;
 using Umbraco.Web;
 using Umbraco.Web.WebApi;
 using Workflow.Extensions;
@@ -239,30 +238,6 @@ namespace Workflow.Api
             catch (Exception ex)
             {
                 string msg = MagicStrings.ErrorGettingPendingTasksForNode.Replace("{id}", id.ToString());
-                Log.Error(msg, ex);
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
-            }
-        }
-
-        /// <summary>
-        /// Check if the current node is already in a workflow process
-        /// </summary>
-        /// <param name="id">The node to check</param>
-        /// <returns>A bool indicating the workflow status (true -> workflow active)</returns>
-        [Obsolete]
-        [HttpGet]
-        [Route("status/{id:int}")]
-        public IHttpActionResult GetStatus(int id)
-        {
-            try
-            {
-                IEnumerable<WorkflowInstancePoco> instances = _instancesService.GetForNodeByStatus(id, new List<int> { (int)WorkflowStatus.PendingApproval });
-
-                return Ok(instances.Any());
-            }
-            catch (Exception ex)
-            {
-                string msg = $"Error getting status for node {id}";
                 Log.Error(msg, ex);
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
