@@ -49,6 +49,7 @@ namespace Workflow.Notifications
         public async void Send(WorkflowInstancePoco instance, EmailType emailType)
         {
             WorkflowSettingsPoco settings = _settingsService.GetSettings();
+            WorkflowTaskInstancePoco finalTask = null;
 
             bool? doSend = settings.SendNotifications;
             if (doSend != true) return;
@@ -58,12 +59,18 @@ namespace Workflow.Notifications
                 instance.TaskInstances = _tasksService.GetTasksWithGroupByInstanceGuid(instance.Guid);
             }
 
+            if (!instance.TaskInstances.Any())
+            {
+                Log.Error($"Notifications not sent - no tasks exist for instance { instance.Id }");
+                return;
+            }
+
             try
             {
                 string docTitle = instance.Node.Name;
                 string docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
 
-                IOrderedEnumerable<WorkflowTaskInstancePoco> flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep);
+                WorkflowTaskInstancePoco[] flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep).ToArray();
 
                 // always take get the emails for all previous users, sometimes they will be discarded later
                 // easier to just grab em all, rather than doing so conditionally
@@ -72,8 +79,6 @@ namespace Workflow.Notifications
                 // in the loop, also store the last task to a variable, and keep the populated group
                 var taskIndex = 0;
                 int taskCount = flowTasks.Count();
-
-                WorkflowTaskInstancePoco finalTask = null;
 
                 foreach (WorkflowTaskInstancePoco task in flowTasks)
                 {
@@ -87,6 +92,12 @@ namespace Workflow.Notifications
 
                     finalTask = task;
                     finalTask.UserGroup = group;
+                }
+
+                if (finalTask == null)
+                {
+                    Log.Error("No valid task found for email notifications");
+                    return;
                 }
 
                 List<string> to = new List<string>();
@@ -201,10 +212,12 @@ namespace Workflow.Notifications
 
                     client.Send(msg);
                 }
+
+                Log.Info($"Email notifications sent for task { finalTask.Id }, to { msg.To }");
             }
             catch (Exception e)
             {
-                Log.Error("Error sending notifications", e);
+                Log.Error($"Error sending notifications for task { finalTask.Id }", e);
             }
         }
 
