@@ -38,6 +38,12 @@ namespace Workflow.Repositories.Interfaces
         List<WorkflowInstancePoco> GetAllInstances();
 
         /// <summary>
+        /// Get all workflow instances where status is NOT cancelled, errored or approved
+        /// </summary>       
+        /// <returns></returns>
+        List<WorkflowInstancePoco> GetAllActiveInstances();
+
+        /// <summary>
         /// Get all workflow instances, regardless of status, for the given node id
         /// </summary>       
         /// <param name="nodeId"></param>

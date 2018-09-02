@@ -15,6 +15,8 @@ namespace Workflow.Services.Interfaces
         List<WorkflowInstance> ConvertToWorkflowInstanceList(List<WorkflowInstancePoco> instance);
         List<WorkflowInstance> GetFilteredPagedInstancesForDateRange(DateTime oldest, int? count, int? page, string filter = "");
 
+        Dictionary<int, bool> IsActive(IEnumerable<int> ids);
+
         WorkflowInstancePoco GetByGuid(Guid guid);
 
         int CountPending();

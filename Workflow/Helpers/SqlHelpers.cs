@@ -32,6 +32,8 @@
                             LEFT JOIN WorkflowUserGroups
                             on WorkflowTaskInstance.GroupId = WorkflowUserGroups.GroupId
                             ORDER BY WorkflowInstance.CreatedDate DESC";
+        public const string AllActiveInstances = @"SELECT * FROM WorkflowInstance 
+                            WHERE Status IN (2, 3, 4, 7)";
         public const string AllInstancesForNode = @"SELECT * FROM WorkflowInstance 
                             LEFT JOIN WorkflowTaskInstance
                             on WorkflowTaskInstance.WorkflowInstanceGuid = WorkflowInstance.Guid

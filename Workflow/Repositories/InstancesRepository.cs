@@ -71,6 +71,15 @@ namespace Workflow.Repositories
         }
 
         /// <summary>
+        /// Get all active workflow instances
+        /// </summary>
+        /// <returns>A list of objects of type <see cref="WorkflowInstancePoco"/></returns>
+        public List<WorkflowInstancePoco> GetAllActiveInstances()
+        {
+            return _database.Fetch<WorkflowInstancePoco>(SqlHelpers.AllActiveInstances);
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="nodeId"></param>

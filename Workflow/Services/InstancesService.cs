@@ -130,6 +130,22 @@ namespace Workflow.Services
         }
 
         /// <summary>
+        /// Check the status of a set of nodes - do they have a current workflow process?
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public Dictionary<int, bool> IsActive(IEnumerable<int> ids)
+        {
+            List<WorkflowInstancePoco> allInstances = _repo.GetAllActiveInstances();
+
+            Dictionary<int, bool> response = ids.ToDictionary(
+                k => k, 
+                v => allInstances.Any(i => i.NodeId == v));
+
+            return response;
+        }
+
+        /// <summary>
         /// Converts a list of instance pocos into UI-friendly instance models
         /// </summary>
         /// <param name="instances"></param>
