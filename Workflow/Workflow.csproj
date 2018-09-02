@@ -41,6 +41,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\app.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\importexport.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.contenttypeflow.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.listview.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\rgrove-lazyload\lazyload.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\preview\app.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\preview\preview.loader.prod.js" />

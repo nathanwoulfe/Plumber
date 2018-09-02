@@ -2,6 +2,14 @@
 
 @import "../lib/highcharts/highcharts.scss";
 
+// modify the icon on default listviews when the node is active
+.active-workflow .umb-table-cell:first-child::before {
+    font-size: 16px;
+    padding-left: 9px;
+    padding-top: 0px;
+    content: '\e117';
+} 
+
 .workflow {
     color: #303033;
 

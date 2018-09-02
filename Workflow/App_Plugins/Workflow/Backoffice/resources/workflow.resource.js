@@ -63,8 +63,9 @@
 
             getNodePendingTasks: id => request('GET', urls.tasks + 'node/pending/' + id),
 
-            getTasks: id => request('GET', url.tasks + 'get/' + id),
+            getTasks: id => request('GET', urls.tasks + 'get/' + id),
 
+            getStatus: ids => request('GET', urls.instances + 'status/' + ids),
 
             /* workflow actions */
             initiateWorkflow: (nodeId, comment, publish) =>

@@ -27,6 +27,7 @@
     "~/App_Plugins/workflow/backoffice/directives/workflow.buttongroup.directive.js",
     "~/App_Plugins/workflow/backoffice/directives/workflow.comments.directive.js",
     "~/App_Plugins/workflow/backoffice/directives/workflow.linechart.directive.js",
+    "~/App_Plugins/workflow/backoffice/directives/workflow.listview.directive.js",
     "~/App_Plugins/workflow/backoffice/directives/workflow.tasks.directive.js",
     "~/App_Plugins/workflow/backoffice/directives/workflow.instance.directive.js",
     "~/App_Plugins/workflow/backoffice/directives/workflow.progressstep.directive.js",
