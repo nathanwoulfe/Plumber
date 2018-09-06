@@ -123,6 +123,7 @@ namespace Workflow.Services
                     Status = taskInstance.Status,
                     StatusName = taskInstance.StatusName,
                     CssStatus = taskInstance.StatusName.ToLower().Replace(' ', '-'),
+                    InstanceStatus = instance.WorkflowStatus.ToString().ToLower(),
 
                     NodeId = instance.NodeId,
                     NodeName = instance.Node.Name,

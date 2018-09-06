@@ -18,7 +18,7 @@
                     <span class="counter">Stage {{ $index + 1 }}</span>
                 </div>
                 <div class="history-tasks">
-                    <div class="history-task" ng-repeat="t in taskCollection | orderBy: 'id'">
+                    <div class="history-task" ng-repeat="t in taskCollection | orderBy: '-taskId'">
                         <i class="icon icon-{{ t | iconName }} {{ t.cssStatus }}"></i>
                         <div ng-switch on="t.status">
                             <div ng-switch-when="7">

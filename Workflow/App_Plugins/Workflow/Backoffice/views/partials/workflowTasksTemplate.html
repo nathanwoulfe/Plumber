@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="umb-table-body">
-                <div class="table-row-outer {{ item.cssStatus }}" ng-repeat="item in items track by $index">
+                <div class="table-row-outer" ng-repeat="item in items track by $index">
                     <div class="umb-table-row">
                         <div class="umb-table-cell">
                             <i class="umb-table-body__icon icon-document {{ item.type | lowercase }}"></i>
@@ -71,16 +71,14 @@
                             </workflow-button-group>
                         </div>
                     </div>
-                    <div class="workflow-progress">
-                        <div class="progress-step" ng-class="{ 'done' : item.currentStep > p.permission, 'current' : item.currentStep === p.permission, 'rejected' : item.cssStatus === 'rejected' && item.currentStep === p.permission }" style="width: calc(100% / {{ item.permissions.length }})" ng-repeat="p in item.permissions track by $index | orderBy: 'permission'">
-                            <span class="marker"></span>
-                            <span class="tooltip">
-                                <span class="tooltip-done">Approved:</span>
-                                <span class="tooltip-current">Pending:</span>
-                                <span class="tooltip-rejected">Rejected:</span>
-                                {{ p.userGroup.name }}
-                            </span>
-                        </div>
+                    <div class="workflow-progress {{ item.instanceStatus }}">
+                        <wf-progress-step
+                            task="p"
+                            status="item.cssStatus"
+                            total="item.permissions.length"
+                            current="item.currentStep"
+                            ng-repeat="p in item.permissions track by $index | orderBy: 'permission'">
+                        </wf-progress-step>
                     </div>
                 </div>
             </div>

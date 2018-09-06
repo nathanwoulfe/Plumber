@@ -38,6 +38,9 @@ namespace Workflow.Models
         [JsonProperty("statusName")]
         public string StatusName { get; set; }
 
+        [JsonProperty("instanceStatus")]
+        public string InstanceStatus { get; set; }
+
         [JsonProperty("cssStatus")]
         public string CssStatus { get; set; }
 

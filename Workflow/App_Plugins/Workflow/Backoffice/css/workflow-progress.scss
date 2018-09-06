@@ -1,11 +1,13 @@
 ﻿@import "_variables";
 
+$grey: #d9d9d9;
+
 // progress bar for the tasks dashboard
 .workflow-progress {
     padding: 10px;
-    border-top: 1px solid rgba(#d9d9d9, .25);
+    border-top: 1px solid rgba($grey, .25);
     display: flex;
-    position: relative;
+    position: relative;   
 }
 
 .umb-table-row:hover ~ .workflow-progress {
@@ -21,13 +23,19 @@
     text-align: center;
     position: relative;
 
+    &:last-child {
+        &::after {
+            width: 50%;
+        }
+    }
+
     &::before, &::after {
         content: '';
         width: 50%;
         height: 1px;
         position: absolute;
         top: 6px;
-        background: #d9d9d9;
+        background: $grey;
     }
 
     &::before {
@@ -36,6 +44,35 @@
 
     &::after {
         right: 0;
+        z-index: 1040;
+        width: 100%;
+        left: 50%;
+    }
+
+    &.done {
+        .marker {
+            background: $umbGreen;
+        }
+
+        &::before, &::after {
+            background: $umbGreen;
+        }
+
+        .icon-::before {
+            content: '\e165';
+        }
+    }
+
+    &.current {
+        .icon-::before {
+            content: '\e116';
+        }
+    }
+
+    &.rejected {
+        .icon-::before {
+            content: '\e1a4';
+        }
     }
 
     $states: 'done', 'notrequired', 'cancelled', 'current', 'rejected', 'resubmitted';
@@ -48,11 +85,11 @@
         $color: nth($colors, $i);
 
         &.#{$state} {
-            .tooltip-#{$state} {
+            .tooltip-#{$state} { 
                 display: block;
             }
 
-            .marker, .tooltip::after {
+            &:first-child::before, &:last-child::after, .marker, .tooltip::after {
                 background: $color;
             }
 
@@ -60,17 +97,45 @@
                 border-color: $color;
                 color: $color;
             }
-
-            &::before {
-                background: linear-gradient(90deg, #d9d9d9, $color);
-            }
-
-            &::after {
-                background: linear-gradient(90deg, $color, #d9d9d9);
-            }
         }
-    }    
+    }
 }
+
+.pendingapproval {
+    .done::after {
+        background: linear-gradient(90deg, $umbGreen, $umbPurple);
+    }
+
+    .current {
+        .marker {
+            background: $umbPurple;
+        }
+        &::after {
+            background: linear-gradient(90deg, $umbPurple, $grey);
+        }
+    }
+}
+
+.rejected {
+    .done::after {
+        background: linear-gradient(90deg, $umbGreen, $warning);
+    }
+
+    .current {
+        .marker {
+            background: $warning;
+        }
+
+        .tooltip {
+            border-color: $warning;
+            color: $warning;
+        }
+
+        &::after {
+            background: linear-gradient(90deg, $warning, $grey);
+        }
+    }
+} 
 
 .marker {
     display: block;
@@ -78,9 +143,10 @@
     height: 15px;
     border-radius: 50%;
     margin: 0 auto;
-    background: #d9d9d9;
+    background: $grey;
     position: relative;
     cursor: pointer;
+    z-index: 1050;
 
     &:hover + .tooltip {
         display: block;
@@ -90,22 +156,33 @@
         opacity: 1;
     }
 
+    [class^=icon-] {
+        width: 15px;
+        height: 12px;
+        position: absolute;
+        top: -2px;
+        left: 0px;
+        z-index: 1050;
+        color: #fff;
+        font-size: 10px;
+    }
+
     + .tooltip {
         display: none;
         background: #f8f8f8;
         padding: 5px;
         color: #817f85;
-        border: 1px solid #d9d9d9;
+        border: 1px solid $grey;
 
         > span {
-            text-transform:uppercase;
+            text-transform: uppercase;
         }
 
         &::after {
             content: '';
             width: 1px;
             height: 10px;
-            background: #d9d9d9;
+            background: $grey;
             position: absolute;
             top: 100%;
             left: calc(50% - 1px);
