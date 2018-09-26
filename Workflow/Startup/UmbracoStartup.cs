@@ -19,10 +19,10 @@ namespace Workflow.Startup
 
         protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext context)
         {
-            //Check to see if appSetting AnalyticsStartupInstalled is true or even present
+            //Check to see if appSetting is true or even present
             string installAppSetting = WebConfigurationManager.AppSettings[AppSettingKey];
 
-            if (string.IsNullOrEmpty(installAppSetting) || installAppSetting != true.ToString())
+            if (string.IsNullOrEmpty(installAppSetting))
             {
                 //Check to see if section needs to be added
                 Installer.AddSection(context);
