@@ -1,5 +1,5 @@
 # version format
-version: 0.9.4.{build}
+version: 1.0.0.{build}
 
 image: Visual Studio 2017
 
@@ -13,7 +13,6 @@ install:
   - set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe;C:\Ruby22\bin;%PATH%
   - cmd: gem install sass
   - cmd: npm install -g grunt-cli
-  - cmd: set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
   - cmd: set UMBRACO_PACKAGE_MIN_VERSION=7.9.0
   - cmd: cd BuildPackage
   - cmd: Build.bat
@@ -42,9 +41,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v0.9.4
-    release: Release 0.9.4
-    description: "Min Umbraco version was incorrectly set to 7.10 - should be 7.9"
+    tag: v1.0.0
+    release: Release 1.0.0
+    description: "About fucking time. V1. No more beta."
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
