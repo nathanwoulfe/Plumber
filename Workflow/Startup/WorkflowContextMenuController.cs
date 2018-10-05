@@ -22,9 +22,7 @@ namespace Workflow.Startup
 
             if (nodeId == Constants.System.Root || nodeId == Constants.System.RecycleBinContent) return;
 
-            IPublishedContent node = UmbracoContext.Current.ContentCache.GetById(nodeId);
-
-            if (node == null) return;
+            IContent node = ApplicationContext.Current.Services.ContentService.GetById(nodeId);
 
             const string dialogPath = "/App_Plugins/workflow/Backoffice/views/dialogs/";
 

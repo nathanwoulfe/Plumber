@@ -177,7 +177,7 @@
 
                         // if the workflow status is rejected, the original author should be able to edit and resubmit
                         const currentTask =
-                            resp.items.reduce((prev, current) => (prev.taskId > current.taskId) ? prev : current);
+                            resp.items.reduce((prev, current) => prev.taskId > current.taskId ? prev : current);
 
                         this.rejected = currentTask.cssStatus === 'rejected';
 
@@ -214,6 +214,7 @@
                     workflowConfigured = false;
                     this.buttonGroup = defaultButtons;
                 }
+                
             }
         };
 

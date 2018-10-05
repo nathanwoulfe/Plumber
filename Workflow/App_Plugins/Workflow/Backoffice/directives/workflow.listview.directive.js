@@ -44,9 +44,9 @@
 
                 scope.$watch(() => scope.listViewResultSet.items,
                     (a, b) => {
-                        if (a.length && a !== b) {
+                        if (a && a.length && a !== b) {
                             scope.items = a;
-                            scope.ids = scope.items.map(i => i.id);
+                            scope.ids = scope.items.map(i => i.id); 
 
                             workflowResource.getStatus(scope.ids.join(','))
                                 .then(resp => {
