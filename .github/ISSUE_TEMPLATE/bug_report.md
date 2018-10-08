@@ -25,5 +25,8 @@ If applicable, add screenshots to help explain your problem.
  - Browser [e.g. chrome, safari]
  - Version [e.g. 22]
 
+**Plumber version**
+Which version of Plumber does the bug occur in?
+
 **Additional context**
 Add any other context about the problem here.
