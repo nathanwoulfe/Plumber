@@ -4,6 +4,7 @@
         <key alias="workflow">Workflow</key>
     </area>
     <area alias="workflow">
+        <key alias="ok">Ok</key>
         <key alias="approveButton">Approve</key>
         <key alias="approveButtonLong">Approve changes</key>
         <key alias="editButton">Go to node</key>
@@ -60,6 +61,9 @@
         <key alias="groupDescriptionDetail">Describe the group's role and responsibilities. This value is only displayed here</key>
 
         <key alias="offlineApprovalDescription">Set to true to allow users in this group to approve changes without logging in to the backoffice. Refer to the documentation for full details and setup.</key>
+
+        <key alias="notConfigured">Workflow not configured</key>
+        <key alias="notConfiguredDescription">Please ensure a workflow has been set on the content nodes listed below:</key>
 
     </area>
 </language>

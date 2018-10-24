@@ -22,6 +22,7 @@
             instances: urlBase + 'instances/',
             actions: urlBase + 'actions/',
             logs: urlBase + 'logs/',
+            config: urlBase + 'config/',
         };
 
         const service = {
@@ -67,6 +68,8 @@
 
             getStatus: ids => request('GET', urls.instances + 'status/' + ids),
 
+            workflowConfigured: () => request('GET', urls.config + 'workflowconfigured'),
+
             /* workflow actions */
             initiateWorkflow: (nodeId, comment, publish) =>
                 request('POST',
@@ -107,10 +110,10 @@
 
             doExport: () => request('GET', urlBase + 'export'),
 
-            /*** SAVE PERMISSIONS ***/
-            saveConfig: p => request('POST', urlBase + 'config/saveconfig', p),
+            /* SAVE PERMISSIONS */
+            saveConfig: p => request('POST', urlBase.config + '/saveconfig', p),
 
-            saveDocTypeConfig: p => request('POST', urlBase + 'config/savedoctypeconfig', p),
+            saveDocTypeConfig: p => request('POST', urlBase.config + '/savedoctypeconfig', p),
 
             checkExclusion: (excludedNodes, path) => {
                 if (!excludedNodes) {

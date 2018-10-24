@@ -34,7 +34,7 @@ $grey: #d9d9d9;
         width: 50%;
         height: 1px;
         position: absolute;
-        top: 6px;
+        top: 10px;
         background: $grey;
     }
 
@@ -50,7 +50,7 @@ $grey: #d9d9d9;
     }
 
     &.done {
-        .marker {
+        .marker { 
             background: $umbGreen;
         }
 
@@ -139,8 +139,8 @@ $grey: #d9d9d9;
 
 .marker {
     display: block;
-    width: 15px;
-    height: 15px;
+    width: 21px;
+    height: 21px;
     border-radius: 50%;
     margin: 0 auto;
     background: $grey;
@@ -157,14 +157,14 @@ $grey: #d9d9d9;
     }
 
     [class^=icon-] {
-        width: 15px;
-        height: 12px;
+        width: 21px;
+        height: 21px;
         position: absolute;
-        top: -2px;
-        left: 0px;
+        top: 0;
+        left: 0;
         z-index: 1050;
         color: #fff;
-        font-size: 10px;
+        font-size: 16px;
     }
 
     + .tooltip {

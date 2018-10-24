@@ -41,6 +41,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\app.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\dashboards\importexport.dashboard.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.contenttypeflow.controller.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\controllers\workflow.notconfigured.controller.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.listview.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\lib\rgrove-lazyload\lazyload.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\preview\app.js" />
@@ -55,6 +56,7 @@
     <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.contenttypeflow.overlay.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.instance.directive.js" />
     <Content Include="App_Plugins\Workflow\Backoffice\directives\workflow.progressstep.directive.js" />
+    <Content Include="App_Plugins\Workflow\Backoffice\views\dialogs\workflow.notconfigured.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\partials\workflowInstanceTemplate.html" />
     <Content Include="App_Plugins\Workflow\Backoffice\views\workflow.importexportdashboard.html" />
     <Compile Include="App_Start\WorkflowAuthenticationMiddleware.cs" />

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web.Http;
 using log4net;
+using Umbraco.Core.Models;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
@@ -21,6 +23,29 @@ namespace Workflow.Api
         public ConfigController()
         {
             _configService = new ConfigService();
+        }
+        
+        /// <summary>
+        /// Check root nodes have a group assigned
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("workflowconfigured")]
+        public IHttpActionResult WorkflowConfigured()
+        {
+            IEnumerable<IPublishedContent> rootNodes = Umbraco.TypedContentAtRoot();
+            List<string> response = new List<string>();
+
+            foreach (IPublishedContent node in rootNodes)
+            {
+                List<UserGroupPermissionsPoco> permissions = _configService.GetPermissionsForNode(node.Id);
+                if (!permissions.Any())
+                {
+                    response.Add(node.Name);
+                }
+            }
+
+            return Json(response, ViewHelpers.CamelCase);
         }
 
         /// <summary>

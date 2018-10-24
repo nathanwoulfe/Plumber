@@ -1,0 +1,8 @@
+﻿<div ng-controller="Workflow.NotConfigured.Controller as vm">
+    <h4><localize key="workflow_notConfigured">Warning! Workflow is not fully configured</localize></h4>
+    <p><localize key="workflow_notConfiguredDescription">Please ensure a workflow has been set on the content nodes listed below:</localize></p>
+    <ul style="margin-bottom: 10px;list-style: disc">
+        <li ng-repeat="n in vm.nodeNames" ng-bind="n"></li>
+    </ul>
+    <button class="btn btn-success" ng-click="vm.discard(notification)"><localize key="@workflow_ok">Ok</localize></button>
+</div>
