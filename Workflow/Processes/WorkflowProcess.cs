@@ -381,7 +381,8 @@ namespace Workflow.Processes
                 {
                     // If nothing set for the content type recurse up the tree until we find something
                     IPublishedContent node = _utility.GetPublishedContent(nodeId);
-                    if (node.Level != 1)
+                    // if we hit the homepage, don't go any higher
+                    if (node.Level > 1)
                     {
                         SetApprovalGroup(taskInstance, node.Parent.Id, nodeId);
                     }

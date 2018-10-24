@@ -16,6 +16,7 @@ namespace Workflow.Services
     public class ConfigService : IConfigService
     {
         private readonly IPocoRepository _repo;
+
         public static event EventHandler<ConfigEventArgs> Updated;
 
         public ConfigService()
@@ -96,7 +97,6 @@ namespace Workflow.Services
         public List<UserGroupPermissionsPoco> GetPermissionsForNode(int nodeId, int contentTypeId = 0)
         {
             List<UserGroupPermissionsPoco> permissions = _repo.PermissionsForNode(nodeId, contentTypeId);
-
             return permissions;
         }
 
@@ -141,11 +141,13 @@ namespace Workflow.Services
                 {
                     node = node.Parent;
                 }
-
-                cont = false;
+                else
+                {
+                    cont = false;
+                }
             }
 
-            return null;
+            return new List<UserGroupPermissionsPoco>();
         }
     }
 }
