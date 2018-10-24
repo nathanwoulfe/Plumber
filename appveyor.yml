@@ -41,9 +41,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v1.0.1
-    release: Release 1.0.1
-    description: "Fix editor drawer buttons for new pages."
+    tag: v1.0.2
+    release: Release 1.0.2
+    description: "Fix recursion when checking node permissions, improve backoffice notifications when no workflow set on the root node."
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
