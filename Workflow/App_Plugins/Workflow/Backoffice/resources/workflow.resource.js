@@ -111,9 +111,9 @@
             doExport: () => request('GET', urlBase + 'export'),
 
             /* SAVE PERMISSIONS */
-            saveConfig: p => request('POST', urlBase.config + '/saveconfig', p),
+            saveConfig: p => request('POST', urls.config + '/saveconfig', p),
 
-            saveDocTypeConfig: p => request('POST', urlBase.config + '/savedoctypeconfig', p),
+            saveDocTypeConfig: p => request('POST', urls.config + '/savedoctypeconfig', p),
 
             checkExclusion: (excludedNodes, path) => {
                 if (!excludedNodes) {
