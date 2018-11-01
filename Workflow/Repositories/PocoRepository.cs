@@ -118,6 +118,12 @@ namespace Workflow.Repositories
                 (new UserToGroupForPermissionsRelator().MapIt, SqlHelpers.PermissionsByNode, nodeId, contentTypeId);
         }
 
+        public List<UserGroupPermissionsPoco> AllPermissionsForNode(string[] path, int contentTypeId)
+        {
+            return _database.Fetch<UserGroupPermissionsPoco, UserGroupPoco, User2UserGroupPoco, UserGroupPermissionsPoco>
+                (new UserToGroupForPermissionsRelator().MapIt, SqlHelpers.AllPermissionsForNode, path, contentTypeId);
+        }
+
         public List<UserGroupPermissionsPoco> GetAllPermissions()
         {
             List<UserGroupPermissionsPoco> permissions = _database.Fetch<UserGroupPermissionsPoco>("SELECT * FROM WorkflowUserGroupPermissions");

@@ -20,6 +20,7 @@ namespace Workflow.Repositories.Interfaces
         IEnumerable<UserGroupPoco> GetUserGroups();
 
         List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int contentTypeId = 0);
+        List<UserGroupPermissionsPoco> AllPermissionsForNode(string[] path, int contentTypeId);
         List<UserGroupPermissionsPoco> GetAllPermissions();
 
         void AddUserToGroup(User2UserGroupPoco user);

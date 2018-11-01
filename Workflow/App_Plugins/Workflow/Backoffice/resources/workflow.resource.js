@@ -7,7 +7,7 @@
         let activityFilter;
 
         const urlBase = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/backoffice/api/workflow/';
-
+        console.log(urlBase);
         // are there common elements between two arrays?
         const common = (arr1, arr2) => arr1.some(el => arr2.indexOf(el) > -1);
 
@@ -111,9 +111,9 @@
             doExport: () => request('GET', urlBase + 'export'),
 
             /* SAVE PERMISSIONS */
-            saveConfig: p => request('POST', urlBase.config + '/saveconfig', p),
+            saveConfig: p => request('POST', urls.config + '/saveconfig', p),
 
-            saveDocTypeConfig: p => request('POST', urlBase.config + '/savedoctypeconfig', p),
+            saveDocTypeConfig: p => request('POST', urls.config + '/savedoctypeconfig', p),
 
             checkExclusion: (excludedNodes, path) => {
                 if (!excludedNodes) {
@@ -150,7 +150,7 @@
                 // first is -1, last is the current node
                 path = path.split(',');
                 path.shift();
-                path.pop();
+                path.pop(); 
 
                 const resp = [];
 

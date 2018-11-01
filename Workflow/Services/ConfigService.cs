@@ -118,32 +118,40 @@ namespace Workflow.Services
         private List<UserGroupPermissionsPoco> GetPermissionsForNode(IPublishedContent node)
         {
             if (node == null) return null;
-            int nodeId = node.Id;
+            //int nodeId = node.Id;
 
-            var cont = true;
-            while (cont)
+            // todo => fetch all permissions for node, its ancestors and the content type, in one db call
+            // first, check the current node
+            // then the content type
+            // then work back through the node path
+
+            // skip 1 to ignore root (-1)
+            string[] path = node.Path.Split(',').Skip(1).ToArray();
+            // get all permissions matching either this node, its type, or an ancestor id
+            List<UserGroupPermissionsPoco> allPermissions = _repo.AllPermissionsForNode(path, node.ContentType.Id);
+
+            List<UserGroupPermissionsPoco> forNode = allPermissions.Where(p => p.NodeId == node.Id)?.ToList();
+            if (forNode.Any())
             {
-                // check the node for set permissions
-                // return them if they exist, otherwise check for content type, then the parent if none set for the type
-                List<UserGroupPermissionsPoco> permissions = _repo.PermissionsForNode(node.Id);
-                if (permissions.Any())
-                {
-                    return permissions;
-                }
+                return forNode;
+            }
 
-                if (nodeId == node.Id)
-                {
-                    permissions = _repo.PermissionsForNode(0, node.ContentType.Id);
-                    if (permissions.Any()) return permissions;
-                }
+            List<UserGroupPermissionsPoco> forType =
+                allPermissions.Where(p => p.ContentTypeId == node.ContentType.Id)?.ToList();
 
-                if (node.Level > 1)
+            if (forType.Any())
+            {
+                return forType;
+            }
+
+            // if we're here, reverse the path and check each node in turn
+            IEnumerable<int> reversedPath = path.Reverse().Select(int.Parse);
+            foreach (int ancestorId in reversedPath)
+            {
+                List<UserGroupPermissionsPoco> forAncestor = allPermissions.Where(x => x.NodeId == ancestorId)?.ToList();
+                if (forAncestor.Any())
                 {
-                    node = node.Parent;
-                }
-                else
-                {
-                    cont = false;
+                    return forAncestor;
                 }
             }
 
