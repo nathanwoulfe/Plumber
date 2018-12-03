@@ -2,6 +2,7 @@
 using Umbraco.Core.Logging;
 using Umbraco.Core.Persistence;
 using Workflow.Models;
+using Constants = Workflow.Helpers.Constants;
 
 namespace Workflow.Startup
 {
@@ -9,35 +10,35 @@ namespace Workflow.Startup
     {
         protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
         {            
-            var dbContext = applicationContext.DatabaseContext;
+            DatabaseContext dbContext = applicationContext.DatabaseContext;
             var helper = new DatabaseSchemaHelper(dbContext.Database, LoggerResolver.Current.Logger, dbContext.SqlSyntax);
 
-            if (!helper.TableExist("WorkflowSettings"))
+            if (!helper.TableExist(Constants.SettingsTable))
             {
                 helper.CreateTable<WorkflowSettingsPoco>(false);
             }
 
-            if (!helper.TableExist("WorkflowUserGroups"))
+            if (!helper.TableExist(Constants.UserGroupsTable))
             {
                 helper.CreateTable<UserGroupPoco>(false);
             }
 
-            if (!helper.TableExist("WorkflowUser2UserGroup"))
+            if (!helper.TableExist(Constants.User2UserGroupTable))
             {
                 helper.CreateTable<User2UserGroupPoco>(false);
             }
 
-            if (!helper.TableExist("WorkflowUserGroupPermissions"))
+            if (!helper.TableExist(Constants.PermissionsTable))
             {
                 helper.CreateTable<UserGroupPermissionsPoco>(false);
             }
 
-            if (!helper.TableExist("WorkflowInstance"))
+            if (!helper.TableExist(Constants.InstanceTable))
             {
                 helper.CreateTable<WorkflowInstancePoco>(false);
             }
 
-            if (!helper.TableExist("WorkflowTaskInstance"))
+            if (!helper.TableExist(Constants.TaskInstanceTable))
             {
                 helper.CreateTable<WorkflowTaskInstancePoco>(false);
             }

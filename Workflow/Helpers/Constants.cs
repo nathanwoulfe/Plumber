@@ -7,6 +7,15 @@
         public const string VersionKey = "plumberVersion";
         public const string DocsKey = "plumberDocs";
 
+        //table names
+        public const string SettingsTable = "WorkflowSettings";
+        public const string UserGroupsTable = "WorkflowUserGroups";
+        public const string User2UserGroupTable = "WorkflowUser2UserGroup";
+        public const string PermissionsTable = "WorkflowUserGroupPermissions";
+        public const string InstanceTable = "WorkflowInstance";
+        public const string TaskInstanceTable = "WorkflowTaskInstance";
+
+        // github urls
         public const string LatestVersionUrl = "https://api.github.com/repos/nathanwoulfe/plumber/releases/latest";
         public const string DocsUrl = "https://api.github.com/repos/nathanwoulfe/plumber/contents/Workflow/DOCS.md";
         public const string MdMediaType = "application/vnd.github.v3.html";
@@ -35,5 +44,7 @@
         public const string PreviewUserName = "WorkflowPreview";
         public const string PreviewRouteBase = "/workflow-preview/";
         public const string PreviewFileFolder = "/app_plugins/workflow/preview";
+
+
     }
 }
