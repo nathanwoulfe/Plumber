@@ -88,7 +88,7 @@ namespace Workflow.Helpers
             }
 
             IContent c = _contentService.GetById(id);
-            return c != null ? c.Name : MagicStrings.NoNode;
+            return c != null ? c.Name : Constants.NoNode;
         }
 
         /// <summary>

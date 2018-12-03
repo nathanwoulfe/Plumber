@@ -7,7 +7,7 @@ using Workflow.Helpers;
 
 namespace Workflow.Migrations
 {
-	[Migration("0.5.0", 1, MagicStrings.Name)]
+	[Migration("0.5.0", 1, Constants.Name)]
     public class VersionZeroFiveZero : MigrationBase
     {
 

@@ -4,14 +4,14 @@ using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Persistence.Migrations;
 using Umbraco.Core.Persistence.SqlSyntax;
-using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
+using Constants = Workflow.Helpers.Constants;
 
 namespace Workflow.Migrations
 {
-    [Migration("0.4.0", 1, MagicStrings.Name)]
+    [Migration("0.4.0", 1, Constants.Name)]
     public class VersionZeroFourZero : MigrationBase
     {
         private static readonly IInstancesService InstancesService = new InstancesService();

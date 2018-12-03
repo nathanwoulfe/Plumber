@@ -43,11 +43,11 @@ namespace Workflow.Models
 
         [ResultColumn]
         [JsonProperty("contentTypeName")]
-        public string ContentTypeName => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId)?.Name : MagicStrings.NoContentType;
+        public string ContentTypeName => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId)?.Name : Constants.NoContentType;
 
         [ResultColumn]
         [JsonProperty("contentTypeAlias")]
-        public string ContentTypeAlias => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId)?.Alias : MagicStrings.NoContentType;
+        public string ContentTypeAlias => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId)?.Alias : Constants.NoContentType;
 
         [ResultColumn]
         [JsonProperty("userGroup")]

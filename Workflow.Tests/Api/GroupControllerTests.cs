@@ -58,7 +58,7 @@ namespace Workflow.Tests.Api
             object content = await (await _groupsController.Post(model)).GetContent();
 
             Assert.Equal(200, (int)content.Get("status"));
-            Assert.Equal(MagicStrings.GroupCreated.Replace("{name}", name), content.Get("msg"));
+            Assert.Equal(Constants.GroupCreated.Replace("{name}", name), content.Get("msg"));
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Workflow.Tests.Api
 
             object result = await (await _groupsController.Put(group)).GetContent();
 
-            Assert.Equal(MagicStrings.GroupUpdated.Replace("{name}", "PublisherUpdated"), result.Get("msg"));
+            Assert.Equal(Constants.GroupUpdated.Replace("{name}", "PublisherUpdated"), result.Get("msg"));
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Workflow.Tests.Api
 
             object result = await(await _groupsController.Put(null)).GetContent();
 
-            Assert.Equal(MagicStrings.ErrorUpdatingGroup, result.Get("ExceptionMessage"));
+            Assert.Equal(Constants.ErrorUpdatingGroup, result.Get("ExceptionMessage"));
         }
 
         [Fact]
@@ -103,7 +103,7 @@ namespace Workflow.Tests.Api
 
             object result = await (await _groupsController.Put(group)).GetContent();
 
-            Assert.Equal(MagicStrings.GroupNameExists, result.Get("msg"));
+            Assert.Equal(Constants.GroupNameExists, result.Get("msg"));
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace Workflow.Tests.Api
             // delete the group using the returned group id
             object result = await (await _groupsController.Delete((int)content.Get("id"))).GetContent();
 
-            Assert.Equal(MagicStrings.GroupDeleted, result);
+            Assert.Equal(Constants.GroupDeleted, result);
 
             // what happens if the group doesnt exist?
             object result2 = await (await _groupsController.Delete(9999)).GetContent();
@@ -163,7 +163,7 @@ namespace Workflow.Tests.Api
             object content = await (await _groupsController.Post(model)).GetContent();
 
             Assert.Equal(200, content.Get("status"));
-            Assert.Equal(MagicStrings.GroupNameExists, content.Get("msg"));
+            Assert.Equal(Constants.GroupNameExists, content.Get("msg"));
         }
 
         /// <summary>
@@ -199,8 +199,8 @@ namespace Workflow.Tests.Api
             object content = await (await _groupsController.Get(int.MaxValue)).GetContent();
 
             Assert.NotNull(content);
-            Assert.Equal(MagicStrings.HttpResponseException, content.Get("ExceptionType"));
-            Assert.Equal(MagicStrings.ErrorGettingGroup.Replace("{id}", int.MaxValue.ToString()), content.Get("ExceptionMessage"));
+            Assert.Equal(Constants.HttpResponseException, content.Get("ExceptionType"));
+            Assert.Equal(Constants.ErrorGettingGroup.Replace("{id}", int.MaxValue.ToString()), content.Get("ExceptionMessage"));
         }
 
         /// <summary>
