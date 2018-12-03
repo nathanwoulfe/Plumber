@@ -109,5 +109,13 @@
                             on WorkflowUserGroupPermissions.GroupId = WorkflowUser2UserGroup.GroupId             
                             WHERE WorkflowUserGroupPermissions.NodeId = @0
                             AND WorkflowUserGroupPermissions.ContentTypeId = @1";
+
+        public const string AllPermissionsForNode = @"SELECT * FROM WorkflowUserGroupPermissions
+                            LEFT JOIN WorkflowUserGroups
+                            ON WorkflowUserGroups.GroupId = WorkflowUserGroupPermissions.GroupId           
+                            LEFT JOIN WorkflowUser2UserGroup
+                            on WorkflowUserGroupPermissions.GroupId = WorkflowUser2UserGroup.GroupId             
+                            WHERE WorkflowUserGroupPermissions.NodeId IN (@0)
+                            OR WorkflowUserGroupPermissions.ContentTypeId = @1";
     }
 }

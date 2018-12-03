@@ -7,7 +7,7 @@
         let activityFilter;
 
         const urlBase = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/backoffice/api/workflow/';
-
+        console.log(urlBase);
         // are there common elements between two arrays?
         const common = (arr1, arr2) => arr1.some(el => arr2.indexOf(el) > -1);
 
@@ -150,7 +150,7 @@
                 // first is -1, last is the current node
                 path = path.split(',');
                 path.shift();
-                path.pop();
+                path.pop(); 
 
                 const resp = [];
 
