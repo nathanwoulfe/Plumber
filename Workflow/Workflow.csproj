@@ -73,9 +73,10 @@
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
     <Compile Include="Helpers\Installer.cs" />
-    <Compile Include="Helpers\MagicStrings.cs" />
+    <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\Uninstaller.cs" />
     <Compile Include="Migrations\VersionZeroEightZero.cs" />
+    <Compile Include="Migrations\VersionOneOneZero.cs" />
     <Compile Include="Migrations\VersionZeroNineZero.cs" />
     <Compile Include="Models\WorkflowInstanceModel.cs" />
     <Compile Include="Repositories\InstancesRepository.cs" />

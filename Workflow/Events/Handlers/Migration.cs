@@ -7,7 +7,7 @@ using Umbraco.Core.Logging;
 using Umbraco.Core.Models;
 using Umbraco.Core.Persistence.Migrations;
 using Umbraco.Web;
-using Workflow.Helpers;
+using Constants = Workflow.Helpers.Constants;
 
 namespace Workflow.Events.Handlers
 {
@@ -22,7 +22,7 @@ namespace Workflow.Events.Handlers
         {
             var currentVersion = new SemVersion(0);
 
-            IEnumerable<IMigrationEntry> migrations = ApplicationContext.Current.Services.MigrationEntryService.GetAll(MagicStrings.Name);
+            IEnumerable<IMigrationEntry> migrations = ApplicationContext.Current.Services.MigrationEntryService.GetAll(Constants.Name);
             IMigrationEntry latest = migrations.OrderByDescending(x => x.Version).FirstOrDefault();
 
             if (null != latest)
@@ -30,7 +30,7 @@ namespace Workflow.Events.Handlers
                 currentVersion = latest.Version;
             }
 
-            var targetVersion = new SemVersion(0, 9);
+            var targetVersion = new SemVersion(1, 1);
             if (targetVersion == currentVersion)
             {
                 return;
@@ -41,7 +41,7 @@ namespace Workflow.Events.Handlers
                 ApplicationContext.Current.ProfilingLogger.Logger,
                 currentVersion,
                 targetVersion,
-                MagicStrings.Name);
+                Constants.Name);
 
             try
             {
