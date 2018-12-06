@@ -1,5 +1,5 @@
 # version format
-version: 1.0.3.{build}
+version: 1.0.4.{build}
 
 image: Visual Studio 2017
 
@@ -41,9 +41,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v1.0.3
-    release: Release 1.0.3
-    description: "Fixes incorrect API url"
+    tag: v1.0.4
+    release: Release 1.0.4
+    description: "Cancel button in editor drawer was missing for admin users when the previous change had been rejected. Button is not missing anymore."
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
