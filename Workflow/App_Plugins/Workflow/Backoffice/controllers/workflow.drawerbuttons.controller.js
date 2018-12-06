@@ -95,7 +95,7 @@
             this.task = task || this.task;
             this.canAction = false;
 
-            this.adminUser = user.allowedSections.indexOf('workflow') !== -1;
+            this.isAdmin = user.allowedSections.indexOf('workflow') !== -1;
             const currentTaskUsers = this.task.permissions[this.task.currentStep].userGroup.usersSummary;
 
             if (currentTaskUsers.indexOf(`|${user.id}|`) !== -1) {
@@ -112,13 +112,13 @@
                 // primary button is approve when the user is in the approving group and task is not rejected
                 else if (this.canAction && !this.rejected) {
                     this.buttonGroup.defaultButton = buttons.approveButton;
-                } else if (this.userCanEdit
-                ) { // rejected tasks show the resubmit, only when the user is the original author
+                } else if (this.userCanEdit) {
+                    // rejected tasks show the resubmit, only when the user is the original author
                     this.buttonGroup.defaultButton = buttons.resubmitButton;
                 } else { // all other cases see the detail button
                     this.buttonGroup.defaultButton = buttons.detailButton;
                 }
-
+                 
                 this.buttonGroup.subButtons = [];
 
                 // if the user is in the approving group, and the task is not rejected, add reject to sub buttons
