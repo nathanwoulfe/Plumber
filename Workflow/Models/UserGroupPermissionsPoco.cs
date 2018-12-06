@@ -37,6 +37,11 @@ namespace Workflow.Models
         [JsonProperty("permission")]
         public int Permission { get; set; }
 
+        [Column("Condition")]
+        [NullSetting(NullSetting = NullSettings.Null)]
+        [JsonProperty("condition")]
+        public string Condition { get; set; }
+
         [ResultColumn]
         [JsonProperty("nodeName")]
         public string NodeName => NodeId > 0 ? _utility.GetNodeName(NodeId) : string.Empty;

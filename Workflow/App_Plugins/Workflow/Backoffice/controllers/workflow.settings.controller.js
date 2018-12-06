@@ -68,6 +68,11 @@
                 this.groups.forEach(g => {
                     g.permissions.forEach(p => {
                         if (p.contentTypeId > 0) {
+
+                            if (p.condition) {
+                                p.condition = p.condition.split(',');
+                            }
+
                             this.docTypes.forEach(dt => {
                                 if (dt.id === p.contentTypeId) {
                                     if (!dt.approvalPath) {
@@ -99,11 +104,20 @@
                 if (dt.approvalPath && dt.approvalPath.length) {
                     permissions[i] = [];
                     dt.approvalPath.forEach((path, ii) => {
-                        permissions[i].push({
+                        const p = {
                             contentTypeId: dt.id,
                             permission: ii,
                             groupId: path.groupId
-                        });
+                        };
+
+                        const permissionsForStep =
+                            path.permissions.filter(perm => perm.contentTypeId === dt.id && perm.permission === ii)[0];
+
+                        if (permissionsForStep.condition) {
+                            p.condition = permissionsForStep.condition.join(',');
+                        }
+
+                        permissions[i].push(p);
                     });
                 }
             });
@@ -136,14 +150,14 @@
                 submit: model => {
 
                     // map the updated approval path back onto the doctypes collection 
-                    if (model.approvalPath.length) {
+                    if (model.type.approvalPath.length) {
 
                         // multi has a value when adding - can add more than one
                         const ids = model.type ? [model.type.id] : model.multi.map(t => t.id); 
 
                         this.docTypes.forEach(v => {
                             if (ids.indexOf(v.id) !== -1) {
-                                v.approvalPath = model.approvalPath;
+                                v.approvalPath = model.type.approvalPath;
                             }
                         });
                     }

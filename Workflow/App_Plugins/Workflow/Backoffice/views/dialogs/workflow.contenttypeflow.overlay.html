@@ -30,6 +30,30 @@
                     </div>
                 </li>
             </ul>
+            <h5>Conditional stages</h5>
+            <button class="btn btn-default" style="margin-bottom:10px" ng-click="vm.addCondition()" data-element="workflow-overlay__contenttype-addcondition">Add condition</button>
+            <ul class="current-flow">
+                <li class="umb-node-preview" ng-repeat="c in vm.conditions track by $index">
+                    <div class="umb-node-preview__content conditional-group">
+                        Include
+                        <div class="fancy-select">
+                            <select class="flow-select" ng-model="c.groupId" ng-options="g.groupId as g.name for g in vm.approvalPath" data-element="workflow-overlay__contenttype-conditionalgroup">
+                                <option selected disabled>--- Add ---</option>
+                            </select>
+                        </div>
+                        when 
+                        <div class="fancy-select">
+                            <select class="flow-select" ng-model="c.condition" ng-change="vm.setCondition(c.groupId, c.condition)" ng-options="p.key as p.name for p in vm.properties" data-element="workflow-overlay__contenttype-conditionalproperty">
+                                <option selected disabled>--- Add ---</option>
+                            </select>
+                        </div>
+                        has changed
+                    </div>
+                    <div class="umb-node-preview__actions">
+                        <span class="umb-node-preview__action" ng-click="vm.removeCondition($event, $index, c.condition, c.groupId)"><i class="icon icon-trash"></i></span>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
