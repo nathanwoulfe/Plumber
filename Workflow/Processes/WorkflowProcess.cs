@@ -315,8 +315,14 @@ namespace Workflow.Processes
         /// <param name="initialId"></param>
         private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId = int.MinValue, int initialId = int.MinValue)
         {
-            nodeId = nodeId == int.MinValue ? taskInstance.WorkflowInstance.NodeId : nodeId;
-            initialId = initialId == int.MinValue ? taskInstance.WorkflowInstance.NodeId : initialId;
+            if (nodeId == int.MinValue)
+            {
+                nodeId = taskInstance.WorkflowInstance.NodeId;
+            }
+            if (initialId == int.MinValue)
+            {
+                initialId = taskInstance.WorkflowInstance.NodeId;
+            }      
 
             List<UserGroupPermissionsPoco> approvalGroup = _configService.GetPermissionsForNode(nodeId);
             UserGroupPermissionsPoco group = null;
