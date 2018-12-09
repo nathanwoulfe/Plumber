@@ -6,6 +6,7 @@ using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Umbraco.Core;
 using Umbraco.Web;
 using Umbraco.Web.WebApi;
 using Workflow.Extensions;
@@ -262,7 +263,7 @@ namespace Workflow.Api
                             {(int) TaskStatus.PendingApproval, (int) TaskStatus.Rejected })
                     : _tasksService.GetTaskSubmissionsForUser(userId, new List<int>
                         {(int) TaskStatus.PendingApproval, (int) TaskStatus.Rejected}))
-                    .Where(x => x.WorkflowInstance.Active)
+                    .Where(x => x.WorkflowInstance.Active) 
                     .ToList();
                             
 
@@ -278,6 +279,7 @@ namespace Workflow.Api
                         x.Status == (int) TaskStatus.Rejected && x.WorkflowInstance.AuthorUserId == userId).ToList();
                 }
 
+                taskInstances = taskInstances.Where(x => x.WorkflowInstance.Node != null && !x.WorkflowInstance.Node.Path.Contains(Constants.System.RecycleBinContentString)).ToList();
                 List<WorkflowTask> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList(), false);
 
                 return Json(new
