@@ -3,6 +3,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
+using Workflow.Extensions;
 using Workflow.Helpers;
 
 namespace Workflow.Models
@@ -87,7 +88,7 @@ namespace Workflow.Models
         {
             List<string> addresses = new List<string>();
 
-            if (_utility.IsValidEmailAddress(GroupEmail))
+            if (GroupEmail.IsValidEmailAddress())
             {
                 addresses.Add(GroupEmail);
             }
@@ -96,7 +97,7 @@ namespace Workflow.Models
                 addresses.AddRange(from user in Users
                     .Where(u => u.User.IsApproved && 
                                 !u.User.IsLockedOut && 
-                                _utility.IsValidEmailAddress(u.User.Email)) where user.User.Email != null select user.User.Email);
+                                u.User.Email.IsValidEmailAddress()) where user.User.Email != null select user.User.Email);
             }
             return addresses;
         }

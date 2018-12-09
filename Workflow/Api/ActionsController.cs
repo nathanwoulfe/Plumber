@@ -10,6 +10,7 @@ using Microsoft.AspNet.SignalR;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Web;
 using Umbraco.Web.WebApi;
+using Workflow.Extensions;
 using Workflow.Models;
 using Workflow.Helpers;
 using Workflow.Notifications;

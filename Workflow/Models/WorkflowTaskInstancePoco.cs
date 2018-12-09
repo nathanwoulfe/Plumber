@@ -2,6 +2,7 @@
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
+using Workflow.Extensions;
 using Workflow.Helpers;
 
 namespace Workflow.Models
@@ -24,8 +25,7 @@ namespace Workflow.Models
             _utility = new Utility();
         }
 
-        public WorkflowTaskInstancePoco(TaskType type)
-            : this()
+        public WorkflowTaskInstancePoco(TaskType type) : this()
         {
             Type = (int)type;
         }
@@ -68,8 +68,8 @@ namespace Workflow.Models
         [ResultColumn]
         public TaskStatus? TaskStatus => (TaskStatus?)Status;
 
-        [ResultColumn]
-        public TaskType TaskType => (TaskType)Type;
+        //[ResultColumn]
+        //public TaskType TaskType => (TaskType)Type;
 
         [ResultColumn]
         public IUser ActionedByUser
@@ -85,10 +85,10 @@ namespace Workflow.Models
         }
 
         [ResultColumn]
-        public string TypeName => _utility.PascalCaseToTitleCase(Type.ToString());
+        public string TypeName => Type.ToString().ToTitleCase();
 
         [ResultColumn]
-        public string StatusName => _utility.PascalCaseToTitleCase(TaskStatus.ToString());
+        public string StatusName => TaskStatus.ToString().ToTitleCase();
 
         [ResultColumn]
         public virtual UserGroupPoco UserGroup { get; set; }
@@ -96,7 +96,7 @@ namespace Workflow.Models
         [ResultColumn]
         public virtual WorkflowInstancePoco WorkflowInstance { get; set; }
 
-        [ResultColumn]
-        public virtual double CompletedDateTicks => CompletedDate?.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds ?? 0;
+        //[ResultColumn]
+        //public virtual double CompletedDateTicks => CompletedDate?.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds ?? 0;
     }
 }

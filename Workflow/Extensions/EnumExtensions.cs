@@ -26,5 +26,16 @@ namespace Workflow.Extensions
         {
             return !set.Contains(status);
         }
+
+        /// <summary>
+        /// Is the workflow status included in the provided arguments set
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="set"></param>
+        /// <returns></returns>
+        public static bool In(this WorkflowStatus status, params object[] set)
+        {
+            return set.Contains(status);
+        }
     }
 }

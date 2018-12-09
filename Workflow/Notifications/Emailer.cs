@@ -5,6 +5,7 @@ using System.Net.Mail;
 using System.Reflection;
 using log4net;
 using Umbraco.Core.Models;
+using Workflow.Extensions;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Services;
@@ -290,9 +291,9 @@ namespace Workflow.Notifications
         /// <param name="emailType"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
-        private static string BuildEmailSubject(EmailType emailType, WorkflowInstancePoco instance)
+        private string BuildEmailSubject(EmailType emailType, WorkflowInstancePoco instance)
         {
-            return $"{instance.EmailTypeName(emailType)} - {instance.Node.Name} ({instance.TypeDescription})";
+            return $"{emailType.ToString().ToTitleCase()} - {instance.Node.Name} ({instance.TypeDescription})";
         }
     }
 }

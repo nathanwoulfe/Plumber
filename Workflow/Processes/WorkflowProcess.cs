@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Umbraco.Core.Models;
+using Umbraco.Web;
 using Workflow.Events.Args;
 using Workflow.Extensions;
 using Workflow.Helpers;
@@ -12,6 +13,7 @@ using Workflow.Models;
 using Workflow.Notifications;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
+
 using TaskStatus = Workflow.Models.TaskStatus;
 using TaskType = Workflow.Models.TaskType;
 
@@ -24,7 +26,6 @@ namespace Workflow.Processes
         private readonly IConfigService _configService;
         private readonly IGroupService _groupService;
         private readonly IInstancesService _instancesService;
-        private readonly ISettingsService _settingsService;
         private readonly ITasksService _tasksService;
 
         private readonly Emailer _emailer;
@@ -42,12 +43,13 @@ namespace Workflow.Processes
             _configService = new ConfigService();
             _groupService = new GroupService();
             _instancesService = new InstancesService();
-            _settingsService = new SettingsService();
             _tasksService = new TasksService();
 
             _emailer = new Emailer();
             _utility = new Utility();
-            _settings = _settingsService.GetSettings();
+
+            ISettingsService settingsService = new SettingsService();
+            _settings = settingsService.GetSettings();
         }
 
         # region Public methods
@@ -60,23 +62,28 @@ namespace Workflow.Processes
         /// <returns>The initiated workflow process instance entity.</returns>
         public WorkflowInstancePoco InitiateWorkflow(int nodeId, int authorUserId, string authorComment)
         {
-            // use the guid to associate tasks to a workflow instance
-            Guid g = Guid.NewGuid();
-
             // create and persist the new workflow instance
-            Instance = new WorkflowInstancePoco(nodeId, authorUserId, authorComment, Type);
-            Instance.SetScheduledDate();
-            Instance.Guid = g;
+            Instance = new WorkflowInstancePoco
+            {
+                NodeId = nodeId,
+                AuthorUserId = authorUserId,
+                AuthorComment = authorComment,
+                Type = (int)Type,
+                Guid = Guid.NewGuid()
+            };
 
             _instancesService.InsertInstance(Instance);
 
-            // create the first task in the workflow
-            WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(nodeId);
+            // create the first task in the workflow and set the approval group
+            Instance.CreateApprovalTask(out WorkflowTaskInstancePoco taskInstance);
+            SetApprovalGroup(taskInstance);
+
             Created?.Invoke(this, new InstanceEventArgs(Instance));
 
             if (taskInstance.UserGroup == null)
             {
                 string errorMessage = $"No approval flow set for document {nodeId} or any of its parent documents. Unable to initiate approval task.";
+
                 Log.Error(errorMessage);
                 throw new WorkflowException(errorMessage);
             }
@@ -118,18 +125,15 @@ namespace Workflow.Processes
                 // when approving a task for a rejected workflow, create the new task with the same approval step as the rejected task
                 // update the rejected task status to resubmitted
 
-                WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(Instance.NodeId);
+                Instance.CreateApprovalTask(out WorkflowTaskInstancePoco taskInstance);
+                SetApprovalGroup(taskInstance);
                 ApproveOrContinue(taskInstance, userId);
-
-                //WorkflowTaskInstancePoco rejectedTask = Instance.TaskInstances.First(x => x.TaskStatus == TaskStatus.Rejected);
-                //rejectedTask.Status = (int)TaskStatus.Resubmitted;
-                //_tasksService.UpdateTask(rejectedTask);
             }
             else
             {
                 if (Instance != null)
                 {
-                    throw new WorkflowException("Workflow instance " + Instance.Id + " is not found.");
+                    throw new WorkflowException($"Workflow instance {Instance.Id} could not be found.");
                 }
                 throw new WorkflowException("Workflow instance is not found.");
             }
@@ -153,7 +157,7 @@ namespace Workflow.Processes
             {
                 Instance = instance;
 
-                if (Instance.WorkflowStatus == WorkflowStatus.PendingApproval || Instance.WorkflowStatus == WorkflowStatus.Rejected || Instance.WorkflowStatus == WorkflowStatus.Resubmitted)
+                if (Instance.WorkflowStatus.In(WorkflowStatus.PendingApproval, WorkflowStatus.Rejected, WorkflowStatus.Resubmitted))
                 {
                     // if pending, update to approved or rejected
                     ProcessApprovalAction(action, userId, comment);
@@ -166,7 +170,8 @@ namespace Workflow.Processes
                         {
                             // create the next task, then check if it should be approved
                             // if it needs approval, 
-                            WorkflowTaskInstancePoco taskInstance = CreateApprovalTask(Instance.NodeId);
+                            Instance.CreateApprovalTask(out WorkflowTaskInstancePoco taskInstance);
+                            SetApprovalGroup(taskInstance);
                             ApproveOrContinue(taskInstance, userId);
                         }
                         else
@@ -213,18 +218,14 @@ namespace Workflow.Processes
             if (instance != null)
             {
                 Instance = instance;
-                Instance.CompletedDate = DateTime.Now;
-                Instance.Status = (int)WorkflowStatus.Cancelled;
+                
+                Instance.Cancel();
 
                 WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.First();
                 if (taskInstance != null)
                 {
                     // Cancel the task and workflow instances
-                    taskInstance.Status = (int)TaskStatus.Cancelled;
-                    taskInstance.ActionedByUserId = userId;
-                    taskInstance.Comment = reason;
-                    taskInstance.CompletedDate = Instance.CompletedDate;
-
+                    taskInstance.Cancel(userId, reason, Instance.CompletedDate);
                     _tasksService.UpdateTask(taskInstance);
                 }
 
@@ -260,10 +261,19 @@ namespace Workflow.Processes
         /// </summary>
         private void ApproveOrContinue(WorkflowTaskInstancePoco taskInstance, int? userId = null, string comment = "APPROVAL NOT REQUIRED")
         {
-            // if author is not in the approving group, or flow type is explicit, require approval
-            if (!taskInstance.UserGroup.IsMember(Instance.AuthorUserId) || _settings.FlowType == (int)FlowType.Explicit)
+            // require approval if author is not in the approving group, or flow type is explicit, 
+            // and the task has NOT been marked as not required 
+            //(this would happen if the step is not required due to a conditional property not being dirty)
+            if ((!taskInstance.UserGroup.IsMember(Instance.AuthorUserId) || _settings.FlowType == (int)FlowType.Explicit) &&
+                taskInstance.TaskStatus != TaskStatus.NotRequired)
             {
-                SetPendingTask(taskInstance);
+                // set instance and task to pending, send notifications and persist task 
+                taskInstance.Status = (int)TaskStatus.PendingApproval;
+                Instance.Status = (int)WorkflowStatus.PendingApproval;
+
+                _emailer.Send(Instance, EmailType.ApprovalRequest);
+
+                _tasksService.UpdateTask(taskInstance);
             }
             else
             {
@@ -286,60 +296,15 @@ namespace Workflow.Processes
 
             if (taskInstance == null) return;
 
-            EmailType? emailType = null;
-            var emailRequired = false;
-
-            switch (action)
-            {
-                case WorkflowAction.Approve:
-                    if (taskInstance.TaskStatus != TaskStatus.NotRequired)
-                    {
-                        taskInstance.Status = (int) TaskStatus.Approved;
-                    }
-                    break;
-
-                case WorkflowAction.Reject:
-                    taskInstance.Status = (int)TaskStatus.Rejected;
-                    emailRequired = true;
-                    emailType = EmailType.ApprovalRejection;
-
-                    break;
-            }
-
-            taskInstance.CompletedDate = DateTime.Now;
-            taskInstance.Comment = comment;
-            taskInstance.ActionedByUserId = userId;
+            taskInstance.ProcessApproval(action, userId, comment, out EmailType? emailAction);
 
             // Send the email after we've done the updates.
-            if (emailRequired)
+            if (emailAction != null)
             {
-                _emailer.Send(Instance, emailType.Value);
+                _emailer.Send(Instance, emailAction.Value);
             }
 
             _tasksService.UpdateTask(taskInstance);
-        }
-
-        /// <summary>
-        /// Generate the next approval flow task, returning the new task and a bool indicating whether the publish action should becompleted (ie, this is the end of the flow)
-        /// </summary>
-        /// <param name="nodeId"></param>
-        /// <returns></returns>
-        private WorkflowTaskInstancePoco CreateApprovalTask(int nodeId)
-        {
-            var taskInstance =
-                new WorkflowTaskInstancePoco(TaskType.Approve)
-                {
-                    ApprovalStep = Instance.TaskInstances.Count(x => x.TaskStatus.In(TaskStatus.Approved, TaskStatus.NotRequired)),
-                    WorkflowInstanceGuid = Instance.Guid
-                };
-
-            Instance.TaskInstances.Add(taskInstance);
-
-            SetApprovalGroup(taskInstance, nodeId, nodeId);
-
-            _tasksService.InsertTask(taskInstance);
-
-            return taskInstance;
         }
 
         /// <summary>
@@ -348,9 +313,12 @@ namespace Workflow.Processes
         /// <param name="taskInstance"></param>
         /// <param name="nodeId"></param>
         /// <param name="initialId"></param>
-        private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId, int initialId)
+        private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId = int.MinValue, int initialId = int.MinValue)
         {
-            List<UserGroupPermissionsPoco> approvalGroup = _configService.GetPermissionsForNode(nodeId, 0);
+            nodeId = nodeId == int.MinValue ? taskInstance.WorkflowInstance.NodeId : nodeId;
+            initialId = initialId == int.MinValue ? taskInstance.WorkflowInstance.NodeId : initialId;
+
+            List<UserGroupPermissionsPoco> approvalGroup = _configService.GetPermissionsForNode(nodeId);
             UserGroupPermissionsPoco group = null;
 
             // if the node has a approval flow set, this value will be the assigned groups
@@ -359,7 +327,7 @@ namespace Workflow.Processes
                 // approval group length will match the number of groups mapped to the node
                 // only interested in the one that corresponds with the index of the most recently added workflow task
                 group = approvalGroup.First(g => g.Permission == taskInstance.ApprovalStep);
-                SetInstanceTotalSteps(approvalGroup.Count);
+                Instance.SetTotalSteps(approvalGroup.Count);
             }
             else
             {
@@ -370,8 +338,37 @@ namespace Workflow.Processes
 
                     if (contentTypeApproval.Any(g => g.ContentTypeId != 0))
                     {
-                        group = contentTypeApproval.First(g => g.Permission == taskInstance.ApprovalStep);
-                        SetInstanceTotalSteps(contentTypeApproval.Count);
+                        // check that the current step is not excluded by a condition
+                        UserGroupPermissionsPoco activeGroup = contentTypeApproval.First(g => g.Permission == taskInstance.ApprovalStep);
+                        if (activeGroup != null)
+                        {
+                            string[] conditions = activeGroup.Condition?.Split(',');
+                            // if any conditions exist for the content type,
+                            // fetch the current saved version and the live version
+                            // take the property value by key (the condition identifier) and compare from both docs
+                            // if they match, the step is not required.
+                            if (conditions != null)
+                            {
+                                IContent node = _utility.GetContent(nodeId);
+                                IEnumerable<Property> propsToCheck =
+                                    node.Properties.Where(p => conditions.Contains(p.PropertyType.Key.ToString()));
+
+                                IPublishedContent publishedVersion = _utility.GetPublishedContent(nodeId);
+                                
+                                foreach (Property prop in propsToCheck)
+                                {
+                                    if (prop.Value.ToString().Equals(publishedVersion.GetPropertyValue<string>(prop.Alias)))
+                                    {
+                                        // prop is clean and matches on a condition - group should not be included
+                                        taskInstance.Status = (int)TaskStatus.NotRequired;
+                                    }
+                                }
+                            }
+
+                            group = activeGroup;
+                        }
+
+                        Instance.SetTotalSteps(contentTypeApproval.Count);
                     }
                 }
 
@@ -394,7 +391,7 @@ namespace Workflow.Processes
                             GroupId = groupId,
                             UserGroup = GetGroup(groupId).Result
                         };
-                        SetInstanceTotalSteps(1);
+                        Instance.SetTotalSteps(1);
                     }
                 }
             }
@@ -404,6 +401,8 @@ namespace Workflow.Processes
 
             taskInstance.GroupId = group.GroupId;
             taskInstance.UserGroup = group.UserGroup;
+
+            _tasksService.InsertTask(taskInstance);
         }
 
         /// <summary>
@@ -414,33 +413,6 @@ namespace Workflow.Processes
         private async Task<UserGroupPoco> GetGroup(int id)
         {
             return await _groupService.GetPopulatedUserGroupAsync(id);
-        }
-
-        /// <summary>
-        /// set the total steps property for a workflow instance
-        /// </summary>
-        /// <param name="stepCount">The number of approval groups in the current flow (explicit, inherited or content type)</param>
-        private void SetInstanceTotalSteps(int stepCount)
-        {
-            if (Instance.TotalSteps == stepCount) return;
-
-            Instance.TotalSteps = stepCount;
-            _instancesService.UpdateInstance(Instance);
-        }
-
-
-        /// <summary>
-        /// Set the task to pending, notify appropriate groups
-        /// </summary>
-        /// <param name="taskInstance"></param>
-        private void SetPendingTask(WorkflowTaskInstancePoco taskInstance)
-        {
-            taskInstance.Status = (int)TaskStatus.PendingApproval;
-            Instance.Status = (int)WorkflowStatus.PendingApproval;
-
-            _emailer.Send(Instance, EmailType.ApprovalRequest);
-
-            _tasksService.UpdateTask(taskInstance);
         }
 
         #endregion

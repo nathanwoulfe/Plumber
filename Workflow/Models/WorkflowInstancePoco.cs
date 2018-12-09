@@ -4,6 +4,7 @@ using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
+using Workflow.Extensions;
 using Workflow.Helpers;
 
 namespace Workflow.Models
@@ -15,6 +16,7 @@ namespace Workflow.Models
     {
         private IPublishedContent _node;
         private IUser _authorUser;
+
         private readonly Utility _utility;
 
         public WorkflowInstancePoco()
@@ -23,16 +25,9 @@ namespace Workflow.Models
             Status = (int)WorkflowStatus.PendingApproval;
             CreatedDate = DateTime.Now;
             CompletedDate = null;
+            this.SetScheduledDate();
 
             _utility = new Utility();
-        }
-
-        public WorkflowInstancePoco(int nodeId, int authorUserId, string authorComment, WorkflowType type) : this()
-        {
-            NodeId = nodeId;
-            AuthorUserId = authorUserId;
-            AuthorComment = authorComment;
-            Type = (int)type;
         }
 
         [Column("Id")]
@@ -73,28 +68,11 @@ namespace Workflow.Models
         [ResultColumn]
         public WorkflowType WorkflowType => (WorkflowType)Type;
 
-        public void SetScheduledDate()
-        {
-            IContent content = _utility.GetContent(NodeId);
-            switch (Type)
-            {
-                case (int)WorkflowType.Publish when content.ReleaseDate.HasValue:
-                    ScheduledDate = content.ReleaseDate;
-                    break;
-                case (int)WorkflowType.Unpublish when content.ExpireDate.HasValue:
-                    ScheduledDate = content.ExpireDate;
-                    break;
-                default:
-                    ScheduledDate = null;
-                    break;
-            }
-        }
-
         /// <summary>
         /// Title case text name for the workflow type.
         /// </summary>
         [ResultColumn]
-        public string TypeName => WorkflowTypeName(WorkflowType);
+        public string TypeName => WorkflowType.ToString().ToTitleCase();
 
         [ResultColumn]
         public string TypeDescriptionPastTense => TypeDescription.Replace("ish", "ished").Replace("dule", "duled").Replace("for", "to be");
@@ -121,7 +99,7 @@ namespace Workflow.Models
         /// Title case text name for the workflow status.
         /// </summary>
         [ResultColumn]
-        public string StatusName => _utility.PascalCaseToTitleCase(WorkflowStatus.ToString());
+        public string StatusName => WorkflowStatus.ToString().ToTitleCase();
 
         /// <summary>
         /// Indicates whether the workflow instance is currently active.
@@ -137,24 +115,19 @@ namespace Workflow.Models
         [ResultColumn]
         public ICollection<WorkflowTaskInstancePoco> TaskInstances { get; set; }
 
+        #region PrivateMethods
+
         private string WorkflowTypeDescription(WorkflowType type, DateTime? scheduledDate)
         {
+            string typeString = type.ToString().ToTitleCase();
             if (scheduledDate.HasValue)
             {
-                return "Schedule for " + WorkflowTypeName(type) + " at " + scheduledDate.Value.ToString("dd/MM/yy HH:mm");
+                return "Schedule for " + typeString + " at " + scheduledDate.Value.ToString("dd/MM/yy HH:mm");
             }
 
-            return WorkflowTypeName(type);
+            return typeString;
         }
 
-        private string WorkflowTypeName(WorkflowType type)
-        {
-            return _utility.PascalCaseToTitleCase(type.ToString());
-        }
-
-        public string EmailTypeName(EmailType type)
-        {
-            return _utility.PascalCaseToTitleCase(type.ToString());
-        }       
+        #endregion
     }
 }
