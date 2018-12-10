@@ -8,7 +8,6 @@ namespace Workflow.Helpers
 {
     public static class UrlHelpers
     {
-        private const string ContentEditUrlFormat = "/umbraco#/content/content/edit/{0}";
         private static readonly ISettingsService SettingsService = new SettingsService();
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace Workflow.Helpers
         /// <returns></returns>
         public static string GetFullyQualifiedContentEditorUrl(int docId)
         {
-            return GetFullyQualifiedEditUrl(string.Format(ContentEditUrlFormat, docId));
+            return GetFullyQualifiedEditUrl(string.Format(Constants.ContentEditUrlFormat, docId));
         }
 
         /// <summary>

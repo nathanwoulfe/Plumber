@@ -74,5 +74,30 @@ namespace Workflow.Extensions
 
             instance.TaskInstances.Add(taskInstance);
         }
+
+        /// <summary>
+        /// Builds workflow instance details markup.
+        /// </summary>
+        /// <returns>HTML tr inner html definition</returns>
+        public static string BuildProcessSummary(this WorkflowInstancePoco instance)
+        {
+            string result = $"{instance.TypeDescription} requested by {instance.AuthorUser.Name} on {instance.CreatedDate:dd/MM/yy} - {instance.StatusName}<br/>";
+
+            if (instance.AuthorComment.HasValue())
+            {
+                result += $"&nbsp;&nbsp;Comment: <i>{instance.AuthorComment}</i>";
+            }
+            result += "<br/>";
+
+            var index = 1;
+
+            foreach (WorkflowTaskInstancePoco taskInstance in instance.TaskInstances)
+            {
+                result += taskInstance.BuildTaskSummary(index) + "<br/>";
+                index += 1;
+            }
+
+            return $"{result}<br/>";
+        }
     }
 }

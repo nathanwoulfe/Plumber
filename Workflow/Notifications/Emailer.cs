@@ -50,10 +50,8 @@ namespace Workflow.Notifications
         public async void Send(WorkflowInstancePoco instance, EmailType emailType)
         {
             WorkflowSettingsPoco settings = _settingsService.GetSettings();
-            WorkflowTaskInstancePoco finalTask = null;
 
-            bool? doSend = settings.SendNotifications;
-            if (doSend != true) return;
+            if (!settings.SendNotifications) return;
 
             if (!instance.TaskInstances.Any())
             {
@@ -65,6 +63,8 @@ namespace Workflow.Notifications
                 Log.Error($"Notifications not sent - no tasks exist for instance { instance.Id }");
                 return;
             }
+
+            WorkflowTaskInstancePoco finalTask = null;
 
             try
             {
@@ -79,7 +79,7 @@ namespace Workflow.Notifications
 
                 // in the loop, also store the last task to a variable, and keep the populated group
                 var taskIndex = 0;
-                int taskCount = flowTasks.Count();
+                int taskCount = flowTasks.Length;
 
                 foreach (WorkflowTaskInstancePoco task in flowTasks)
                 {
@@ -102,7 +102,6 @@ namespace Workflow.Notifications
                 }
 
                 List<string> to = new List<string>();
-                string systemEmailAddress = settings.Email;
 
                 var body = "";
 
@@ -129,7 +128,7 @@ namespace Workflow.Notifications
                         to.Add(instance.AuthorUser.Email);
 
                         //Notify web admins
-                        to.Add(systemEmailAddress);
+                        to.Add(settings.Email);
 
                         if (instance.WorkflowType == WorkflowType.Publish)
                         {
@@ -141,7 +140,7 @@ namespace Workflow.Notifications
                                    "Umbraco user", docUrl, docTitle,
                                    instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
 
-                        body += BuildProcessSummary(instance);
+                        body += instance.BuildProcessSummary();
 
                         break;
 
@@ -153,7 +152,7 @@ namespace Workflow.Notifications
                                    "Umbraco user", docUrl, docTitle,
                                    instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
 
-                        body += BuildProcessSummary(instance);
+                        body += instance.BuildProcessSummary();
 
                         break;
 
@@ -177,14 +176,13 @@ namespace Workflow.Notifications
                 var client = new SmtpClient();
                 var msg = new MailMessage
                 {
-                    Subject = BuildEmailSubject(emailType, instance),
+                    Subject = $"{emailType.ToString().ToTitleCase()} - {instance.Node.Name} ({instance.TypeDescription})",
                     IsBodyHtml = true,
                 };
 
-
-                if (!string.IsNullOrEmpty(systemEmailAddress))
+                if (settings.Email.HasValue())
                 {
-                    msg.From = new MailAddress(systemEmailAddress);
+                    msg.From = new MailAddress(settings.Email);
                 }
 
                 // if offline is permitted, email group members individually as we need the user id in the url
@@ -220,80 +218,6 @@ namespace Workflow.Notifications
             {
                 Log.Error($"Error sending notifications for task { finalTask.Id }", e);
             }
-        }
-
-        /// <summary>
-        /// Builds workflow instance details markup.
-        /// </summary>
-        /// <returns>HTML tr inner html definition</returns>
-        private static string BuildProcessSummary(WorkflowInstancePoco instance)
-        {
-            string result = $"{instance.TypeDescription} requested by {instance.AuthorUser.Name} on {instance.CreatedDate.ToString("dd/MM/yy")} - {instance.StatusName}<br/>";
-
-            if (!string.IsNullOrEmpty(instance.AuthorComment))
-            {
-                result += $"&nbsp;&nbsp;Comment: <i>{instance.AuthorComment}</i>";
-            }
-            result += "<br/>";
-
-            var index = 1;
-
-            foreach (WorkflowTaskInstancePoco taskInstance in instance.TaskInstances)
-            {
-                result += BuildTaskSummary(taskInstance, index) + "<br/>";
-                index += 1;
-            }
-
-            return result + "<br/>";
-        }
-
-        /// <summary>
-        /// Create simple html markup for an inactive workflow task.
-        /// </summary>
-        /// <param name="taskInstance">The task instance.</param>
-        /// <param name="index"></param>
-        /// <returns>HTML markup describing an active task instance.</returns>
-        private static string BuildTaskSummary(WorkflowTaskInstancePoco taskInstance, int index)
-        {
-            var result = "";
-
-            switch (taskInstance.Status)
-            {
-                case (int)TaskStatus.Approved:
-                case (int)TaskStatus.Rejected:
-                case (int)TaskStatus.Cancelled:
-
-                    if (taskInstance.CompletedDate != null)
-                    {
-                        result += $"Stage {index}: {taskInstance.StatusName} by {taskInstance.ActionedByUser.Name} on {taskInstance.CompletedDate.Value.ToString("dd/MM/yy")}";
-                    }
-
-                    if (!string.IsNullOrEmpty(taskInstance.Comment))
-                    {
-                        result += $"<br/>&nbsp;&nbsp;Comment: <i>{taskInstance.Comment}</i>";
-                    }
-
-                    break;
-
-                case (int)TaskStatus.NotRequired:
-
-                    result += $"Stage {index}: Not required";
-
-                    break;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="emailType"></param>
-        /// <param name="instance"></param>
-        /// <returns></returns>
-        private string BuildEmailSubject(EmailType emailType, WorkflowInstancePoco instance)
-        {
-            return $"{emailType.ToString().ToTitleCase()} - {instance.Node.Name} ({instance.TypeDescription})";
         }
     }
 }

@@ -81,6 +81,9 @@
     <Compile Include="Migrations\VersionZeroEightZero.cs" />
     <Compile Include="Migrations\VersionOneOneZero.cs" />
     <Compile Include="Migrations\VersionZeroNineZero.cs" />
+    <Compile Include="Models\Content\PublishedContent.cs" />
+    <Compile Include="Models\Content\PublishedProperty.cs" />
+    <Compile Include="Models\Content\PublishedPropertyBase.cs" />
     <Compile Include="Models\WorkflowInstanceModel.cs" />
     <Compile Include="Repositories\InstancesRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInstancesRepository.cs" />

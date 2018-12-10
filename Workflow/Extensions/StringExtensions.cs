@@ -6,6 +6,11 @@ namespace Workflow.Extensions
 {
     public static class StringExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string ToTitleCase(this string value)
         {
             if (value == null)
@@ -16,6 +21,11 @@ namespace Workflow.Extensions
             return Regex.Replace(value, "([A-Z]+?(?=(([A-Z]?[a-z])|$))|[0-9]+)", " $1").Trim();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static bool IsValidEmailAddress(this string value)
         {
             try
@@ -27,6 +37,16 @@ namespace Workflow.Extensions
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool HasValue(this string value)
+        {
+            return !string.IsNullOrEmpty(value);
         }
     }
 }

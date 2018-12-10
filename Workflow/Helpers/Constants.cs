@@ -45,6 +45,8 @@
         public const string PreviewRouteBase = "/workflow-preview/";
         public const string PreviewFileFolder = "/app_plugins/workflow/preview";
 
+        public const string ContentEditUrlFormat = "/umbraco#/content/content/edit/{0}";
+
 
     }
 }

@@ -77,14 +77,8 @@ namespace Workflow.Helpers
         /// <returns></returns>
         public string GetNodeName(int id)
         {
-            if (_context.Application.UmbracoApplicationUrl != null)
-            {
-                IPublishedContent n = _context.ContentCache.GetById(id);
-                if (n != null) return n.Name;
-            }
-
-            IContent c = _contentService.GetById(id);
-            return c != null ? c.Name : Constants.NoNode;
+            IPublishedContent node = GetPublishedContent(id);
+            return node != null ? node.Name : Constants.NoNode;
         }
 
         /// <summary>
@@ -132,7 +126,6 @@ namespace Workflow.Helpers
         /// <param name="value"></param>
         /// <param name="path"></param>
         /// <param name="httpOnly"></param>
-        /// <param name="daysToPersist"></param>
         public static void SetCookie(string name, string value, string path = "/", bool httpOnly = true)
         {
             HttpContext context = HttpContext.Current;
