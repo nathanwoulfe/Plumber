@@ -6,6 +6,7 @@ using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Services;
 using Umbraco.Web;
+using Workflow.Extensions;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Services;
@@ -114,24 +115,5 @@ namespace Workflow.Tests.Helpers
             Assert.IsType<int>(user.Id);
             Assert.Equal(Utility.CurrentUserId, user.Id);
         }
-
-        [Theory]
-        [InlineData("alias@domain.com.au", true)]
-        [InlineData("this.is@valid", true)]
-        [InlineData("thisisjusta-string", false)]
-        public void Can_Validate_Email(string value, bool expected)
-        {
-            Assert.Equal(expected, _utility.IsValidEmailAddress(value));
-        }
-
-        [Theory]
-        [InlineData("pascalCasedString", "Pascal Cased String")]
-        [InlineData(null, null)]
-        public void Can_Convert_String_Casing(string value, string expected)
-        {
-            // yes, strings can have other formats, but these are internal and I control the format
-            Assert.Equal(expected, _utility.PascalCaseToTitleCase(value));
-        }
-
     }
 }

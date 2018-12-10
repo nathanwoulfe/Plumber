@@ -107,23 +107,7 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<UserGroupPermissionsPoco> GetRecursivePermissionsForNode(IPublishedContent node)
         {
-            List<UserGroupPermissionsPoco> permissions = GetPermissionsForNode(node);
-            return permissions;
-        }
-
-        /// <summary>
-        /// Get the explicit or implied approval flow for a given node
-        /// Will return explicit, content type, or inherited, in that order
-        /// </summary>
-        private List<UserGroupPermissionsPoco> GetPermissionsForNode(IPublishedContent node)
-        {
             if (node == null) return null;
-            //int nodeId = node.Id;
-
-            // todo => fetch all permissions for node, its ancestors and the content type, in one db call
-            // first, check the current node
-            // then the content type
-            // then work back through the node path
 
             // skip 1 to ignore root (-1)
             string[] path = node.Path.Split(',').Skip(1).ToArray();

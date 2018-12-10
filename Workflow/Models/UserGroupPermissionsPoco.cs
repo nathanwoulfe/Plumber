@@ -37,17 +37,22 @@ namespace Workflow.Models
         [JsonProperty("permission")]
         public int Permission { get; set; }
 
+        [Column("Condition")]
+        [NullSetting(NullSetting = NullSettings.Null)]
+        [JsonProperty("condition")]
+        public string Condition { get; set; }
+
         [ResultColumn]
         [JsonProperty("nodeName")]
         public string NodeName => NodeId > 0 ? _utility.GetNodeName(NodeId) : string.Empty;
 
         [ResultColumn]
         [JsonProperty("contentTypeName")]
-        public string ContentTypeName => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId)?.Name : MagicStrings.NoContentType;
+        public string ContentTypeName => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId)?.Name : Constants.NoContentType;
 
         [ResultColumn]
         [JsonProperty("contentTypeAlias")]
-        public string ContentTypeAlias => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId)?.Alias : MagicStrings.NoContentType;
+        public string ContentTypeAlias => ContentTypeId > 0 ? _utility.GetContentType(ContentTypeId)?.Alias : Constants.NoContentType;
 
         [ResultColumn]
         [JsonProperty("userGroup")]

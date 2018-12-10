@@ -6,7 +6,6 @@ using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Umbraco.Core;
 using Umbraco.Web;
 using Umbraco.Web.WebApi;
 using Workflow.Extensions;
@@ -15,6 +14,9 @@ using Workflow.Helpers;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
 using TaskStatus = Workflow.Models.TaskStatus;
+
+using UmbConstants = Umbraco.Core.Constants;
+using Constants = Workflow.Helpers.Constants;
 
 namespace Workflow.Api
 {
@@ -238,7 +240,7 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                string msg = MagicStrings.ErrorGettingPendingTasksForNode.Replace("{id}", id.ToString());
+                string msg = Constants.ErrorGettingPendingTasksForNode.Replace("{id}", id.ToString());
                 Log.Error(msg, ex);
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
@@ -279,7 +281,7 @@ namespace Workflow.Api
                         x.Status == (int) TaskStatus.Rejected && x.WorkflowInstance.AuthorUserId == userId).ToList();
                 }
 
-                taskInstances = taskInstances.Where(x => x.WorkflowInstance.Node != null && !x.WorkflowInstance.Node.Path.Contains(Constants.System.RecycleBinContentString)).ToList();
+                taskInstances = taskInstances.Where(x => x.WorkflowInstance.Node != null && !x.WorkflowInstance.Node.Path.Contains(UmbConstants.System.RecycleBinContentString)).ToList();
                 List<WorkflowTask> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList(), false);
 
                 return Json(new

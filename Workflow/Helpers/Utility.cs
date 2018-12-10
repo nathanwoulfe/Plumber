@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Net.Mail;
-using System.Text.RegularExpressions;
 using System.Web;
 using umbraco;
 using Umbraco.Core;
@@ -17,7 +15,6 @@ namespace Workflow.Helpers
     public class Utility
     {
         private readonly UmbracoContext _context;
-        private readonly UmbracoHelper _helper;
 
         private readonly IUserService _userService;
         private readonly IContentTypeService _contentTypeService;
@@ -36,7 +33,6 @@ namespace Workflow.Helpers
         public Utility(IPocoRepository pocoRepo, IUserService userService, IContentTypeService contentTypeService, IContentService contentService, UmbracoContext context)
         {
             _context = context;
-            _helper = new UmbracoHelper(_context);
 
             _userService = userService;
             _contentTypeService = contentTypeService;
@@ -55,7 +51,7 @@ namespace Workflow.Helpers
             // applicationUrl is null in tests, so can use it to avoid hitting the published cache, which is not available
             if(_context.Application.UmbracoApplicationUrl != null)
             {
-                IPublishedContent n = _helper.TypedContent(id);
+                IPublishedContent n = _context.ContentCache.GetById(id);
                 if (n != null) return n;
             }
 
@@ -81,14 +77,8 @@ namespace Workflow.Helpers
         /// <returns></returns>
         public string GetNodeName(int id)
         {
-            if (_context.Application.UmbracoApplicationUrl != null)
-            {
-                IPublishedContent n = _helper.TypedContent(id);
-                if (n != null) return n.Name;
-            }
-
-            IContent c = _contentService.GetById(id);
-            return c != null ? c.Name : MagicStrings.NoNode;
+            IPublishedContent node = GetPublishedContent(id);
+            return node != null ? node.Name : Constants.NoNode;
         }
 
         /// <summary>
@@ -131,43 +121,11 @@ namespace Workflow.Helpers
             return _context.Security.CurrentUser;
         }
 
-        /// <summary>
-        /// Convert a pascal-cased string to title case
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public string PascalCaseToTitleCase(string str)
-        {
-            if (str == null)
-                return null;
-
-            str = char.ToUpper(str[0]) + str.Substring(1);
-
-            return Regex.Replace(str, "([A-Z]+?(?=(([A-Z]?[a-z])|$))|[0-9]+)", " $1").Trim();
-        }
-        
-        /// <summary>Checks whether the email address is valid.</summary>
-        /// <param name="email">the email address to check</param>
-        /// <returns>true if valid, false otherwise.</returns>
-        public bool IsValidEmailAddress(string email)
-        {
-            try
-            {
-                var m = new MailAddress(email);
-                return m.Address == email;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
         /// <summary />
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <param name="path"></param>
         /// <param name="httpOnly"></param>
-        /// <param name="daysToPersist"></param>
         public static void SetCookie(string name, string value, string path = "/", bool httpOnly = true)
         {
             HttpContext context = HttpContext.Current;

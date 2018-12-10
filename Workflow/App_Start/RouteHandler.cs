@@ -4,7 +4,7 @@ using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 using Umbraco.Web.Mvc;
-using Workflow.Helpers;
+using Constants = Workflow.Helpers.Constants;
 
 namespace Workflow
 {
@@ -16,7 +16,7 @@ namespace Workflow
 
             string path = requestContext.HttpContext.Request.Url.GetAbsolutePathDecoded();
 
-            if (!path.StartsWith(MagicStrings.PreviewRouteBase)) return null;
+            if (!path.StartsWith(Constants.PreviewRouteBase)) return null;
 
             string[] segments = path.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
 

@@ -3,11 +3,11 @@ using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Persistence.Migrations;
 using Umbraco.Core.Persistence.SqlSyntax;
-using Workflow.Helpers;
+using Constants = Workflow.Helpers.Constants;
 
 namespace Workflow.Migrations
 {
-    [Migration("0.8.0", 1, MagicStrings.Name)]
+    [Migration("0.8.0", 1, Constants.Name)]
     public class VersionZeroEightZero : MigrationBase
     {
 

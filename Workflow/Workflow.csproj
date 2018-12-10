@@ -72,11 +72,18 @@
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\ContentExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\TaskInstanceExtensions.cs" />
+    <Compile Include="Extensions\WorkflowInstanceExtensions.cs" />
     <Compile Include="Helpers\Installer.cs" />
-    <Compile Include="Helpers\MagicStrings.cs" />
+    <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\Uninstaller.cs" />
     <Compile Include="Migrations\VersionZeroEightZero.cs" />
+    <Compile Include="Migrations\VersionOneOneZero.cs" />
     <Compile Include="Migrations\VersionZeroNineZero.cs" />
+    <Compile Include="Models\Content\PublishedContent.cs" />
+    <Compile Include="Models\Content\PublishedProperty.cs" />
+    <Compile Include="Models\Content\PublishedPropertyBase.cs" />
     <Compile Include="Models\WorkflowInstanceModel.cs" />
     <Compile Include="Repositories\InstancesRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInstancesRepository.cs" />
@@ -326,8 +333,8 @@
       <HintPath>..\packages\System.Threading.Tasks.Dataflow.4.7.0\lib\portable-net45+win8+wpa81\System.Threading.Tasks.Dataflow.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Http">

@@ -66,7 +66,7 @@ namespace Workflow.Api
             }
             catch (Exception e)
             {
-                string error = MagicStrings.ErrorGettingGroup.Replace("{id}", id.ToString());
+                string error = Constants.ErrorGettingGroup.Replace("{id}", id.ToString());
                 Log.Error(error, e);
                 // if we are here, something isn't right...
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(e, error));
@@ -91,10 +91,10 @@ namespace Workflow.Api
                 // check that it doesn't already exist
                 if (poco == null)
                 {
-                    return Ok(new { status = 200, success = false, msg = MagicStrings.GroupNameExists });
+                    return Ok(new { status = 200, success = false, msg = Constants.GroupNameExists });
                 }
 
-                string msg = MagicStrings.GroupCreated.Replace("{name}", name);
+                string msg = Constants.GroupCreated.Replace("{name}", name);
                 Log.Debug(msg);
 
                 // return the id of the new group, to update the front-end route to display the edit view
@@ -126,19 +126,19 @@ namespace Workflow.Api
                 // need to check the new name/alias isn't already in use
                 if (result == null)
                 {
-                    return Content(HttpStatusCode.OK, new { status = 500, msg = MagicStrings.GroupNameExists });
+                    return Content(HttpStatusCode.OK, new { status = 500, msg = Constants.GroupNameExists });
                 }
 
             }
             catch (Exception ex)
             {
-                Log.Error(MagicStrings.ErrorUpdatingGroup, ex);
+                Log.Error(Constants.ErrorUpdatingGroup, ex);
 
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, MagicStrings.ErrorUpdatingGroup));
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, Constants.ErrorUpdatingGroup));
             }
 
             // feedback to the browser
-            string msgText = MagicStrings.GroupUpdated.Replace("{name}", group.Name);
+            string msgText = Constants.GroupUpdated.Replace("{name}", group.Name);
             Log.Debug(msgText);
 
             return Ok(new { status = 200, msg = msgText });
@@ -160,8 +160,8 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                Log.Error(MagicStrings.ErrorDeletingGroup, ex);
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, MagicStrings.ErrorDeletingGroup));
+                Log.Error(Constants.ErrorDeletingGroup, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, Constants.ErrorDeletingGroup));
             }
 
             // gone.

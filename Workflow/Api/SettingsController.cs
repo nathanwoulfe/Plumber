@@ -18,6 +18,7 @@ using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
+using Constants = Workflow.Helpers.Constants;
 
 namespace Workflow.Api
 {
@@ -58,9 +59,9 @@ namespace Workflow.Api
             try
             {
                 MemoryCache cache = MemoryCache.Default;
-                if (cache[MagicStrings.VersionKey] != null)
+                if (cache[Constants.VersionKey] != null)
                 {
-                    return Json((PackageVersion)cache.Get(MagicStrings.VersionKey), ViewHelpers.CamelCase);
+                    return Json((PackageVersion)cache.Get(Constants.VersionKey), ViewHelpers.CamelCase);
                 }
 
                 Assembly assembly = Assembly.GetExecutingAssembly();
@@ -69,9 +70,9 @@ namespace Workflow.Api
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 var client = new WebClient();
-                client.Headers.Add("user-agent", MagicStrings.Name);
+                client.Headers.Add("user-agent", Constants.Name);
 
-                string response = client.DownloadString(MagicStrings.LatestVersionUrl);
+                string response = client.DownloadString(Constants.LatestVersionUrl);
                 JObject content = JObject.Parse(response);
 
                 string currentVersion = $"v{version.Major}.{version.Minor}.{version.Build}";
@@ -91,17 +92,17 @@ namespace Workflow.Api
 
 
                 // Store data in the cache    
-                cache.Add(MagicStrings.VersionKey, packageVersion,
+                cache.Add(Constants.VersionKey, packageVersion,
                     new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddHours(6) });
 
                 return Json(packageVersion, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
-                Log.Error(MagicStrings.ErrorGettingVersion, ex);
+                Log.Error(Constants.ErrorGettingVersion, ex);
 
                 // nothing is displayed if the version isn't available
-                return Json(MagicStrings.ErrorGettingVersion);
+                return Json(Constants.ErrorGettingVersion);
             }
         }
 
@@ -118,9 +119,9 @@ namespace Workflow.Api
                 var fromCache = false;
 
                 MemoryCache cache = MemoryCache.Default;
-                if (cache[MagicStrings.DocsKey] != null)
+                if (cache[Constants.DocsKey] != null)
                 {
-                    docs = (string)cache.Get(MagicStrings.DocsKey);
+                    docs = (string)cache.Get(Constants.DocsKey);
                     fromCache = true;
                 }
                 else
@@ -128,10 +129,10 @@ namespace Workflow.Api
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                     var client = new WebClient();
-                    client.Headers.Add("user-agent", MagicStrings.Name);
-                    client.Headers.Add("accept", MagicStrings.MdMediaType);
+                    client.Headers.Add("user-agent", Constants.Name);
+                    client.Headers.Add("accept", Constants.MdMediaType);
 
-                    docs = client.DownloadString(MagicStrings.DocsUrl);
+                    docs = client.DownloadString(Constants.DocsUrl);
                 }
 
                 var response = new HttpResponseMessage
@@ -144,7 +145,7 @@ namespace Workflow.Api
                 if (!fromCache)
                 {
                     // Store data in the cache    
-                    cache.Add(MagicStrings.DocsKey, docs, new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddHours(6) });
+                    cache.Add(Constants.DocsKey, docs, new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddHours(6) });
                 }
 
                 return response;
@@ -174,8 +175,8 @@ namespace Workflow.Api
             }
             catch (Exception ex)
             {
-                Log.Error(MagicStrings.ErrorGettingSettings, ex);
-                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, MagicStrings.ErrorGettingSettings));
+                Log.Error(Constants.ErrorGettingSettings, ex);
+                return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, Constants.ErrorGettingSettings));
             }
         }
 
@@ -190,11 +191,11 @@ namespace Workflow.Api
             try
             {
                 _settingsService.UpdateSettings(model);
-                return Ok(MagicStrings.SettingsUpdated);
+                return Ok(Constants.SettingsUpdated);
             }
             catch (Exception ex)
             {
-                const string error = MagicStrings.SettingsNotUpdated;
+                const string error = Constants.SettingsNotUpdated;
                 Log.Error(error, ex);
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, error));
             }

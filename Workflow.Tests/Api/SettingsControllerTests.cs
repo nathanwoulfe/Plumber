@@ -7,9 +7,9 @@ using Newtonsoft.Json.Linq;
 using Umbraco.Core;
 using Umbraco.Web;
 using Workflow.Api;
-using Workflow.Helpers;
 using Workflow.Models;
 using Xunit;
+using Constants = Workflow.Helpers.Constants;
 
 namespace Workflow.Tests.Api
 {
@@ -51,11 +51,11 @@ namespace Workflow.Tests.Api
         public async void Get_Generic_Error_If_Docs_Unavailable()
         {
             MemoryCache cache = MemoryCache.Default;
-            cache[MagicStrings.VersionKey] = Utility.RandomString();
+            cache[Constants.VersionKey] = Utility.RandomString();
 
             dynamic result = await _settingsController.GetVersion().GetContent();
             Assert.NotNull(result);
-            Assert.Equal(MagicStrings.ErrorGettingVersion, result);
+            Assert.Equal(Constants.ErrorGettingVersion, result);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace Workflow.Tests.Api
         public void Can_Get_Docs_From_Cache()
         {
             MemoryCache cache = MemoryCache.Default;
-            cache.Add(MagicStrings.DocsKey, "A string", new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddHours(6) });
+            cache.Add(Constants.DocsKey, "A string", new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddHours(6) });
 
             HttpResponseMessage result = _settingsController.GetDocs();
             Assert.NotNull(result);
@@ -105,7 +105,7 @@ namespace Workflow.Tests.Api
             };
 
             string result = await _settingsController.Save(model).GetContent();
-            Assert.Equal(MagicStrings.SettingsUpdated, result);
+            Assert.Equal(Constants.SettingsUpdated, result);
         }
 
         [Fact]

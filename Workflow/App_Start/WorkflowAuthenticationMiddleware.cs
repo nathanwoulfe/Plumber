@@ -12,6 +12,7 @@ using Umbraco.Core.Configuration;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Security;
 using Workflow.Helpers;
+using Constants = Workflow.Helpers.Constants;
 
 namespace Workflow
 {
@@ -24,7 +25,7 @@ namespace Workflow
         public override async Task Invoke(IOwinContext context)
         {
             IOwinRequest request = context.Request;
-            if (request.Uri.AbsolutePath.StartsWith(MagicStrings.PreviewRouteBase) && request.Uri.Segments.Length == 6) 
+            if (request.Uri.AbsolutePath.StartsWith(Constants.PreviewRouteBase) && request.Uri.Segments.Length == 6) 
             {
                 string[] segments = request.Uri.Segments;
 

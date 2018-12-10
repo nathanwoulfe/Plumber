@@ -9,6 +9,7 @@ using Umbraco.Core.Models.Membership;
 using Umbraco.Web;
 using Umbraco.Web.UI.JavaScript;
 using Workflow.Helpers;
+using Constants = Workflow.Helpers.Constants;
 using Installer = Workflow.Helpers.Installer;
 
 namespace Workflow.Startup
@@ -91,7 +92,7 @@ namespace Workflow.Startup
         private static void InstalledPackage_BeforeDelete(InstalledPackage sender, System.EventArgs e)
         {
             //Check which package is being uninstalled
-            if (sender.Data.Name != MagicStrings.Name) return;
+            if (sender.Data.Name != Constants.Name) return;
 
             //Start Uninstall - clean up process...
             Uninstaller.RemoveSection();
