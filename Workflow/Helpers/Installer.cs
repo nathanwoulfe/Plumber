@@ -117,10 +117,13 @@ namespace Workflow.Helpers
                                         "<tab caption=\"Documentation\">" +
                                         "<control>../app_plugins/workflow/backoffice/views/workflow.docsdashboard.html</control>" +
                                         "</tab>" +
+                                        "<tab caption=\"Log viewer\">" +
+                                        "<control>../app_plugins/workflow/backoffice/views/workflow.logsdashboard.html</control>" +
+                                        "</tab>" +
+                                        "<tab caption=\"Deployment\">" +
+                                        "<control>../app_plugins/workflow/backoffice/views/workflow.importexportdashboard.html</control>" +
+                                        "</tab>" +
                                         "</section>";
-
-                // logs and io dash are added in a migration
-                // todo -> move back here for v1. This will be a breaking change for pre-0.7.0 installs
 
                 //Get the main root <dashboard> node
                 var dashboardNode = dashboardXml.SelectSingleNode("//dashBoard");
