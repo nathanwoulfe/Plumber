@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
 using Chauffeur.TestingTools;
-using Umbraco.Web;
 using Workflow.Api;
 using Workflow.Helpers;
 using Workflow.Models;
@@ -30,19 +27,11 @@ namespace Workflow.Tests.Api
             // not testing this, but need it for quickly creating groups
             _groupService = new GroupService();
 
-            _groupsController = new GroupsController(UmbracoContext.Current)
+            _groupsController = new GroupsController()
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
             };
-        }
-
-        [Fact]
-        public void Constructors_Work()
-        {
-            // chasing coverage - make sure constructors are all accessible
-            Assert.NotNull(new GroupsController());
-            Assert.NotNull(new GroupsController(UmbracoContext.Current, new UmbracoHelper(UmbracoContext.Current)));
         }
 
         [Fact]

@@ -20,23 +20,14 @@ namespace Workflow.Api
         private readonly IGroupService _groupService;
         private readonly Utility _utility;
 
-        public GroupsController()
+        public GroupsController() : this(new GroupService(), new Utility())
         {
-            _groupService = new GroupService();
-            _utility = new Utility();
         }
 
-        public GroupsController(UmbracoContext umbracoContext) : base(umbracoContext)
+        public GroupsController(IGroupService groupService, Utility utility)
         {
-            _groupService = new GroupService();
-            _utility = new Utility();
-        }
-
-        public GroupsController(UmbracoContext umbracoContext, UmbracoHelper umbracoHelper) : base(umbracoContext,
-            umbracoHelper)
-        {
-            _groupService = new GroupService();
-            _utility = new Utility();
+            _groupService = groupService;
+            _utility = utility;
         }
 
         /// <summary>
