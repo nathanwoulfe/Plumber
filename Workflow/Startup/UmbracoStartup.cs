@@ -16,12 +16,11 @@ namespace Workflow.Startup
 {
     public class UmbracoStartup : ApplicationEventHandler
     {
-        private const string AppSettingKey = "WorkflowInstalled";
 
         protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext context)
         {
             //Check to see if appSetting is true or even present
-            string installAppSetting = WebConfigurationManager.AppSettings[AppSettingKey];
+            string installAppSetting = WebConfigurationManager.AppSettings[Constants.AppSettingKey];
 
             if (string.IsNullOrEmpty(installAppSetting))
             {
@@ -43,7 +42,7 @@ namespace Workflow.Startup
                 //All done installing our custom stuff
                 //As we only want this to run once - not every startup of Umbraco
                 Configuration webConfig = WebConfigurationManager.OpenWebConfiguration("/");
-                webConfig.AppSettings.Settings.Add(AppSettingKey, true.ToString());
+                webConfig.AppSettings.Settings.Add(Constants.AppSettingKey, true.ToString());
                 webConfig.Save();
 
             }
@@ -100,7 +99,7 @@ namespace Workflow.Startup
 
             //Remove AppSetting key when all done
             Configuration webConfig = WebConfigurationManager.OpenWebConfiguration("/");
-            webConfig.AppSettings.Settings.Remove(AppSettingKey);
+            webConfig.AppSettings.Settings.Remove(Constants.AppSettingKey);
             webConfig.Save();
         }
     }

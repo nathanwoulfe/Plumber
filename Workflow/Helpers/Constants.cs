@@ -3,6 +3,7 @@
     public static class Constants
     {
         public const string Name = "Plumber";
+        public const string AppSettingKey = "WorkflowInstalled";
 
         public const string VersionKey = "plumberVersion";
         public const string DocsKey = "plumberDocs";
