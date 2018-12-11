@@ -239,6 +239,12 @@
             pointer-events: none;
         }
     }
+
+    // make sidebar a little wider than 350px default
+    .umb-package-details__sidebar {
+        flex:0 0 450px;
+    }
+
     // import scss partials
     @import "highcharts";
     @import "listview";

@@ -67,7 +67,7 @@ namespace Workflow.Trees
                     $"{RouteBase}approval-groups/info");
                 nodes.Add(groupsNode);
 
-                TreeNode historyNode = CreateTreeNode("history", id, queryStrings, "History", "icon-directions-alt", false,
+                TreeNode historyNode = CreateTreeNode("history", id, queryStrings, "History", "icon-alarm-clock", false,
                     $"{RouteBase}history/info");
                 nodes.Add(historyNode);
 

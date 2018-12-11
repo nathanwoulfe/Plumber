@@ -105,6 +105,14 @@ namespace Workflow.Api
                     filename += "." + logdate;
                 }
 
+                if (!File.Exists(filename))
+                {
+                    response.Content = new StringContent($"No log file found for {logdate}");
+                    response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+
+                    return response;
+                }
+
                 string logText = HttpUtility.HtmlEncode(File.ReadAllText(filename));
 
                 if (!string.IsNullOrEmpty(logText))
@@ -176,7 +184,6 @@ namespace Workflow.Api
 
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
             return response;
-
         }
     }
 }

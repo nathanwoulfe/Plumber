@@ -8,12 +8,13 @@
     }
 
     .datepicker {
-        margin-bottom: 0;
-        margin-right: 10px;
+        max-width:237px; // fixed values aren't good, but YOLO
+        margin-left:auto;
+        margin-right:auto;
     }
 
     .button-row {
-        margin-bottom: 5px;
+        margin-bottom: 5px; 
         text-align: center;
     }
 

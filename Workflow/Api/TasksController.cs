@@ -187,7 +187,7 @@ namespace Workflow.Api
         {
             try
             {
-                // todo -> ony fetch the require page, not all
+                // todo -> only fetch the require page, not all
                 List<WorkflowTaskInstancePoco> taskInstances = _tasksService.GetTasksByNodeId(id);
                 // set sorted to false as the instances are ordered by create date -> sorting will order the paged items by workflow step
                 List<WorkflowTask> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList(), false);
