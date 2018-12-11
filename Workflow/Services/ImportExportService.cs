@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Workflow.Models;

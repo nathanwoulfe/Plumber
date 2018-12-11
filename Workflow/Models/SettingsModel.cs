@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Workflow.Models
+﻿namespace Workflow.Models
 {
     public class SettingsModel
     {

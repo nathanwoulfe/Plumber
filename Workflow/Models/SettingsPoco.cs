@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Umbraco.Core.Persistence;
+﻿using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
 
 namespace Workflow.Models

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Workflow.Events.Args;
