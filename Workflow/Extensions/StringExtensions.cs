@@ -48,5 +48,17 @@ namespace Workflow.Extensions
         {
             return !string.IsNullOrEmpty(value);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool HasNoValue(this string value)
+        {
+            return string.IsNullOrEmpty(value);
+        }
+
+
     }
 }

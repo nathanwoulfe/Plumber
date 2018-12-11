@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using Workflow.Extensions;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
@@ -22,14 +23,14 @@ namespace Workflow.Helpers
             string editUrl = settings.EditUrl;
             HttpRequest request = HttpContext.Current.Request;
 
-            if (string.IsNullOrEmpty(editUrl))
+            if (editUrl.HasNoValue())
             {
                 if (request.ApplicationPath != null)
                     editUrl = request.Url.Scheme + "://" + request.Url.Authority +
                               request.ApplicationPath.TrimEnd('/') + "/";
             }
 
-            if (editUrl == null) return string.Empty;
+            if (editUrl.HasNoValue()) return string.Empty;
 
             bool valid = Uri.TryCreate(editUrl, UriKind.Absolute, out Uri uriResult)
                           && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
@@ -37,7 +38,7 @@ namespace Workflow.Helpers
             // if result is false, the settings value has no scheme, so prepend from the current request, or fallback to https
             if (!valid)
             {
-                editUrl = (request.ApplicationPath != null ? request.Url.Scheme : Uri.UriSchemeHttps) + "://" + editUrl;
+                editUrl = (request.ApplicationPath.HasValue() ? request.Url.Scheme : Uri.UriSchemeHttps) + "://" + editUrl;
             }
 
             var baseUrl = new Uri(editUrl);
@@ -64,7 +65,7 @@ namespace Workflow.Helpers
             WorkflowSettingsPoco settings = SettingsService.GetSettings();
             string editUrl = settings.EditUrl;
 
-            if (string.IsNullOrEmpty(editUrl))
+            if (editUrl.HasNoValue())
             {
                 HttpRequest request = HttpContext.Current.Request;
                 if (request.ApplicationPath != null)
@@ -72,10 +73,10 @@ namespace Workflow.Helpers
                               request.ApplicationPath.TrimEnd('/') + "/";
             }
 
-            if (editUrl == null) return string.Empty;
+            if (editUrl.HasNoValue()) return string.Empty;
 
             var baseUrl = new Uri(editUrl.StartsWith("http") ? editUrl : $"http://{editUrl}");
-            return (new Uri(baseUrl, partialUrl)).ToString();
+            return new Uri(baseUrl, partialUrl).ToString();
         }
     }
 }
