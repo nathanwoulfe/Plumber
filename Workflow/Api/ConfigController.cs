@@ -20,11 +20,15 @@ namespace Workflow.Api
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IConfigService _configService;
 
-        public ConfigController()
+        public ConfigController() : this(new ConfigService())
         {
-            _configService = new ConfigService();
         }
-        
+
+        public ConfigController(IConfigService configSerivce)
+        {
+            _configService = configSerivce;
+        }
+
         /// <summary>
         /// Check root nodes have a group assigned
         /// </summary>
