@@ -128,7 +128,7 @@
     <Compile Include="Models\InitiateWorkflowModel.cs" />
     <Compile Include="Models\SettingsPoco.cs" />
     <Compile Include="Repositories\PocoRepository.cs" />
-    <Compile Include="Helpers\SqlHelpers.cs" />
+    <Compile Include="Helpers\SqlQueries.cs" />
     <Compile Include="Notifications\Emailer.cs" />
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Processes\DocumentPublishProcess.cs" />

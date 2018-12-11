@@ -48,7 +48,7 @@ namespace Workflow.Repositories
         /// <returns></returns>
         public int CountPendingInstances()
         {
-            return _database.Fetch<int>(SqlHelpers.CountPendingInstances).First();
+            return _database.Fetch<int>(SqlQueries.CountPendingInstances).First();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Workflow.Repositories
         /// <returns></returns>
         public double CountAllInstances()
         {
-            return _database.Fetch<double>(SqlHelpers.CountAllInstances).First();
+            return _database.Fetch<double>(SqlQueries.CountAllInstances).First();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Workflow.Repositories
         public List<WorkflowInstancePoco> GetAllInstances()
         {
             return _database.Fetch<WorkflowInstancePoco, WorkflowTaskInstancePoco, UserGroupPoco, WorkflowInstancePoco>
-                (new UserToGroupForInstanceRelator().MapIt, SqlHelpers.AllInstances);
+                (new UserToGroupForInstanceRelator().MapIt, SqlQueries.AllInstances);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="WorkflowInstancePoco"/></returns>
         public List<WorkflowInstancePoco> GetAllActiveInstances()
         {
-            return _database.Fetch<WorkflowInstancePoco>(SqlHelpers.AllActiveInstances);
+            return _database.Fetch<WorkflowInstancePoco>(SqlQueries.AllActiveInstances);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Workflow.Repositories
         public List<WorkflowInstancePoco> GetAllInstancesForNode(int nodeId)
         {
             return _database.Fetch<WorkflowInstancePoco, WorkflowTaskInstancePoco, UserGroupPoco, WorkflowInstancePoco>
-                (new UserToGroupForInstanceRelator().MapIt, SqlHelpers.AllInstancesForNode, nodeId);
+                (new UserToGroupForInstanceRelator().MapIt, SqlQueries.AllInstancesForNode, nodeId);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="WorkflowInstancePoco"/></returns>
         public List<WorkflowInstancePoco> GetAllInstancesForDateRange(DateTime oldest)
         {
-            return _database.Fetch<WorkflowInstancePoco>(SqlHelpers.AllInstancesForDateRange, oldest);
+            return _database.Fetch<WorkflowInstancePoco>(SqlQueries.AllInstancesForDateRange, oldest);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Workflow.Repositories
         {
             int filterVal = !string.IsNullOrEmpty(filter) ? (int)Enum.Parse(typeof(WorkflowStatus), filter) : -1;
             return _database.Fetch<WorkflowInstancePoco, WorkflowTaskInstancePoco, UserGroupPoco, WorkflowInstancePoco>
-                (new UserToGroupForInstanceRelator().MapIt, SqlHelpers.FilteredInstancesForDateRange, oldest, filterVal);
+                (new UserToGroupForInstanceRelator().MapIt, SqlQueries.FilteredInstancesForDateRange, oldest, filterVal);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="WorkflowInstancePoco"/></returns>
         public WorkflowInstancePoco GetInstanceByGuid(Guid guid)
         {
-            return _database.Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByGuid, guid).First();
+            return _database.Fetch<WorkflowInstancePoco>(SqlQueries.InstanceByGuid, guid).First();
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Workflow.Repositories
         public IEnumerable<WorkflowInstancePoco> GetInstancesForNodeByStatus(int nodeId, IEnumerable<int> status = null)
         {
             if (status == null || !status.Any())
-                return _database.Fetch<WorkflowInstancePoco>(SqlHelpers.InstanceByNodeStr, nodeId);
+                return _database.Fetch<WorkflowInstancePoco>(SqlQueries.InstanceByNodeStr, nodeId);
 
             string statusStr = string.Concat("Status = ", string.Join(" OR Status = ", status));
             if (!string.IsNullOrEmpty(statusStr))
@@ -140,7 +140,7 @@ namespace Workflow.Repositories
                 statusStr = " AND " + statusStr;
             }
 
-            return _database.Fetch<WorkflowInstancePoco>(string.Concat(SqlHelpers.InstanceByNodeStr, statusStr), nodeId);
+            return _database.Fetch<WorkflowInstancePoco>(string.Concat(SqlQueries.InstanceByNodeStr, statusStr), nodeId);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Workflow.Repositories
         public WorkflowSettingsPoco GetSettings()
         {
             var wsp = new WorkflowSettingsPoco();
-            List<WorkflowSettingsPoco> settings = _database.Fetch<WorkflowSettingsPoco>(SqlHelpers.GetSettings);
+            List<WorkflowSettingsPoco> settings = _database.Fetch<WorkflowSettingsPoco>(SqlQueries.GetSettings);
 
             if (settings.Any())
             {
@@ -58,7 +58,7 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="UserGroupPoco"/></returns>
         public IEnumerable<UserGroupPoco> GetUserGroups()
         {
-            return _database.Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(new GroupsRelator().MapIt, SqlHelpers.UserGroups);            
+            return _database.Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(new GroupsRelator().MapIt, SqlQueries.UserGroups);            
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Workflow.Repositories
             return _database
                 .Fetch<UserGroupPoco, UserGroupPermissionsPoco, User2UserGroupPoco, UserGroupPoco>(
                     new GroupsRelator().MapIt,
-                    SqlHelpers.UserGroupDetailed,
+                    SqlQueries.UserGroupDetailed,
                     id
                 ).FirstOrDefault(g => !g.Deleted);
         }
@@ -115,13 +115,13 @@ namespace Workflow.Repositories
         public List<UserGroupPermissionsPoco> PermissionsForNode(int nodeId, int contentTypeId = 0)
         {
             return _database.Fetch<UserGroupPermissionsPoco, UserGroupPoco, User2UserGroupPoco, UserGroupPermissionsPoco>
-                (new UserToGroupForPermissionsRelator().MapIt, SqlHelpers.PermissionsByNode, nodeId, contentTypeId);
+                (new UserToGroupForPermissionsRelator().MapIt, SqlQueries.PermissionsByNode, nodeId, contentTypeId);
         }
 
         public List<UserGroupPermissionsPoco> AllPermissionsForNode(string[] path, int contentTypeId)
         {
             return _database.Fetch<UserGroupPermissionsPoco, UserGroupPoco, User2UserGroupPoco, UserGroupPermissionsPoco>
-                (new UserToGroupForPermissionsRelator().MapIt, SqlHelpers.AllPermissionsForNode, path, contentTypeId);
+                (new UserToGroupForPermissionsRelator().MapIt, SqlQueries.AllPermissionsForNode, path, contentTypeId);
         }
 
         public List<UserGroupPermissionsPoco> GetAllPermissions()

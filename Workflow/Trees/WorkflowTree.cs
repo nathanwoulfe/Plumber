@@ -93,7 +93,7 @@ namespace Workflow.Trees
         public void AddApprovalGroupsToTree(TreeNodeCollection nodes, FormDataCollection queryStrings)
         {
             UmbracoDatabase db = ApplicationContext.Current.DatabaseContext.Database;
-            List<UserGroupPoco> userGroups = db.Fetch<UserGroupPoco>(SqlHelpers.GroupsForTree).OrderBy(x => x.Name).ToList();
+            List<UserGroupPoco> userGroups = db.Fetch<UserGroupPoco>(SqlQueries.GroupsForTree).OrderBy(x => x.Name).ToList();
 
             if (!userGroups.Any()) return;
 

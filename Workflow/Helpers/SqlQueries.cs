@@ -1,6 +1,6 @@
 ﻿namespace Workflow.Helpers
 {
-    public class SqlHelpers
+    public class SqlQueries
     {
         // settings
         public const string GetSettings = @"SELECT * FROM WorkflowSettings";

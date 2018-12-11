@@ -47,7 +47,7 @@ namespace Workflow.Repositories
         /// <returns>An integer representing the number of pending workflow tasks</returns>
         public int CountPendingTasks()
         {
-            return _database.Fetch<int>(SqlHelpers.CountPendingTasks).First();
+            return _database.Fetch<int>(SqlQueries.CountPendingTasks).First();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Workflow.Repositories
         /// <returns>An integer representing the number of pending workflow tasks assigned to the group</returns>
         public int CountGroupTasks(int groupId)
         {
-            return _database.Fetch<int>(SqlHelpers.CountGroupTasks, groupId).First();
+            return _database.Fetch<int>(SqlQueries.CountGroupTasks, groupId).First();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
         public List<WorkflowTaskInstancePoco> GetTasksAndGroupByInstanceId(Guid guid)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco, UserGroupPoco>(SqlHelpers.TasksAndGroupByInstanceId, guid);
+            return _database.Fetch<WorkflowTaskInstancePoco, UserGroupPoco>(SqlQueries.TasksAndGroupByInstanceId, guid);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
         public List<WorkflowTaskInstancePoco> GetTasksByNodeId(int nodeId)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.TasksByNode, nodeId);
+            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.TasksByNode, nodeId);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Workflow.Repositories
         {
 
             return _database
-                    .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.PendingTasks,
+                    .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.PendingTasks,
                         new { statusInts = status.Select(s => s.ToString()).ToArray() }).ToList();
 
         }
@@ -102,7 +102,7 @@ namespace Workflow.Repositories
         public WorkflowTaskInstancePoco Get(int id)
         {
             return _database
-                .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco>(SqlHelpers.GetTask, id).FirstOrDefault();
+                .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco>(SqlQueries.GetTask, id).FirstOrDefault();
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Workflow.Repositories
         public IEnumerable<WorkflowTaskInstancePoco> GetAllGroupTasks(int groupId)
         {
             return _database
-                .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.AllGroupTasks, groupId).ToList();
+                .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.AllGroupTasks, groupId).ToList();
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
         public List<WorkflowTaskInstancePoco> GetAllTasksForDateRange(DateTime oldest)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco>(SqlHelpers.AllTasksForDateRange, oldest);
+            return _database.Fetch<WorkflowTaskInstancePoco>(SqlQueries.AllTasksForDateRange, oldest);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Workflow.Repositories
         public List<WorkflowTaskInstancePoco> GetFilteredPagedTasksForDateRange(DateTime oldest, string filter)
         {
             int filterVal = !string.IsNullOrEmpty(filter) ? (int)Enum.Parse(typeof(TaskStatus), filter) : -1;
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.FilteredTasksForDateRange, oldest, filterVal);
+            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.FilteredTasksForDateRange, oldest, filterVal);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
         public List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlHelpers.SubmissionsForUser, new { id, statusInts = status.Select(s => s.ToString()).ToArray() });
+            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.SubmissionsForUser, new { id, statusInts = status.Select(s => s.ToString()).ToArray() });
         }
     }
 }
