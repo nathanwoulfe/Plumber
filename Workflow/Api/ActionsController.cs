@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -8,7 +7,6 @@ using System.Web.Http;
 using log4net;
 using Microsoft.AspNet.SignalR;
 using Umbraco.Core.Models.Membership;
-using Umbraco.Web;
 using Umbraco.Web.WebApi;
 using Workflow.Extensions;
 using Workflow.Models;
@@ -34,19 +32,14 @@ namespace Workflow.Api
 
         private readonly Utility _utility;
 
-        public ActionsController()
+        public ActionsController() : this(new InstancesService(), new TasksService())
         {
-            _instancesService = new InstancesService();
-            _tasksService = new TasksService();
-
-            _utility = new Utility();
-            _hubContext = GlobalHost.ConnectionManager.GetHubContext<PlumberHub>();
         }
 
-        public ActionsController(UmbracoContext umbracoContext) : base(umbracoContext)
+        public ActionsController(IInstancesService instancesService, ITasksService tasksService)
         {
-            _instancesService = new InstancesService();
-            _tasksService = new TasksService();
+            _instancesService = instancesService;
+            _tasksService = tasksService;
 
             _utility = new Utility();
             _hubContext = GlobalHost.ConnectionManager.GetHubContext<PlumberHub>();
@@ -129,11 +122,11 @@ namespace Workflow.Api
         [Route("approve")]
         public IHttpActionResult ApproveWorkflowTask(TaskData model)
         {
-            WorkflowInstancePoco instance = GetInstance(model.InstanceGuid);
+            WorkflowInstancePoco instance = _instancesService.GetPopulatedInstance(model.InstanceGuid);
 
             try
             {
-                WorkflowProcess process = GetProcess(instance.Type);
+                WorkflowProcess process = instance.GetProcess();
                 IUser currentUser = _utility.GetCurrentUser();
 
                 instance = process.ActionWorkflow(
@@ -145,12 +138,15 @@ namespace Workflow.Api
 
                 string msg = string.Empty;
                 string logMsg = string.Empty;
-                   
+
+                string typeDescription = instance.WorkflowType.Description(instance.ScheduledDate);
+                string typeDescriptionPast = instance.WorkflowType.DescriptionPastTense(instance.ScheduledDate);
+
                 switch (instance.WorkflowStatus)
                 {
                     case WorkflowStatus.PendingApproval:
-                        msg = $"Approval completed successfully. Page will be {instance.TypeDescriptionPastTense.ToLower()} following workflow completion.";
-                        logMsg = $"Workflow {instance.TypeDescription} task on {instance.Node.Name} [{instance.NodeId}] approved by {currentUser.Name}";
+                        msg = $"Approval completed successfully. Page will be {typeDescriptionPast.ToLower()} following workflow completion.";
+                        logMsg = $"Workflow {typeDescription} task on {instance.Node.Name} [{instance.NodeId}] approved by {currentUser.Name}";
                         break;
                     case WorkflowStatus.Approved:
                         msg = "Workflow approved successfully.";
@@ -158,13 +154,13 @@ namespace Workflow.Api
 
                         if (instance.ScheduledDate.HasValue)
                         {
-                            string scheduled = $" Page scheduled for {instance.TypeDescription} at {instance.ScheduledDate.Value.ToString("dd MMM YYYY", CultureInfo.CurrentCulture)}";
+                            string scheduled = $" Page scheduled for {typeDescription} at {instance.ScheduledDate.Value.ToString("dd MMM YYYY", CultureInfo.CurrentCulture)}";
                             msg += scheduled;
                             logMsg += scheduled;
                         }
                         else
                         {
-                            msg += $" Page has been {instance.TypeDescriptionPastTense.ToLower()}";
+                            msg += $" Page has been {typeDescriptionPast.ToLower()}";
                         }
                         break;
                 }
@@ -199,11 +195,11 @@ namespace Workflow.Api
         [Route("reject")]
         public IHttpActionResult RejectWorkflowTask(TaskData model)
         {
-            WorkflowInstancePoco instance = GetInstance(model.InstanceGuid);
+            WorkflowInstancePoco instance = _instancesService.GetPopulatedInstance(model.InstanceGuid);
 
             try
             {
-                WorkflowProcess process = GetProcess(instance.Type);
+                WorkflowProcess process = instance.GetProcess();
                 IUser currentUser = _utility.GetCurrentUser();
 
                 instance = process.ActionWorkflow(
@@ -213,14 +209,16 @@ namespace Workflow.Api
                     model.Comment
                 );
 
-                Log.Info($"{instance.TypeDescription} request for {instance.Node.Name} [{instance.NodeId}] was rejected by {currentUser.Name}");
+                string typeDescription = instance.WorkflowType.Description(instance.ScheduledDate);
+
+                Log.Info($"{typeDescription} request for {instance.Node.Name} [{instance.NodeId}] was rejected by {currentUser.Name}");
 
                 _hubContext.Clients.All.TaskRejected(
                     _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance: instance));
 
                 return Json(new
                 {
-                    message = instance.TypeDescription + " request has been rejected.",
+                    message = typeDescription + " request has been rejected.",
                     status = 200
                 }, ViewHelpers.CamelCase);
             }
@@ -243,11 +241,11 @@ namespace Workflow.Api
         [Route("cancel")]
         public IHttpActionResult CancelWorkflowTask(TaskData model)
         {
-            WorkflowInstancePoco instance = GetInstance(model.InstanceGuid);
+            WorkflowInstancePoco instance = _instancesService.GetPopulatedInstance(model.InstanceGuid);
 
             try
             {
-                WorkflowProcess process = GetProcess(instance.Type);
+                WorkflowProcess process = instance.GetProcess();
                 IUser currentUser = _utility.GetCurrentUser();
 
                 instance = process.CancelWorkflow(
@@ -256,7 +254,9 @@ namespace Workflow.Api
                     model.Comment
                 );
 
-                Log.Info($"{instance.TypeDescription} request for {instance.Node.Name} [{instance.NodeId}] was cancelled by {currentUser.Name}");
+                string typeDescription = instance.WorkflowType.Description(instance.ScheduledDate);
+
+                Log.Info($"{typeDescription} request for {instance.Node.Name} [{instance.NodeId}] was cancelled by {currentUser.Name}");
 
                 _hubContext.Clients.All.TaskCancelled(
                     _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance: instance)
@@ -265,7 +265,7 @@ namespace Workflow.Api
                 return Json(new
                 {
                     status = 200,
-                    message = instance.TypeDescription + " workflow cancelled"
+                    message = typeDescription + " workflow cancelled"
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
@@ -286,11 +286,11 @@ namespace Workflow.Api
         [Route("resubmit")]
         public IHttpActionResult ResubmitWorkflowTask(TaskData model)
         {
-            WorkflowInstancePoco instance = GetInstance(model.InstanceGuid);
+            WorkflowInstancePoco instance = _instancesService.GetPopulatedInstance(model.InstanceGuid);
 
             try
             {
-                WorkflowProcess process = GetProcess(instance.Type);
+                WorkflowProcess process = instance.GetProcess();
                 IUser currentUser = _utility.GetCurrentUser();
 
                 instance = process.ResubmitWorkflow(
@@ -299,14 +299,17 @@ namespace Workflow.Api
                     model.Comment
                 );
 
-                Log.Info($"{instance.TypeDescription} request for {instance.Node.Name} [{instance.NodeId}] was resubmitted by {currentUser.Name}");
+                string typeDescription = instance.WorkflowType.Description(instance.ScheduledDate);
+                string typeDescriptionPast = instance.WorkflowType.DescriptionPastTense(instance.ScheduledDate);
+
+                Log.Info($"{typeDescription} request for {instance.Node.Name} [{instance.NodeId}] was resubmitted by {currentUser.Name}");
 
                 _hubContext.Clients.All.TaskResubmitted(
                     _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance: instance));
 
                 return Json(new
                 {
-                    message = $"Changes resubmitted successfully. Page will be {instance.TypeDescriptionPastTense.ToLower()} following workflow completion.",
+                    message = $"Changes resubmitted successfully. Page will be {typeDescriptionPast.ToLower()} following workflow completion.",
                     status = 200
                 }, ViewHelpers.CamelCase);
             }
@@ -318,46 +321,5 @@ namespace Workflow.Api
                 return Content(HttpStatusCode.InternalServerError, ViewHelpers.ApiException(ex, msg));
             }
         }
-
-        #region Private methods
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private static dynamic GetProcess(int type)
-        {
-            if ((WorkflowType)type == WorkflowType.Publish)
-            {
-                return new DocumentPublishProcess();
-            }
-            return new DocumentUnpublishProcess();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="instanceGuid"></param>
-        /// <returns></returns>
-        private WorkflowInstancePoco GetInstance(Guid instanceGuid)
-        {
-            WorkflowInstancePoco instance = _instancesService.GetByGuid(instanceGuid);
-            instance.SetScheduledDate();
-
-            // TODO -> fix this
-            List<WorkflowTaskInstancePoco> tasks = _tasksService.GetTasksWithGroupByInstanceGuid(instance.Guid);
-
-            if (tasks.Any())
-            {
-                // ordering by descending id to allow for cases with multiple rejections
-                // most recent will be highest id, obviously...
-                instance.TaskInstances = tasks.OrderByDescending(t => t.Id).ToList();
-            }
-
-            return instance;
-        }
-
-        #endregion
     }
 }

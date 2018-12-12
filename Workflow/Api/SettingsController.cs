@@ -12,7 +12,6 @@ using Newtonsoft.Json.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
-using Umbraco.Web;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
 using Workflow.Models;
@@ -30,24 +29,15 @@ namespace Workflow.Api
         private readonly ISettingsService _settingsService;
         private readonly IContentTypeService _contentTypeService;
 
-        public SettingsController()
+        public SettingsController() : this(new SettingsService(), ApplicationContext.Current.Services.ContentTypeService)
         {
-            _settingsService = new SettingsService();
-            _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
         }
 
-        public SettingsController(UmbracoContext umbracoContext) : base(umbracoContext)
+        public SettingsController(ISettingsService settingsService, IContentTypeService contentTypeService)
         {
-            _settingsService = new SettingsService();
-            _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
+            _settingsService = settingsService;
+            _contentTypeService = contentTypeService;
         }
-
-        //public SettingsController(UmbracoContext umbracoContext, UmbracoHelper umbracoHelper) : base(umbracoContext,
-        //    umbracoHelper)
-        //{
-        //    _settingsService = new SettingsService();
-        //    _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
-        //}
 
         /// <summary>
         /// Get an object with info about the installed version and latest release from GitHub

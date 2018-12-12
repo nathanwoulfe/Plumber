@@ -161,7 +161,7 @@ namespace Workflow.Services
             {
                 var model = new WorkflowInstance
                 {
-                    Type = instance.TypeDescription,
+                    Type = instance.WorkflowType.Description(instance.ScheduledDate),
                     InstanceGuid = instance.Guid,
                     Status = instance.StatusName,
                     CssStatus = instance.StatusName.ToLower().Split(' ')[0],
@@ -189,6 +189,29 @@ namespace Workflow.Services
         public WorkflowInstancePoco GetByGuid(Guid guid)
         {
             WorkflowInstancePoco instance = _repo.GetInstanceByGuid(guid);
+            return instance;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        public WorkflowInstancePoco GetPopulatedInstance(Guid guid)
+        {
+            WorkflowInstancePoco instance = GetByGuid(guid);
+            instance.SetScheduledDate();
+
+            // TODO -> fix this
+            List<WorkflowTaskInstancePoco> tasks = _tasksService.GetTasksWithGroupByInstanceGuid(instance.Guid);
+
+            if (tasks.Any())
+            {
+                // ordering by descending id to allow for cases with multiple rejections
+                // most recent will be highest id
+                instance.TaskInstances = tasks.OrderByDescending(t => t.Id).ToList();
+            }
+
             return instance;
         }
 

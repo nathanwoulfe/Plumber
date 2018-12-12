@@ -116,7 +116,7 @@ namespace Workflow.Services
                     InstanceGuid = instance.Guid,
                     TaskId = taskInstance.Id,
 
-                    Type = instance.TypeDescription,
+                    Type = instance.WorkflowType.Description(instance.ScheduledDate),
                     TypeId = instance.Type,
                     CurrentStep = taskInstance.ApprovalStep,
 
@@ -154,13 +154,13 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<WorkflowTaskInstancePoco> GetAllPendingTasks(IEnumerable<int> status)
         {
-            List<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllPendingTasks(status)
+            IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllPendingTasks(status);
+
+            return taskInstances
                 .Where(x => x.WorkflowInstance.Active)
                 .GroupBy(x => x.WorkflowInstanceGuid)
                 .Select(x => x.First())
                 .ToList();
-
-            return taskInstances;
         }
 
         /// <summary>

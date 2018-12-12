@@ -149,7 +149,8 @@ namespace Workflow.Repositories
                     ContentTypeId = m.ContentTypeId,
                     GroupId = m.GroupId,
                     NodeId = m.NodeId,
-                    Permission = m.Permission
+                    Permission = m.Permission,
+                    Condition = m.Condition
                 });
             }
         }

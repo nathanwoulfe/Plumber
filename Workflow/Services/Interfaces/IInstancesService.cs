@@ -18,6 +18,7 @@ namespace Workflow.Services.Interfaces
         Dictionary<int, bool> IsActive(IEnumerable<int> ids);
 
         WorkflowInstancePoco GetByGuid(Guid guid);
+        WorkflowInstancePoco GetPopulatedInstance(Guid guid);
 
         int CountPending();
         double CountAll(); // value is used to calculate total pages, using math.ceiling, so needs type

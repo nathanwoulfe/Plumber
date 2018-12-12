@@ -75,6 +75,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TaskInstanceExtensions.cs" />
     <Compile Include="Extensions\WorkflowInstanceExtensions.cs" />
+    <Compile Include="Extensions\WorkflowTypeExtensions.cs" />
     <Compile Include="Helpers\Installer.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\Uninstaller.cs" />

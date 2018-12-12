@@ -5,9 +5,9 @@ namespace Workflow.Extensions
 {
     public static class TaskInstanceExtensions
     {
-        public static void ProcessApproval(this WorkflowTaskInstancePoco taskInstance, WorkflowAction action, int userId, string comment, out EmailType? emailAction)
+        public static EmailType? ProcessApproval(this WorkflowTaskInstancePoco taskInstance, WorkflowAction action, int userId, string comment)
         {
-            emailAction = null;
+            EmailType? emailAction = null;
 
             switch (action)
             {
@@ -28,6 +28,8 @@ namespace Workflow.Extensions
             taskInstance.CompletedDate = DateTime.Now;
             taskInstance.Comment = comment;
             taskInstance.ActionedByUserId = userId;
+
+            return emailAction;
         }
 
         /// <summary>

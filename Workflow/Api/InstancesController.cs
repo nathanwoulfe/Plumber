@@ -23,9 +23,13 @@ namespace Workflow.Api
 
         private readonly IInstancesService _instancesService;
 
-        public InstancesController()
+        public InstancesController() : this(new InstancesService())
         {
-            _instancesService = new InstancesService();
+        }
+
+        public InstancesController(IInstancesService instancesService)
+        {
+            _instancesService = instancesService;
         }
         
         /// <summary>

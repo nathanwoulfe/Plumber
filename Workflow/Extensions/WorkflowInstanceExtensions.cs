@@ -3,6 +3,7 @@ using System.Linq;
 using Umbraco.Core.Models;
 using Workflow.Helpers;
 using Workflow.Models;
+using Workflow.Processes;
 using Workflow.Services;
 
 using TaskStatus = Workflow.Models.TaskStatus;
@@ -63,16 +64,31 @@ namespace Workflow.Extensions
         /// Adds an approval task to this workflow instance, setting the approval step and instance guid
         /// </summary>
         /// <param name="instance"></param>
-        /// <param name="taskInstance"></param>
-        public static void CreateApprovalTask(this WorkflowInstancePoco instance, out WorkflowTaskInstancePoco taskInstance)
+        public static WorkflowTaskInstancePoco CreateApprovalTask(this WorkflowInstancePoco instance)
         {
-            taskInstance = new WorkflowTaskInstancePoco(TaskType.Approve)
+            var taskInstance = new WorkflowTaskInstancePoco(TaskType.Approve)
             {
                 ApprovalStep = instance.TaskInstances.Count(x => x.TaskStatus.In(TaskStatus.Approved, TaskStatus.NotRequired)),
                 WorkflowInstanceGuid = instance.Guid
             };
 
             instance.TaskInstances.Add(taskInstance);
+
+            return taskInstance;
+        }
+
+        /// <summary>
+        /// Create the new process object for the instance - publish or unpublish
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public static WorkflowProcess GetProcess(this WorkflowInstancePoco instance)
+        {
+            if ((WorkflowType)instance.Type == WorkflowType.Publish)
+            {
+                return new DocumentPublishProcess();
+            }
+            return new DocumentUnpublishProcess();
         }
 
         /// <summary>
@@ -81,7 +97,7 @@ namespace Workflow.Extensions
         /// <returns>HTML tr inner html definition</returns>
         public static string BuildProcessSummary(this WorkflowInstancePoco instance)
         {
-            string result = $"{instance.TypeDescription} requested by {instance.AuthorUser.Name} on {instance.CreatedDate:dd/MM/yy} - {instance.StatusName}<br/>";
+            string result = $"{instance.WorkflowType.Description(instance.ScheduledDate)} requested by {instance.AuthorUser.Name} on {instance.CreatedDate:dd/MM/yy} - {instance.StatusName}<br/>";
 
             if (instance.AuthorComment.HasValue())
             {

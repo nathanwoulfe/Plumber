@@ -8,7 +8,6 @@ using Workflow.Models;
 using Workflow.Helpers;
 using Workflow.Services;
 using System.Threading.Tasks;
-using Umbraco.Web;
 using Workflow.Services.Interfaces;
 
 namespace Workflow.Api
@@ -20,14 +19,14 @@ namespace Workflow.Api
         private readonly IGroupService _groupService;
         private readonly Utility _utility;
 
-        public GroupsController() : this(new GroupService(), new Utility())
+        public GroupsController() : this(new GroupService())
         {
         }
 
-        public GroupsController(IGroupService groupService, Utility utility)
+        public GroupsController(IGroupService groupService)
         {
             _groupService = groupService;
-            _utility = utility;
+            _utility = new Utility();
         }
 
         /// <summary>

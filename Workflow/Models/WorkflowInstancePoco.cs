@@ -25,6 +25,7 @@ namespace Workflow.Models
             Status = (int)WorkflowStatus.PendingApproval;
             CreatedDate = DateTime.Now;
             CompletedDate = null;
+
             this.SetScheduledDate();
 
             _utility = new Utility();
@@ -69,21 +70,6 @@ namespace Workflow.Models
         public WorkflowType WorkflowType => (WorkflowType)Type;
 
         /// <summary>
-        /// Title case text name for the workflow type.
-        /// </summary>
-        [ResultColumn]
-        public string TypeName => WorkflowType.ToString().ToTitleCase();
-
-        [ResultColumn]
-        public string TypeDescriptionPastTense => TypeDescription.Replace("ish", "ished").Replace("dule", "duled").Replace("for", "to be");
-
-        /// <summary>
-        /// Describe the workflow type by including details for release at / expire at scheduling.
-        /// </summary>
-        [ResultColumn]
-        public string TypeDescription => WorkflowTypeDescription(WorkflowType, ScheduledDate);
-
-        /// <summary>
         /// The document object associated with this workflow.
         /// </summary>
         [ResultColumn]
@@ -105,9 +91,7 @@ namespace Workflow.Models
         /// Indicates whether the workflow instance is currently active.
         /// </summary>
         [ResultColumn]
-        public bool Active => WorkflowStatus != WorkflowStatus.Cancelled 
-                              && WorkflowStatus != WorkflowStatus.Errored 
-                              && WorkflowStatus != WorkflowStatus.Approved;
+        public bool Active => WorkflowStatus.NotIn(WorkflowStatus.Cancelled, WorkflowStatus.Errored, WorkflowStatus.Approved);
 
         [ResultColumn]
         public DateTime? ScheduledDate { get; set; }
@@ -115,19 +99,5 @@ namespace Workflow.Models
         [ResultColumn]
         public ICollection<WorkflowTaskInstancePoco> TaskInstances { get; set; }
 
-        #region PrivateMethods
-
-        private string WorkflowTypeDescription(WorkflowType type, DateTime? scheduledDate)
-        {
-            string typeString = type.ToString().ToTitleCase();
-            if (scheduledDate.HasValue)
-            {
-                return "Schedule for " + typeString + " at " + scheduledDate.Value.ToString("dd/MM/yy HH:mm");
-            }
-
-            return typeString;
-        }
-
-        #endregion
     }
 }

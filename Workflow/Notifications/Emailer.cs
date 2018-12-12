@@ -104,6 +104,8 @@ namespace Workflow.Notifications
                 List<string> to = new List<string>();
 
                 var body = "";
+                string typeDescription = instance.WorkflowType.Description(instance.ScheduledDate);
+                string typeDescriptionPast = instance.WorkflowType.DescriptionPastTense(instance.ScheduledDate);
 
                 switch (emailType)
                 {
@@ -111,7 +113,7 @@ namespace Workflow.Notifications
                         to = finalTask.UserGroup.PreferredEmailAddresses();
                         body = string.Format(EmailApprovalRequestString,
                             to.Count > 1 ? "Umbraco user" : finalTask.UserGroup.Name, docUrl, docTitle, instance.AuthorComment,
-                            instance.AuthorUser.Name, instance.TypeDescription, string.Empty);
+                            instance.AuthorUser.Name, typeDescription, string.Empty);
                         break;
 
                     case EmailType.ApprovalRejection:
@@ -119,7 +121,7 @@ namespace Workflow.Notifications
                         to.Add(instance.AuthorUser.Email);
                         body = string.Format(EmailRejectedString,
                             "Umbraco user", docUrl, docTitle, finalTask.Comment,
-                            finalTask.ActionedByUser.Name, instance.TypeDescription.ToLower());
+                            finalTask.ActionedByUser.Name, typeDescription.ToLower());
 
                         break;
 
@@ -138,7 +140,7 @@ namespace Workflow.Notifications
 
                         body = string.Format(EmailApprovedString,
                                    "Umbraco user", docUrl, docTitle,
-                                   instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
+                                   typeDescriptionPast.ToLower()) + "<br/>";
 
                         body += instance.BuildProcessSummary();
 
@@ -150,7 +152,7 @@ namespace Workflow.Notifications
 
                         body = string.Format(EmailApprovedString,
                                    "Umbraco user", docUrl, docTitle,
-                                   instance.TypeDescriptionPastTense.ToLower()) + "<br/>";
+                                   typeDescriptionPast.ToLower()) + "<br/>";
 
                         body += instance.BuildProcessSummary();
 
@@ -163,7 +165,7 @@ namespace Workflow.Notifications
                         to.Add(instance.AuthorUser.Email);
 
                         body = string.Format(EmailCancelledString,
-                            "Umbraco user", instance.TypeDescription, docUrl, docTitle, finalTask.ActionedByUser.Name, finalTask.Comment);
+                            "Umbraco user", typeDescription, docUrl, docTitle, finalTask.ActionedByUser.Name, finalTask.Comment);
                         break;
                     case EmailType.SchedulerActionCancelled:
                         break;
@@ -176,7 +178,7 @@ namespace Workflow.Notifications
                 var client = new SmtpClient();
                 var msg = new MailMessage
                 {
-                    Subject = $"{emailType.ToString().ToTitleCase()} - {instance.Node.Name} ({instance.TypeDescription})",
+                    Subject = $"{emailType.ToString().ToTitleCase()} - {instance.Node.Name} ({typeDescription})",
                     IsBodyHtml = true,
                 };
 
@@ -195,7 +197,7 @@ namespace Workflow.Notifications
 
                         body = string.Format(EmailApprovalRequestString,
                             user.User.Name, docUrl, docTitle, instance.AuthorComment,
-                            instance.AuthorUser.Name, instance.TypeDescription, offlineString);
+                            instance.AuthorUser.Name, typeDescription, offlineString);
                  
                         msg.To.Clear();
                         msg.To.Add(user.User.Email);

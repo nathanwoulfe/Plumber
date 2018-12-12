@@ -68,9 +68,6 @@ namespace Workflow.Models
         [ResultColumn]
         public TaskStatus? TaskStatus => (TaskStatus?)Status;
 
-        //[ResultColumn]
-        //public TaskType TaskType => (TaskType)Type;
-
         [ResultColumn]
         public IUser ActionedByUser
         {
@@ -85,9 +82,6 @@ namespace Workflow.Models
         }
 
         [ResultColumn]
-        public string TypeName => Type.ToString().ToTitleCase();
-
-        [ResultColumn]
         public string StatusName => TaskStatus.ToString().ToTitleCase();
 
         [ResultColumn]
@@ -95,8 +89,5 @@ namespace Workflow.Models
 
         [ResultColumn]
         public virtual WorkflowInstancePoco WorkflowInstance { get; set; }
-
-        //[ResultColumn]
-        //public virtual double CompletedDateTicks => CompletedDate?.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds ?? 0;
     }
 }

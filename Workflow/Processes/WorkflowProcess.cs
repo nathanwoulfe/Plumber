@@ -75,7 +75,7 @@ namespace Workflow.Processes
             _instancesService.InsertInstance(Instance);
 
             // create the first task in the workflow and set the approval group
-            Instance.CreateApprovalTask(out WorkflowTaskInstancePoco taskInstance);
+            WorkflowTaskInstancePoco taskInstance = Instance.CreateApprovalTask();
             SetApprovalGroup(taskInstance);
 
             Created?.Invoke(this, new InstanceEventArgs(Instance));
@@ -125,7 +125,7 @@ namespace Workflow.Processes
                 // when approving a task for a rejected workflow, create the new task with the same approval step as the rejected task
                 // update the rejected task status to resubmitted
 
-                Instance.CreateApprovalTask(out WorkflowTaskInstancePoco taskInstance);
+                WorkflowTaskInstancePoco taskInstance = Instance.CreateApprovalTask();
                 SetApprovalGroup(taskInstance);
                 ApproveOrContinue(taskInstance, userId);
             }
@@ -170,7 +170,7 @@ namespace Workflow.Processes
                         {
                             // create the next task, then check if it should be approved
                             // if it needs approval, 
-                            Instance.CreateApprovalTask(out WorkflowTaskInstancePoco taskInstance);
+                            WorkflowTaskInstancePoco taskInstance = Instance.CreateApprovalTask();
                             SetApprovalGroup(taskInstance);
                             ApproveOrContinue(taskInstance, userId);
                         }
@@ -296,7 +296,7 @@ namespace Workflow.Processes
 
             if (taskInstance == null) return;
 
-            taskInstance.ProcessApproval(action, userId, comment, out EmailType? emailAction);
+            EmailType? emailAction = taskInstance.ProcessApproval(action, userId, comment);
 
             // Send the email after we've done the updates.
             if (emailAction != null)

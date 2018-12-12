@@ -6,13 +6,13 @@ using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Umbraco.Web;
 using Umbraco.Web.WebApi;
 using Workflow.Extensions;
 using Workflow.Models;
 using Workflow.Helpers;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
+
 using TaskStatus = Workflow.Models.TaskStatus;
 
 using UmbConstants = Umbraco.Core.Constants;
@@ -28,40 +28,19 @@ namespace Workflow.Api
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly ITasksService _tasksService;
-        private readonly ISettingsService _settingsService;
         private readonly IInstancesService _instancesService;
         private readonly IGroupService _groupService;
 
-        private readonly Utility _utility;
-
-        public TasksController()
+        public TasksController() : this(new TasksService(), new InstancesService(), new GroupService())
         {
-            _tasksService = new TasksService();
-            _settingsService = new SettingsService();
-            _instancesService = new InstancesService();
-            _groupService = new GroupService();
 
-            _utility = new Utility();
         }
 
-        public TasksController(UmbracoContext umbracoContext) : base(umbracoContext)
+        public TasksController(ITasksService tasksService, IInstancesService instancesService, IGroupService groupService)
         {
-            _tasksService = new TasksService();
-            _settingsService = new SettingsService();
-            _instancesService = new InstancesService();
-            _groupService = new GroupService();
-
-            _utility = new Utility();
-        }
-
-        public TasksController(UmbracoContext umbracoContext, UmbracoHelper umbracoHelper) : base(umbracoContext, umbracoHelper)
-        {
-            _tasksService = new TasksService();
-            _settingsService = new SettingsService();
-            _instancesService = new InstancesService();
-            _groupService = new GroupService();
-
-            _utility = new Utility();
+            _tasksService = tasksService;
+            _instancesService = instancesService;
+            _groupService = groupService;
         }
 
         /// <summary>

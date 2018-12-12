@@ -55,5 +55,6 @@ namespace Workflow.Models
         public int NodeId { get; set; }
         public int ContentTypeId { get; set; }
         public int Permission { get; set; }
+        public string Condition { get; set; }
     }
 }

@@ -21,9 +21,13 @@ namespace Workflow.Api
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IImportExportService _exportService;
 
-        public ImportController()
+        public ImportController() : this(new ImportExportService())
         {
-            _exportService = new ImportExportService();
+        }
+
+        public ImportController(IImportExportService importExportService)
+        {
+            _exportService = importExportService;
         }
 
         /// <summary>
