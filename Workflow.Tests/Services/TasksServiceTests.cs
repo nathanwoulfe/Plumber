@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Chauffeur.TestingTools;
+using Umbraco.Core;
+using Umbraco.Core.Models;
+using Umbraco.Core.Services;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
@@ -14,14 +17,22 @@ namespace Workflow.Tests.Services
         private readonly ITasksService _service;
         private readonly IInstancesService _instancesService;
 
+        private readonly IContentService _contentService;
+        private readonly IContentTypeService _contentTypeService;
+
         public TasksServiceTests()
         {
             Host.Run(new[] {"install y"}).Wait();
 
-            Scaffold.Run();
-
             _service = new TasksService();
             _instancesService = new InstancesService();
+
+            _contentService = ApplicationContext.Current.Services.ContentService;
+            _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
+
+            Scaffold.Run();
+            Scaffold.Config();
+            Scaffold.ContentType(_contentTypeService);
         }
 
         [Fact]
@@ -63,8 +74,6 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Count_User_Tasks()
         {
-            Scaffold.Config();
-
             Guid guid = Guid.NewGuid();
 
             _instancesService.InsertInstance(Scaffold.Instance(guid, 1));
@@ -86,8 +95,6 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Get_Tasks_With_Group_By_Instance_Guid()
         {
-            Scaffold.Config();
-
             Guid guid = Guid.NewGuid();
 
             _instancesService.InsertInstance(Scaffold.Instance(guid, 1));
@@ -133,13 +140,12 @@ namespace Workflow.Tests.Services
             _service.InsertTask(Scaffold.Task());
             _service.InsertTask(Scaffold.Task());
 
-            Assert.Equal(4, _service.GetAllPendingTasks(new [] { 1, 2, 3}).Count);
+            Assert.Equal(4, _service.GetAllPendingTasks(new List<int> { 1, 2, 3}).Count);
         }
 
         [Fact]
         public void Can_Get_Tasks_By_Node_Id()
         {
-            Scaffold.Config();
             const int nodeId = 1055;
 
             Guid guid = Guid.NewGuid();
@@ -157,10 +163,13 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Get_Tasks_By_Group_Id()
         {
-            Scaffold.Config();
+            IContent node = Scaffold.Node(_contentService);
 
-            _service.InsertTask(Scaffold.Task(Guid.Empty, DateTime.Now.AddDays(-1), 3, 1, 1));
-            _service.InsertTask(Scaffold.Task(Guid.Empty, DateTime.Now, 3, 3));
+            Guid guid = Guid.NewGuid();
+            _instancesService.InsertInstance(Scaffold.Instance(guid, 1, node.Id));
+
+            _service.InsertTask(Scaffold.Task(guid, DateTime.Now.AddDays(-1), 3, 1, 1));
+            _service.InsertTask(Scaffold.Task(guid, DateTime.Now, 3, 3));
 
             List<WorkflowTask> result = _service.GetAllGroupTasks(3, 10, 1);
 
@@ -171,20 +180,30 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Get_Pending_Workflow_Tasks()
         {
-            Scaffold.Config();
+            List<WorkflowTask> result = _service.GetPendingTasks(new List<int>
+            {
+                (int)TaskStatus.PendingApproval
+            }, 10, 1);
 
-            List<WorkflowTask> result = _service.GetPendingTasks(new[] { 1, 2, 3 }, 10, 1);
             Assert.NotNull(result);
             Assert.Empty(result);
 
             var i = 0;
             while (i < 5)
             {
-                _service.InsertTask(Scaffold.Task());
+                IContent node = Scaffold.Node(_contentService);
+
+                Guid guid = Guid.NewGuid();
+                _instancesService.InsertInstance(Scaffold.Instance(guid, 1, node.Id));
+
+                _service.InsertTask(Scaffold.Task(guid));
                 i += 1;
             }
 
-            List<WorkflowTask> result2 = _service.GetPendingTasks(new[] {1, 2, 3}, 10, 1);
+            List<WorkflowTask> result2 = _service.GetPendingTasks(new List<int>
+            {
+                (int)TaskStatus.PendingApproval
+            }, 10, 1);
 
             Assert.NotNull(result2);
             Assert.Equal(i, result2.Count);
@@ -193,11 +212,17 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Get_Task_By_id()
         {
-            Scaffold.Config();
+            IContent root = Scaffold.Node(_contentService);
 
-            _service.InsertTask(Scaffold.Task());
+            Guid guid = Guid.NewGuid();
 
-            List<WorkflowTask> tasks = _service.GetPendingTasks(new[] {1, 2, 3}, 10, 1);
+            _instancesService.InsertInstance(Scaffold.Instance(guid, 1, root.Id));
+            _service.InsertTask(Scaffold.Task(guid));
+
+            List<WorkflowTask> tasks = _service.GetPendingTasks(new List<int>
+            {
+                (int)TaskStatus.PendingApproval
+            }, 10, 1);
             int id = tasks.First().TaskId;
 
             WorkflowTask task = _service.GetTask(id);
@@ -212,13 +237,16 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Get_Paged_Filtered_Tasks()
         {
-            Scaffold.Config();
+            IContent node = Scaffold.Node(_contentService);
 
-            _service.InsertTask(Scaffold.Task());
-            _service.InsertTask(Scaffold.Task());
-            _service.InsertTask(Scaffold.Task());
-            _service.InsertTask(Scaffold.Task());
-            _service.InsertTask(Scaffold.Task(new Guid(), DateTime.Now, 2, 1, 1));
+            Guid guid = Guid.NewGuid();
+            _instancesService.InsertInstance(Scaffold.Instance(guid, 1, node.Id));
+
+            _service.InsertTask(Scaffold.Task(guid));
+            _service.InsertTask(Scaffold.Task(guid));
+            _service.InsertTask(Scaffold.Task(guid));
+            _service.InsertTask(Scaffold.Task(guid));
+            _service.InsertTask(Scaffold.Task(guid, DateTime.Now, 2, 1, 1));
 
             List<WorkflowTask> tasks = _service.GetFilteredPagedTasksForDateRange(DateTime.Now.AddDays(-2), 2, 1);
 

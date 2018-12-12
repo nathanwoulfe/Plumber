@@ -5,7 +5,6 @@ using System.Web.Http;
 using Chauffeur.TestingTools;
 using Newtonsoft.Json.Linq;
 using Umbraco.Core;
-using Umbraco.Web;
 using Workflow.Api;
 using Workflow.Models;
 using Xunit;
@@ -23,17 +22,11 @@ namespace Workflow.Tests.Api
 
             Scaffold.Run();
 
-            _settingsController = new SettingsController(UmbracoContext.Current)
+            _settingsController = new SettingsController
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
             };
-        }
-
-        [Fact]
-        public void Has_Parameterless_Constructor()
-        {
-            Assert.NotNull(new SettingsController());
         }
 
         [Fact]

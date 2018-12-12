@@ -17,6 +17,7 @@ using Umbraco.Web.Security;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
+using TaskType = Workflow.Models.TaskType;
 
 namespace Workflow.Tests
 {
@@ -181,7 +182,7 @@ namespace Workflow.Tests
 
         public static WorkflowTaskInstancePoco Task(Guid guid = new Guid(), DateTime createdDate = new DateTime(), int groupId = 1, int approvalStep = 1, int status = 3)
         {
-            return new WorkflowTaskInstancePoco
+            return new WorkflowTaskInstancePoco(TaskType.Approve)
             {
                 GroupId = groupId,
                 Comment = Utility.RandomString(),

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Chauffeur.TestingTools;
-using Moq;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
@@ -23,14 +22,14 @@ namespace Workflow.Tests.Services
         {
             Host.Run(new[] { "install y" }).Wait();
 
-            Scaffold.Run();
-            Scaffold.Config();
-
             _configService = new ConfigService(new PocoRepository());
 
             _contentService = ApplicationContext.Current.Services.ContentService;
             _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
 
+            Scaffold.Run();
+            Scaffold.Config();
+            Scaffold.ContentType(_contentTypeService);
         }
 
         [Fact]
@@ -71,28 +70,45 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Get_Recursive_Permissions_For_Node_When_Node_Has_Permissions()
         {
-            var content = Mock.Of<IPublishedContent>(c => c.Id == 1089);
+            IContent root = Scaffold.Node(_contentService);
+            IContent child = Scaffold.Node(_contentService, root.Id);
+            IContent grandChild = Scaffold.Node(_contentService, child.Id);
 
-            List<UserGroupPermissionsPoco> permissions = _configService.GetRecursivePermissionsForNode(content);
+            List<UserGroupPermissionsPoco> permissions = _configService.GetRecursivePermissionsForNode(grandChild.ToPublishedContent());
 
-            // node has permissions, returns without recursion
-            Assert.NotNull(permissions);
+            // node has no permissions, yet
+            Assert.Empty(permissions);
+
+            // add a permission so something is returned...
+            var poco = new UserGroupPermissionsPoco
+            {
+                GroupId = 3,
+                Permission = 0,
+                NodeId = grandChild.Id
+            };
+
+            _configService.UpdateContentTypeConfig(new Dictionary<int, List<UserGroupPermissionsPoco>>
+            {
+                { 0, new List<UserGroupPermissionsPoco> { poco } }
+            });
+
+            permissions = _configService.GetRecursivePermissionsForNode(grandChild.ToPublishedContent());
+            Assert.Single(permissions);
         }
 
         [Fact]
         public void Can_Get_Recursive_Permissions_When_Node_Has_No_Permissions()
         {
-            Scaffold.ContentType(_contentTypeService);
             IContentType contentType = _contentTypeService.GetContentType("textpage");
 
             IContent root = Scaffold.Node(_contentService);
             IContent child = Scaffold.Node(_contentService, root.Id);
 
             List<UserGroupPermissionsPoco> permissions = _configService.GetRecursivePermissionsForNode(root.ToPublishedContent());
-            Assert.Null(permissions);
+            Assert.Empty(permissions);
 
             permissions = _configService.GetRecursivePermissionsForNode(child.ToPublishedContent());
-            Assert.Null(permissions);
+            Assert.Empty(permissions);
 
             // add a permission so something is returned...
             var poco = new UserGroupPermissionsPoco
@@ -108,7 +124,7 @@ namespace Workflow.Tests.Services
             });
 
             permissions = _configService.GetRecursivePermissionsForNode(child.ToPublishedContent());
-            Assert.NotNull(permissions);
+            Assert.Single(permissions);
         }
 
         [Fact]
@@ -122,7 +138,6 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Get_Content_Type_Permission_For_Node()
         {
-            Scaffold.ContentType(_contentTypeService);
             IContentType type = _contentTypeService.GetContentType("textpage");
             IContent node = Scaffold.Node(_contentService);
 

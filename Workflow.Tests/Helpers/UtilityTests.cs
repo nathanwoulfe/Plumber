@@ -6,7 +6,6 @@ using Umbraco.Core.Models;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Services;
 using Umbraco.Web;
-using Workflow.Extensions;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Services;

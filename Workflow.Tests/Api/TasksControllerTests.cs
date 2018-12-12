@@ -1,17 +1,13 @@
-﻿using System;
+﻿using Chauffeur.TestingTools;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
-using Chauffeur.TestingTools;
-using Newtonsoft.Json.Linq;
-using OpenQA.Selenium;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
-using Umbraco.Web;
 using Workflow.Api;
-using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
@@ -46,14 +42,6 @@ namespace Workflow.Tests.Api
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
             };
-        }
-
-        [Fact]
-        public void Constructors_Work()
-        {
-            // chasing coverage - make sure constructors are all accessible
-            Assert.NotNull(new TasksController());
-            Assert.NotNull(new TasksController(UmbracoContext.Current, new UmbracoHelper(UmbracoContext.Current)));
         }
 
         [Fact]
@@ -96,16 +84,14 @@ namespace Workflow.Tests.Api
 
             _instancesService.InsertInstance(Scaffold.Instance(guid, 1, node.Id));
             _tasksService.InsertTask(Scaffold.Task(guid));
-            _tasksService.InsertTask(Scaffold.Task(guid));
-            _tasksService.InsertTask(Scaffold.Task(guid));
 
             // needs flow or function exits
-            Dictionary<int, List<UserGroupPermissionsPoco>> config = Scaffold.Permissions(node.Id, 3, 2);
+            Dictionary<int, List<UserGroupPermissionsPoco>> config = Scaffold.Permissions(node.Id, 3, 0);
             _configService.UpdateNodeConfig(config);
 
             JObject content = await _tasksController.GetNodePendingTasks(node.Id).GetContent();
 
-            Assert.Equal(3, content.Value<int>("total"));
+            Assert.Single(content.Value<JArray>("items"));
         }
 
         [Fact]
