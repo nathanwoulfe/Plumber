@@ -98,21 +98,5 @@ namespace Workflow.Tests.Helpers
 
             Assert.True(hasFlow);
         }
-
-        [Fact]
-        public void Can_Get_User_By_Id()
-        {
-            IUser user = _utility.GetUser(0);
-            Assert.NotNull(user);
-        }
-
-        [Fact]
-        public void Can_Get_Current_User()
-        {
-            IUser user = _utility.GetCurrentUser();
-            Assert.NotNull(user);
-            Assert.IsType<int>(user.Id);
-            Assert.Equal(Utility.CurrentUserId, user.Id);
-        }
     }
 }
