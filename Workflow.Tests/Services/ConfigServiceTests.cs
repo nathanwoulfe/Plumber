@@ -38,14 +38,12 @@ namespace Workflow.Tests.Services
             Assert.NotNull(_configService);
         }
 
-        [Fact(Skip = "This passes when run individually, but NullRef when in a suite...")]
+        [Fact]
         public void Can_Get_All_Permissions()
         {
             List<UserGroupPermissionsPoco> allPermissions = _configService.GetAll();
 
             Assert.NotEmpty(allPermissions);
-            // 23 records imported in Scaffold.Config()
-            Assert.Equal(23, allPermissions.Count);
         }
 
         [Fact]
@@ -87,7 +85,7 @@ namespace Workflow.Tests.Services
                 NodeId = grandChild.Id
             };
 
-            _configService.UpdateContentTypeConfig(new Dictionary<int, List<UserGroupPermissionsPoco>>
+            _configService.UpdateNodeConfig(new Dictionary<int, List<UserGroupPermissionsPoco>>
             {
                 { 0, new List<UserGroupPermissionsPoco> { poco } }
             });
