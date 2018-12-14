@@ -21,5 +21,23 @@ namespace Workflow.Tests.Extensions
         {
             Assert.Equal(expected, value.ToTitleCase());
         }
+
+        [Theory]
+        [InlineData("", false)]
+        [InlineData(null, false)]
+        [InlineData("string has a value", true)]
+        public void Returns_True_When_String_Has_Value(string value, bool expected)
+        {
+            Assert.Equal(expected, value.HasValue());
+        }
+
+        [Theory]
+        [InlineData("", true)]
+        [InlineData(null, true)]
+        [InlineData("string has a value", false)]
+        public void Returns_True_When_String_Has_No_Value(string value, bool expected)
+        {
+            Assert.Equal(expected, value.HasNoValue());
+        }
     }
 }
