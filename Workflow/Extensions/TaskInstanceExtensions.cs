@@ -15,7 +15,9 @@ namespace Workflow.Extensions
                     if (taskInstance.TaskStatus != TaskStatus.NotRequired)
                     {
                         taskInstance.Status = (int)TaskStatus.Approved;
+                        emailAction = EmailType.ApprovalRequest;
                     }
+
                     break;
 
                 case WorkflowAction.Reject:
