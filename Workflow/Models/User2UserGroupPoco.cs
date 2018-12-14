@@ -22,8 +22,8 @@ namespace Workflow.Models
         [Column("GroupId")]
         public int GroupId { get; set; }
 
-        [ResultColumn]
-        public string Name => _utility.GetUser(UserId)?.Name ?? string.Empty;
+        //[ResultColumn]
+        //public string Name => _utility.GetUser(UserId)?.Name ?? string.Empty;
 
         [ResultColumn]
         public IUser User => _utility.GetUser(UserId);

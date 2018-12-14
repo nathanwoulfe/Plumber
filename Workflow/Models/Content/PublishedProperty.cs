@@ -1,4 +1,6 @@
-﻿using System;
+﻿// ReSharper disable All 
+
+using System;
 using System.Xml.Serialization;
 using Umbraco.Core.Models.PublishedContent;
 

@@ -5,7 +5,7 @@ namespace Workflow.Relators
 {
     internal class UserToGroupForInstanceRelator
     {
-        public WorkflowInstancePoco Current;
+        private WorkflowInstancePoco _current;
 
         /// <summary>
         /// Maps Users to the UserGroup property of a WorkflowTaskInstance
@@ -18,7 +18,7 @@ namespace Workflow.Relators
         {
             if (wip == null)
             {
-                return Current;
+                return _current;
             }
 
             if (ugp.GroupId == wtip.GroupId)
@@ -26,18 +26,18 @@ namespace Workflow.Relators
                 wtip.UserGroup = ugp;
             }
 
-            if (Current != null && Current.Guid == wip.Guid)
+            if (_current != null && _current.Guid == wip.Guid)
             {
-                if (Current.TaskInstances.All(t => t.ApprovalStep != wtip.ApprovalStep))
+                if (_current.TaskInstances.All(t => t.ApprovalStep != wtip.ApprovalStep))
                 {
-                    Current.TaskInstances.Add(wtip);
+                    _current.TaskInstances.Add(wtip);
                 }
                 return null;
             }
 
-            var prev = Current;
-            Current = wip;
-            Current.TaskInstances.Add(wtip);
+            var prev = _current;
+            _current = wip;
+            _current.TaskInstances.Add(wtip);
 
             return prev;
         }

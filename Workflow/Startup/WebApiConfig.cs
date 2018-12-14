@@ -3,7 +3,7 @@ using Umbraco.Core;
 
 namespace Workflow.Startup
 {
-    public class WebApiConfig
+    public static class WebApiConfig
     {
         public static void Register(HttpConfiguration config)
         {

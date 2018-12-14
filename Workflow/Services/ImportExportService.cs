@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Umbraco.Core;
-using Umbraco.Core.Logging;
 using Workflow.Models;
 using Workflow.Repositories;
 using Workflow.Repositories.Interfaces;
@@ -10,20 +8,14 @@ namespace Workflow.Services
 {
     public class ImportExportService : IImportExportService
     {
-        private readonly ILogger _log;
         private readonly IImportExportRepository _repo;
 
-        public ImportExportService()
-            : this(
-                  ApplicationContext.Current.ProfilingLogger.Logger,
-                  new ImportExportRepository()
-            )
+        public ImportExportService() : this(new ImportExportRepository())
         {
         }
 
-        private ImportExportService(ILogger log, IImportExportRepository repo)
+        private ImportExportService(IImportExportRepository repo)
         {
-            _log = log;
             _repo = repo;
         }
 

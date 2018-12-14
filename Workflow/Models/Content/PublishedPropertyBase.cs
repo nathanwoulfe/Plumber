@@ -1,4 +1,6 @@
-﻿using System;
+﻿// ReSharper disable All 
+
+using System;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.PublishedContent;
 

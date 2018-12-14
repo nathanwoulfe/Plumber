@@ -1,25 +1,24 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Workflow.Models
 { 
-    public class UserGroupModel
-    {
-        public string Name { get; set; }
-        public string Alias { get; set; }
-        public string Description { get; set; }
-        public string GroupEmail { get; set; }
-        public string UsersSummary { get; set; }
-        public int GroupId { get; set; }
-        public List<UserGroupUserModel> Users { get; set; }
-        public List<UserGroupPermissionsModel> Permissions { get; set; }
+    //public class UserGroupModel
+    //{
+    //    public string Name { get; set; }
+    //    public string Alias { get; set; }
+    //    public string Description { get; set; }
+    //    public string GroupEmail { get; set; }
+    //    public string UsersSummary { get; set; }
+    //    public int GroupId { get; set; }
+    //    public List<UserGroupUserModel> Users { get; set; }
+    //    public List<UserGroupPermissionsModel> Permissions { get; set; }
 
-        public UserGroupModel()
-        {
-            Users = new List<UserGroupUserModel>();
-            Permissions = new List<UserGroupPermissionsModel>();
-        }
-    }
+    //    public UserGroupModel()
+    //    {
+    //        Users = new List<UserGroupUserModel>();
+    //        Permissions = new List<UserGroupPermissionsModel>();
+    //    }
+    //}
 
     public class UserGroupPermissionsModel
     {

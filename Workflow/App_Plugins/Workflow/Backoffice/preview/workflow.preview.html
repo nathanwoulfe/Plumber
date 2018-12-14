@@ -13,7 +13,7 @@
         <div class="alert alert-error"><strong>Invalid request</strong> The requested URL does not map to a valid workflow process. The task may have already been completed, or the requesting user does not have permission to action the task.</div>
     </div>
 
-    <iframe id="resultFrame" ng-src="{{ vm.pageUrl }}" frameborder="0" iframe-is-loaded></iframe>
+    <iframe id="resultFrame" ng-src="{{ vm.pageUrl }}" iframe-is-loaded></iframe>
 
     <div data-element="editor-footer" class="umb-tab-buttons umb-editor-drawer" ng-if="!vm.invalid">
         <button class="btn btn-default" ng-click="vm.action('Reject')">Reject</button>

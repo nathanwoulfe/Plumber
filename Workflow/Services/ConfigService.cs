@@ -114,14 +114,14 @@ namespace Workflow.Services
             // get all permissions matching either this node, its type, or an ancestor id
             List<UserGroupPermissionsPoco> allPermissions = _repo.AllPermissionsForNode(path, node.ContentType.Id);
 
-            List<UserGroupPermissionsPoco> forNode = allPermissions.Where(p => p.NodeId == node.Id)?.ToList();
+            List<UserGroupPermissionsPoco> forNode = allPermissions.Where(p => p.NodeId == node.Id).ToList();
             if (forNode.Any())
             {
                 return forNode;
             }
 
             List<UserGroupPermissionsPoco> forType =
-                allPermissions.Where(p => p.ContentTypeId == node.ContentType.Id)?.ToList();
+                allPermissions.Where(p => p.ContentTypeId == node.ContentType.Id).ToList();
 
             if (forType.Any())
             {
@@ -132,7 +132,7 @@ namespace Workflow.Services
             IEnumerable<int> reversedPath = path.Reverse().Select(int.Parse);
             foreach (int ancestorId in reversedPath)
             {
-                List<UserGroupPermissionsPoco> forAncestor = allPermissions.Where(x => x.NodeId == ancestorId)?.ToList();
+                List<UserGroupPermissionsPoco> forAncestor = allPermissions.Where(x => x.NodeId == ancestorId).ToList();
                 if (forAncestor.Any())
                 {
                     return forAncestor;

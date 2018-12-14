@@ -64,9 +64,9 @@
                                 <a class="umb-table-body__link" ng-href="#/workflow/workflow/edit-group/{{ item.groupId }}" title="Edit group: {{ item.name }}">{{ item.name }}</a>
                             </div>
                             <div class="umb-table-cell">
-                                <ul>
-                                    <li ng-repeat="user in item.users">
-                                        <a ng-href="#/users/users/user/{{ user.userId }}" title="Edit user: {{ user.name }}">{{ user.name }}</a>
+                                <ul> 
+                                    <li ng-repeat="u in item.users">
+                                        <a ng-href="#/users/users/user/{{ u.user.userId }}" title="Edit user: {{ u.user.name }}">{{ u.user.name }}</a>
                                     </li>
                                 </ul> 
                             </div>

@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
 using Workflow.Extensions;
-using Workflow.Helpers;
 
 namespace Workflow.Models
 {
@@ -13,8 +12,6 @@ namespace Workflow.Models
     [PrimaryKey("GroupId", autoIncrement = true)]
     public class UserGroupPoco
     {
-        private readonly Utility _utility = new Utility();
-
         [Column("GroupId")]
         [PrimaryKeyColumn(AutoIncrement = true)]
         [JsonProperty("groupId")]

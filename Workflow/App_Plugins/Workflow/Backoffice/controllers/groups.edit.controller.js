@@ -101,8 +101,10 @@
 
                     this.group.users = [];
 
+                    // this is a bit clunky - save only needs the userId and groupId, the user object is discarded
+                    // it's used in the view though
                     model.selection.forEach(u => {
-                        this.group.users.push({ userId: u.userId || u.id, groupId: this.group.groupId, name: u.name });
+                        this.group.users.push({ userId: u.userId || u.id, groupId: this.group.groupId, user: u.user || u });
                     });
                 },
                 close: () => {

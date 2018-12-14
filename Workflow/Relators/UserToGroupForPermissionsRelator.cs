@@ -4,7 +4,7 @@ namespace Workflow.Relators
 {
     internal class UserToGroupForPermissionsRelator
     {
-        public UserGroupPermissionsPoco Current;
+        private UserGroupPermissionsPoco _current;
 
         /// <summary>
         /// Maps Users to the UserGroup property of a UserGroupPermissionsPoco
@@ -17,30 +17,30 @@ namespace Workflow.Relators
         {
             if (ugpp == null)
             {
-                return Current;
+                return _current;
             }
 
-            if (Current != null && Current.GroupId == ugpp.GroupId)
+            if (_current != null && _current.GroupId == ugpp.GroupId)
             {
-                if (Current.UserGroup == null)
+                if (_current.UserGroup == null)
                 {
-                    Current.UserGroup = ugp;
+                    _current.UserGroup = ugp;
                 } 
                 
-                if (Current.GroupId == u2Ugp.GroupId)
+                if (_current.GroupId == u2Ugp.GroupId)
                 {
-                    Current.UserGroup.Users.Add(u2Ugp);
+                    _current.UserGroup.Users.Add(u2Ugp);
                 }      
                 return null;
             }
 
-            var prev = Current;
-            Current = ugpp;
-            Current.UserGroup = ugp;
+            var prev = _current;
+            _current = ugpp;
+            _current.UserGroup = ugp;
 
-            if (Current.GroupId == u2Ugp.GroupId)
+            if (_current.GroupId == u2Ugp.GroupId)
             {
-                Current.UserGroup.Users.Add(u2Ugp);
+                _current.UserGroup.Users.Add(u2Ugp);
             }
 
             return prev;

@@ -6,40 +6,40 @@ namespace Workflow.Relators
 {
     public class GroupsRelator
     {
-        public UserGroupPoco Current;
+        private UserGroupPoco _current;
 
         public UserGroupPoco MapIt(UserGroupPoco a, UserGroupPermissionsPoco c, User2UserGroupPoco b)
         {
             if (a == null)
             {
-                return Current;
+                return _current;
             }
 
-            if (Current != null && Current.GroupId == b.GroupId)
+            if (_current != null && _current.GroupId == b.GroupId)
             {
-                if (Current.Users.All(u => u.UserId != b.UserId))
+                if (_current.Users.All(u => u.UserId != b.UserId))
                 {
-                    Current.Users.Add(b);
+                    _current.Users.Add(b);
                 }
 
-                if (Current.Permissions.All(p => p.Id != c.Id))
+                if (_current.Permissions.All(p => p.Id != c.Id))
                 {
-                    Current.Permissions.Add(c);
+                    _current.Permissions.Add(c);
                 }
                 return null;
             }
 
-            var prev = Current;
-            Current = a;
+            var prev = _current;
+            _current = a;
 
-            if (Current.GroupId == b.GroupId)
+            if (_current.GroupId == b.GroupId)
             {
-                Current.Users = new List<User2UserGroupPoco>() { b };
+                _current.Users = new List<User2UserGroupPoco>() { b };
             }
 
-            if (Current.GroupId == c.GroupId)
+            if (_current.GroupId == c.GroupId)
             {
-                Current.Permissions = new List<UserGroupPermissionsPoco>() { c };
+                _current.Permissions = new List<UserGroupPermissionsPoco>() { c };
             }
 
             return prev;

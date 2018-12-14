@@ -1,15 +1,15 @@
 ﻿namespace Workflow.Models
 {
-    public class SettingsModel
-    {
-        public string DefaultApprover { get; set; }
-        public string Email { get; set; }
-        public string EditUrl { get; set; }
-        public string SiteUrl { get; set; }
-        public int FlowType { get; set; }
-        public bool SendNotifications { get; set; }
-        public bool LockIfActive { get; set; }
-    }
+    //public class SettingsModel
+    //{
+    //    public string DefaultApprover { get; set; }
+    //    public string Email { get; set; }
+    //    public string EditUrl { get; set; }
+    //    public string SiteUrl { get; set; }
+    //    public int FlowType { get; set; }
+    //    public bool SendNotifications { get; set; }
+    //    public bool LockIfActive { get; set; }
+    //}
 
     /// <summary>
     /// The permitted flow types

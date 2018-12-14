@@ -54,6 +54,7 @@
         font-weight: 400;
         transform: translateY(-2px);
         text-shadow: none;
+        padding:3px 5px 2px;
     }
 
     h6.badge {
@@ -83,6 +84,10 @@
                 cursor: pointer;
             }
         }
+    }
+
+    .flow-select {
+        margin-bottom:0;
     }
 
     .upgrade {

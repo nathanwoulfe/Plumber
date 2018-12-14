@@ -6,12 +6,10 @@ namespace Workflow.Events
 {
     public class EventArgsBase : EventArgs
     {
-        private readonly Utility _utility;
-
         protected EventArgsBase()
         {
-            _utility = new Utility();
-            User = _utility.GetCurrentUser() ?? null;
+            var utility = new Utility();
+            User = utility.GetCurrentUser();
         }
 
         private IUser User { get; set; }

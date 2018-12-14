@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Umbraco.Core;
-using Umbraco.Core.Logging;
 using Workflow.Extensions;
 using Workflow.Models;
 using Workflow.Repositories;
@@ -13,22 +11,15 @@ namespace Workflow.Services
 {
     public class InstancesService : IInstancesService
     {
-        private readonly ILogger _log;
         private readonly IInstancesRepository _repo;
         private readonly ITasksService _tasksService;
 
-        public InstancesService()
-            : this(
-                ApplicationContext.Current.ProfilingLogger.Logger,
-                new InstancesRepository(), 
-                new TasksService()
-            )
+        public InstancesService() : this(new InstancesRepository(), new TasksService())
         {
         }
 
-        private InstancesService(ILogger log, IInstancesRepository repo, ITasksService tasksService)
+        private InstancesService(IInstancesRepository repo, ITasksService tasksService)
         {
-            _log = log;
             _repo = repo;
             _tasksService = tasksService;
         }
@@ -80,7 +71,7 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<WorkflowInstance> GetAllInstancesForDateRange(DateTime? oldest)
         {
-            List<WorkflowInstancePoco> instances = _repo.GetAllInstancesForDateRange(oldest.Value);
+            List<WorkflowInstancePoco> instances = _repo.GetAllInstancesForDateRange(oldest ?? DateTime.MinValue);
             List<WorkflowInstance> workflowInstances = ConvertToWorkflowInstanceList(instances);
 
             return workflowInstances;

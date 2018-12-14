@@ -1,6 +1,4 @@
 ﻿using System;
-using Umbraco.Core;
-using Umbraco.Core.Logging;
 using Workflow.Events.Args;
 using Workflow.Models;
 using Workflow.Repositories;
@@ -11,22 +9,16 @@ namespace Workflow.Services
 {
     public class SettingsService : ISettingsService
     {
-        private readonly ILogger _log;
         private readonly IPocoRepository _repo;
 
         public static event EventHandler<SettingsEventArgs> Updated;
 
-        public SettingsService()
-            : this(
-                ApplicationContext.Current.ProfilingLogger.Logger,
-                new PocoRepository()
-            )
+        public SettingsService() : this(new PocoRepository())
         {
         }
 
-        private SettingsService(ILogger log, IPocoRepository repo)
+        private SettingsService(IPocoRepository repo)
         {
-            _log = log;
             _repo = repo;
         }
 

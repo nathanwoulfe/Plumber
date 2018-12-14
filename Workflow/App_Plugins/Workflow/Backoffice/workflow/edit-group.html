@@ -66,11 +66,11 @@
 
                                         <div class="umb-package-details__section-title"><localize key="workflow_membership">Group members</localize></div>
 
-                                        <umb-user-preview ng-repeat="user in vm.group.users | orderBy: 'name'"
-                                                          name="user.name"
-                                                          avatars="user.avatars"
+                                        <umb-user-preview ng-repeat="u in vm.group.users | orderBy: 'name'"
+                                                          name="u.user.name"
+                                                          avatars="u.user.avatars"
                                                           allow-remove="true"
-                                                          on-remove="vm.remove(user.userId)">
+                                                          on-remove="vm.remove(u.userId)">
                                         </umb-user-preview>
 
                                         <a href=""
