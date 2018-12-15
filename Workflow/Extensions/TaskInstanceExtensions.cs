@@ -55,7 +55,7 @@ namespace Workflow.Extensions
         /// <param name="taskInstance">The task instance.</param>
         /// <param name="index"></param>
         /// <returns>HTML markup describing an active task instance.</returns>
-        public static string BuildTaskSummary(this WorkflowTaskInstancePoco taskInstance, int index)
+        public static string BuildTaskSummary(this WorkflowTaskInstancePoco taskInstance)
         {
             var result = "";
 
@@ -67,7 +67,7 @@ namespace Workflow.Extensions
 
                     if (taskInstance.CompletedDate != null)
                     {
-                        result += $"Stage {index}: {taskInstance.StatusName} by {taskInstance.ActionedByUser.Name} on {taskInstance.CompletedDate.Value:dd/MM/yy}";
+                        result += $"Stage {taskInstance.ApprovalStep}: {taskInstance.StatusName} by {taskInstance.ActionedByUser.Name} on {taskInstance.CompletedDate.Value:dd/MM/yy}";
                     }
 
                     if (taskInstance.Comment.HasValue())
@@ -79,7 +79,7 @@ namespace Workflow.Extensions
 
                 case (int)TaskStatus.NotRequired:
 
-                    result += $"Stage {index}: Not required";
+                    result += $"Stage {taskInstance.ApprovalStep}: Not required";
 
                     break;
             }

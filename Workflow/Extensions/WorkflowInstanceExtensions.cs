@@ -105,12 +105,9 @@ namespace Workflow.Extensions
             }
             result += "<br/>";
 
-            var index = 1;
-
-            foreach (WorkflowTaskInstancePoco taskInstance in instance.TaskInstances)
+            foreach (WorkflowTaskInstancePoco taskInstance in instance.TaskInstances.OrderBy(t => t.ApprovalStep))
             {
-                result += taskInstance.BuildTaskSummary(index) + "<br/>";
-                index += 1;
+                result += taskInstance.BuildTaskSummary() + "<br/>";
             }
 
             return $"{result}<br/>";
