@@ -46,9 +46,9 @@
                                     Permissions
                                 </a>
                             </div>
-                            <div class="umb-table-cell">
+                            <div class="umb-table-cell umb-table-cell__auto">
                                 <a class="umb-table-head__link" href="#" prevent-default>
-                                    Group email
+                                    Email
                                 </a>
                             </div>
                         </div>
@@ -70,16 +70,19 @@
                                     </li>
                                 </ul> 
                             </div>
-                            <div class="umb-table-cell">
+                            <div class="umb-table-cell"> 
                                 <ul>
-                                    <li ng-repeat="perm in item.permissions">
-                                        <a ng-if="perm.nodeName" ng-href="#/content/content/edit/{{ perm.nodeId }}" title="Edit node: {{ perm.nodeName }}">{{ perm.nodeName}} (stage: {{ perm.permission + 1 }})</a>
-                                        <a ng-if="perm.contentTypeName" ng-href="#/settings/documentTypes/edit/{{ perm.contentTypeId }}" title="Edit content type: {{ perm.contentTypeName }}">{{ perm.contentTypeName }} (stage: {{ perm.permission + 1 }})</a>
+                                    <li ng-repeat="perm in item.permissions | limitTo: 3">
+                                        <a ng-if="perm.nodeName" ng-href="#/content/content/edit/{{ perm.nodeId }}" title="Edit node: {{ perm.nodeName }}">{{ perm.nodeName}} (stage {{ perm.permission + 1 }})</a>
+                                        <a ng-if="perm.contentTypeName && !perm.nodeName" ng-href="#/settings/documentTypes/edit/{{ perm.contentTypeId }}" title="Edit content type: {{ perm.contentTypeName }}">{{ perm.contentTypeName }} (stage {{ perm.permission + 1 }})</a>
                                     </li>
+                                    <li ng-if="item.permissions.length > 3">Plus {{ item.permissions.length - 3 }} more</li>
                                 </ul>
                             </div>
-                            <div class="umb-table-cell">
-                                <a ng-href="mailto:{{ vm.getEmail(item.users) }}"><span class="icon icon-inbox" title="Email group"></span></a>
+                            <div class="umb-table-cell umb-table-cell__auto">
+                                <a ng-href="mailto:{{ vm.getEmail(item.users) }}">
+                                    <i class="umb-table-body__icon icon-inbox" title="Email group"></i>
+                                </a>
                             </div>
                         </div>
                     </div>

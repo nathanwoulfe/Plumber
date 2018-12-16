@@ -40,6 +40,10 @@
         flex: 0 0 170px;
     }
 
+    &__auto {
+        flex: 0 1 auto;
+    }
+
     &__15 {
         flex-basis: 15%;
         max-width: 15%;
