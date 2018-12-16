@@ -1,5 +1,5 @@
 # version format
-version: 1.0.4.{build}
+version: 1.1.0.{build}
 
 image: Visual Studio 2017
 
@@ -41,9 +41,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v1.0.4
-    release: Release 1.0.4
-    description: "Cancel button in editor drawer was missing for admin users when the previous change had been rejected. Button is not missing anymore."
+    tag: v1.1.0
+    release: Release 1.1.0
+    description: "Adds conditional stages for workflow - if property x is dirty, include group y, otherwise mark step as not required. Also extends testing, tidies up some smells and makes some optimization-focussed tweaks."
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
