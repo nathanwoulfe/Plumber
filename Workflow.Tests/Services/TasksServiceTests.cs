@@ -18,7 +18,6 @@ namespace Workflow.Tests.Services
         private readonly IInstancesService _instancesService;
 
         private readonly IContentService _contentService;
-        private readonly IContentTypeService _contentTypeService;
 
         public TasksServiceTests()
         {
@@ -28,11 +27,10 @@ namespace Workflow.Tests.Services
             _instancesService = new InstancesService();
 
             _contentService = ApplicationContext.Current.Services.ContentService;
-            _contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
 
             Scaffold.Run();
             Scaffold.Config();
-            Scaffold.ContentType(_contentTypeService);
+            Scaffold.ContentType(ApplicationContext.Current.Services.ContentTypeService);
         }
 
         [Fact]

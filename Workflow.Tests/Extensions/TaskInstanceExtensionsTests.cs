@@ -70,8 +70,11 @@ namespace Workflow.Tests.Extensions
             {
                 WorkflowInstanceGuid = Guid.NewGuid(),
                 ApprovalStep = 1,
-                CreatedDate = DateTime.Now,
-                Status = (int)status
+                CreatedDate = DateTime.Now.AddDays(-10),
+                CompletedDate = DateTime.Now,
+                Comment = Utility.RandomString(),
+                Status = (int)status,
+                ActionedByUserId = 0
             };
 
             string summary = taskInstance.BuildTaskSummary();

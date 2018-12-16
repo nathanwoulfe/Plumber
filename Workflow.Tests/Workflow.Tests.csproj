@@ -259,6 +259,8 @@
     <Compile Include="Extensions\DateTimeExtensionsTests.cs" />
     <Compile Include="Extensions\EnumExtensionsTests.cs" />
     <Compile Include="Extensions\TaskInstanceExtensionsTests.cs" />
+    <Compile Include="Extensions\WorkflowInstanceExtensionsTests.cs" />
+    <Compile Include="Extensions\WorkflowTypeExtensionsTests.cs" />
     <Compile Include="Integration\GroupTests.cs" />
     <Compile Include="Integration\UserAccessTests.cs" />
     <Content Include="Config.json">

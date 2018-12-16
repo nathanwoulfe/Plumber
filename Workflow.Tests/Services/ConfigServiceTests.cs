@@ -95,6 +95,35 @@ namespace Workflow.Tests.Services
         }
 
         [Fact]
+        public void Can_Get_Recursive_Permissions_For_Node_When_Ancestor_Has_Permissions()
+        {
+            IContent root = Scaffold.Node(_contentService);
+            IContent child = Scaffold.Node(_contentService, root.Id);
+            IContent grandChild = Scaffold.Node(_contentService, child.Id);
+
+            List<UserGroupPermissionsPoco> permissions = _configService.GetRecursivePermissionsForNode(grandChild.ToPublishedContent());
+
+            // node has no permissions, yet
+            Assert.Empty(permissions);
+
+            // add a permission so something is returned...
+            var poco = new UserGroupPermissionsPoco
+            {
+                GroupId = 3,
+                Permission = 0,
+                NodeId = child.Id
+            };
+
+            _configService.UpdateNodeConfig(new Dictionary<int, List<UserGroupPermissionsPoco>>
+            {
+                { 0, new List<UserGroupPermissionsPoco> { poco } }
+            });
+
+            permissions = _configService.GetRecursivePermissionsForNode(grandChild.ToPublishedContent());
+            Assert.Single(permissions);
+        }
+
+        [Fact]
         public void Can_Get_Recursive_Permissions_When_Node_Has_No_Permissions()
         {
             IContentType contentType = _contentTypeService.GetContentType("textpage");

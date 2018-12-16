@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Chauffeur.TestingTools;
+using Umbraco.Core;
+using Umbraco.Core.Models;
+using Umbraco.Core.Services;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
@@ -12,6 +15,7 @@ namespace Workflow.Tests.Services
     public class InstancesServiceTests : UmbracoHostTestBase
     {
         private readonly IInstancesService _service;
+        private readonly ITasksService _tasksService;
 
         public InstancesServiceTests()
         {
@@ -19,8 +23,10 @@ namespace Workflow.Tests.Services
 
             Scaffold.Run();
             Scaffold.Config();
+            Scaffold.ContentType(ApplicationContext.Current.Services.ContentTypeService);
 
             _service = new InstancesService();
+            _tasksService = new TasksService();
         }
 
         [Theory]
@@ -80,6 +86,48 @@ namespace Workflow.Tests.Services
             }
         }
 
+        [Theory]
+        [InlineData(1075, 2)]
+        [InlineData(9999, 11)]
+        [InlineData(1242, 43)]
+        public void Can_Get_For_Node_By_Status_When_Status_Null(int nodeId, int count)
+        {
+            Scaffold.Instances(count, nodeId: nodeId);
+
+            List<WorkflowInstancePoco> results = _service.GetForNodeByStatus(nodeId, null).ToList();
+
+            Assert.Equal(count, results.Count);
+            foreach (WorkflowInstancePoco result in results)
+            {
+                Assert.Equal(nodeId, result.NodeId);
+            }
+        }
+
+        [Fact]
+        public void Can_Get_All_Active_Instances()
+        {
+            int[] ids = {1051, 1052, 1063};
+
+            foreach (int id in ids)
+            {
+                Scaffold.Instances(1, nodeId: id);
+            }
+
+            Dictionary<int, bool> results = _service.IsActive(ids);
+
+            Assert.True(results[ids[0]]);
+            Assert.True(results[ids[1]]);
+            Assert.True(results[ids[2]]);
+
+            // try again, but with two ids with no attached instance
+            int[] moreIds = {1051, 3333, 4444};
+            results = _service.IsActive(moreIds);
+
+            Assert.True(results[moreIds[0]]);
+            Assert.False(results[moreIds[1]]);
+            Assert.False(results[moreIds[2]]);
+        }
+        
         [Theory]
         [InlineData(2, -3, 2)]
         [InlineData(11, -2, 11)]
@@ -158,6 +206,38 @@ namespace Workflow.Tests.Services
             Assert.Equal(expected, instances.Count);
         }
 
+        /// <summary>
+        /// This relies on scaffolded config - to get populated groups on the tasks, it must come from config
+        /// </summary>
+        [Theory]
+        [InlineData(4, 2)]
+        [InlineData(3, 5)]
+        [InlineData(2, 3)]
+        public void Can_Get_Populated_Instance(int taskCount, int lastGroupId)
+        {
+            IContent node = Scaffold.Node(ApplicationContext.Current.Services.ContentService);
+
+            Guid guid = Guid.NewGuid();
+
+            WorkflowInstancePoco instance = Scaffold.Instance(guid, (int) WorkflowType.Publish, node.Id);
+
+            _service.InsertInstance(instance);
+            for (var i = 1; i <= taskCount; i += 1)
+            {
+                _tasksService.InsertTask(Scaffold.Task(guid, DateTime.Now, 
+                    i < taskCount ? i : lastGroupId, 
+                    i, 
+                    i < taskCount ? 1 : 3));
+            }
+
+            // this has groups, tasks, everything. Or it should.
+            WorkflowInstancePoco populatedInstance = _service.GetPopulatedInstance(guid);
+
+            Assert.Equal(taskCount, populatedInstance.TaskInstances.Count);
+            Assert.Equal(0, populatedInstance.TotalSteps); // this shouldn't be set yet
+            Assert.Equal(lastGroupId, populatedInstance.TaskInstances.First().UserGroup.GroupId); // tasks are descending by id
+            Assert.Equal(WorkflowStatus.PendingApproval, populatedInstance.WorkflowStatus);
+        }
 
         [Fact]
         public void Can_Get_By_Guid()

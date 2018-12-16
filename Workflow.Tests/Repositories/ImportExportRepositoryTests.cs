@@ -19,6 +19,7 @@ namespace Workflow.Tests.Repositories
             Host.Run(new[] { "install y" }).Wait();
 
             Scaffold.Run();
+            Scaffold.Config();
 
             _repo = new ImportExportRepository();
         }
@@ -28,23 +29,12 @@ namespace Workflow.Tests.Repositories
         {
             WorkflowSettingsExport settings = _repo.ExportSettings();
             Assert.NotNull(settings);
-            Assert.Null(settings.DefaultApprover);
-
-            Scaffold.Config();
-            settings = _repo.ExportSettings();
-            Assert.NotNull(settings);
-            Assert.Equal("12", settings.DefaultApprover);
         }
 
         [Fact]
         public void Can_Export_User2UserGroups()
         {
             IEnumerable<User2UserGroupExport> user2UserGroups = _repo.ExportUser2UserGroups();
-            Assert.Empty(user2UserGroups);
-
-            Scaffold.Config();
-
-            user2UserGroups = _repo.ExportUser2UserGroups();
             Assert.NotEmpty(user2UserGroups);
         }
 
@@ -52,11 +42,6 @@ namespace Workflow.Tests.Repositories
         public void Can_Export_UserGroups()
         {
             IEnumerable<UserGroupExport> userGroups = _repo.ExportUserGroups();
-            Assert.Empty(userGroups);
-
-            Scaffold.Config();
-
-            userGroups = _repo.ExportUserGroups();
             Assert.NotEmpty(userGroups);
         }
 
@@ -64,11 +49,6 @@ namespace Workflow.Tests.Repositories
         public void Can_Export_UserGroupPermissions()
         {
             IEnumerable<UserGroupPermissionsExport> userGroupPermissions = _repo.ExportUserGroupPermissions();
-            Assert.Empty(userGroupPermissions);
-
-            Scaffold.Config();
-
-            userGroupPermissions = _repo.ExportUserGroupPermissions();
             Assert.NotEmpty(userGroupPermissions);
         }
     }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chauffeur.TestingTools;
 using GDev.Umbraco.Test;
+using Umbraco.Core;
+using Umbraco.Core.Models;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
@@ -26,6 +28,7 @@ namespace Workflow.Tests.Services
             Host.Run(new[] { "install y" }).Wait();
 
             Scaffold.Run();
+            Scaffold.Config();
 
             // even though it's not being used, this needs to stay
             _mocker = new ContextMocker();
@@ -74,8 +77,6 @@ namespace Workflow.Tests.Services
         [Fact]
         public async void Can_Validate_Request()
         {
-            Scaffold.Config();
-
             Guid guid = Guid.NewGuid();
 
             const int userId = 11;
@@ -115,8 +116,6 @@ namespace Workflow.Tests.Services
         [Fact]
         public async void Cannot_Validate_Request_When_Last_Task_Not_Pending()
         {
-            Scaffold.Config();
-
             Guid guid = Guid.NewGuid();
 
             const int userId = 446;
@@ -137,8 +136,6 @@ namespace Workflow.Tests.Services
         [Fact]
         public async void Cannot_Validate_Request_When_No_Tasks()
         {
-            Scaffold.Config();
-
             Guid guid = Guid.NewGuid();
 
             const int userId = 46;
@@ -148,6 +145,18 @@ namespace Workflow.Tests.Services
 
             bool isValid = await _previewService.Validate(nodeId, userId, 6456, guid);
             Assert.False(isValid);
+        }
+
+        [Fact]
+        public void Can_Generate_Preview()
+        {
+            Scaffold.ContentType(ApplicationContext.Current.Services.ContentTypeService);
+            IContent node = Scaffold.Node(ApplicationContext.Current.Services.ContentService);
+            Guid guid = Guid.NewGuid();
+
+            _instancesService.InsertInstance(Scaffold.Instance(guid, 0, node.Id));
+
+            _previewService.Generate(node.Id, 0, guid);
         }
     }
 }

@@ -23,10 +23,10 @@ namespace Workflow.Extensions
             IContent content = utility.GetContent(instance.NodeId);
             switch (instance.Type)
             {
-                case (int)WorkflowType.Publish when content.ReleaseDate.HasValue:
+                case (int)WorkflowType.Publish when content?.ReleaseDate != null:
                     instance.ScheduledDate = content.ReleaseDate;
                     break;
-                case (int)WorkflowType.Unpublish when content.ExpireDate.HasValue:
+                case (int)WorkflowType.Unpublish when content?.ExpireDate != null:
                     instance.ScheduledDate = content.ExpireDate;
                     break;
                 default:
@@ -55,9 +55,6 @@ namespace Workflow.Extensions
             if (instance.TotalSteps == steps) return;
 
             instance.TotalSteps = steps;
-
-            var instancesService = new InstancesService();
-            instancesService.UpdateInstance(instance);
         }
 
         /// <summary>

@@ -402,7 +402,10 @@ namespace Workflow.Processes
                 }
             }
 
+            _instancesService.UpdateInstance(Instance);
+
             // group will not be null unless we have nothing set anywhere, which is silly
+            // in fact, this is likely not even possible any more
             if (group == null) return;
 
             taskInstance.GroupId = group.GroupId;
