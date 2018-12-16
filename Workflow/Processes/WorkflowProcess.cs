@@ -72,6 +72,8 @@ namespace Workflow.Processes
                 Guid = Guid.NewGuid()
             };
 
+            Instance.SetScheduledDate();
+
             _instancesService.InsertInstance(Instance);
 
             // create the first task in the workflow and set the approval group
@@ -138,6 +140,8 @@ namespace Workflow.Processes
                 throw new WorkflowException("Workflow instance is not found.");
             }
 
+            // this may have been modified between workflow stages
+            Instance.SetScheduledDate();
             _instancesService.UpdateInstance(Instance);
 
             return Instance;
@@ -191,6 +195,9 @@ namespace Workflow.Processes
                 {
                     throw new WorkflowException("Workflow instance " + Instance.Id + " is not pending any action.");
                 }
+
+                // this may have been modified between workflow stages
+                Instance.SetScheduledDate();
 
                 _instancesService.UpdateInstance(Instance);
             }

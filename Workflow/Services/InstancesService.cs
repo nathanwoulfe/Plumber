@@ -191,7 +191,6 @@ namespace Workflow.Services
         public WorkflowInstancePoco GetPopulatedInstance(Guid guid)
         {
             WorkflowInstancePoco instance = GetByGuid(guid);
-            instance.SetScheduledDate();
 
             // TODO -> fix this
             List<WorkflowTaskInstancePoco> tasks = _tasksService.GetTasksWithGroupByInstanceGuid(instance.Guid);

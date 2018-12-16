@@ -26,8 +26,6 @@ namespace Workflow.Models
             CreatedDate = DateTime.Now;
             CompletedDate = null;
 
-            this.SetScheduledDate();
-
             _utility = new Utility();
         }
 
