@@ -9,22 +9,22 @@ namespace Workflow.Services.Interfaces
         int CountPendingTasks();
         int CountGroupTasks(int groupId);
 
-        List<WorkflowTask> GetPendingTasks(IEnumerable<int> status, int count, int page);
-        List<WorkflowTask> GetAllGroupTasks(int groupId, int count, int page);
-        List<WorkflowTask> ConvertToWorkflowTaskList(List<WorkflowTaskInstancePoco> taskInstances, bool sort = true, WorkflowInstancePoco instance = null);
+        List<WorkflowTaskViewModel> GetPendingTasks(IEnumerable<int> status, int count, int page);
+        List<WorkflowTaskViewModel> GetAllGroupTasks(int groupId, int count, int page);
+        List<WorkflowTaskViewModel> ConvertToWorkflowTaskList(List<WorkflowTaskPoco> taskInstances, bool sort = true, WorkflowInstancePoco instance = null);
         
-        List<WorkflowTaskInstancePoco> GetTasksWithGroupByInstanceGuid(Guid guid);
-        List<WorkflowTaskInstancePoco> GetAllPendingTasks(IEnumerable<int> status);
-        List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status);
+        List<WorkflowTaskPoco> GetTasksWithGroupByInstanceGuid(Guid guid);
+        List<WorkflowTaskPoco> GetAllPendingTasks(IEnumerable<int> status);
+        List<WorkflowTaskPoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status);
 
-        List<WorkflowTaskInstancePoco> GetAllTasksForDateRange(DateTime oldest);
-        List<WorkflowTask> GetFilteredPagedTasksForDateRange(DateTime oldest, int? count, int? page, string filter = "");
+        List<WorkflowTaskPoco> GetAllTasksForDateRange(DateTime oldest);
+        List<WorkflowTaskViewModel> GetFilteredPagedTasksForDateRange(DateTime oldest, int? count, int? page, string filter = "");
 
-        List<WorkflowTaskInstancePoco> GetTasksByNodeId(int id);
+        List<WorkflowTaskPoco> GetTasksByNodeId(int id);
 
-        WorkflowTask GetTask(int id);
+        WorkflowTaskViewModel GetTask(int id);
 
-        void InsertTask(WorkflowTaskInstancePoco poco);
-        void UpdateTask(WorkflowTaskInstancePoco poco);
+        void InsertTask(WorkflowTaskPoco poco);
+        void UpdateTask(WorkflowTaskPoco poco);
     }
 }

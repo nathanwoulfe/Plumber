@@ -77,7 +77,7 @@ namespace Workflow.Processes
             _instancesService.InsertInstance(Instance);
 
             // create the first task in the workflow and set the approval group
-            WorkflowTaskInstancePoco taskInstance = Instance.CreateApprovalTask();
+            WorkflowTaskPoco taskInstance = Instance.CreateApprovalTask();
             SetApprovalGroup(taskInstance);
 
             Created?.Invoke(this, new InstanceEventArgs(Instance));
@@ -111,7 +111,7 @@ namespace Workflow.Processes
                 if (Instance.WorkflowStatus != WorkflowStatus.Rejected) return Instance;
 
                 // create a task to store the resubmission comment - this is the equivalent of the author comment on the instance
-                var resubmitTask = new WorkflowTaskInstancePoco(TaskType.Resubmit)
+                var resubmitTask = new WorkflowTaskPoco(TaskType.Resubmit)
                 {
                     ActionedByUserId = userId,
                     ApprovalStep = Instance.TaskInstances.Last(x => x.TaskStatus == TaskStatus.Rejected).ApprovalStep,
@@ -127,7 +127,7 @@ namespace Workflow.Processes
                 // when approving a task for a rejected workflow, create the new task with the same approval step as the rejected task
                 // update the rejected task status to resubmitted
 
-                WorkflowTaskInstancePoco taskInstance = Instance.CreateApprovalTask();
+                WorkflowTaskPoco taskInstance = Instance.CreateApprovalTask();
                 SetApprovalGroup(taskInstance);
                 ApproveOrContinue(taskInstance, userId);
             }
@@ -174,7 +174,7 @@ namespace Workflow.Processes
                         {
                             // create the next task, then check if it should be approved
                             // if it needs approval, 
-                            WorkflowTaskInstancePoco taskInstance = Instance.CreateApprovalTask();
+                            WorkflowTaskPoco taskInstance = Instance.CreateApprovalTask();
                             SetApprovalGroup(taskInstance);
                             ApproveOrContinue(taskInstance, userId);
                         }
@@ -228,7 +228,7 @@ namespace Workflow.Processes
                 
                 Instance.Cancel();
 
-                WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.First();
+                WorkflowTaskPoco taskInstance = Instance.TaskInstances.First();
                 if (taskInstance != null)
                 {
                     // Cancel the task and workflow instances
@@ -266,7 +266,7 @@ namespace Workflow.Processes
         /// If so, update the task and send notifications
         /// Otherwise, update the task to notrequired, resolve it and create the next step in ActionWorkflow
         /// </summary>
-        private void ApproveOrContinue(WorkflowTaskInstancePoco taskInstance, int? userId = null, string comment = "APPROVAL NOT REQUIRED")
+        private void ApproveOrContinue(WorkflowTaskPoco taskInstance, int? userId = null, string comment = "APPROVAL NOT REQUIRED")
         {
             // require approval if author is not in the approving group, or flow type is explicit, 
             // and the task has NOT been marked as not required 
@@ -299,7 +299,7 @@ namespace Workflow.Processes
         /// <param name="comment"></param>
         private void ProcessApprovalAction(WorkflowAction action, int userId, string comment)
         {
-            WorkflowTaskInstancePoco taskInstance = Instance.TaskInstances.First(ti => ti.CompletedDate == null);
+            WorkflowTaskPoco taskInstance = Instance.TaskInstances.First(ti => ti.CompletedDate == null);
 
             if (taskInstance == null) return;
 
@@ -320,7 +320,7 @@ namespace Workflow.Processes
         /// <param name="taskInstance"></param>
         /// <param name="nodeId"></param>
         /// <param name="initialId"></param>
-        private void SetApprovalGroup(WorkflowTaskInstancePoco taskInstance, int nodeId = int.MinValue, int initialId = int.MinValue)
+        private void SetApprovalGroup(WorkflowTaskPoco taskInstance, int nodeId = int.MinValue, int initialId = int.MinValue)
         {
             if (nodeId == int.MinValue)
             {

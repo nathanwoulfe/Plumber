@@ -40,7 +40,7 @@ namespace Workflow.Startup
 
             if (!helper.TableExist(Constants.TaskInstanceTable))
             {
-                helper.CreateTable<WorkflowTaskInstancePoco>(false);
+                helper.CreateTable<WorkflowTaskPoco>(false);
             }
         }
     }

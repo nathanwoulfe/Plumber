@@ -21,7 +21,7 @@ namespace Workflow.Models
 
         public WorkflowInstancePoco()
         {
-            TaskInstances = new HashSet<WorkflowTaskInstancePoco>();
+            TaskInstances = new HashSet<WorkflowTaskPoco>();
             Status = (int)WorkflowStatus.PendingApproval;
             CreatedDate = DateTime.Now;
             CompletedDate = null;
@@ -95,7 +95,7 @@ namespace Workflow.Models
         public DateTime? ScheduledDate { get; set; }
 
         [ResultColumn]
-        public ICollection<WorkflowTaskInstancePoco> TaskInstances { get; set; }
+        public ICollection<WorkflowTaskPoco> TaskInstances { get; set; }
 
     }
 }

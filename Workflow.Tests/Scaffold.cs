@@ -44,7 +44,7 @@ namespace Workflow.Tests
             persistenceHelper.CreateTable<UserGroupPermissionsPoco>();
             persistenceHelper.CreateTable<WorkflowSettingsPoco>();
             persistenceHelper.CreateTable<WorkflowInstancePoco>();
-            persistenceHelper.CreateTable<WorkflowTaskInstancePoco>();
+            persistenceHelper.CreateTable<WorkflowTaskPoco>();
 
         }
 
@@ -180,9 +180,9 @@ namespace Workflow.Tests
             };
         }
 
-        public static WorkflowTaskInstancePoco Task(Guid guid = new Guid(), DateTime createdDate = new DateTime(), int groupId = 1, int approvalStep = 1, int status = 3)
+        public static WorkflowTaskPoco Task(Guid guid = new Guid(), DateTime createdDate = new DateTime(), int groupId = 1, int approvalStep = 1, int status = 3)
         {
-            return new WorkflowTaskInstancePoco(TaskType.Approve)
+            return new WorkflowTaskPoco(TaskType.Approve)
             {
                 GroupId = groupId,
                 Comment = Utility.RandomString(),

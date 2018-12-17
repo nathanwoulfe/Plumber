@@ -10,12 +10,12 @@ namespace Workflow.Models
     [TableName("WorkflowTaskInstance")]
     [ExplicitColumns]
     [PrimaryKey("Id", autoIncrement = true)]
-    public class WorkflowTaskInstancePoco
+    public class WorkflowTaskPoco
     {
         private IUser _actionedByUser;
         private readonly Utility _utility;
 
-        public WorkflowTaskInstancePoco()
+        public WorkflowTaskPoco()
         {
             CreatedDate = DateTime.Now;
             CompletedDate = null;
@@ -25,7 +25,7 @@ namespace Workflow.Models
             _utility = new Utility();
         }
 
-        public WorkflowTaskInstancePoco(TaskType type) : this()
+        public WorkflowTaskPoco(TaskType type) : this()
         {
             Type = (int)type;
         }

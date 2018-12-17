@@ -66,7 +66,7 @@ namespace Workflow.Repositories
         /// <returns>A list of objects of type <see cref="WorkflowInstancePoco"/></returns>
         public List<WorkflowInstancePoco> GetAllInstances()
         {
-            return _database.Fetch<WorkflowInstancePoco, WorkflowTaskInstancePoco, UserGroupPoco, WorkflowInstancePoco>
+            return _database.Fetch<WorkflowInstancePoco, WorkflowTaskPoco, UserGroupPoco, WorkflowInstancePoco>
                 (new UserToGroupForInstanceRelator().MapIt, SqlQueries.AllInstances);
         }
 
@@ -86,7 +86,7 @@ namespace Workflow.Repositories
         /// <returns></returns>
         public List<WorkflowInstancePoco> GetAllInstancesForNode(int nodeId)
         {
-            return _database.Fetch<WorkflowInstancePoco, WorkflowTaskInstancePoco, UserGroupPoco, WorkflowInstancePoco>
+            return _database.Fetch<WorkflowInstancePoco, WorkflowTaskPoco, UserGroupPoco, WorkflowInstancePoco>
                 (new UserToGroupForInstanceRelator().MapIt, SqlQueries.AllInstancesForNode, nodeId);
         }
 
@@ -109,7 +109,7 @@ namespace Workflow.Repositories
         public List<WorkflowInstancePoco> GetFilteredPagedInstancesForDateRange(DateTime oldest, string filter)
         {
             int filterVal = !string.IsNullOrEmpty(filter) ? (int)Enum.Parse(typeof(WorkflowStatus), filter) : -1;
-            return _database.Fetch<WorkflowInstancePoco, WorkflowTaskInstancePoco, UserGroupPoco, WorkflowInstancePoco>
+            return _database.Fetch<WorkflowInstancePoco, WorkflowTaskPoco, UserGroupPoco, WorkflowInstancePoco>
                 (new UserToGroupForInstanceRelator().MapIt, SqlQueries.FilteredInstancesForDateRange, oldest, filterVal);
         }
 

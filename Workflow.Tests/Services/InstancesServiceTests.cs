@@ -4,7 +4,6 @@ using System.Linq;
 using Chauffeur.TestingTools;
 using Umbraco.Core;
 using Umbraco.Core.Models;
-using Umbraco.Core.Services;
 using Workflow.Models;
 using Workflow.Services;
 using Workflow.Services.Interfaces;
@@ -136,7 +135,7 @@ namespace Workflow.Tests.Services
         {
             IEnumerable<WorkflowInstancePoco> instances = Scaffold.Instances(count);
 
-            List<WorkflowInstance> results = _service.GetAllInstancesForDateRange(DateTime.Now.AddDays(daysAgo));
+            List<WorkflowInstanceViewModel> results = _service.GetAllInstancesForDateRange(DateTime.Now.AddDays(daysAgo));
 
             // all instances are incomplete, so return regardless of daysAgo value
             Assert.Equal(expected, results.Count);
@@ -162,7 +161,7 @@ namespace Workflow.Tests.Services
         {
             Scaffold.Instances(count);
 
-            List<WorkflowInstance> results = _service.GetFilteredPagedInstancesForDateRange(DateTime.Now.AddDays(daysAgo), expected, 1, "3");
+            List<WorkflowInstanceViewModel> results = _service.GetFilteredPagedInstancesForDateRange(DateTime.Now.AddDays(daysAgo), expected, 1, "3");
 
             // all instances are incomplete, so return regardless of daysAgo value
             Assert.Equal(expected, results.Count);
@@ -201,7 +200,7 @@ namespace Workflow.Tests.Services
         {
             Scaffold.Instances(instanceCount);
 
-            List<WorkflowInstance> instances = _service.Get(page, count);
+            List<WorkflowInstanceViewModel> instances = _service.Get(page, count);
 
             Assert.Equal(expected, instances.Count);
         }
@@ -259,7 +258,7 @@ namespace Workflow.Tests.Services
 
             _service.InsertInstance(Scaffold.Instance(Guid.NewGuid(), 1, nodeId));
 
-            List<WorkflowInstance> instances = _service.GetByNodeId(nodeId, 1, 10);
+            List<WorkflowInstanceViewModel> instances = _service.GetByNodeId(nodeId, 1, 10);
 
             Assert.NotNull(instances);
             Assert.Equal(nodeId, instances.First().NodeId);
@@ -269,7 +268,7 @@ namespace Workflow.Tests.Services
         public void Converting_Empty_Set_To_Instance_List_Returns_Empty_List()
         {
             List<WorkflowInstancePoco> instances = new List<WorkflowInstancePoco>();
-            List<WorkflowInstance> result = _service.ConvertToWorkflowInstanceList(instances);
+            List<WorkflowInstanceViewModel> result = _service.ConvertToWorkflowInstanceList(instances);
 
             Assert.Empty(result);
         }

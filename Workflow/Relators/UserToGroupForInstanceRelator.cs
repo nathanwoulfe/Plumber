@@ -10,34 +10,34 @@ namespace Workflow.Relators
         /// <summary>
         /// Maps Users to the UserGroup property of a WorkflowTaskInstance
         /// </summary>
-        /// <param name="wtip"></param>
-        /// <param name="wip"></param>
-        /// <param name="ugp"></param>
+        /// <param name="task"></param>
+        /// <param name="instance"></param>
+        /// <param name="userGroup"></param>
         /// <returns></returns>
-        public WorkflowInstancePoco MapIt(WorkflowInstancePoco wip, WorkflowTaskInstancePoco wtip, UserGroupPoco ugp)
+        public WorkflowInstancePoco MapIt(WorkflowInstancePoco instance, WorkflowTaskPoco task, UserGroupPoco userGroup)
         {
-            if (wip == null)
+            if (instance == null)
             {
                 return _current;
             }
 
-            if (ugp.GroupId == wtip.GroupId)
+            if (userGroup.GroupId == task.GroupId)
             {
-                wtip.UserGroup = ugp;
+                task.UserGroup = userGroup;
             }
 
-            if (_current != null && _current.Guid == wip.Guid)
+            if (_current != null && _current.Guid == instance.Guid)
             {
-                if (_current.TaskInstances.All(t => t.ApprovalStep != wtip.ApprovalStep))
+                if (_current.TaskInstances.All(t => t.ApprovalStep != task.ApprovalStep))
                 {
-                    _current.TaskInstances.Add(wtip);
+                    _current.TaskInstances.Add(task);
                 }
                 return null;
             }
 
-            var prev = _current;
-            _current = wip;
-            _current.TaskInstances.Add(wtip);
+            WorkflowInstancePoco prev = _current;
+            _current = instance;
+            _current.TaskInstances.Add(task);
 
             return prev;
         }

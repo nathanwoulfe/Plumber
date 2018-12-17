@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Workflow.Models
 {
-    public class WorkflowInstance
+    public class WorkflowInstanceViewModel
     {
         public string Type { get; set; }
         public string NodeName { get; set; }
@@ -13,7 +13,7 @@ namespace Workflow.Models
         public string RequestedBy { get; set; }
         public string RequestedOn { get; set; }
         public int NodeId { get; set; }
-        public List<WorkflowTask> Tasks { get; set; }
+        public List<WorkflowTaskViewModel> Tasks { get; set; }
 
         // need these as a datetime for the charts, to match task model
         public DateTime? CompletedDate { get; set; }
@@ -21,9 +21,9 @@ namespace Workflow.Models
 
         public Guid InstanceGuid { get; set; }
 
-        public WorkflowInstance()
+        public WorkflowInstanceViewModel()
         {
-            Tasks = new List<WorkflowTask>();
+            Tasks = new List<WorkflowTaskViewModel>();
         }
     }
 }

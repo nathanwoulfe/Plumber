@@ -19,11 +19,7 @@ namespace Workflow.Services
         public static event EventHandler<TaskEventArgs> Created;
         public static event EventHandler<TaskEventArgs> Updated;
 
-        public TasksService()
-            : this(
-                new TasksRepository(),
-                new ConfigService()
-            )
+        public TasksService() : this(new TasksRepository(), new ConfigService())
         {
         }
 
@@ -59,14 +55,14 @@ namespace Workflow.Services
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public List<WorkflowTask> GetPendingTasks(IEnumerable<int> status, int count, int page)
+        public List<WorkflowTaskViewModel> GetPendingTasks(IEnumerable<int> status, int count, int page)
         {
-            IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllPendingTasks(status)
+            IEnumerable<WorkflowTaskPoco> taskInstances = _tasksRepo.GetAllPendingTasks(status)
                 .Where(x => x.WorkflowInstance.Active)
                 .GroupBy(x => x.WorkflowInstanceGuid)
                 .Select(x => x.First());
 
-            List<WorkflowTask> tasks = ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
+            List<WorkflowTaskViewModel> tasks = ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
 
             return tasks;
         }
@@ -78,10 +74,10 @@ namespace Workflow.Services
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public List<WorkflowTask> GetAllGroupTasks(int groupId, int count, int page)
+        public List<WorkflowTaskViewModel> GetAllGroupTasks(int groupId, int count, int page)
         {
-            IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllGroupTasks(groupId);
-            List<WorkflowTask> tasks = ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
+            IEnumerable<WorkflowTaskPoco> taskInstances = _tasksRepo.GetAllGroupTasks(groupId);
+            List<WorkflowTaskViewModel> tasks = ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
 
             return tasks;
         }
@@ -93,15 +89,15 @@ namespace Workflow.Services
         /// <param name="sorted">Depending on the caller, the response may not be sorted</param>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public List<WorkflowTask> ConvertToWorkflowTaskList(List<WorkflowTaskInstancePoco> taskInstances, bool sorted = true, WorkflowInstancePoco instance = null)
+        public List<WorkflowTaskViewModel> ConvertToWorkflowTaskList(List<WorkflowTaskPoco> taskInstances, bool sorted = true, WorkflowInstancePoco instance = null)
         {
-            List<WorkflowTask> workflowItems = new List<WorkflowTask>();
+            List<WorkflowTaskViewModel> workflowItems = new List<WorkflowTaskViewModel>();
 
             if (!taskInstances.Any()) return workflowItems;
 
             bool useInstanceFromTask = instance == null;
 
-            foreach (WorkflowTaskInstancePoco taskInstance in taskInstances)
+            foreach (WorkflowTaskPoco taskInstance in taskInstances)
             {
                 instance = useInstanceFromTask ? taskInstance.WorkflowInstance : instance;
 
@@ -111,7 +107,7 @@ namespace Workflow.Services
                     continue;
                 }
 
-                var item = new WorkflowTask
+                var item = new WorkflowTaskViewModel
                 {
                     InstanceGuid = instance.Guid,
                     TaskId = taskInstance.Id,
@@ -152,9 +148,9 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public List<WorkflowTaskInstancePoco> GetAllPendingTasks(IEnumerable<int> status)
+        public List<WorkflowTaskPoco> GetAllPendingTasks(IEnumerable<int> status)
         {
-            IEnumerable<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllPendingTasks(status);
+            IEnumerable<WorkflowTaskPoco> taskInstances = _tasksRepo.GetAllPendingTasks(status);
 
             return taskInstances
                 .Where(x => x.WorkflowInstance.Active)
@@ -168,9 +164,9 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="oldest"></param>
         /// <returns></returns>
-        public List<WorkflowTaskInstancePoco> GetAllTasksForDateRange(DateTime oldest)
+        public List<WorkflowTaskPoco> GetAllTasksForDateRange(DateTime oldest)
         {
-            List<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetAllTasksForDateRange(oldest);
+            List<WorkflowTaskPoco> taskInstances = _tasksRepo.GetAllTasksForDateRange(oldest);
             return taskInstances;
         }
 
@@ -182,12 +178,12 @@ namespace Workflow.Services
         /// <param name="page"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public List<WorkflowTask> GetFilteredPagedTasksForDateRange(DateTime oldest, int? count, int? page, string filter = "")
+        public List<WorkflowTaskViewModel> GetFilteredPagedTasksForDateRange(DateTime oldest, int? count, int? page, string filter = "")
         {
-            List<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetFilteredPagedTasksForDateRange(oldest, filter);
+            List<WorkflowTaskPoco> taskInstances = _tasksRepo.GetFilteredPagedTasksForDateRange(oldest, filter);
 
             // todo - fetch only required data, don't do paging here
-            List<WorkflowTask> workflowTaskInstances = ConvertToWorkflowTaskList(
+            List<WorkflowTaskViewModel> workflowTaskInstances = ConvertToWorkflowTaskList(
                 page.HasValue && count.HasValue ?
                     taskInstances.Skip((page.Value - 1) * count.Value).Take(count.Value).ToList() :
                     taskInstances);
@@ -200,9 +196,9 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public List<WorkflowTaskInstancePoco> GetTasksByNodeId(int id)
+        public List<WorkflowTaskPoco> GetTasksByNodeId(int id)
         {
-            List<WorkflowTaskInstancePoco> taskInstances = _tasksRepo.GetTasksByNodeId(id);
+            List<WorkflowTaskPoco> taskInstances = _tasksRepo.GetTasksByNodeId(id);
             return taskInstances;
         }
     
@@ -212,7 +208,7 @@ namespace Workflow.Services
         /// <param name="id"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        public List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status)
+        public List<WorkflowTaskPoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status)
         {
             return _tasksRepo.GetTaskSubmissionsForUser(id, status)
                 .Where(x => x.WorkflowInstance.Active)
@@ -226,7 +222,7 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
-        public List<WorkflowTaskInstancePoco> GetTasksWithGroupByInstanceGuid(Guid guid)
+        public List<WorkflowTaskPoco> GetTasksWithGroupByInstanceGuid(Guid guid)
         {
             return _tasksRepo.GetTasksAndGroupByInstanceId(guid);
         }
@@ -236,9 +232,9 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public WorkflowTask GetTask(int id)
+        public WorkflowTaskViewModel GetTask(int id)
         {
-            WorkflowTaskInstancePoco task =_tasksRepo.Get(id);
+            WorkflowTaskPoco task =_tasksRepo.Get(id);
             return ConvertToWorkflowTaskList(task.AsEnumerableOfOne().ToList()).FirstOrDefault();
         }
 
@@ -246,7 +242,7 @@ namespace Workflow.Services
         /// 
         /// </summary>
         /// <param name="poco"></param>
-        public void InsertTask(WorkflowTaskInstancePoco poco)
+        public void InsertTask(WorkflowTaskPoco poco)
         {
             _tasksRepo.InsertTask(poco);
             Created?.Invoke(this, new TaskEventArgs(poco));
@@ -257,7 +253,7 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="poco"></param>
         /// <returns></returns>
-        public void UpdateTask(WorkflowTaskInstancePoco poco)
+        public void UpdateTask(WorkflowTaskPoco poco)
         {
             _tasksRepo.UpdateTask(poco);
             Updated?.Invoke(this, new TaskEventArgs(poco));

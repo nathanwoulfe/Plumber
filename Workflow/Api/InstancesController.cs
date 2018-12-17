@@ -42,7 +42,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowInstance> workflowInstances = _instancesService.Get(page, count);
+                List<WorkflowInstanceViewModel> workflowInstances = _instancesService.Get(page, count);
 
                 return Json(new
                 {
@@ -70,7 +70,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowInstance> workflowInstances = _instancesService.GetByNodeId(nodeId, page, count);
+                List<WorkflowInstanceViewModel> workflowInstances = _instancesService.GetByNodeId(nodeId, page, count);
 
                 return Json(new
                 {
@@ -98,7 +98,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowInstance> instances = _instancesService.GetAllInstancesForDateRange(DateTime.Now.AddDays(days * -1));
+                List<WorkflowInstanceViewModel> instances = _instancesService.GetAllInstancesForDateRange(DateTime.Now.AddDays(days * -1));
 
                 return Json(new
                 {
@@ -124,7 +124,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowInstance> instances =
+                List<WorkflowInstanceViewModel> instances =
                     _instancesService.GetFilteredPagedInstancesForDateRange(DateTime.Now.AddDays(days * -1), count, page, filter);
 
                 return Json(new

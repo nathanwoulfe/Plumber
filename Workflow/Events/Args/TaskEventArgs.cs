@@ -4,11 +4,11 @@ namespace Workflow.Events.Args
 {
     public class TaskEventArgs : EventArgsBase
     {
-        public TaskEventArgs(WorkflowTaskInstancePoco task)
+        public TaskEventArgs(WorkflowTaskPoco task)
         {
             Task = task;
         }
 
-        public WorkflowTaskInstancePoco Task { get; set; }
+        public WorkflowTaskPoco Task { get; set; }
     }
 }

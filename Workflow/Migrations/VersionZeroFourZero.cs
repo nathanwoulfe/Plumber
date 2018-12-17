@@ -48,7 +48,7 @@ namespace Workflow.Migrations
             {
                 if (!instance.TaskInstances.Any()) continue;
 
-                WorkflowTaskInstancePoco finalTask = instance.TaskInstances.OrderBy(x => x.Id).Last();
+                WorkflowTaskPoco finalTask = instance.TaskInstances.OrderBy(x => x.Id).Last();
 
                 instance.CompletedDate = finalTask.CompletedDate;
                 Context.Database.Update(instance);

@@ -85,7 +85,7 @@ namespace Workflow.Tests.Services
             UserGroupPoco group = await AddGroupWithPermissionAndUser(userId, nodeId);
 
             // create a task on an instance
-            WorkflowTaskInstancePoco task = Scaffold.Task(guid, groupId: group.GroupId);
+            WorkflowTaskPoco task = Scaffold.Task(guid, groupId: group.GroupId);
 
             _tasksService.InsertTask(task);
             _instancesService.InsertInstance(Scaffold.Instance(guid, 1, nodeId));
@@ -124,7 +124,7 @@ namespace Workflow.Tests.Services
             UserGroupPoco group = await AddGroupWithPermissionAndUser(userId, nodeId);
 
             // create a task on an instance
-            WorkflowTaskInstancePoco task = Scaffold.Task(guid, groupId: group.GroupId, status: (int)TaskStatus.NotRequired);
+            WorkflowTaskPoco task = Scaffold.Task(guid, groupId: group.GroupId, status: (int)TaskStatus.NotRequired);
 
             _tasksService.InsertTask(task);
             _instancesService.InsertInstance(Scaffold.Instance(guid, 1, nodeId));

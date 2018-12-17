@@ -7,7 +7,7 @@ namespace Workflow.Models
     /// <summary>
     /// A UI-ready sub-set of properties from the WorkflowTaskPoco
     /// </summary>
-    public class WorkflowTask
+    public class WorkflowTaskViewModel
     {
         [JsonProperty("nodeId")]
         public int NodeId { get; set; }

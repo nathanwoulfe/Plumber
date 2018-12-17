@@ -4,7 +4,6 @@ using Umbraco.Core.Models;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Processes;
-using Workflow.Services;
 
 using TaskStatus = Workflow.Models.TaskStatus;
 using TaskType = Workflow.Models.TaskType;
@@ -61,9 +60,9 @@ namespace Workflow.Extensions
         /// Adds an approval task to this workflow instance, setting the approval step and instance guid
         /// </summary>
         /// <param name="instance"></param>
-        public static WorkflowTaskInstancePoco CreateApprovalTask(this WorkflowInstancePoco instance)
+        public static WorkflowTaskPoco CreateApprovalTask(this WorkflowInstancePoco instance)
         {
-            var taskInstance = new WorkflowTaskInstancePoco(TaskType.Approve)
+            var taskInstance = new WorkflowTaskPoco(TaskType.Approve)
             {
                 ApprovalStep = instance.TaskInstances.Count(x => x.TaskStatus.In(TaskStatus.Approved, TaskStatus.NotRequired)),
                 WorkflowInstanceGuid = instance.Guid
@@ -102,7 +101,7 @@ namespace Workflow.Extensions
             }
             result += "<br/>";
 
-            foreach (WorkflowTaskInstancePoco taskInstance in instance.TaskInstances.OrderBy(t => t.ApprovalStep))
+            foreach (WorkflowTaskPoco taskInstance in instance.TaskInstances.OrderBy(t => t.ApprovalStep))
             {
                 result += taskInstance.BuildTaskSummary() + "<br/>";
             }

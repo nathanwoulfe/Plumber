@@ -77,7 +77,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTask> workflowItems = _tasksService.GetPendingTasks(
+                List<WorkflowTaskViewModel> workflowItems = _tasksService.GetPendingTasks(
                     new List<int> {(int) TaskStatus.PendingApproval, (int) TaskStatus.Rejected}, count, page);
 
                 int taskCount = _tasksService.CountPendingTasks();
@@ -108,7 +108,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> taskInstances = 
+                List<WorkflowTaskPoco> taskInstances = 
                     _tasksService.GetAllTasksForDateRange(DateTime.Now.AddDays(days * -1));
 
                 return Json(new
@@ -134,7 +134,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTask> taskInstances =
+                List<WorkflowTaskViewModel> taskInstances =
                     _tasksService.GetFilteredPagedTasksForDateRange(DateTime.Now.AddDays(days * -1), count, page, filter);
 
                 return Json(new
@@ -167,9 +167,9 @@ namespace Workflow.Api
             try
             {
                 // todo -> only fetch the require page, not all
-                List<WorkflowTaskInstancePoco> taskInstances = _tasksService.GetTasksByNodeId(id);
+                List<WorkflowTaskPoco> taskInstances = _tasksService.GetTasksByNodeId(id);
                 // set sorted to false as the instances are ordered by create date -> sorting will order the paged items by workflow step
-                List<WorkflowTask> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList(), false);
+                List<WorkflowTaskViewModel> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList(), false);
 
                 return Json(new
                 {
@@ -208,13 +208,13 @@ namespace Workflow.Api
 
             try
             {
-                WorkflowTaskInstancePoco currentTask = _tasksService.GetTasksByNodeId(id).FirstOrDefault();
+                WorkflowTaskPoco currentTask = _tasksService.GetTasksByNodeId(id).FirstOrDefault();
 
                 return Json(new
                 {
                     items = currentTask != null && currentTask.TaskStatus.In(TaskStatus.PendingApproval, TaskStatus.Rejected) ? 
-                        _tasksService.ConvertToWorkflowTaskList(new List<WorkflowTaskInstancePoco> { currentTask }) : 
-                        new List<WorkflowTask>()
+                        _tasksService.ConvertToWorkflowTaskList(new List<WorkflowTaskPoco> { currentTask }) : 
+                        new List<WorkflowTaskViewModel>()
                 }, ViewHelpers.CamelCase);
             }
             catch (Exception ex)
@@ -239,7 +239,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> taskInstances = (type == 0
+                List<WorkflowTaskPoco> taskInstances = (type == 0
                     ? _tasksService.GetAllPendingTasks(new List<int>
                             {(int) TaskStatus.PendingApproval, (int) TaskStatus.Rejected })
                     : _tasksService.GetTaskSubmissionsForUser(userId, new List<int>
@@ -250,7 +250,7 @@ namespace Workflow.Api
 
                 if (type == 0)
                 {
-                    foreach (WorkflowTaskInstancePoco taskInstance in taskInstances)
+                    foreach (WorkflowTaskPoco taskInstance in taskInstances)
                     {
                         taskInstance.UserGroup = await _groupService.GetPopulatedUserGroupAsync(taskInstance.UserGroup.GroupId);
                     }
@@ -261,7 +261,7 @@ namespace Workflow.Api
                 }
 
                 taskInstances = taskInstances.Where(x => x.WorkflowInstance.Node != null && !x.WorkflowInstance.Node.Path.Contains(UmbConstants.System.RecycleBinContentString)).ToList();
-                List<WorkflowTask> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList(), false);
+                List<WorkflowTaskViewModel> workflowItems = _tasksService.ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList(), false);
 
                 return Json(new
                 {
@@ -289,7 +289,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTask> workflowItems = _tasksService.GetAllGroupTasks(groupId, count, page);
+                List<WorkflowTaskViewModel> workflowItems = _tasksService.GetAllGroupTasks(groupId, count, page);
                 int groupTaskCount = _tasksService.CountGroupTasks(groupId);
 
                 return Json(new
@@ -319,7 +319,7 @@ namespace Workflow.Api
         {
             try
             {
-                List<WorkflowTaskInstancePoco> taskInstances = _tasksService.GetTasksWithGroupByInstanceGuid(guid);
+                List<WorkflowTaskPoco> taskInstances = _tasksService.GetTasksWithGroupByInstanceGuid(guid);
                 WorkflowInstancePoco instance = _instancesService.GetByGuid(guid);
 
                 return Json(new

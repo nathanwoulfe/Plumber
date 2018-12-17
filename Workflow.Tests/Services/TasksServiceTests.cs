@@ -39,7 +39,7 @@ namespace Workflow.Tests.Services
             TasksService.Created += (sender, args) =>
             {
                 Assert.NotNull(args);
-                Assert.IsAssignableFrom<WorkflowTaskInstancePoco>(args.Task);
+                Assert.IsAssignableFrom<WorkflowTaskPoco>(args.Task);
             };
 
             int count = _service.CountPendingTasks();
@@ -57,11 +57,11 @@ namespace Workflow.Tests.Services
             TasksService.Updated += (sender, args) =>
             {
                 Assert.NotNull(args);
-                Assert.IsAssignableFrom<WorkflowTaskInstancePoco>(args.Task);
+                Assert.IsAssignableFrom<WorkflowTaskPoco>(args.Task);
                 Assert.Equal(comment, args.Task.Comment);
             };
 
-            WorkflowTaskInstancePoco task = Scaffold.Task();
+            WorkflowTaskPoco task = Scaffold.Task();
             _service.InsertTask(task);
 
             task.Comment = comment;
@@ -78,7 +78,7 @@ namespace Workflow.Tests.Services
             _service.InsertTask(Scaffold.Task(guid));
 
             // status 1 is approved, there are none
-            List<WorkflowTaskInstancePoco> result = _service.GetTaskSubmissionsForUser(0, new[] { 1 });
+            List<WorkflowTaskPoco> result = _service.GetTaskSubmissionsForUser(0, new[] { 1 });
 
             Assert.NotNull(result);
             Assert.Empty(result);
@@ -98,7 +98,7 @@ namespace Workflow.Tests.Services
             _instancesService.InsertInstance(Scaffold.Instance(guid, 1));
             _service.InsertTask(Scaffold.Task(guid));
 
-            List<WorkflowTaskInstancePoco> result = _service.GetTasksWithGroupByInstanceGuid(guid);
+            List<WorkflowTaskPoco> result = _service.GetTasksWithGroupByInstanceGuid(guid);
 
             Assert.NotNull(result);
             Assert.Single(result);
@@ -109,7 +109,7 @@ namespace Workflow.Tests.Services
         public void Can_Get_Tasks_For_Date_Range()
         {
             _service.InsertTask(Scaffold.Task(Guid.NewGuid(), DateTime.Now.AddDays(-1)));
-            List<WorkflowTaskInstancePoco> result = _service.GetAllTasksForDateRange(DateTime.Now.AddDays(-2));
+            List<WorkflowTaskPoco> result = _service.GetAllTasksForDateRange(DateTime.Now.AddDays(-2));
 
             Assert.NotNull(result);
             Assert.Single(result);
@@ -152,7 +152,7 @@ namespace Workflow.Tests.Services
             _service.InsertTask(Scaffold.Task(guid, DateTime.Now.AddDays(-1), 3, 1, 1));
             _service.InsertTask(Scaffold.Task(guid, DateTime.Now, 3, 3));
 
-            List<WorkflowTaskInstancePoco> result = _service.GetTasksByNodeId(nodeId);
+            List<WorkflowTaskPoco> result = _service.GetTasksByNodeId(nodeId);
 
             Assert.NotNull(result);
             Assert.Equal(2, result.Count);
@@ -169,7 +169,7 @@ namespace Workflow.Tests.Services
             _service.InsertTask(Scaffold.Task(guid, DateTime.Now.AddDays(-1), 3, 1, 1));
             _service.InsertTask(Scaffold.Task(guid, DateTime.Now, 3, 3));
 
-            List<WorkflowTask> result = _service.GetAllGroupTasks(3, 10, 1);
+            List<WorkflowTaskViewModel> result = _service.GetAllGroupTasks(3, 10, 1);
 
             Assert.NotNull(result);
             Assert.Equal(2, result.Count);
@@ -178,7 +178,7 @@ namespace Workflow.Tests.Services
         [Fact]
         public void Can_Get_Pending_Workflow_Tasks()
         {
-            List<WorkflowTask> result = _service.GetPendingTasks(new List<int>
+            List<WorkflowTaskViewModel> result = _service.GetPendingTasks(new List<int>
             {
                 (int)TaskStatus.PendingApproval
             }, 10, 1);
@@ -198,7 +198,7 @@ namespace Workflow.Tests.Services
                 i += 1;
             }
 
-            List<WorkflowTask> result2 = _service.GetPendingTasks(new List<int>
+            List<WorkflowTaskViewModel> result2 = _service.GetPendingTasks(new List<int>
             {
                 (int)TaskStatus.PendingApproval
             }, 10, 1);
@@ -217,16 +217,16 @@ namespace Workflow.Tests.Services
             _instancesService.InsertInstance(Scaffold.Instance(guid, 1, root.Id));
             _service.InsertTask(Scaffold.Task(guid));
 
-            List<WorkflowTask> tasks = _service.GetPendingTasks(new List<int>
+            List<WorkflowTaskViewModel> tasks = _service.GetPendingTasks(new List<int>
             {
                 (int)TaskStatus.PendingApproval
             }, 10, 1);
             int id = tasks.First().TaskId;
 
-            WorkflowTask task = _service.GetTask(id);
+            WorkflowTaskViewModel taskViewModel = _service.GetTask(id);
 
-            Assert.NotNull(task);
-            Assert.Equal(id, task.TaskId);
+            Assert.NotNull(taskViewModel);
+            Assert.Equal(id, taskViewModel.TaskId);
         }
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace Workflow.Tests.Services
             _service.InsertTask(Scaffold.Task(guid));
             _service.InsertTask(Scaffold.Task(guid, DateTime.Now, 2, 1, 1));
 
-            List<WorkflowTask> tasks = _service.GetFilteredPagedTasksForDateRange(DateTime.Now.AddDays(-2), 2, 1);
+            List<WorkflowTaskViewModel> tasks = _service.GetFilteredPagedTasksForDateRange(DateTime.Now.AddDays(-2), 2, 1);
 
             Assert.NotEmpty(tasks);
             Assert.Equal(2, tasks.Count);

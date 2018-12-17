@@ -50,7 +50,7 @@ namespace Workflow.Services
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<WorkflowInstance> Get(int? page = 0, int? count = null)
+        public List<WorkflowInstanceViewModel> Get(int? page = 0, int? count = null)
         {
             List<WorkflowInstancePoco> instances = _repo.GetAllInstances();
             
@@ -59,7 +59,7 @@ namespace Workflow.Services
                 ? instances.Skip((page.Value - 1) * count.Value).Take(count.Value).ToList()
                 : instances;
 
-            List<WorkflowInstance> workflowInstances = ConvertToWorkflowInstanceList(instances);
+            List<WorkflowInstanceViewModel> workflowInstances = ConvertToWorkflowInstanceList(instances);
 
             return workflowInstances;
         }
@@ -69,10 +69,10 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="oldest"></param>
         /// <returns></returns>
-        public List<WorkflowInstance> GetAllInstancesForDateRange(DateTime? oldest)
+        public List<WorkflowInstanceViewModel> GetAllInstancesForDateRange(DateTime? oldest)
         {
             List<WorkflowInstancePoco> instances = _repo.GetAllInstancesForDateRange(oldest ?? DateTime.MinValue);
-            List<WorkflowInstance> workflowInstances = ConvertToWorkflowInstanceList(instances);
+            List<WorkflowInstanceViewModel> workflowInstances = ConvertToWorkflowInstanceList(instances);
 
             return workflowInstances;
         }
@@ -84,7 +84,7 @@ namespace Workflow.Services
         /// <param name="page"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public List<WorkflowInstance> GetByNodeId(int nodeId, int? page, int? count)
+        public List<WorkflowInstanceViewModel> GetByNodeId(int nodeId, int? page, int? count)
         {
             List<WorkflowInstancePoco> instances = _repo.GetAllInstancesForNode(nodeId);
 
@@ -93,7 +93,7 @@ namespace Workflow.Services
                 ? instances.Skip((page.Value - 1) * count.Value).Take(count.Value).ToList()
                 : instances;
 
-            List<WorkflowInstance> workflowInstances = ConvertToWorkflowInstanceList(instances);
+            List<WorkflowInstanceViewModel> workflowInstances = ConvertToWorkflowInstanceList(instances);
 
             return workflowInstances;
         }
@@ -106,7 +106,7 @@ namespace Workflow.Services
         /// <param name="page"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public List<WorkflowInstance> GetFilteredPagedInstancesForDateRange(DateTime oldest, int? count, int? page, string filter = "")
+        public List<WorkflowInstanceViewModel> GetFilteredPagedInstancesForDateRange(DateTime oldest, int? count, int? page, string filter = "")
         {
             List<WorkflowInstancePoco> instances = _repo.GetFilteredPagedInstancesForDateRange(oldest, filter);
 
@@ -115,7 +115,7 @@ namespace Workflow.Services
                 ? instances.Skip((page.Value - 1) * count.Value).Take(count.Value).ToList()
                 : instances;
 
-            List<WorkflowInstance> workflowInstances = ConvertToWorkflowInstanceList(instances);
+            List<WorkflowInstanceViewModel> workflowInstances = ConvertToWorkflowInstanceList(instances);
 
             return workflowInstances;
         }
@@ -141,16 +141,16 @@ namespace Workflow.Services
         /// </summary>
         /// <param name="instances"></param>
         /// <returns></returns>
-        public List<WorkflowInstance> ConvertToWorkflowInstanceList(List<WorkflowInstancePoco> instances)
+        public List<WorkflowInstanceViewModel> ConvertToWorkflowInstanceList(List<WorkflowInstancePoco> instances)
         {
-            List<WorkflowInstance> workflowInstances = new List<WorkflowInstance>();
+            List<WorkflowInstanceViewModel> workflowInstances = new List<WorkflowInstanceViewModel>();
 
             if (instances == null || instances.Count <= 0)
                 return workflowInstances;
 
             foreach (WorkflowInstancePoco instance in instances)
             {
-                var model = new WorkflowInstance
+                var model = new WorkflowInstanceViewModel
                 {
                     Type = instance.WorkflowType.Description(instance.ScheduledDate),
                     InstanceGuid = instance.Guid,
@@ -193,7 +193,7 @@ namespace Workflow.Services
             WorkflowInstancePoco instance = GetByGuid(guid);
 
             // TODO -> fix this
-            List<WorkflowTaskInstancePoco> tasks = _tasksService.GetTasksWithGroupByInstanceGuid(instance.Guid);
+            List<WorkflowTaskPoco> tasks = _tasksService.GetTasksWithGroupByInstanceGuid(instance.Guid);
 
             if (tasks.Any())
             {

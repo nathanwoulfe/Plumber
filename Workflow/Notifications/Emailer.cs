@@ -64,14 +64,14 @@ namespace Workflow.Notifications
                 return;
             }
 
-            WorkflowTaskInstancePoco finalTask = null;
+            WorkflowTaskPoco finalTask = null;
 
             try
             {
                 string docTitle = instance.Node.Name;
                 string docUrl = UrlHelpers.GetFullyQualifiedContentEditorUrl(instance.NodeId);
 
-                WorkflowTaskInstancePoco[] flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep).ToArray();
+                WorkflowTaskPoco[] flowTasks = instance.TaskInstances.OrderBy(t => t.ApprovalStep).ToArray();
 
                 // always take get the emails for all previous users, sometimes they will be discarded later
                 // easier to just grab em all, rather than doing so conditionally
@@ -81,7 +81,7 @@ namespace Workflow.Notifications
                 var taskIndex = 0;
                 int taskCount = flowTasks.Length;
 
-                foreach (WorkflowTaskInstancePoco task in flowTasks)
+                foreach (WorkflowTaskPoco task in flowTasks)
                 {
                     taskIndex += 1;
 

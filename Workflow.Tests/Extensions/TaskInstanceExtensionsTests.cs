@@ -21,7 +21,7 @@ namespace Workflow.Tests.Extensions
         [InlineData(WorkflowAction.Reject, 1, "comment text", EmailType.ApprovalRejection)]
         public void Can_Process_Task(WorkflowAction action, int userId, string comment, EmailType expected)
         {
-            var taskInstance = new WorkflowTaskInstancePoco
+            var taskInstance = new WorkflowTaskPoco
             {
                 WorkflowInstanceGuid = Guid.NewGuid(),
                 ApprovalStep = 1,
@@ -42,7 +42,7 @@ namespace Workflow.Tests.Extensions
         [InlineData(11, "second comment text")]
         public void Can_Cancel_Task(int userId, string comment)
         {
-            var taskInstance = new WorkflowTaskInstancePoco
+            var taskInstance = new WorkflowTaskPoco
             {
                 WorkflowInstanceGuid = Guid.NewGuid(),
                 ApprovalStep = 1,
@@ -66,7 +66,7 @@ namespace Workflow.Tests.Extensions
         [InlineData(TaskStatus.NotRequired)]
         public void Can_Get_Summary_String(TaskStatus status)
         {
-            var taskInstance = new WorkflowTaskInstancePoco
+            var taskInstance = new WorkflowTaskPoco
             {
                 WorkflowInstanceGuid = Guid.NewGuid(),
                 ApprovalStep = 1,

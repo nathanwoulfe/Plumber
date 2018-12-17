@@ -5,7 +5,7 @@ namespace Workflow.Extensions
 {
     public static class TaskInstanceExtensions
     {
-        public static EmailType? ProcessApproval(this WorkflowTaskInstancePoco taskInstance, WorkflowAction action, int userId, string comment)
+        public static EmailType? ProcessApproval(this WorkflowTaskPoco taskInstance, WorkflowAction action, int userId, string comment)
         {
             EmailType? emailAction = null;
 
@@ -41,7 +41,7 @@ namespace Workflow.Extensions
         /// <param name="userId"></param>
         /// <param name="reason"></param>
         /// <param name="completedDate"></param>
-        public static void Cancel(this WorkflowTaskInstancePoco taskInstance, int userId, string reason, DateTime? completedDate)
+        public static void Cancel(this WorkflowTaskPoco taskInstance, int userId, string reason, DateTime? completedDate)
         {
             taskInstance.Status = (int)TaskStatus.Cancelled;
             taskInstance.ActionedByUserId = userId;
@@ -55,7 +55,7 @@ namespace Workflow.Extensions
         /// <param name="taskInstance">The task instance.</param>
         /// <param name="index"></param>
         /// <returns>HTML markup describing an active task instance.</returns>
-        public static string BuildTaskSummary(this WorkflowTaskInstancePoco taskInstance)
+        public static string BuildTaskSummary(this WorkflowTaskPoco taskInstance)
         {
             var result = "";
 

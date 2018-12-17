@@ -27,7 +27,7 @@ namespace Workflow.Repositories
         /// 
         /// </summary>
         /// <param name="poco"></param>
-        public void InsertTask(WorkflowTaskInstancePoco poco)
+        public void InsertTask(WorkflowTaskPoco poco)
         {
             _database.Insert(poco);
         }
@@ -36,7 +36,7 @@ namespace Workflow.Repositories
         /// 
         /// </summary>
         /// <param name="poco"></param>
-        public void UpdateTask(WorkflowTaskInstancePoco poco)
+        public void UpdateTask(WorkflowTaskPoco poco)
         {
             _database.Update(poco);
         }
@@ -64,32 +64,32 @@ namespace Workflow.Repositories
         /// Get tasks and associated group by instance guid
         /// </summary>
         /// <param name="guid">The instance guid</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetTasksAndGroupByInstanceId(Guid guid)
+        /// <returns>A list of objects of type <see cref="WorkflowTaskPoco"/></returns>
+        public List<WorkflowTaskPoco> GetTasksAndGroupByInstanceId(Guid guid)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco, UserGroupPoco>(SqlQueries.TasksAndGroupByInstanceId, guid);
+            return _database.Fetch<WorkflowTaskPoco, UserGroupPoco>(SqlQueries.TasksAndGroupByInstanceId, guid);
         }
 
         /// <summary>
         /// Get all tasks for the given node 
         /// </summary>
         /// <param name="nodeId">The node id</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetTasksByNodeId(int nodeId)
+        /// <returns>A list of objects of type <see cref="WorkflowTaskPoco"/></returns>
+        public List<WorkflowTaskPoco> GetTasksByNodeId(int nodeId)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.TasksByNode, nodeId);
+            return _database.Fetch<WorkflowTaskPoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.TasksByNode, nodeId);
         }
 
         /// <summary>
         /// Get all pending workflow tasks matching any of the provided status values
         /// </summary>
         /// <param name="status">A collection of WorkflowStatus integers</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public IEnumerable<WorkflowTaskInstancePoco> GetAllPendingTasks(IEnumerable<int> status)
+        /// <returns>A list of objects of type <see cref="WorkflowTaskPoco"/></returns>
+        public IEnumerable<WorkflowTaskPoco> GetAllPendingTasks(IEnumerable<int> status)
         {
 
             return _database
-                    .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.PendingTasks,
+                    .Fetch<WorkflowTaskPoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.PendingTasks,
                         new { statusInts = status.Select(s => s.ToString()).ToArray() }).ToList();
 
         }
@@ -99,31 +99,31 @@ namespace Workflow.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public WorkflowTaskInstancePoco Get(int id)
+        public WorkflowTaskPoco Get(int id)
         {
             return _database
-                .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco>(SqlQueries.GetTask, id).FirstOrDefault();
+                .Fetch<WorkflowTaskPoco, WorkflowInstancePoco>(SqlQueries.GetTask, id).FirstOrDefault();
         }
 
         /// <summary>
         /// Get all tasks for the given group id
         /// </summary>
         /// <param name="groupId">Id of group to query</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public IEnumerable<WorkflowTaskInstancePoco> GetAllGroupTasks(int groupId)
+        /// <returns>A list of objects of type <see cref="WorkflowTaskPoco"/></returns>
+        public IEnumerable<WorkflowTaskPoco> GetAllGroupTasks(int groupId)
         {
             return _database
-                .Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.AllGroupTasks, groupId).ToList();
+                .Fetch<WorkflowTaskPoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.AllGroupTasks, groupId).ToList();
         }
 
         /// <summary>
         /// Get all tasks created after the given date
         /// </summary>
         /// <param name="oldest">The creation date of the oldest tasks to return</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetAllTasksForDateRange(DateTime oldest)
+        /// <returns>A list of objects of type <see cref="WorkflowTaskPoco"/></returns>
+        public List<WorkflowTaskPoco> GetAllTasksForDateRange(DateTime oldest)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco>(SqlQueries.AllTasksForDateRange, oldest);
+            return _database.Fetch<WorkflowTaskPoco>(SqlQueries.AllTasksForDateRange, oldest);
         }
 
         /// <summary>
@@ -132,10 +132,10 @@ namespace Workflow.Repositories
         /// <param name="oldest"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public List<WorkflowTaskInstancePoco> GetFilteredPagedTasksForDateRange(DateTime oldest, string filter)
+        public List<WorkflowTaskPoco> GetFilteredPagedTasksForDateRange(DateTime oldest, string filter)
         {
             int filterVal = !string.IsNullOrEmpty(filter) ? (int)Enum.Parse(typeof(TaskStatus), filter) : -1;
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.FilteredTasksForDateRange, oldest, filterVal);
+            return _database.Fetch<WorkflowTaskPoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.FilteredTasksForDateRange, oldest, filterVal);
         }
 
         /// <summary>
@@ -143,10 +143,10 @@ namespace Workflow.Repositories
         /// </summary>
         /// <param name="id">The user id</param>
         /// <param name="status">The task status collection</param>
-        /// <returns>A list of objects of type <see cref="WorkflowTaskInstancePoco"/></returns>
-        public List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status)
+        /// <returns>A list of objects of type <see cref="WorkflowTaskPoco"/></returns>
+        public List<WorkflowTaskPoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status)
         {
-            return _database.Fetch<WorkflowTaskInstancePoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.SubmissionsForUser, new { id, statusInts = status.Select(s => s.ToString()).ToArray() });
+            return _database.Fetch<WorkflowTaskPoco, WorkflowInstancePoco, UserGroupPoco>(SqlQueries.SubmissionsForUser, new { id, statusInts = status.Select(s => s.ToString()).ToArray() });
         }
     }
 }

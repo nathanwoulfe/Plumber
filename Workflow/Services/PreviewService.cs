@@ -52,7 +52,7 @@ namespace Workflow.Services
         /// <param name="guid"></param>
         public async Task<bool> Validate(int nodeId, int userId, int taskId, Guid guid)
         {
-            List<WorkflowTaskInstancePoco> taskInstances = _tasksService.GetTasksByNodeId(nodeId);
+            List<WorkflowTaskPoco> taskInstances = _tasksService.GetTasksByNodeId(nodeId);
 
             if (!taskInstances.Any() || taskInstances.Last().TaskStatus == TaskStatus.Cancelled)
             {
@@ -60,7 +60,7 @@ namespace Workflow.Services
             }
 
             // only interested in last active task
-            WorkflowTaskInstancePoco activeTask = taskInstances.OrderBy(t => t.Id).LastOrDefault(t => t.TaskStatus.In(TaskStatus.PendingApproval, TaskStatus.Rejected));
+            WorkflowTaskPoco activeTask = taskInstances.OrderBy(t => t.Id).LastOrDefault(t => t.TaskStatus.In(TaskStatus.PendingApproval, TaskStatus.Rejected));
 
             if (activeTask == null)
             {

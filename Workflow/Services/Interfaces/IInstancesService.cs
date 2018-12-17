@@ -9,11 +9,11 @@ namespace Workflow.Services.Interfaces
         IEnumerable<WorkflowInstancePoco> GetAll();
         IEnumerable<WorkflowInstancePoco> GetForNodeByStatus(int nodeId, IEnumerable<int> status);
 
-        List<WorkflowInstance> Get(int? page, int? count);
-        List<WorkflowInstance> GetByNodeId(int nodeId, int? page, int? count);
-        List<WorkflowInstance> GetAllInstancesForDateRange(DateTime? oldest);
-        List<WorkflowInstance> ConvertToWorkflowInstanceList(List<WorkflowInstancePoco> instance);
-        List<WorkflowInstance> GetFilteredPagedInstancesForDateRange(DateTime oldest, int? count, int? page, string filter = "");
+        List<WorkflowInstanceViewModel> Get(int? page, int? count);
+        List<WorkflowInstanceViewModel> GetByNodeId(int nodeId, int? page, int? count);
+        List<WorkflowInstanceViewModel> GetAllInstancesForDateRange(DateTime? oldest);
+        List<WorkflowInstanceViewModel> ConvertToWorkflowInstanceList(List<WorkflowInstancePoco> instance);
+        List<WorkflowInstanceViewModel> GetFilteredPagedInstancesForDateRange(DateTime oldest, int? count, int? page, string filter = "");
 
         Dictionary<int, bool> IsActive(IEnumerable<int> ids);
 

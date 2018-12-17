@@ -6,21 +6,21 @@ namespace Workflow.Repositories.Interfaces
 {
     public interface ITasksRepository
     {
-        void InsertTask(WorkflowTaskInstancePoco poco);
-        void UpdateTask(WorkflowTaskInstancePoco poco);
+        void InsertTask(WorkflowTaskPoco poco);
+        void UpdateTask(WorkflowTaskPoco poco);
 
         int CountGroupTasks(int groupId);
         int CountPendingTasks();
 
-        IEnumerable<WorkflowTaskInstancePoco> GetAllGroupTasks(int groupId);
-        IEnumerable<WorkflowTaskInstancePoco> GetAllPendingTasks(IEnumerable<int> status);
+        IEnumerable<WorkflowTaskPoco> GetAllGroupTasks(int groupId);
+        IEnumerable<WorkflowTaskPoco> GetAllPendingTasks(IEnumerable<int> status);
 
-        WorkflowTaskInstancePoco Get(int id);
+        WorkflowTaskPoco Get(int id);
 
-        List<WorkflowTaskInstancePoco> GetAllTasksForDateRange(DateTime oldest);
-        List<WorkflowTaskInstancePoco> GetFilteredPagedTasksForDateRange(DateTime oldest, string filter);
-        List<WorkflowTaskInstancePoco> GetTasksByNodeId(int nodeId);
-        List<WorkflowTaskInstancePoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status);
-        List<WorkflowTaskInstancePoco> GetTasksAndGroupByInstanceId(Guid guid);
+        List<WorkflowTaskPoco> GetAllTasksForDateRange(DateTime oldest);
+        List<WorkflowTaskPoco> GetFilteredPagedTasksForDateRange(DateTime oldest, string filter);
+        List<WorkflowTaskPoco> GetTasksByNodeId(int nodeId);
+        List<WorkflowTaskPoco> GetTaskSubmissionsForUser(int id, IEnumerable<int> status);
+        List<WorkflowTaskPoco> GetTasksAndGroupByInstanceId(Guid guid);
     }
 }
