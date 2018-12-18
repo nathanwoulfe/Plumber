@@ -3,7 +3,7 @@
 
     function workflowActionsService($rootScope, workflowResource, notificationsService) {
 
-        const dialogPath = '../app_plugins/workflow/backoffice/views/dialogs/'; 
+        const overlayPath = Umbraco.Sys.ServerVariables.workflow.overlayPath; 
 
         // UI feedback for button directive
         const buttonState = (state, id) => {
@@ -31,7 +31,7 @@
 
             action: (item, type, fromDash) => {
                 let workflowOverlay = {
-                    view: dialogPath + 'workflow.action.dialog.html',
+                    view: `${overlayPath}/workflow.action.dialog.html`,
                     show: true,
                     title: type + ' workflow process',
                     subtitle: `Document: ${item.nodeName}`,
@@ -64,7 +64,7 @@
 
             initiate: (name, id, publish) => {
                 let workflowOverlay = {
-                    view: dialogPath + 'workflow.submit.dialog.html',
+                    view: `${overlayPath}/workflow.submit.dialog.html`,
                     show: true,
                     title: `Send for ${publish ? 'publish' : 'unpublish'} approval`,
                     subtitle: `Document: ${name}`,
@@ -91,7 +91,7 @@
 
             cancel: (item, fromDash) => {
                 let workflowOverlay = {
-                    view: dialogPath + 'workflow.cancel.dialog.html',
+                    view: `${overlayPath}/workflow.cancel.dialog.html`,
                     show: true,
                     title: 'Cancel workflow process',
                     subtitle: `Document: ${item.nodeName}`,
@@ -119,7 +119,7 @@
 
             detail: item => {
                 let workflowOverlay = {
-                    view: dialogPath + 'workflow.action.dialog.html',
+                    view: `${overlayPath}/workflow.action.dialog.html`,
                     show: true,
                     title: 'Workflow detail',
                     subtitle: `Document: ${item.nodeName}`,

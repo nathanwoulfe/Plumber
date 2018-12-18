@@ -188,7 +188,7 @@
             .then(resp => {
                 if (Object.keys(resp).length) {
                     notificationsService.add({
-                        view: Umbraco.Sys.ServerVariables.workflow.pluginPath + 'views/dialogs/workflow.notconfigured.html',
+                        view: `${Umbraco.Sys.ServerVariables.workflow.overlayPath}/workflow.notconfigured.html`,
                         args: { nodes: resp }
                     });
                 }

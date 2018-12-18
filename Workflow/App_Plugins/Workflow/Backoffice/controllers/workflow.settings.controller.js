@@ -4,7 +4,7 @@
     function settingsController($scope, $q, workflowResource, notificationsService, workflowGroupsResource, contentResource) {
 
         const promises = [workflowResource.getSettings(), workflowResource.getContentTypes(), workflowGroupsResource.get()];
-        const overlayBase = '../app_plugins/workflow/backoffice/views/dialogs/';
+        const overlayBase = Umbraco.Sys.ServerVariables.workflow.overlayPath;
 
         this.excludeNodesModel = {
             view: 'contentpicker',
@@ -141,7 +141,7 @@
 
         this.editDocTypeFlow = type => {
             this.overlay = {
-                view: `${overlayBase}workflow.contenttypeflow.overlay.html`,
+                view: `${overlayBase}/workflow.contenttypeflow.overlay.html`,
                 show: true,
                 type: type,
                 groups: this.groups,

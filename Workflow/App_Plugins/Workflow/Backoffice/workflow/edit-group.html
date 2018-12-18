@@ -11,10 +11,7 @@
                 <umb-tab id="tab{{tab.id}}" ng-repeat="tab in vm.tabs" rel="{{tab.id}}">
                     <div ng-if="tab.alias === 'tab0'">
 
-                        <!---->
-
                         <div class="umb-packages-view-wrapper" style="padding: 0;">
-
                             <div class="umb-package-details">
 
                                 <div class="umb-package-details__main-content">
@@ -49,12 +46,12 @@
                                                 </umb-node-preview>
                                             </umb-control-group>
                                             <umb-control-group label="@workflow_documentFlows" description="@workflow_documentFlowsDescription">
-                                                <umb-node-preview ng-repeat="node in vm.docPermissions"
+                                                <umb-node-preview ng-repeat="docType in vm.docPermissions"
                                                                   style="max-width: 100%;"
                                                                   allow-edit="true"
-                                                                  on-edit="vm.editDocTypePermission()"
-                                                                  icon="node.icon"
-                                                                  name="node.name">
+                                                                  on-edit="vm.editDocTypePermission(docType)"
+                                                                  icon="docType.icon"
+                                                                  name="docType.name">
                                                 </umb-node-preview>
                                             </umb-control-group>
                                         </umb-box-content>

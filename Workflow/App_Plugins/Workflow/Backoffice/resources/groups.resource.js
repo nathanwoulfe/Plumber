@@ -3,7 +3,7 @@
 
     function workflowGroupsResource($http, $q, umbRequestHelper) {
 
-        const urlBase = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/backoffice/api/workflow/groups/';
+        const urlBase = Umbraco.Sys.ServerVariables.workflow.apiBasePath + '/groups';
 
         const request = (method, url, data) =>
             umbRequestHelper.resourcePromise(
@@ -20,25 +20,28 @@
              * @returns {array} user groups
              * @description Get single group by id, or all groups if no id parameter provided
              */
-            get: id => request('GET', urlBase + (id ? `get/${id}` : 'get')),
+            get: id => request('GET', urlBase + (id ? `/get/${id}` : '/get')),
 
             /**
-             * @returns the new user group
              * @description Add a new group, where the param is the new group name
+             * @param {string} name - the name of the new group
+             * @returns the new user group
              */
-            add: name => request('POST', urlBase + 'add', { data: name }),
+            add: name => request('POST', urlBase + '/add', { data: name }),
 
             /**
+             * @param {object} group
              * @returns {string}
              * @description save updates to an existing group object
              */
-            save: group => request('PUT', urlBase + 'save', group),
+            save: group => request('PUT', urlBase + '/save', group),
 
             /**
+             * @param {int} id
              * @returns {string}
              * @description delete group by id
              */
-            'delete': id => request('DELETE', urlBase + 'delete/' + id)
+            'delete': id => request('DELETE', urlBase + '/delete/' + id)
         };
 
         return service;

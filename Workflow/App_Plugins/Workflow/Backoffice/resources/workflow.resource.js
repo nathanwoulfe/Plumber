@@ -6,7 +6,7 @@
 
         let activityFilter;
 
-        const urlBase = Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/backoffice/api/workflow/';
+        const urlBase = Umbraco.Sys.ServerVariables.workflow.apiBasePath;
 
         // are there common elements between two arrays?
         const common = (arr1, arr2) => arr1.some(el => arr2.indexOf(el) > -1);
@@ -17,98 +17,98 @@
                 'Something broke');
 
         const urls = {
-            settings: urlBase + 'settings/',
-            tasks: urlBase + 'tasks/',
-            instances: urlBase + 'instances/',
-            actions: urlBase + 'actions/',
-            logs: urlBase + 'logs/',
-            config: urlBase + 'config/',
+            settings: urlBase + '/settings',
+            tasks: urlBase + '/tasks',
+            instances: urlBase + '/instances',
+            actions: urlBase + '/actions',
+            logs: urlBase + '/logs',
+            config: urlBase + '/config',
         };
 
         const service = {
 
-            getContentTypes: () => request('GET', urls.settings + 'getcontenttypes'),
+            getContentTypes: () => request('GET', urls.settings + '/getcontenttypes'),
 
             /* tasks and approval endpoints */
-            getApprovalsForUser: (userId, count, page) => request('GET', urls.tasks + 'flows/' + userId + '/0/' + count + '/' + page),
+            getApprovalsForUser: (userId, count, page) => request('GET', urls.tasks + '/flows/' + userId + '/0/' + count + '/' + page),
 
-            getSubmissionsForUser: (userId, count, page) => request('GET', urls.tasks + 'flows/' + userId + '/1/' + count + '/' + page),
+            getSubmissionsForUser: (userId, count, page) => request('GET', urls.tasks + '/flows/' + userId + '/1/' + count + '/' + page),
 
-            getPendingTasks: (count, page) => request('GET', urls.tasks + 'pending/' + count + '/' + page),
+            getPendingTasks: (count, page) => request('GET', urls.tasks + '/pending/' + count + '/' + page),
 
-            getAllTasksForRange: days => request('GET', urls.tasks + 'range/' + days),
+            getAllTasksForRange: days => request('GET', urls.tasks + '/range/' + days),
 
-            getFilteredTasksForRange: (days, filter, count, page) => request('GET', urls.tasks + 'filteredRange/' +
+            getFilteredTasksForRange: (days, filter, count, page) => request('GET', urls.tasks + '/filteredRange/' +
                 days +
                 (filter ? `/${filter}` : '') +
                 (count ? `/${count}` : '') +
                 (page ? `/${page}` : '')),
 
-            getAllInstances: (count, page, filter) => request('GET', urls.instances + count + '/' + page + '/' + (filter || '')),
+            getAllInstances: (count, page, filter) => request('GET', urls.instances + '/' + count + '/' + page + '/' + (filter || '')),
 
             getAllInstancesForRange: days => request('GET', urls.instances + 'range/' + days),
 
-            getAllInstancesForNode: (nodeId, count, page) => request('GET', urls.instances + nodeId + '/' + count + '/' + page),
+            getAllInstancesForNode: (nodeId, count, page) => request('GET', urls.instances + '/' + nodeId + '/' + count + '/' + page),
 
-            getFilteredInstancesForRange: (days, filter, count, page) => request('GET', urls.instances + 'filteredRange/' +
+            getFilteredInstancesForRange: (days, filter, count, page) => request('GET', urls.instances + '/filteredRange/' +
                 days +
                 (filter ? `/${filter}` : '') +
                 (count ? `/${count}` : '') +
                 (page ? `/${page}` : '')),
 
-            getAllTasksForGroup: (groupId, count, page) => request('GET', urls.tasks + 'group/' + groupId + '/' + count + '/' + page),
+            getAllTasksForGroup: (groupId, count, page) => request('GET', urls.tasks + '/group/' + groupId + '/' + count + '/' + page),
 
-            getAllTasksByGuid: guid => request('GET', urls.tasks + 'tasksbyguid/' + guid),
+            getAllTasksByGuid: guid => request('GET', urls.tasks + '/tasksbyguid/' + guid),
 
-            getNodeTasks: (id, count, page) => request('GET', urls.tasks + 'node/' + id + '/' + count + '/' + page),
+            getNodeTasks: (id, count, page) => request('GET', urls.tasks + '/node/' + id + '/' + count + '/' + page),
 
-            getNodePendingTasks: id => request('GET', urls.tasks + 'node/pending/' + id),
+            getNodePendingTasks: id => request('GET', urls.tasks + '/node/pending/' + id),
 
-            getTasks: id => request('GET', urls.tasks + 'get/' + id),
+            getTasks: id => request('GET', urls.tasks + '/get/' + id),
 
-            getStatus: ids => request('GET', urls.instances + 'status/' + ids),
+            getStatus: ids => request('GET', urls.instances + '/status/' + ids),
 
-            workflowConfigured: () => request('GET', urls.config + 'workflowconfigured'),
+            workflowConfigured: () => request('GET', urls.config + '/workflowconfigured'),
 
             /* workflow actions */
             initiateWorkflow: (nodeId, comment, publish) =>
                 request('POST',
-                    urls.actions + 'initiate', { nodeId: nodeId, comment: comment, publish: publish }),
+                    urls.actions + '/initiate', { nodeId: nodeId, comment: comment, publish: publish }),
 
             approveWorkflowTask: (instanceGuid, comment) =>
                 request('POST',
-                    urls.actions + 'approve', { instanceGuid: instanceGuid, comment: comment }),
+                    urls.actions + '/approve', { instanceGuid: instanceGuid, comment: comment }),
 
             rejectWorkflowTask: (instanceGuid, comment) =>
                 request('POST',
-                    urls.actions + 'reject', { instanceGuid: instanceGuid, comment: comment }),
+                    urls.actions + '/reject', { instanceGuid: instanceGuid, comment: comment }),
 
             resubmitWorkflowTask: (instanceGuid, comment) =>
                 request('POST',
-                    urls.actions + 'resubmit', { instanceGuid: instanceGuid, comment: comment }),
+                    urls.actions + '/resubmit', { instanceGuid: instanceGuid, comment: comment }),
 
             cancelWorkflowTask: (instanceGuid, comment) =>
                 request('POST',
-                    urls.actions + 'cancel', { instanceGuid: instanceGuid, comment: comment }),
+                    urls.actions + '/cancel', { instanceGuid: instanceGuid, comment: comment }),
 
 
             /* get/set workflow settings*/
-            getSettings: () => request('GET', urls.settings + 'get'),
+            getSettings: () => request('GET', urls.settings + '/get'),
 
-            saveSettings: settings => request('POST', urls.settings + 'save', settings),
+            saveSettings: settings => request('POST', urls.settings + '/save', settings),
 
-            getVersion: () => request('GET', urls.settings + 'version'),
+            getVersion: () => request('GET', urls.settings + '/version'),
 
-            getDocs: () => request('GET', urls.settings + 'docs'),
+            getDocs: () => request('GET', urls.settings + '/docs'),
 
             getLog: date => request('GET', urls.logs + 'get/' + (date || '')),
 
-            getLogDates: () => request('GET', urls.logs + 'datelist'),
+            getLogDates: () => request('GET', urls.logs + '/datelist'),
 
 
-            doImport: model => request('POST', urlBase + 'import', model),
+            doImport: model => request('POST', urlBase + '/import', model),
 
-            doExport: () => request('GET', urlBase + 'export'),
+            doExport: () => request('GET', urlBase + '/export'),
 
             /* SAVE PERMISSIONS */
             saveConfig: p => request('POST', urls.config + '/saveconfig', p),

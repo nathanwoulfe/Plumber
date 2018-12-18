@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Routing;
+using ClientDependency.Core;
 using umbraco.cms.businesslogic.packager;
 using Umbraco.Core;
 using Umbraco.Core.Models.Membership;
@@ -76,10 +77,13 @@ namespace Workflow.Startup
         /// <param name="e"></param>
         private static void ServerVariablesParser_Parsing(object sender, Dictionary<string, object> e)
         {
+            IDictionary<string, object> settings = e["umbracoSettings"].ToDictionary();
+ 
             e.Add("workflow", new Dictionary<string, object>
             {
-                { "pluginPath", "/app_plugins/workflow/backoffice/" },
-                { "apiBasePath", "/umbraco/backoffice/api/workflow/" }
+                { "pluginPath",$"{settings["appPluginsPath"]}/workflow/backoffice" },
+                { "apiBasePath", $"{settings["umbracoPath"]}/backoffice/api/workflow" },
+                { "overlayPath", $"{settings["appPluginsPath"]}/workflow/backoffice/views/dialogs" }
             });
         }
 
