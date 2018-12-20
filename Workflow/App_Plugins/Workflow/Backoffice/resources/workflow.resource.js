@@ -101,7 +101,7 @@
 
             getDocs: () => request('GET', urls.settings + '/docs'),
 
-            getLog: date => request('GET', urls.logs + 'get/' + (date || '')),
+            getLog: date => request('GET', urls.logs + '/get/' + (date || '')),
 
             getLogDates: () => request('GET', urls.logs + '/datelist'),
 
@@ -117,7 +117,7 @@
 
             checkExclusion: (excludedNodes, path) => {
                 if (!excludedNodes) {
-                    return false;
+                    return false; 
                 }
 
                 const excluded = excludedNodes.split(',');
