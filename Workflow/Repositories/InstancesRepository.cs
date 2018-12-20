@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
+using Workflow.Extensions;
 using Workflow.Helpers;
 using Workflow.Models;
 using Workflow.Relators;
@@ -135,9 +136,9 @@ namespace Workflow.Repositories
                 return _database.Fetch<WorkflowInstancePoco>(SqlQueries.InstanceByNodeStr, nodeId);
 
             string statusStr = string.Concat("Status = ", string.Join(" OR Status = ", status));
-            if (!string.IsNullOrEmpty(statusStr))
+            if (statusStr.HasValue())
             {
-                statusStr = " AND " + statusStr;
+                statusStr = $" AND ({statusStr})";
             }
 
             return _database.Fetch<WorkflowInstancePoco>(string.Concat(SqlQueries.InstanceByNodeStr, statusStr), nodeId);
