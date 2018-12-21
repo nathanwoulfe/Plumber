@@ -121,6 +121,11 @@
                  
                 this.buttonGroup.subButtons = [];
 
+                // if the default button isn't detail, it should be first in the sub button set
+                if (this.buttonGroup.defaultButton !== buttons.detailButton) {
+                    this.buttonGroup.subButtons.push(buttons.detailButton);
+                }
+
                 // if the user is in the approving group, and the task is not rejected, add reject to sub buttons
                 if (this.canAction && !this.rejected) {
                     this.buttonGroup.subButtons.push(buttons.rejectButton);
