@@ -22,7 +22,7 @@ namespace Workflow.Tests.Integration
             _fixture = fixture;
         }
 
-        [Theory(Skip = "Ignore Selenium tests")]
+        [Theory]
         [InlineData(ChromeDriverFixture.EditorUser, ChromeDriverFixture.EditorPassword, false)]
         [InlineData(ChromeDriverFixture.AdminUser, ChromeDriverFixture.AdminPassword, true)]
         public void UserTypeHasCorrectAccess(string user, string password, bool expected)

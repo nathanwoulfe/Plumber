@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -13,7 +12,7 @@ namespace Workflow.Tests
     {
         public readonly ChromeDriver Driver;
 
-        private const string BaseUrl = "http://localhost:56565/umbraco";
+        public const string BaseUrl = "http://localhost:56565/umbraco";
         public const string GroupsDashUrl = BaseUrl + "#/workflow/workflow/approval-groups/info";
 
         public const string EditorUser = "EditorUser@mail.com";
@@ -29,36 +28,29 @@ namespace Workflow.Tests
                 Url = BaseUrl
             };
 
+            Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
             Driver.Manage().Window.Maximize();
         }
 
         public void Login(string user, string pass)
         {
-            Thread.Sleep(2500);
-
             Driver.FindElement(By.Name("username")).Clear();
             Driver.FindElement(By.Name("username")).SendKeys(user);
 
             Driver.FindElement(By.Name("password")).Clear();
             Driver.FindElement(By.Name("password")).SendKeys(pass);
 
-            Wait("[type='submit']");
-
             Driver.FindElement(By.CssSelector("[type='submit']")).Click();
-
-            Thread.Sleep(5000);
         }
 
         /// <summary>
         /// Logout of the backoffice
         /// </summary>
         /// <param name="sleep">If the test is part of a theory, sleep after logout before logging back in</param>
-        public void Logout(bool sleep)
+        public void Logout(bool sleep = true)
         {
             DataElement("section-user").Click();
-            Wait("[data-element=button-logOut]");
             DataElement("button-logOut").Click();
-            Thread.Sleep(sleep ? 2500 : 0);
         }
 
         public void Wait(string css)
