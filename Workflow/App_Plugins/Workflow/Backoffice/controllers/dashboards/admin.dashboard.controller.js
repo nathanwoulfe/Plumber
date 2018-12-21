@@ -7,6 +7,12 @@
         const msPerDay = 1000 * 60 * 60 * 24;
         const now = moment();
 
+        this.tours = [
+            { alias: 'plmbrGroups', name: 'Approval groups' },
+            { alias: 'plmbrConfig', name: 'Configuring workflows' },
+            {alias:'plmbrSettings', name: 'Global settings'},
+        ];
+
         /**
          * Returns an array of 0s, length equal to the selected range
          */
@@ -148,6 +154,14 @@
         const updateAlertHidden = () => {
             localStorage.setItem(storeKey, now.add(7, 'days'));
         };
+
+        // try fetch a tour, to determine if tours are enabled
+        tourService.getTourByAlias('plmbrConfig')
+            .then(resp => {
+                if (resp) {
+                    this.showTours = true;
+                } 
+            });
 
         // start selected tour
         const launchTour = tourAlias => {

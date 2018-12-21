@@ -14,26 +14,14 @@
                 <div class="upgrade upgrade-current alert alert-info" ng-if="!vm.version.outOfDate && vm.version">
                     <p>You're up to date, running Plumber {{ vm.version.currentVersion }}</p>
                 </div>
-                <hr />
-                <ul class="chart-header vert-centered">
+                <hr ng-if="vm.showTours" />
+                <ul class="chart-header vert-centered" ng-if="vm.showTours">
                     <li>Take a tour:</li>
-                    <li>
-                        <umb-button action="vm.launchTour('plmbrGroups')"
+                    <li ng-repeat="t in vm.tours">
+                        <umb-button action="vm.launchTour(t.alias)"
                                     type="button"
                                     button-style="info"
-                                    label="Approval groups"></umb-button>
-                    </li>
-                    <li>
-                        <umb-button action="vm.launchTour('plmbrSettings')"
-                                    type="button"
-                                    button-style="info"
-                                    label="Global settings"></umb-button>
-                    </li>
-                    <li>
-                        <umb-button action="vm.launchTour('plmbrConfig')"
-                                    type="button"
-                                    button-style="info"
-                                    label="Configuring workflows"></umb-button>
+                                    label="{{ t.name }}"></umb-button>
                     </li>
                 </ul>
                 <hr />
