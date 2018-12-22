@@ -1,15 +1,5 @@
 ﻿@import "_variables";
 
-// listview for history views
-.umb-table {
-    border-radius:3px;
-
-    &__name {
-        flex-basis:15%;
-        max-width:15%;
-    }
-}
-
 .task-detail-btn {
     padding: 0;
     background: 0 0;
@@ -29,54 +19,14 @@
     }
 }
 
-.umb-table-cell {
-
-    &__7 {
-        flex-basis: 7%;
-        max-width: 7%;
-    }
-
-    &__fixed-170 {
-        flex: 0 0 170px;
-    }
-
-    &__auto {
-        flex: 0 1 auto;
-    }
-
-    &__15 {
-        flex-basis: 15%;
-        max-width: 15%;
-    }
-
-    &.show-overflow {
-        overflow: visible;
-
-        > * {
-            overflow: visible;
-        }
-    }
-
-    ul {
-        margin: 0;
-    }
-
-    .umb-overlay {
-        cursor: default;
-    }
-}
-
-.controls {
-    h5 {
-        margin-top: 0;
-    }
+.controls h5 {
+    margin-top: 0;
 }
 
 .control-panel {
     padding: 10px 0;
     margin: 10px 0;
 }
-
 
 .dropdown-menu {
     .warning {
@@ -86,29 +36,6 @@
     .danger {
         color: $danger;
     }
-}
-
-.table-row-outer {
-    .umb-table-row {
-        cursor:default;
-
-        &:not(:first-child) {
-            border-top: none;
-
-            i {
-                opacity: 0;
-            }
-        }
-    }
-}
-
-.umb-table__input[type=checkbox] {
-    opacity: 0;
-    cursor: default;
-}
-
-.umb-table-body__icon.soft {
-    opacity: .25;
 }
 
 /* colours will be available for all elements in the .workspace namespace */
@@ -125,7 +52,7 @@
 }
 
 .not-required {
-    color:$pending;
+    color: $pending;
 }
 
 .rejected, .resubmitted {
@@ -135,8 +62,9 @@
 .action-dialog {
 
     .not-required {
-        color:$pending;
+        color: $pending;
     }
+
     .rejected {
         color: $danger;
     }

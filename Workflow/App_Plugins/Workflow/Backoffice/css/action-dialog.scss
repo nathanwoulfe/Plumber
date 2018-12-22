@@ -1,0 +1,47 @@
+﻿.action-dialog {
+
+    textarea, label {
+        width: 100%;
+    }
+
+    &--task-list {
+        list-style-type: none;
+        margin: 0;
+    }
+
+    &--task-list-item {
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .history-tasks {
+        position: relative;
+    }
+
+    .history-task {
+        display: flex;
+
+        &-number {
+            span {
+                font-weight: bold;
+            }
+        }
+    }
+
+    .history-item {
+        display: flex;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        &__break:first-child {
+            padding-right: 10px;
+        }
+    }
+}

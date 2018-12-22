@@ -43,12 +43,10 @@
         padding-bottom: 6px;
     }
 
-    &.basic {
-        .log {
-            &-thread, &-class, &-detail {
-                display: none;
-            }
-        }
+    &.basic .log {
+        &-thread, &-class, &-detail {
+            display: none;
+        }        
     }
 
     .log {

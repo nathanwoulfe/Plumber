@@ -1,0 +1,72 @@
+﻿// listview for history views
+.table-row-outer .umb-table-row {
+    cursor: default;
+
+    &:not(:first-child) {
+        border-top: none;
+
+        i {
+            opacity: 0;
+        }
+    }
+}
+
+.umb-table {
+    border-radius: 3px;
+
+    &__name {
+        flex-basis: 15%;
+        max-width: 15%;
+    }
+
+    &__input[type=checkbox] {
+        opacity: 0;
+        cursor: default;
+    }
+
+    &-body__icon.soft {
+        opacity: .25;
+    }
+
+    &-row:hover ~ .workflow-progress {
+        background: #f3f3f5;
+        border-top-color: #f3f3f5;
+    }
+
+    &-cell {
+
+        &__7 {
+            flex-basis: 7%;
+            max-width: 7%;
+        }
+
+        &__fixed-170 {
+            flex: 0 0 170px;
+        }
+
+        &__auto {
+            flex: 0 1 auto;
+        }
+
+        &__15 {
+            flex-basis: 15%;
+            max-width: 15%;
+        }
+
+        &.show-overflow {
+            overflow: visible;
+
+            > * {
+                overflow: visible;
+            }
+        }
+
+        ul {
+            margin: 0;
+        }
+
+        .umb-overlay {
+            cursor: default;
+        }
+    }
+}
