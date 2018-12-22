@@ -56,6 +56,9 @@ namespace Workflow.Models
         [JsonProperty("comment")]
         public string Comment { get; set; }
 
+        [JsonProperty("instanceComment")]
+        public string InstanceComment { get; set; }
+
         [JsonProperty("approvalGroup")]
         public string ApprovalGroup { get; set; }
 
