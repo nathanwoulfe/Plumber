@@ -48,6 +48,10 @@
         color: $umbraco;
     }
 
+    .comment-text {
+        font-style:italic;  
+    }
+
     .badge {
         border-radius: 2px;
         background: $umbGreen;
@@ -143,31 +147,26 @@
         }
 
         .history-tasks {
-            padding-left: 7px;
-            position: relative;
-
-            &::before {
-                content: '';
-                position: absolute;
-                width: 2px;
-                background: #999;
-                height: 100%;
-                top: 0;
-                left: 0;
-            }
+            position:relative;
         }
 
         .history-task {
             display: flex;
 
-            > div {
-                padding-left: 5px;
-            }
-
             &-number {
                 span {
                     font-weight: bold;
                 }
+            }
+        }
+
+        .history-item {
+            display:flex;
+            &:last-child {
+                margin-bottom:0;
+            }
+            &__break:first-child {
+                padding-right:10px;
             }
         }
     }

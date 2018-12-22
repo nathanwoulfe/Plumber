@@ -29,6 +29,39 @@
                     this.tasks[v.currentStep].push(v);
                 });
             });
+
+        this.colorForStatus = status => {
+            switch (status) {
+                case 1:
+                    return 'success'; //approved
+                case 2:
+                    return 'warning'; //rejected
+                case 3:
+                    return 'gray'; //pending
+                case 4:
+                    return 'info'; //not required
+                case 5:
+                    return 'danger'; //cancelled
+                case 6:
+                    return 'danger'; //error
+                default:
+                    return 'gray'; //resubmitted
+            }
+        };
+
+        this.whodunnit = task => {
+
+            // if rejected or incomplete, use the group name
+            if (task.status === 4 || !task.completedBy)
+                return task.approvalGroup;
+
+            // if approved, show the user and group name
+            if (task.approvalGroup)
+                return `${task.completedBy} for ${task.approvalGroup}`;
+
+            // otherwise, just show the user name - resubmitted tasks don't have a group
+            return task.completedBy;
+        };
     }
 
     angular.module('plumber')

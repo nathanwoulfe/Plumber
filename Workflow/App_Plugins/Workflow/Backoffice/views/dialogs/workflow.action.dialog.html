@@ -1,16 +1,29 @@
 ﻿<div class="workflow action-dialog" ng-controller="Workflow.Action.Controller as vm">
-
-    <p>
-        Content modified by {{ model.requestedBy }}<br />
-        Approval requested on {{ model.requestedOn }}
-    </p>
+    
     <h5>Change description</h5>
-    <p><i>{{ model.comment }}</i></p>
+    <div class="history-item">
+        <div class="history-item__break">
+            <div class="history-item__avatar">
+                <umb-avatar
+                    size="m"
+                    color="secondary"
+                    name="{{ model.requestedBy }}">
+                </umb-avatar>
+            </div>
+            <div>
+                <div ng-bind="model.requestedBy"></div>
+                <div class="history-item__date" ng-bind="model.requestedOn"></div>
+            </div>
+        </div>
+        <div class="history-item__break">
+            <p ng-bind="model.comment" class="comment-text"></p>
+        </div>
+    </div>
 
     <div ng-if="vm.tasks.length">
 
         <hr />
-        <h5>Current workflow activity</h5>
+        <h5>Workflow activity</h5>
 
         <ul class="action-dialog--task-list">
             <li class="action-dialog--task-list-item" ng-repeat="taskCollection in vm.tasks track by $index">
@@ -18,24 +31,31 @@
                     <span class="counter">Stage {{ $index + 1 }}</span>
                 </div>
                 <div class="history-tasks">
-                    <div class="history-task" ng-repeat="t in taskCollection | orderBy: '-taskId'">
-                        <i class="icon icon-{{ t | iconName }} {{ t.cssStatus }}"></i>
-                        <div ng-switch on="t.status">
-                            <div ng-switch-when="7">
-                                Resubmitted by {{ t.completedBy }} on {{ t.completedOn }} <br />
-                                Comment: {{ t.comment }}
+                    <div class="history-line" ng-if="taskCollection.length > 1"></div>
+                    
+                    <div class="history-item" ng-repeat="t in taskCollection | orderBy: '-taskId'">
+                        <div class="history-item__break">
+                            <div class="history-item__avatar">
+                                <umb-avatar
+                                    size="xs"
+                                    color="secondary"
+                                    name="{{ t.status === 4 ? t.approvalGroup : t.approvalGroup || t.completedBy }}">
+                                </umb-avatar>
                             </div>
-                            <div ng-switch-when="3">
-                                Pending approval by <strong ng-bind="t.approvalGroup"></strong>
+                            <div>
+                                <div ng-bind="vm.whodunnit(t)"></div>
+                                <div class="history-item__date" ng-bind="t.completedOn" ng-if="t.completedOn"></div>
                             </div>
-                            <div ng-switch-when="4">
-                                {{ t.comment }}
+                        </div>
+                        <div class="history-item__break">
+                            <umb-badge
+                                color="{{ vm.colorForStatus(t.status) }}"
+                                size="xs">
+                                {{ t.statusName }}
+                            </umb-badge>
+                            <div ng-if="t.status !== 4 && t.status !== 3">
+                                <span ng-bind="t.comment"></span>
                             </div>
-                            <div ng-switch-default>
-                                <span ng-bind="t.statusName"></span> by <strong ng-bind="t.approvalGroup"></strong> ({{ t.completedBy }}) on {{ t.completedOn }} <br />
-                                Comment: {{ t.comment }}
-                            </div>
-
                         </div>
                     </div>
                 </div>
