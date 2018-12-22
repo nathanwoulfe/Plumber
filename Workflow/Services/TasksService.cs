@@ -28,7 +28,7 @@ namespace Workflow.Services
             _tasksRepo = tasksRepo;
             _configService = configService;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -95,14 +95,22 @@ namespace Workflow.Services
 
             if (!taskInstances.Any()) return workflowItems;
 
+            bool useInstanceFromTask = instance == null;
+
             foreach (WorkflowTaskPoco taskInstance in taskInstances)
             {
-                instance = instance ?? taskInstance.WorkflowInstance;
+                instance = useInstanceFromTask ? taskInstance.WorkflowInstance : instance;
 
                 // ignore workflows where node has been deleted
                 if (instance.Node == null || instance.Node.Path.Contains(Constants.System.RecycleBinContentString))
                 {
                     continue;
+                }
+
+                // if the instance has been rejected/resubmitted, get the most recent comment from that stage
+                if (instance.WorkflowStatus.In(WorkflowStatus.Rejected, WorkflowStatus.Resubmitted))
+                {
+
                 }
 
                 var item = new WorkflowTaskViewModel
@@ -126,6 +134,7 @@ namespace Workflow.Services
                     RequestedBy = instance.AuthorUser?.Name,
                     RequestedOn = taskInstance.CreatedDate.ToFriendlyDate(),
                     Comment = taskInstance.Comment,
+                    InstanceComment = instance.AuthorComment,
 
                     ApprovalGroupId = taskInstance.UserGroup?.GroupId,
                     ApprovalGroup = taskInstance.UserGroup?.Name,
@@ -154,6 +163,7 @@ namespace Workflow.Services
 
             return taskInstances
                 .Where(x => x.WorkflowInstance.Active)
+                .OrderByDescending(x => x.Id)
                 .GroupBy(x => x.WorkflowInstanceGuid)
                 .Select(x => x.First())
                 .ToList();
@@ -212,6 +222,7 @@ namespace Workflow.Services
         {
             return _tasksRepo.GetTaskSubmissionsForUser(id, status)
                 .Where(x => x.WorkflowInstance.Active)
+                .OrderByDescending(x => x.Id)
                 .GroupBy(x => x.WorkflowInstanceGuid)
                 .Select(x => x.First())
                 .ToList();

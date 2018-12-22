@@ -17,6 +17,7 @@
                 // 2 -> no buttons
 
                 $scope.detail = item => {
+                    console.log(item);
                     $scope.$parent.vm.workflowOverlay = workflowActionsService.detail(item);
                 };
 

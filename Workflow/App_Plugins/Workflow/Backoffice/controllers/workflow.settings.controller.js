@@ -110,10 +110,12 @@
                             groupId: path.groupId
                         };
 
+                        // filter the permissions for cases where the contenttype id and permission index match the current loop iteration
                         const permissionsForStep =
                             path.permissions.filter(perm => perm.contentTypeId === dt.id && perm.permission === ii)[0];
 
-                        if (permissionsForStep.condition) {
+                        // if a permission exists, push it onto the current permission object
+                        if (permissionsForStep && permissionsForStep.condition) {
                             p.condition = permissionsForStep.condition.join(',');
                         }
 

@@ -31,8 +31,7 @@ namespace Workflow.Extensions
             taskInstance.Comment = comment;
             taskInstance.ActionedByUserId = userId;
 
-            // check if user is a member of the group, or is acting as an admin, then set flag
-            taskInstance.ActionedByAdmin = !taskInstance.UserGroup.UsersSummary.Contains($"|{userId}|");
+            taskInstance.ActionedByAdmin = ActionedByAdmin(taskInstance, userId);
 
             return emailAction;
         }
@@ -51,8 +50,7 @@ namespace Workflow.Extensions
             taskInstance.Comment = reason;
             taskInstance.CompletedDate = completedDate;
 
-            // check if user is a member of the group, or is acting as an admin, then set flag
-            taskInstance.ActionedByAdmin = !taskInstance.UserGroup.UsersSummary.Contains($"|{userId}|");
+            taskInstance.ActionedByAdmin = ActionedByAdmin(taskInstance, userId);
         }
 
         /// <summary>
@@ -91,6 +89,18 @@ namespace Workflow.Extensions
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// check if user is a member of the group, or is acting as an admin, then set flag
+        /// If the usergroup doesn't exist, just return false - if that's the case, we have bigger problems...
+        /// </summary>
+        /// <param name="taskInstance"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        private static bool ActionedByAdmin(WorkflowTaskPoco taskInstance, int userId)
+        {
+            return !taskInstance.UserGroup?.UsersSummary.Contains($"|{userId}|") ?? false;
         }
     }
 }

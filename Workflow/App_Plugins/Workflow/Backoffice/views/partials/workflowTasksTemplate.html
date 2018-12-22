@@ -58,7 +58,7 @@
                         </div>
                         <div class="umb-table-cell" ng-bind="item.requestedBy"></div>
                         <div class="umb-table-cell" ng-bind="item.requestedOn"></div>
-                        <div class="umb-table-cell umb-table-cell__15" ng-bind="item.comment"></div>
+                        <div class="umb-table-cell umb-table-cell__15" ng-bind="item.comment || item.instanceComment"></div>
                         <div class="umb-table-cell" ng-bind="item.approvalGroup"></div>
                         <div class="umb-table-cell umb-table-cell__fixed-170 show-overflow" ng-if="!noActions">
 

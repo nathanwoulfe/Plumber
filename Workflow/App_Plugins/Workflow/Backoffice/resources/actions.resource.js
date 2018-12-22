@@ -123,7 +123,7 @@
                     show: true,
                     title: 'Workflow detail',
                     subtitle: `Document: ${item.nodeName}`,
-                    comment: item.comment,
+                    comment: item.instanceComment,
                     guid: item.instanceGuid,
                     requestedBy: item.requestedBy,
                     requestedOn: item.requestedOn,

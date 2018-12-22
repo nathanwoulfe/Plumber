@@ -105,10 +105,15 @@
          * @param {any} $event
          * @param {any} index
          */
-        this.remove = ($event, index) => {
+        this.remove = ($event, index, groupId) => {
             $event.stopPropagation();
             this.approvalPath.splice(index, 1);
             $scope.model.type.approvalPath = this.approvalPath;
+
+            // also remove any conditions - can't do in the existing method as params are different.
+            if (this.conditions.length > 0) {
+                this.conditions = this.conditions.filter(c => c.groupId !== groupId);
+            }
         };
 
         this.sortOptions = {
