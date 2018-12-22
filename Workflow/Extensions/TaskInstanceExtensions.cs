@@ -31,6 +31,9 @@ namespace Workflow.Extensions
             taskInstance.Comment = comment;
             taskInstance.ActionedByUserId = userId;
 
+            // check if user is a member of the group, or is acting as an admin, then set flag
+            taskInstance.ActionedByAdmin = !taskInstance.UserGroup.UsersSummary.Contains($"|{userId}|");
+
             return emailAction;
         }
 
@@ -47,6 +50,9 @@ namespace Workflow.Extensions
             taskInstance.ActionedByUserId = userId;
             taskInstance.Comment = reason;
             taskInstance.CompletedDate = completedDate;
+
+            // check if user is a member of the group, or is acting as an admin, then set flag
+            taskInstance.ActionedByAdmin = !taskInstance.UserGroup.UsersSummary.Contains($"|{userId}|");
         }
 
         /// <summary>

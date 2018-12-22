@@ -65,6 +65,8 @@ namespace Workflow.Models
         [JsonProperty("completedOn")]
         public string CompletedOn { get; set; }
 
+        [JsonProperty("actionedByAdmin")]
+        public bool ActionedByAdmin { get; set; }
 
         [JsonProperty("permissions")]
         public List<UserGroupPermissionsPoco> Permissions { get; set; }

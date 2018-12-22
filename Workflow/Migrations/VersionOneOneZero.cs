@@ -28,6 +28,11 @@ namespace Workflow.Migrations
             {
                 Create.Column("Condition").OnTable(Constants.PermissionsTable).AsString().Nullable();
             }
+
+            if (columns.Any(x => x.TableName.InvariantEquals(Constants.TaskInstanceTable) && x.ColumnName.InvariantEquals("ActionedByAdmin")) == false)
+            {
+                Create.Column("ActionedByAdmin").OnTable(Constants.TaskInstanceTable).AsBoolean().Nullable();
+            }
         }
     }
 }

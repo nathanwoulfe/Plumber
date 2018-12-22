@@ -324,11 +324,11 @@ namespace Workflow.Processes
         {
             if (nodeId == int.MinValue)
             {
-                nodeId = taskInstance.WorkflowInstance.NodeId;
+                nodeId = Instance.NodeId;
             }
             if (initialId == int.MinValue)
             {
-                initialId = taskInstance.WorkflowInstance.NodeId;
+                initialId = Instance.NodeId;
             }      
 
             List<UserGroupPermissionsPoco> approvalGroup = _configService.GetPermissionsForNode(nodeId);

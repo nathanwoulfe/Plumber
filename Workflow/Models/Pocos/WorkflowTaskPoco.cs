@@ -21,6 +21,7 @@ namespace Workflow.Models
             CompletedDate = null;
             Status = (int)Models.TaskStatus.PendingApproval;
             ApprovalStep = 0;
+            ActionedByAdmin = false;
 
             _utility = new Utility();
         }
@@ -64,6 +65,10 @@ namespace Workflow.Models
         [Column("ActionedByUserId")]
         [NullSetting(NullSetting = NullSettings.Null)]
         public int? ActionedByUserId { get; set; }
+
+        [Column("ActionedByAdmin")]
+        [NullSetting(NullSetting = NullSettings.Null)]
+        public bool ActionedByAdmin { get; set; }
 
         [ResultColumn]
         public TaskStatus? TaskStatus => (TaskStatus?)Status;

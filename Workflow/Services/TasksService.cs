@@ -95,11 +95,9 @@ namespace Workflow.Services
 
             if (!taskInstances.Any()) return workflowItems;
 
-            bool useInstanceFromTask = instance == null;
-
             foreach (WorkflowTaskPoco taskInstance in taskInstances)
             {
-                instance = useInstanceFromTask ? taskInstance.WorkflowInstance : instance;
+                instance = instance ?? taskInstance.WorkflowInstance;
 
                 // ignore workflows where node has been deleted
                 if (instance.Node == null || instance.Node.Path.Contains(Constants.System.RecycleBinContentString))
@@ -127,12 +125,14 @@ namespace Workflow.Services
                     RequestedById = instance.AuthorUserId,
                     RequestedBy = instance.AuthorUser?.Name,
                     RequestedOn = taskInstance.CreatedDate.ToFriendlyDate(),
-                    Comment = useInstanceFromTask || string.IsNullOrEmpty(taskInstance.Comment) ? instance.AuthorComment : taskInstance.Comment,
+                    Comment = taskInstance.Comment,
 
                     ApprovalGroupId = taskInstance.UserGroup?.GroupId,
                     ApprovalGroup = taskInstance.UserGroup?.Name,
                     CompletedBy = taskInstance.ActionedByUser?.Name,
                     CompletedOn = taskInstance.CompletedDate?.ToFriendlyDate(),
+
+                    ActionedByAdmin = taskInstance.ActionedByAdmin,
 
                     Permissions = _configService.GetRecursivePermissionsForNode(instance.Node)
                 };
