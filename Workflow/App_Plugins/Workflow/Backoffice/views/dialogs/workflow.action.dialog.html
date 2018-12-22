@@ -1,13 +1,12 @@
 ﻿<div class="workflow action-dialog" ng-controller="Workflow.Action.Controller as vm">
-    
+
     <h5>Change description</h5>
     <div class="history-item">
         <div class="history-item__break">
             <div class="history-item__avatar">
-                <umb-avatar
-                    size="m"
-                    color="secondary"
-                    name="{{ model.requestedBy }}">
+                <umb-avatar size="m"
+                            color="secondary"
+                            name="{{ model.requestedBy }}">
                 </umb-avatar>
             </div>
             <div>
@@ -19,6 +18,8 @@
             <p ng-bind="model.comment" class="comment-text"></p>
         </div>
     </div>
+
+    <umb-load-indicator ng-show="!vm.tasksLoaded"></umb-load-indicator>
 
     <div ng-if="vm.tasks.length">
 
@@ -32,25 +33,23 @@
                 </div>
                 <div class="history-tasks">
                     <div class="history-line" ng-if="taskCollection.length > 1"></div>
-                    
+
                     <div class="history-item" ng-repeat="t in taskCollection | orderBy: '-taskId'">
                         <div class="history-item__break">
                             <div class="history-item__avatar">
-                                <umb-avatar
-                                    size="xs"
-                                    color="secondary"
-                                    name="{{ t.status === 4 ? t.approvalGroup : t.approvalGroup || t.completedBy }}">
+                                <umb-avatar size="xs"
+                                            color="secondary"
+                                            name="{{ t.avatarName }}">
                                 </umb-avatar>
                             </div>
                             <div>
-                                <div ng-bind="vm.whodunnit(t)"></div>
+                                <div ng-bind="t.whodunnit"></div>
                                 <div class="history-item__date" ng-bind="t.completedOn" ng-if="t.completedOn"></div>
                             </div>
                         </div>
                         <div class="history-item__break">
-                            <umb-badge
-                                color="{{ vm.colorForStatus(t.status) }}"
-                                size="xs">
+                            <umb-badge color="{{ t.statusColor }}"
+                                       size="xs">
                                 {{ t.statusName }}
                             </umb-badge>
                             <div ng-if="t.status !== 4 && t.status !== 3">

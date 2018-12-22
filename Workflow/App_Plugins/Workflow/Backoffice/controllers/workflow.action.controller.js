@@ -3,6 +3,57 @@
     function actionController($scope, workflowResource) {
         this.limit = 250;
         this.disabled = this.isFinalApproval === true ? false : true;
+        this.tasksLoaded = false;
+
+        const avatarName = task => {
+            // don't show group if admin completed the task
+            if (task.actionedByAdmin)
+                return 'Admin';
+
+            // if not required, show the group name
+            if (task.status === 4)
+                return task.approvalGroup;
+
+            // finally show either the group or the user - resubmitted tasks won't have a group, just a user
+            return task.approvalGroup || task.completedBy;
+        };
+
+        const statusColor = status => {
+            switch (status) {
+            case 1:
+                return 'success'; //approved
+            case 2:
+                return 'warning'; //rejected
+            case 3:
+                return 'gray'; //pending
+            case 4:
+                return 'info'; //not required
+            case 5:
+                return 'danger'; //cancelled
+            case 6:
+                return 'danger'; //error
+            default:
+                return 'gray'; //resubmitted
+            }
+        };
+
+        const whodunnit = task => {
+
+            // if rejected or incomplete, use the group name
+            if (task.status === 4 || !task.completedBy)
+                return task.approvalGroup;
+
+            // if actioned by an admin, show
+            if (task.actionedByAdmin)
+                return `${task.completedBy} as Admin`;
+
+            // if approved, show the user and group name
+            if (task.approvalGroup)
+                return `${task.completedBy} for ${task.approvalGroup}`;
+
+            // otherwise, just show the user name - resubmitted tasks don't have a group
+            return task.completedBy;
+        };
 
         /**
          * Fetch all tasks for the current workflow instance
@@ -12,6 +63,8 @@
             .then(resp => {
                 const tasks = resp.items;
 
+                this.tasksLoaded = true;
+
                 // current step should only count approved tasks - maybe rejected/resubmitted into
                 this.currentStep = resp.currentStep;
                 this.totalSteps = resp.totalSteps;
@@ -20,48 +73,20 @@
                 // modify the tasks object to nest tasks
 
                 this.tasks = [];
-                tasks.forEach(v => {
+                tasks.forEach(t => {
 
-                    if (!this.tasks[v.currentStep]) {
-                        this.tasks[v.currentStep] = [];
+                    // push some extra UI strings onto each task
+                    t.avatarName = avatarName(t);
+                    t.statusColor = statusColor(t.status);
+                    t.whodunnit = whodunnit(t);
+
+                    if (!this.tasks[t.currentStep]) {
+                        this.tasks[t.currentStep] = [];
                     }
 
-                    this.tasks[v.currentStep].push(v);
+                    this.tasks[t.currentStep].push(t);
                 });
             });
-
-        this.colorForStatus = status => {
-            switch (status) {
-                case 1:
-                    return 'success'; //approved
-                case 2:
-                    return 'warning'; //rejected
-                case 3:
-                    return 'gray'; //pending
-                case 4:
-                    return 'info'; //not required
-                case 5:
-                    return 'danger'; //cancelled
-                case 6:
-                    return 'danger'; //error
-                default:
-                    return 'gray'; //resubmitted
-            }
-        };
-
-        this.whodunnit = task => {
-
-            // if rejected or incomplete, use the group name
-            if (task.status === 4 || !task.completedBy)
-                return task.approvalGroup;
-
-            // if approved, show the user and group name
-            if (task.approvalGroup)
-                return `${task.completedBy} for ${task.approvalGroup}`;
-
-            // otherwise, just show the user name - resubmitted tasks don't have a group
-            return task.completedBy;
-        };
     }
 
     angular.module('plumber')
