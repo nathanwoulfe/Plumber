@@ -1,9 +1,9 @@
 # Plumber - workflow for Umbraco
 
 [![Build status](https://ci.appveyor.com/api/projects/status/ap94da7169wk0g0v?svg=true)](https://ci.appveyor.com/project/nathanwoulfe/umbracoworkflow)
+[![Latest build](https://img.shields.io/nuget/dt/Workflow.Umbraco.svg)](https://www.nuget.org/packages/Workflow.Umbraco)
 [![NuGet release](https://img.shields.io/nuget/dt/Workflow.Umbraco.svg)](https://www.nuget.org/packages/Workflow.Umbraco)
 [![Our Umbraco project page](https://img.shields.io/badge/our-umbraco-brightgreen.svg)](https://our.umbraco.org/projects/backoffice-extensions/plumber-workflow-for-umbraco)
-
 
 Plumber adds a heap of useful bits and pieces to Umbraco, to allow multi-staged workflow approval for publish/unpublish actions. 
 
@@ -11,15 +11,17 @@ To get started, clone the repo, build the Workflow project (build action should 
 
 In the backoffice, the new Workflow section has a documentation tab, which offers more explanation of features and processes, or you can [read the documentation here](Workflow/DOCS.md).
 
-The workflow model is derived from the workflow solution developed by myself and the web team at [USC](http://www.usc.edu.au), but re-visions that basic three-step workflow into something much more flexible.
-
 ## Get started
 
-### Grab the latest release from AppVeyor:
+### Grab the latest release from Our.Umbraco:
+
+https://our.umbraco.com/packages/backoffice-extensions/plumber-workflow-for-umbraco/
+
+### Grab the latest build from AppVeyor:
 
 https://ci.appveyor.com/project/nathanwoulfe/umbracoworkflow/build/artifacts
 
-### Or install via Nuget:
+### Or install via Nuget (preferred option):
 
 ```Install-Package Workflow.Umbraco```
 
@@ -41,12 +43,5 @@ The database is my development environment, so I'll likely introduce breaking ch
 
 ## Like it? Love it? 
 
-Maintaining an open source product takes time and effort, which could be otherwise spent on paid work.
-
-Since we live in the future, feel free to buy me a beer (or moon-lambo, depending on current prices) via a donation to one of the wallets below:
-
-- NANO<br />**xrb_1dig7t3qjnwdtq53zrs9wc5mi9ry8doctdjwrgacs1oumqeykod9kdhxfpdu**
-- ETH/ERC20<br />**0x8cbD3b158F604E9273Ac4887F90DaDCb254E9656**
-
-If you're not familiar with Nano, [check it out](https://nano.org/en) - it's everything Bitcoin wanted to be. Instant, free and environmentally friendly.
+[I'm on Patreon](https://www.patreon.com/user?u=16154946) if you feel like buying me a coffee.
 
