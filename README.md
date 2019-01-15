@@ -1,7 +1,6 @@
 # Plumber - workflow for Umbraco
 
-[![Build status](https://ci.appveyor.com/api/projects/status/ap94da7169wk0g0v?svg=true)](https://ci.appveyor.com/project/nathanwoulfe/umbracoworkflow)
-[![Latest build](https://img.shields.io/nuget/dt/Workflow.Umbraco.svg)](https://www.nuget.org/packages/Workflow.Umbraco)
+[![Latest build](https://ci.appveyor.com/api/projects/status/ap94da7169wk0g0v?svg=true)](https://ci.appveyor.com/project/nathanwoulfe/umbracoworkflow/artifacts)
 [![NuGet release](https://img.shields.io/nuget/dt/Workflow.Umbraco.svg)](https://www.nuget.org/packages/Workflow.Umbraco)
 [![Our Umbraco project page](https://img.shields.io/badge/our-umbraco-brightgreen.svg)](https://our.umbraco.org/projects/backoffice-extensions/plumber-workflow-for-umbraco)
 
