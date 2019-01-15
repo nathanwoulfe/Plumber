@@ -109,7 +109,7 @@
                     '<%= dest %>/<%= backoffice %>/js/preview.js': '<%= backoffice %>/preview.es6'
                 },
                 options: {
-                    transform: [['babelify', { presets: 'env' }]],
+                    transform: [['babelify', { presets: ['env'] }]],
                     browserifyOptions: {
                         debug: false
                     }
