@@ -43,7 +43,7 @@ deploy:
   - provider: GitHub
     tag: v1.1.3
     release: Release 1.1.3
-    description: "Bug fixing v1.1.2. Missed an object initialization in contenty type flow config overlay controller."
+    description: "Bug fixing v1.1.2. Missed an object initialization in contenttype flow config overlay controller. Say that fast five times..."
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR

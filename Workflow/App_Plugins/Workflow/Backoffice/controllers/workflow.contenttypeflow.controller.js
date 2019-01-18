@@ -79,6 +79,7 @@
          * @returns {} 
          */
         this.setCondition = (groupId, condition, oldValue) => {
+
             this.approvalPath.forEach(group => {
                 if (group.groupId === groupId) {
                     group.permissions.forEach(p => {
