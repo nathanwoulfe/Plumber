@@ -2,17 +2,18 @@
 
     <umb-load-indicator ng-if="vm.loading">
     </umb-load-indicator>
-    
-    <div ng-if="!model.type">
+
+    <div ng-if="vm.isAdd">
         <h6>Select content type/s:</h6>
-        <select multiple class="flow-select" ng-model="model.multi" ng-options="g as g.name for g in model.types" data-element="workflow-overlay__contenttype-types">
+        <select multiple class="flow-select" ng-model="model.typesToAdd" ng-options="g as g.name for g in model.types" data-element="workflow-overlay__contenttype-types">
             <option selected disabled>--- Select content type ---</option>
         </select>
     </div>
-    
-    <h5 ng-if="model.type">Editing flow for: {{ model.type.name }}</h5>
 
-    <div ng-if="model.type || model.multi">
+    <h5 ng-if="model.type && !model.typesToAdd">Editing flow for: {{ model.type.name }}</h5>
+    <h5 ng-if="model.typesToAdd">Adding {{ model.typesToAdd.length === 1 ? 'flow' : 'flows' }} for: {{ vm.multiNames() }}</h5>
+
+    <div ng-if="model.type || model.typesToAdd">
         <h6>Select workflow group:</h6>
         <select class="flow-select" ng-model="vm.selectedApprovalGroup" ng-options="g as g.name for g in model.groups" data-element="workflow-overlay__contenttype-groups">
             <option selected disabled>--- Add ---</option>
@@ -23,6 +24,7 @@
             <ul class="current-flow" ui-sortable="vm.sortOptions" ng-model="vm.approvalPath">
                 <li class="umb-node-preview" ng-repeat="u in vm.approvalPath track by $index">
                     <div class="umb-node-preview__content">Stage {{ $index + 1 }}: {{ u.name }}</div>
+
                     <div class="umb-node-preview__actions">
                         <a class="umb-node-preview__action" ng-href="/umbraco/#/workflow/workflow/edit-group/{{ u.groupId }}">Edit group</a>
                         <span class="umb-node-preview__action sort-handle"><i class="icon icon-navigation-vertical"></i></span>
@@ -30,30 +32,32 @@
                     </div>
                 </li>
             </ul>
-            <h5>Conditional stages</h5>
-            <button class="btn btn-default" style="margin-bottom:10px" ng-click="vm.addCondition()" data-element="workflow-overlay__contenttype-addcondition">Add condition</button>
-            <ul class="current-flow">
-                <li class="umb-node-preview" ng-repeat="c in vm.conditions track by $index">
-                    <div class="umb-node-preview__content conditional-group">
-                        Include
-                        <div class="fancy-select">
-                            <select class="flow-select" ng-model="c.groupId" ng-options="g.groupId as g.name for g in vm.approvalPath" data-element="workflow-overlay__contenttype-conditionalgroup">
-                                <option selected disabled>--- Add ---</option>
-                            </select>
+            <div ng-if="!model.typesToAdd">
+                <h5>Conditional stages</h5>
+                <button class="btn btn-default" style="margin-bottom:10px" ng-click="vm.addCondition()" data-element="workflow-overlay__contenttype-addcondition">Add condition</button>
+                <ul class="current-flow">
+                    <li class="umb-node-preview" ng-repeat="c in vm.conditions track by $index">
+                        <div class="umb-node-preview__content conditional-group">
+                            Include
+                            <div class="fancy-select">
+                                <select class="flow-select" ng-model="c.groupId" ng-options="g.groupId as g.name for g in vm.approvalPath" data-element="workflow-overlay__contenttype-conditionalgroup">
+                                    <option selected disabled>--- Add ---</option>
+                                </select>
+                            </div>
+                            when
+                            <div class="fancy-select">
+                                <select class="flow-select" ng-model="c.condition" ng-change="vm.setCondition(c.groupId, c.condition, '{{ c.condition }}')" ng-options="p.key as p.name for p in vm.properties" data-element="workflow-overlay__contenttype-conditionalproperty">
+                                    <option selected disabled>--- Add ---</option>
+                                </select>
+                            </div>
+                            has changed
                         </div>
-                        when 
-                        <div class="fancy-select">
-                            <select class="flow-select" ng-model="c.condition" ng-change="vm.setCondition(c.groupId, c.condition)" ng-options="p.key as p.name for p in vm.properties" data-element="workflow-overlay__contenttype-conditionalproperty">
-                                <option selected disabled>--- Add ---</option>
-                            </select>
+                        <div class="umb-node-preview__actions">
+                            <span class="umb-node-preview__action" ng-click="vm.removeCondition($event, $index, c.condition, c.groupId)"><i class="icon icon-trash"></i></span>
                         </div>
-                        has changed
-                    </div>
-                    <div class="umb-node-preview__actions">
-                        <span class="umb-node-preview__action" ng-click="vm.removeCondition($event, $index, c.condition, c.groupId)"><i class="icon icon-trash"></i></span>
-                    </div>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

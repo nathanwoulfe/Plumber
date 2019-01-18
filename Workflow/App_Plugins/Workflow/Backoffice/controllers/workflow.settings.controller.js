@@ -104,7 +104,7 @@
                 if (dt.approvalPath && dt.approvalPath.length) {
                     permissions[i] = [];
                     dt.approvalPath.forEach((path, ii) => {
-                        const p = {
+                        const permissionObject = {
                             contentTypeId: dt.id,
                             permission: ii,
                             groupId: path.groupId
@@ -116,10 +116,10 @@
 
                         // if a permission exists, push it onto the current permission object
                         if (permissionsForStep && permissionsForStep.condition) {
-                            p.condition = permissionsForStep.condition.join(',');
+                            permissionObject.condition = permissionsForStep.condition.join(',');
                         }
 
-                        permissions[i].push(p);
+                        permissions[i].push(permissionObject);
                     });
                 }
             });
@@ -155,7 +155,7 @@
                     if (model.type.approvalPath.length) {
 
                         // multi has a value when adding - can add more than one
-                        const ids = model.type ? [model.type.id] : model.multi.map(t => t.id); 
+                        const ids = model.typesToAdd ? model.typesToAdd.map(t => t.id) : [model.type.id];
 
                         this.docTypes.forEach(v => {
                             if (ids.indexOf(v.id) !== -1) {
