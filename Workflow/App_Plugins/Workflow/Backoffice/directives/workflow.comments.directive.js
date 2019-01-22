@@ -6,7 +6,7 @@
                     <label for="comments">
                         {{ labelText }} <span ng-bind="info"></span>
                     </label>
-                    <textarea no-dirty-check id="comments" ng-model="comment" ng-change="limitChars()"></textarea>
+                    <textarea no-dirty-check id="comments" ng-model="comment" ng-change="limitChars()" umb-auto-focus></textarea>
                 </div>`;
 
     function comments() {
