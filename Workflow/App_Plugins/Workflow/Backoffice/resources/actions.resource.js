@@ -22,7 +22,7 @@
                 $rootScope.$emit('workflowActioned');
                 buttonState('success', id);
             } else {
-                notificationsService.error('OH SNAP', d.message);
+                notificationsService.error('OH SNAP', d.data.ExceptionMessage);
                 buttonState('error', id);
             }
         };
@@ -49,6 +49,8 @@
                         workflowResource[functionName](item.instanceGuid, model.approvalComment)
                             .then(resp => {
                                 notify(resp, fromDash, item.nodeId);
+                            }, err => {
+                                notify(err, fromDash, item.nodeId);
                             });
                        
                         workflowOverlay.close();
@@ -77,6 +79,8 @@
                         workflowResource.initiateWorkflow(id, model.comment, publish)
                             .then(resp => {
                                 notify(resp, false, id);
+                            }, err => {
+                                notify(err, false, id);
                             });
 
                         workflowOverlay.close();
