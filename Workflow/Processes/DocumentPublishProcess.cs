@@ -1,7 +1,9 @@
 ﻿using log4net;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Umbraco.Core;
+using Umbraco.Core.Events;
 using Umbraco.Core.Models;
 using Umbraco.Core.Publishing;
 using Umbraco.Core.Services;
@@ -21,6 +23,7 @@ namespace Workflow.Processes
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IContentService _contentService;
+        private readonly ILocalizedTextService _textService;
         private readonly IInstancesService _instancesService;
         private readonly Emailer _emailer;
         private readonly Utility _utility;
@@ -30,6 +33,7 @@ namespace Workflow.Processes
         public DocumentPublishProcess()
             : this(
                 ApplicationContext.Current.Services.ContentService,
+                ApplicationContext.Current.Services.TextService,
                 new InstancesService(),
                 new Emailer(),
                 new Utility()
@@ -37,9 +41,10 @@ namespace Workflow.Processes
         {
         }
 
-        private DocumentPublishProcess(IContentService contentService, IInstancesService instancesService, Emailer emailer, Utility utility)
+        private DocumentPublishProcess(IContentService contentService, ILocalizedTextService textService, IInstancesService instancesService, Emailer emailer, Utility utility)
         {
             _contentService = contentService;
+            _textService = textService;
             _instancesService = instancesService;
             _emailer = emailer;
             _utility = utility;
@@ -83,15 +88,28 @@ namespace Workflow.Processes
 
             Attempt<PublishStatus> publishStatus = _contentService.PublishWithStatus(node, Instance.TaskInstances.Last().ActionedByUserId ?? _utility.GetCurrentUser().Id);
 
+            EventMessages = GetEventMessages(publishStatus);
+
             if (!publishStatus.Success)
             {
+                var exceptionOccured = publishStatus.Exception != null;
+
+                var errorMessage = exceptionOccured
+                    ? $" (Workflow error: {publishStatus.Exception.Message})"
+                    : $" (Workflow error: Publish failed: {publishStatus.Result.StatusType.ToString()})";
+
                 Instance.Status = (int)WorkflowStatus.Errored;
-                Instance.AuthorComment += $" (Workflow error: {publishStatus.Exception.Message})";
+                Instance.AuthorComment += errorMessage;
+                Log.Error(errorMessage);
 
-                Log.Error(publishStatus.Exception.Message);
-
-                throw new WorkflowException(publishStatus.Exception.Message);
-
+                if (exceptionOccured)
+                {
+                    throw new WorkflowException(publishStatus.Exception.Message); // need eventmessages support here?
+                }
+                else
+                {
+                    throw new UmbracoOperationFailedException(publishStatus.Result.ToString());
+                }
             }
 
             _instancesService.UpdateInstance(Instance);
@@ -125,6 +143,22 @@ namespace Workflow.Processes
 
                 throw new WorkflowException(errorText);
             }
+        }
+
+        /// <summary>
+        /// Get a collection of EventMessages that should show based on the PublishStatus
+        /// This includes EventMessages added by custom Umbraco events, as well as ones
+        /// Umbraco adds by default.
+        /// </summary>
+        private IEnumerable<EventMessage> GetEventMessages(Attempt<PublishStatus> publishStatus)
+        {
+            var eventMessages = new List<EventMessage>();
+
+            eventMessages.AddRange(publishStatus.Result.EventMessages.GetAll());
+
+            eventMessages.AddRange(NotificationHelpers.GetUmbracoDefaultEventMessages(publishStatus.Result, _textService));
+
+            return eventMessages;
         }
     }
 }

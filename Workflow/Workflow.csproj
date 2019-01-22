@@ -133,6 +133,7 @@
     <Compile Include="Api\GroupsController.cs" />
     <Compile Include="Api\TasksController.cs" />
     <Compile Include="Helpers\ViewHelpers.cs" />
+    <Compile Include="Helpers\NotificationHelpers.cs" />
     <Compile Include="Models\InitiateWorkflowModel.cs" />
     <Compile Include="Models\Pocos\SettingsPoco.cs" />
     <Compile Include="Repositories\PocoRepository.cs" />
