@@ -3,7 +3,7 @@
 
     function workflowActionsService($rootScope, workflowResource, notificationsService) {
 
-        const overlayPath = Umbraco.Sys.ServerVariables.workflow.overlayPath; 
+        const overlayPath = Umbraco.Sys.ServerVariables.workflow.overlayPath;
 
         // UI feedback for button directive
         const buttonState = (state, id) => {
@@ -12,14 +12,13 @@
 
         // display notification after actioning workflow task
         const notify = (d, fromDash, id) => {
+            $rootScope.$emit('workflowActioned');
+            if (fromDash) {
+                $rootScope.$emit('refreshWorkflowDash');
+            }
+
             if (d.status === 200) {
-
                 notificationsService.success('SUCCESS', d.message);
-
-                if (fromDash) {
-                    $rootScope.$emit('refreshWorkflowDash');
-                }
-                $rootScope.$emit('workflowActioned');
                 buttonState('success', id);
             } else {
                 notificationsService.error('OH SNAP', d.data.ExceptionMessage);
@@ -52,7 +51,7 @@
                             }, err => {
                                 notify(err, fromDash, item.nodeId);
                             });
-                       
+
                         workflowOverlay.close();
                     },
                     close: () => {
@@ -132,7 +131,7 @@
                     requestedBy: item.requestedBy,
                     requestedOn: item.requestedOn,
                     detail: true,
-                    
+
                     close: () => {
                         workflowOverlay.show = false;
                         workflowOverlay = null;
