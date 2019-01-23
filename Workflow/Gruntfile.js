@@ -1,9 +1,10 @@
 ﻿module.exports = grunt => {
+    const sass = require('node-sass');
+
     require('load-grunt-tasks')(grunt);
     require('time-grunt')(grunt);
 
     //cant load this with require
-    grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-banner');
@@ -75,6 +76,10 @@
 
         //Compile the less file into a CSS file
         sass: {
+            options: {
+                implementation: sass,
+                sourceMap: false
+            },
             dist: {
                 files: {
                     '<%= backoffice %>/css/styles.css': ['<%= backoffice %>/css/styles.scss'],

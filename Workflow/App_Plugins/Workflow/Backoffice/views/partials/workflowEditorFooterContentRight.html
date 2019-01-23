@@ -14,7 +14,7 @@
                 label-key="buttons_returnToList">
     </umb-button>
 
-    <umb-button ng-if="!page.isNew" 
+    <umb-button ng-if="!page.isNew && content.allowPreview" 
                 type="button"
                 button-style="info" 
                 action="(vm.active ? vm.preview(content) : preview(content))"
@@ -29,7 +29,7 @@
                 label="Save">
     </umb-button>
 
-    <umb-button-group ng-if="defaultButton && vm.excludeNode || page.trashed"
+    <umb-button-group ng-if="defaultButton && vm.excludeNode || content.trashed"
                       default-button="defaultButton"
                       sub-buttons="subButtons"
                       state="page.buttonGroupState"

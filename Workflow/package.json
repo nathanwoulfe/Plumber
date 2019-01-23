@@ -23,13 +23,14 @@
     "grunt-contrib-copy": "1.0.0",
     "grunt-contrib-cssmin": "3.0.0",
     "grunt-contrib-jshint": "2.0.0",
-    "grunt-contrib-sass": "1.0.0",
     "grunt-contrib-watch": "1.1.0",
     "grunt-mkdir": "1.0.0",
     "grunt-nuget": "0.3.1",
+    "grunt-sass": "^3.0.2",
     "grunt-template": "1.0.0",
     "grunt-umbraco-package": "1.0.0",
     "load-grunt-tasks": "4.0.0",
+    "node-sass": "^4.11.0",
     "time-grunt": "2.0.0"
   }
 }

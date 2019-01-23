@@ -3,7 +3,7 @@
 
     function workflowActionsService($rootScope, workflowResource, notificationsService) {
 
-        const overlayPath = Umbraco.Sys.ServerVariables.workflow.overlayPath; 
+        const overlayPath = Umbraco.Sys.ServerVariables.workflow.overlayPath;
 
         // UI feedback for button directive
         const buttonState = (state, id) => {
@@ -19,14 +19,13 @@
                 });
             }
 
+            $rootScope.$emit('workflowActioned');
+            if (fromDash) {
+                $rootScope.$emit('refreshWorkflowDash');
+            }
+
             if (d.status === 200 && !d.isUmbracoOperationError) { // UmbracoOperationFailedExceptions return 200's, so need to check both cases for success
-
                 notificationsService.success('SUCCESS', d.message);
-
-                if (fromDash) {
-                    $rootScope.$emit('refreshWorkflowDash');
-                }
-                $rootScope.$emit('workflowActioned');
                 buttonState('success', id);
             } else {
                 if (d.isUmbracoOperationError) {
@@ -63,7 +62,7 @@
                             }, err => {
                                 notify(err, fromDash, item.nodeId);
                             });
-                       
+
                         workflowOverlay.close();
                     },
                     close: () => {
@@ -143,7 +142,7 @@
                     requestedBy: item.requestedBy,
                     requestedOn: item.requestedOn,
                     detail: true,
-                    
+
                     close: () => {
                         workflowOverlay.show = false;
                         workflowOverlay = null;

@@ -10,8 +10,7 @@ cache:
 # UMBRACO_PACKAGE_PRERELEASE_SUFFIX will only be used for Release builds
 # example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
 install:
-  - set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe;C:\Ruby22\bin;%PATH%
-  - cmd: gem install sass
+  - set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe;%PATH%
   - cmd: npm install -g grunt-cli
   - cmd: set UMBRACO_PACKAGE_MIN_VERSION=7.9.0
   - cmd: cd BuildPackage
