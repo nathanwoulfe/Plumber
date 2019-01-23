@@ -72,7 +72,7 @@ namespace Workflow.Processes
         /// Publishes the document to the live site.
         /// </summary>
         private void HandlePublishNow()
-        {           
+        {
             // Have to do this prior to the publish due to workaround for "publish at" handling.
             Instance.Status = (int)WorkflowStatus.Approved;
             Instance.CompletedDate = DateTime.Now;
@@ -100,6 +100,8 @@ namespace Workflow.Processes
 
                 Instance.Status = (int)WorkflowStatus.Errored;
                 Instance.AuthorComment += errorMessage;
+                _instancesService.UpdateInstance(Instance);
+
                 Log.Error(errorMessage);
 
                 if (exceptionOccured)
