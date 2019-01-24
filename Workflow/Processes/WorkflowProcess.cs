@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Umbraco.Core.Events;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 using Workflow.Events.Args;
@@ -37,6 +38,8 @@ namespace Workflow.Processes
 
         public static event EventHandler<InstanceEventArgs> Created;
         public static event EventHandler<InstanceEventArgs> Cancelled;
+
+        public IEnumerable<EventMessage> EventMessages;
 
         protected WorkflowProcess()
         {

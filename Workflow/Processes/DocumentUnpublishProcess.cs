@@ -1,8 +1,11 @@
 ﻿using log4net;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Umbraco.Core;
+using Umbraco.Core.Events;
 using Umbraco.Core.Models;
+using Umbraco.Core.Publishing;
 using Umbraco.Core.Services;
 using Workflow.Events.Args;
 using Workflow.Helpers;
@@ -20,6 +23,7 @@ namespace Workflow.Processes
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static IContentService _contentService;
+        private static ILocalizedTextService _textService;
         private static IInstancesService _instancesService;
 
         private readonly Emailer _emailer;
@@ -32,6 +36,7 @@ namespace Workflow.Processes
         public DocumentUnpublishProcess()
             : this(
                 ApplicationContext.Current.Services.ContentService,
+                ApplicationContext.Current.Services.TextService,
                 new InstancesService(),
                 new Emailer(),
                 new Utility()
@@ -39,9 +44,10 @@ namespace Workflow.Processes
         {
         }
 
-        private DocumentUnpublishProcess(IContentService contentService, IInstancesService instancesService, Emailer emailer, Utility utility)
+        private DocumentUnpublishProcess(IContentService contentService, ILocalizedTextService textService, IInstancesService instancesService, Emailer emailer, Utility utility)
         {
             _contentService = contentService;
+            _textService = textService;
             _instancesService = instancesService;
             _emailer = emailer;
             _utility = utility;
@@ -74,6 +80,7 @@ namespace Workflow.Processes
         private void HandleUnpublishNow()
         {
             bool success;
+            bool errorIsFriendly = false;
             var errorText = "";
             int workflowStatus = Instance.Status;
 
@@ -86,7 +93,25 @@ namespace Workflow.Processes
 
                 // Perform the unpublish
                 IContent node = _contentService.GetById(Instance.NodeId);
-                success = _contentService.UnPublish(node, Instance.TaskInstances.Last().ActionedByUserId ?? _utility.GetCurrentUser().Id);
+
+                var unPublishStatus = _contentService.WithResult().UnPublish(node, Instance.TaskInstances.Last().ActionedByUserId ?? _utility.GetCurrentUser().Id);
+
+                EventMessages = GetEventMessages(unPublishStatus);
+
+                success = unPublishStatus.Success;
+
+                if (!success)
+                {
+                    if (unPublishStatus.Exception != null)
+                    {
+                        throw unPublishStatus.Exception; // hit catch block below
+                    }
+                    else
+                    {
+                        throw new UmbracoOperationFailedException(unPublishStatus.Result.ToString());
+                    }
+
+                }
             }
             catch (Exception e)
             {
@@ -106,6 +131,7 @@ namespace Workflow.Processes
                 success = false;
                 errorText = $"Unable to unpublish document {_nodeName}: {e.Message}";
                 Log.Error(errorText);
+                errorIsFriendly = e is UmbracoOperationFailedException;
             }
 
             if (success)
@@ -114,6 +140,10 @@ namespace Workflow.Processes
                 Log.Info("Successfully unpublished page " + Instance.Node.Name);
 
                 Completed?.Invoke(this, new InstanceEventArgs(Instance, "UnpublishNow"));
+            }
+            else if (errorIsFriendly)
+            {
+                throw new UmbracoOperationFailedException(errorText);
             }
             else
             {
@@ -145,6 +175,22 @@ namespace Workflow.Processes
 
                 throw new WorkflowException(errorText);
             }
+        }
+
+        /// <summary>
+        /// Get a collection of EventMessages that should show based on the PublishStatus
+        /// This includes EventMessages added by custom Umbraco events, as well as ones 
+        /// </summary>
+        /// <param name="publishStatus"></param>
+        private IEnumerable<EventMessage> GetEventMessages(Attempt<UnPublishStatus> unPublishStatus)
+        {
+            var eventMessages = new List<EventMessage>();
+
+            eventMessages.AddRange(unPublishStatus.Result.EventMessages.GetAll());
+
+            eventMessages.AddRange(NotificationHelpers.GetUmbracoDefaultEventMessages(unPublishStatus, _textService));
+
+            return eventMessages;
         }
     }
 }

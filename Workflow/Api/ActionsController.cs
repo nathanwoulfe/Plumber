@@ -54,9 +54,9 @@ namespace Workflow.Api
         [Route("initiate")]
         public IHttpActionResult InitiateWorkflow(InitiateWorkflowModel model)
         {
+            WorkflowProcess process = null;
             try
             {
-                WorkflowProcess process;
 
                 if (model.Publish)
                 {
@@ -99,9 +99,23 @@ namespace Workflow.Api
                 return Json(new
                 {
                     message = msg,
-                    status = 200
+                    status = 200,
+                    notifications = NotificationHelpers.MapEventMessagesToNotifications(process.EventMessages)
                 }, ViewHelpers.CamelCase);
 
+            }
+            catch (UmbracoOperationFailedException e)
+            {
+                const string msg = "A Publishing failure occurred initiating the workflow";
+                Log.Error(msg, e);
+
+                return Json(new {
+                        message = msg,
+                        status = 200,
+                        isUmbracoOperationError = true,
+                        notifications = NotificationHelpers.MapEventMessagesToNotifications(process?.EventMessages)
+                    }
+                , ViewHelpers.CamelCase);
             }
             catch (Exception e)
             {
@@ -123,10 +137,10 @@ namespace Workflow.Api
         public IHttpActionResult ApproveWorkflowTask(TaskData model)
         {
             WorkflowInstancePoco instance = _instancesService.GetPopulatedInstance(model.InstanceGuid);
+            WorkflowProcess process = instance.GetProcess();
 
             try
             {
-                WorkflowProcess process = instance.GetProcess();
                 IUser currentUser = _utility.GetCurrentUser();
 
                 instance = process.ActionWorkflow(
@@ -173,8 +187,23 @@ namespace Workflow.Api
                 return Json(new
                 {
                     message = msg,
-                    status = 200
+                    status = 200,
+                    notifications = NotificationHelpers.MapEventMessagesToNotifications(process.EventMessages)
                 }, ViewHelpers.CamelCase);
+            }
+            catch (UmbracoOperationFailedException e)
+            {
+                string msg = $"A Publishing failure occurred processing the approval on {instance.Node.Name} [{instance.Node.Id}]";
+                Log.Error(msg, e);
+
+                return Json(new
+                    {
+                        message = msg,
+                        status = 200,
+                        isUmbracoOperationError = true,
+                        notifications = NotificationHelpers.MapEventMessagesToNotifications(process.EventMessages)
+                    }
+                    , ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
@@ -287,10 +316,10 @@ namespace Workflow.Api
         public IHttpActionResult ResubmitWorkflowTask(TaskData model)
         {
             WorkflowInstancePoco instance = _instancesService.GetPopulatedInstance(model.InstanceGuid);
+            WorkflowProcess process = instance.GetProcess();
 
             try
             {
-                WorkflowProcess process = instance.GetProcess();
                 IUser currentUser = _utility.GetCurrentUser();
 
                 instance = process.ResubmitWorkflow(
@@ -310,8 +339,23 @@ namespace Workflow.Api
                 return Json(new
                 {
                     message = $"Changes resubmitted successfully. Page will be {typeDescriptionPast.ToLower()} following workflow completion.",
-                    status = 200
+                    status = 200,
+                    notifications = NotificationHelpers.MapEventMessagesToNotifications(process.EventMessages)
                 }, ViewHelpers.CamelCase);
+            }
+            catch (UmbracoOperationFailedException e)
+            {
+                string msg = $"A Publishing failure occurred processing the approval on {instance.Node.Name} [{instance.Node.Id}]";
+                Log.Error(msg, e);
+
+                return Json(new
+                    {
+                        message = msg,
+                        status = 200,
+                        isUmbracoOperationError = true,
+                        notifications = NotificationHelpers.MapEventMessagesToNotifications(process.EventMessages)
+                    }
+                    , ViewHelpers.CamelCase);
             }
             catch (Exception ex)
             {
