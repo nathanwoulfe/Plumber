@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Umbraco.Core.Events;
 using Umbraco.Core.Models;
-using Umbraco.Web;
 using Workflow.Events.Args;
 using Workflow.Extensions;
 using Workflow.Helpers;
@@ -373,7 +372,7 @@ namespace Workflow.Processes
                                 
                                 foreach (Property prop in propsToCheck)
                                 {
-                                    if (prop.Value.ToString().Equals(publishedVersion.GetPropertyValue<string>(prop.Alias)))
+                                    if (prop.Value.ToString().Equals(_utility.GetPropertyValueAsString(publishedVersion, prop.Alias)))
                                     {
                                         // prop is clean and matches on a condition - group should not be included
                                         taskInstance.Status = (int)TaskStatus.NotRequired;

@@ -113,6 +113,18 @@ namespace Workflow.Helpers
         }
 
         /// <summary>
+        /// Wrapper for IPublishedContent.GetPropertyValue<string>()
+        /// Avoids Umbraco.Web dependency in calling class
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="alias"></param>
+        /// <returns></returns>
+        public string GetPropertyValueAsString(IPublishedContent content, string alias)
+        {
+            return content.GetPropertyValue<string>(alias);
+        }
+
+        /// <summary>
         /// Get the current logged-in user
         /// </summary>
         /// <returns></returns>
