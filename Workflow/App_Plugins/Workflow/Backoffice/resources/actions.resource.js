@@ -45,11 +45,12 @@
                     show: true,
                     title: type + ' workflow process',
                     subtitle: `Document: ${item.nodeName}`,
-                    comment: item.comment,
                     approvalComment: '',
-                    guid: item.instanceGuid,
-                    requestedBy: item.requestedBy,
-                    requestedOn: item.requestedOn,
+                    item: item,
+                    //comment: item.comment,
+                    //guid: item.instanceGuid,
+                    //requestedBy: item.requestedBy,
+                    //requestedOn: item.requestedOn,
                     submit: model => {
 
                         buttonState('busy', item.nodeId);
@@ -137,10 +138,11 @@
                     show: true,
                     title: 'Workflow detail',
                     subtitle: `Document: ${item.nodeName}`,
-                    comment: item.instanceComment,
-                    guid: item.instanceGuid,
-                    requestedBy: item.requestedBy,
-                    requestedOn: item.requestedOn,
+                    item: item,
+                    //comment: item.instanceComment,
+                    //guid: item.instanceGuid,
+                    //requestedBy: item.requestedBy,
+                    //requestedOn: item.requestedOn,
                     detail: true,
 
                     close: () => {

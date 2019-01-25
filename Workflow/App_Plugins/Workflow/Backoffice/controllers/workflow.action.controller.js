@@ -56,13 +56,22 @@
         };
 
         /**
+         * If the instance has status === error, the error message is on the author comment
+         * wrapped in square brackets. This extracts it.
+         * @returns {string} c
+         */
+        this.extractErrorFromComment = () => {
+            const c = $scope.model.item.comment;
+            return c.substring(c.indexOf('[') + 1, c.length - 1);
+        };
+
+        /**
          * Fetch all tasks for the current workflow instance
          * Then build a UI-ready object
+         * TODO => review this. Tasks exist on $scope.model.item, but need current/total step values
          */
-        workflowResource.getAllTasksByGuid($scope.model.guid)
+        workflowResource.getAllTasksByGuid($scope.model.item.instanceGuid)
             .then(resp => {
-                const tasks = resp.items;
-
                 this.tasksLoaded = true;
 
                 // current step should only count approved tasks - maybe rejected/resubmitted into
@@ -73,7 +82,7 @@
                 // modify the tasks object to nest tasks
 
                 this.tasks = [];
-                tasks.forEach(t => {
+                resp.items.forEach(t => {
 
                     // push some extra UI strings onto each task
                     t.avatarName = avatarName(t);

@@ -41,7 +41,7 @@
                 <div class="table-row-outer {{ item.cssStatus }}" ng-repeat="item in items track by $index">
                     <div class="umb-table-row">
                         <div class="umb-table-cell">
-                            <i class="umb-table-body__icon icon-document"></i>
+                            <i class="umb-table-body__icon icon-{{ item.cssStatus === 'errored' ? 'delete' : 'document' }}"></i>
                         </div>
                         <div class="umb-table-cell" ng-bind="item.type"></div>
                         <div class="umb-table-cell umb-table__name" ng-if="showName">

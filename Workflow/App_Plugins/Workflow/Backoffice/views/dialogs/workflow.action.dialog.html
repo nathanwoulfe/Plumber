@@ -1,4 +1,9 @@
 ﻿<div class="workflow action-dialog" ng-controller="Workflow.Action.Controller as vm">
+    
+    <div ng-if="model.item.status === 'Errored'" class="alert alert-error">
+        <h4 style="margin:10px 0">Processing cancelled due to error:</h4>
+        <p ng-bind="vm.extractErrorFromComment()"></p>
+    </div>
 
     <h5>Change description</h5>
     <div class="history-item">
@@ -6,16 +11,16 @@
             <div class="history-item__avatar">
                 <umb-avatar size="m"
                             color="secondary"
-                            name="{{ model.requestedBy }}">
+                            name="{{ model.item.requestedBy }}">
                 </umb-avatar>
             </div>
             <div>
-                <div ng-bind="model.requestedBy"></div>
-                <div class="history-item__date" ng-bind="model.requestedOn"></div>
+                <div ng-bind="model.item.requestedBy"></div>
+                <div class="history-item__date" ng-bind="model.item.requestedOn"></div>
             </div>
         </div>
         <div class="history-item__break">
-            <p ng-bind="model.comment" class="comment-text"></p>
+            <p ng-bind="model.item.comment" class="comment-text"></p>
         </div>
     </div>
 
@@ -58,10 +63,10 @@
                         </div>
                     </div>
                 </div>
-            </li>
+            </li> 
         </ul>
     </div>
-
+    
     <div ng-if="model.detail !== true">
         <hr />
         <h5>Stage {{ vm.currentStep }} of {{ vm.totalSteps }}</h5>

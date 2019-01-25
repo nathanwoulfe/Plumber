@@ -1,4 +1,6 @@
-﻿// listview for history views
+﻿@import "_variables";
+
+// listview for history views
 .table-row-outer .umb-table-row {
     cursor: default;
 
@@ -9,8 +11,11 @@
             opacity: 0;
         }
     }
-}
 
+    .icon-delete {
+        color:$danger;
+    }
+}
 .umb-table {
     border-radius: 3px;
 
