@@ -75,6 +75,8 @@ A given content node may have all three approval flow types applied, but only on
 
 Current responsibilites for groups can be reviewed on the user group view, for explicit and document-type approval flows only.
 
+Document-type approval flows can also include conditional groups - ie only include Group B in the workflow when the meta-description property has changed.
+
 ### Dashboards
 
 Plumber adds a set of dashboards to the Umbraco install:

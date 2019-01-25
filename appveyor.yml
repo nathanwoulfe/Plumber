@@ -1,5 +1,5 @@
 # version format
-version: 1.1.3.{build}
+version: 1.1.4.{build}
 
 image: Visual Studio 2017
 
@@ -40,9 +40,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v1.1.3
-    release: Release 1.1.3
-    description: "Bug fixing v1.1.2. Missed an object initialization in contenttype flow config overlay controller. Say that fast five times..."
+    tag: v1.1.4
+    release: Release 1.1.4
+    description: "Vastly improves exception handling when a publish fails due to cancellation/exception, plus other cosmetic bits, all courtesy @tomfulton (champion). Also adds email notification for errored processes and improves visibility in backoffice "
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
