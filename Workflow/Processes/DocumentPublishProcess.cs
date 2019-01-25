@@ -92,26 +92,28 @@ namespace Workflow.Processes
 
             if (!publishStatus.Success)
             {
-                var exceptionOccured = publishStatus.Exception != null;
+                bool exceptionOccured = publishStatus.Exception != null;
+                string errorDetail = exceptionOccured
+                    ? publishStatus.Exception.Message
+                    : publishStatus.Result.StatusType.ToString();
 
-                var errorMessage = exceptionOccured
-                    ? $" (Workflow error: {publishStatus.Exception.Message})"
-                    : $" (Workflow error: Publish failed: {publishStatus.Result.StatusType.ToString()})";
+                string errorMessage = exceptionOccured
+                    ? $" [Workflow error: {errorDetail}]"
+                    : $" [Workflow error: Publish failed - {errorDetail}]";
 
                 Instance.Status = (int)WorkflowStatus.Errored;
                 Instance.AuthorComment += errorMessage;
                 _instancesService.UpdateInstance(Instance);
 
                 Log.Error(errorMessage);
+                _emailer.Send(Instance, EmailType.WorkflowErrored, errorDetail);
 
                 if (exceptionOccured)
                 {
                     throw new WorkflowException(publishStatus.Exception.Message); // need eventmessages support here?
                 }
-                else
-                {
-                    throw new UmbracoOperationFailedException(publishStatus.Result.ToString());
-                }
+                
+                throw new UmbracoOperationFailedException(publishStatus.Result.ToString());
             }
 
             _instancesService.UpdateInstance(Instance);
