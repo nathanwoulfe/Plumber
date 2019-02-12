@@ -1,7 +1,7 @@
 ﻿(() => {
     'use strict';
 
-    function controller($scope, $rootScope, $q, $window, userService, workflowResource, workflowGroupsResource, workflowActionsService, contentEditingHelper, editorState, $routeParams, plumberHub) {
+    function controller($scope, $rootScope, $q, $window, userService, workflowResource, workflowGroupsResource, workflowActionsService, contentEditingHelper, editorState, $routeParams, notificationsService, plumberHub) {
 
         this.active = false;
         this.excludeNode = false;
@@ -75,7 +75,26 @@
                 labelKey: 'workflow_publishButton',
                 cssClass: 'success',
                 handler: () => {
-                    this.workflowOverlay = workflowActionsService.initiate(editorState.current.name, editorState.current.id, true);
+                    var that = this;
+                    var contentLastUpdateDate = $scope.content.updateDate;
+
+                    // Perform a Save first, to ensure we catch scenario where the user hasn't been presented
+                    // with a Save button due to issues with Umbraco's dirty-checking
+                    $scope.save().then(function(d) {
+                        // There's no way to know if the Save succeeded from here, as Umbraco returns 200 when
+                        // the Saving event is canceled, and the promise only rejects for 500 errors.  For now,
+                        // we'll determine success by comparing the updateDate of the current form against the 
+                        // one returned from the server's new model.
+                        var saveSucceeded = d.updateDate !== contentLastUpdateDate;
+
+                        if (saveSucceeded) {
+                            that.workflowOverlay = workflowActionsService.initiate(editorState.current.name, editorState.current.id, true);
+                        } else {
+                            notificationsService.error('Workflow: Unable to request publish, saving the content failed');
+                        }
+                    }, function() {
+                        notificationsService.error('Workflow', 'Unable to request publish, saving the content failed');
+                    });
                 }
             },
             unpublishButton: {
@@ -303,5 +322,6 @@
             'contentEditingHelper',
             'editorState',
             '$routeParams',
+            'notificationsService',
             'plumberHub', controller]);
 })();

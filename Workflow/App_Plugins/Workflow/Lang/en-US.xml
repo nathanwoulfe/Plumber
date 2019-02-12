@@ -12,7 +12,7 @@
         <key alias="cancelButtonLong">Cancel workflow</key>
         <key alias="rejectButton">Reject changes</key>
         <key alias="saveButton">Save</key>
-        <key alias="publishButton">Request publish</key>
+        <key alias="publishButton">Save and Request publish</key>
         <key alias="resubmitButton">Resubmit changes</key>
         <key alias="unpublishButton">Request unpublish</key>
         <key alias="detailButton">Workflow detail</key>
