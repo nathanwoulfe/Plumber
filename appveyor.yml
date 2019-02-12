@@ -31,7 +31,7 @@ deploy:
   - provider: NuGet
     server:
     api_key:
-      secure: oy2oqhgk2jqrosfnfbmaugvd4uhfzhtu5fl3rs6n5ch7zm
+      secure: ORGl5eR/eDby41oG+g9voQ+lmTDIK9SbEzPawNN9yKTvvdKn/XC97dfnOcX7vIOA
     skip_symbols: false      
     symbol_server:    
     artifact: /.*\.nupkg/
