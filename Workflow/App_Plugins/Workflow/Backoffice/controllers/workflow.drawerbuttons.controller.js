@@ -83,7 +83,7 @@
                         // There's no way to know if the Save succeeded from here, as Umbraco returns 200 when
                         // the Saving event is canceled, and the promise only rejects for 500 errors.  For now,
                         // we'll determine success by looking for any "Success" notifications in the response.
-                        var saveSucceeded = data.notifications.some(function (notification) { return notification.type === 3 });
+                        var saveSucceeded = d.notifications.some(function (notification) { return notification.type === 3 });
 
                         if (saveSucceeded) {
                             that.workflowOverlay = workflowActionsService.initiate(editorState.current.name, editorState.current.id, true);
