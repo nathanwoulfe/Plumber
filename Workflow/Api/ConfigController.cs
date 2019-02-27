@@ -19,14 +19,16 @@ namespace Workflow.Api
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IConfigService _configService;
+        private readonly ISettingsService _settingsService;
 
-        public ConfigController() : this(new ConfigService())
+        public ConfigController() : this(new ConfigService(), new SettingsService())
         {
         }
 
-        public ConfigController(IConfigService configSerivce)
+        public ConfigController(IConfigService configService, ISettingsService settingsService)
         {
-            _configService = configSerivce;
+            _configService = configService;
+            _settingsService = settingsService;
         }
 
         /// <summary>
@@ -38,10 +40,13 @@ namespace Workflow.Api
         public IHttpActionResult WorkflowConfigured()
         {
             IEnumerable<IPublishedContent> rootNodes = Umbraco.TypedContentAtRoot();
+            List<string> excludedNodes = _settingsService.GetSettings().ExcludeNodes?.Split(',').ToList() ?? new List<string>();
             List<string> response = new List<string>();
 
             foreach (IPublishedContent node in rootNodes)
             {
+                if (excludedNodes.Any(x => x == node.Id.ToString())) continue;
+
                 List<UserGroupPermissionsPoco> permissions = _configService.GetPermissionsForNode(node.Id);
                 if (!permissions.Any())
                 {
