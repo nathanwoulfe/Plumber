@@ -32,7 +32,8 @@
         const segments = window.location.pathname.split('/');
         if (segments && segments.length === 6) {
             // domain/path/nodeid/userid/taskid/guid
-            const [, , nodeId, , taskId, ] = segments;
+            // only need the node id
+            const [, , nodeId, , , ] = segments;
 
             this.pageUrl = `/${nodeId}`;
 
