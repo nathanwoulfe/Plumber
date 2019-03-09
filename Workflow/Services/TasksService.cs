@@ -14,19 +14,21 @@ namespace Workflow.Services
     public class TasksService : ITasksService
     {
         private readonly IConfigService _configService;
+        private readonly IGroupService _groupService;
         private readonly ITasksRepository _tasksRepo;
 
         public static event EventHandler<TaskEventArgs> Created;
         public static event EventHandler<TaskEventArgs> Updated;
 
-        public TasksService() : this(new TasksRepository(), new ConfigService())
+        public TasksService() : this(new TasksRepository(), new ConfigService(), new GroupService())
         {
         }
 
-        private TasksService(ITasksRepository tasksRepo, IConfigService configService)
+        private TasksService(ITasksRepository tasksRepo, IConfigService configService, IGroupService groupService)
         {
             _tasksRepo = tasksRepo;
             _configService = configService;
+            _groupService = groupService;
         }
         
         /// <summary>
@@ -235,7 +237,13 @@ namespace Workflow.Services
         /// <returns></returns>
         public List<WorkflowTaskPoco> GetTasksWithGroupByInstanceGuid(Guid guid)
         {
-            return _tasksRepo.GetTasksAndGroupByInstanceId(guid);
+            List<WorkflowTaskPoco> tasks = _tasksRepo.GetTasksAndGroupByInstanceId(guid);
+            foreach (WorkflowTaskPoco task in tasks)
+            {
+                task.UserGroup = _groupService.GetPopulatedUserGroupAsync(task.GroupId).Result;
+            }
+
+            return tasks;
         }
 
         /// <summary>

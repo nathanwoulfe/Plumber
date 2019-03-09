@@ -5,7 +5,7 @@
     '/umbraco/lib/underscore/underscore-min.js',
     '/umbraco/lib/umbraco/Extensions.js',
 
-    '/umbraco/js/umbraco.services.js',
+    '/umbraco/js/umbraco.services.js', 
     '/umbraco/js/umbraco.resources.js',
     '/umbraco/js/umbraco.security.js',
     '/umbraco/js/umbraco.directives.js',

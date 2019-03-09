@@ -21,5 +21,6 @@ namespace Workflow.Models
         public string Comment { get; set; }
         public int TaskId { get; set; }
         public Guid InstanceGuid { get; set; }
+        public bool Offline { get; set; }
     }
 }

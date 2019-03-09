@@ -27,6 +27,8 @@ namespace Workflow.Controllers
             {
                 _previewService.Generate(nodeId, userId, guid);
 
+                UmbracoContext.Security.PerformLogin(userId);
+
                 Utility.SetCookie(UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName,
                     HttpContext.Items[UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName] as string, $"/{nodeId}");
             }

@@ -38,10 +38,10 @@
 
             if (!this.invalid) {
                 this.action = actionName => {
-                    workflowResource.getTask(taskId)
+                    workflowResource.getNodePendingTasks(nodeId)
                         .then(resp => {
-                            if (resp.task) {
-                                this.workflowOverlay = workflowPreviewService.action(resp.task, actionName);
+                            if (resp.items) {
+                                this.workflowOverlay = workflowPreviewService.action(resp.items[0], actionName);
                             }
                         });
                 };

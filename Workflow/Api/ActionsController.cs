@@ -184,6 +184,11 @@ namespace Workflow.Api
                 _hubContext.Clients.All.TaskApproved(
                     _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance: instance));
 
+                if (model.Offline)
+                {
+                    UmbracoContext.Security.ClearCurrentLogin();
+                }
+
                 return Json(new
                 {
                     message = msg,
@@ -244,6 +249,11 @@ namespace Workflow.Api
 
                 _hubContext.Clients.All.TaskRejected(
                     _tasksService.ConvertToWorkflowTaskList(instance.TaskInstances.ToList(), instance: instance));
+
+                if (model.Offline)
+                {
+                    UmbracoContext.Security.ClearCurrentLogin();
+                }
 
                 return Json(new
                 {

@@ -20,12 +20,12 @@
         const approve = (instanceGuid, comment) =>
             request('POST',
                 urls.actions + 'approve',
-                { instanceGuid: instanceGuid, comment: comment });
+                { instanceGuid: instanceGuid, comment: comment, offline: true });
 
         const reject = (instanceGuid, comment) =>
             request('POST',
                 urls.actions + 'reject',
-                { instanceGuid: instanceGuid, comment: comment });
+                { instanceGuid: instanceGuid, comment: comment, offline: true });
 
         // display notification after actioning workflow task
         const notify = d => {
@@ -34,6 +34,8 @@
             } else {
                 notificationsService.error('OH SNAP', d.message);
             }
+
+            document.querySelector('[data-element="editor-footer"]').style.display = 'none';
         };
 
         const service = {
@@ -44,11 +46,8 @@
                     show: true,
                     title: type + ' workflow process',
                     subtitle: `Document: ${item.nodeName}`,
-                    comment: item.comment,
                     approvalComment: '',
-                    guid: item.instanceGuid,
-                    requestedBy: item.requestedBy,
-                    requestedOn: item.requestedOn,
+                    item: item,
                     submit: model => {
                         // build the function name and access it via index rather than property - saves duplication
                         if (type === 'Approve') {
@@ -91,7 +90,7 @@
                 'Something broke');
 
         return {
-            getTask: id => request('GET', urls.tasks + 'get/' + id),
+            getNodePendingTasks: id => request('GET', urls.tasks + '/node/pending/' + id),
             getAllTasksByGuid: guid => request('GET', urls.tasks + 'tasksbyguid/' + guid)
         };
     }

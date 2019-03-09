@@ -47,10 +47,6 @@
                     subtitle: `Document: ${item.nodeName}`,
                     approvalComment: '',
                     item: item,
-                    //comment: item.comment,
-                    //guid: item.instanceGuid,
-                    //requestedBy: item.requestedBy,
-                    //requestedOn: item.requestedOn,
                     submit: model => {
 
                         buttonState('busy', item.nodeId);
