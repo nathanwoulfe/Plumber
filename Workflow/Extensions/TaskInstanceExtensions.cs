@@ -71,7 +71,7 @@ namespace Workflow.Extensions
 
                     if (taskInstance.CompletedDate != null)
                     {
-                        result += $"Stage {taskInstance.ApprovalStep}: {taskInstance.StatusName} by {taskInstance.ActionedByUser.Name} on {taskInstance.CompletedDate.Value:dd/MM/yy}";
+                        result += $"Stage {taskInstance.ApprovalStep + 1}: {taskInstance.StatusName} by {taskInstance.ActionedByUser.Name} on {taskInstance.CompletedDate.Value:dd/MM/yy}";
                     }
 
                     if (taskInstance.Comment.HasValue())
@@ -83,7 +83,7 @@ namespace Workflow.Extensions
 
                 case (int)TaskStatus.NotRequired:
 
-                    result += $"Stage {taskInstance.ApprovalStep}: Not required";
+                    result += $"Stage {taskInstance.ApprovalStep + 1}: Not required";
 
                     break;
             }

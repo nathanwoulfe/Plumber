@@ -294,7 +294,7 @@ namespace Workflow.Processes
         /// <summary>
         /// Update the workflow task status to approve or reject
         /// Sets flag to send email notification if required
-        /// Persists all cahanges to the task (stats, completed date, actioned by and comment)
+        /// Persists all changes to the task (stats, completed date, actioned by and comment)
         /// </summary>
         /// <param name="action"></param>
         /// <param name="userId"></param>
@@ -308,7 +308,9 @@ namespace Workflow.Processes
             EmailType? emailAction = taskInstance.ProcessApproval(action, userId, comment);
 
             // Send the email after we've done the updates.
-            if (emailAction != null)
+            // but only if NOT the final task in the workflow
+            // approval step is 0-indexed, total is a true count
+            if (emailAction != null && taskInstance.ApprovalStep != Instance.TotalSteps - 1)
             {
                 _emailer.Send(Instance, emailAction.Value);
             }
