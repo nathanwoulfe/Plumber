@@ -1,5 +1,5 @@
 # version format
-version: 1.1.7.{build}
+version: 1.1.8.{build}
 
 image: Visual Studio 2017
 
@@ -40,9 +40,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v1.1.7
-    release: Release 1.1.7
-    description: "Fixes offline approval, updates to footer button to better match Umbraco defaults"
+    tag: v1.1.8
+    release: Release 1.1.8
+    description: "Fix footer buttons for trashed content"
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR

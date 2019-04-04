@@ -8,7 +8,7 @@
                         req.url = '../app_plugins/workflow/backoffice/views/partials/workflowEditorFooterContentRight.html';
                     }
                 }
-                return req || $q.when(req);
+                return req || $q.when(req); 
             }
         };
     }

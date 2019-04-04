@@ -29,7 +29,7 @@
                 label="Save">
     </umb-button>
 
-    <umb-button-group ng-if="defaultButton && vm.excludeNode || content.trashed"
+    <umb-button-group ng-if="defaultButton && vm.excludeNode  && !content.trashed"
                       default-button="defaultButton"
                       sub-buttons="subButtons"
                       state="page.buttonGroupState"
@@ -37,7 +37,7 @@
                       float="right">
     </umb-button-group>
 
-    <workflow-button-group ng-if="!page.isNew && !vm.excludeNode"
+    <workflow-button-group ng-if="!page.isNew && !vm.excludeNode && !content.trashed"
                            default-button="vm.buttonGroup.defaultButton"
                            sub-buttons="vm.buttonGroup.subButtons"
                            direction="up"
@@ -45,6 +45,16 @@
                            drawer="true"
                            float="right">
     </workflow-button-group>
+    
+    <umb-button
+        alias="restore"
+        ng-if="content.trashed"
+        type="button"
+        button-style="primary"
+        action="restore(content)"
+        state="page.buttonRestore"
+        label="Restore">
+    </umb-button>
 
     <umb-overlay ng-if="vm.workflowOverlay.show"
                  model="vm.workflowOverlay"
