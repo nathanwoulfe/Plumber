@@ -14,6 +14,7 @@ namespace Workflow.Extensions
     {
         /// <summary>
         /// If the node associated with this workflow instance has a release or expiry date, set same on the workflow instance
+        /// THIS IS NOT PERSISTED
         /// </summary>
         public static void SetScheduledDate(this WorkflowInstancePoco instance)
         {

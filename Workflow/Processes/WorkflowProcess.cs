@@ -110,6 +110,9 @@ namespace Workflow.Processes
             {
                 Instance = instance;
 
+                // this may have been modified between workflow stages
+                Instance.SetScheduledDate();
+
                 if (Instance.WorkflowStatus != WorkflowStatus.Rejected) return Instance;
 
                 // create a task to store the resubmission comment - this is the equivalent of the author comment on the instance
@@ -142,8 +145,6 @@ namespace Workflow.Processes
                 throw new WorkflowException("Workflow instance is not found.");
             }
 
-            // this may have been modified between workflow stages
-            Instance.SetScheduledDate();
             _instancesService.UpdateInstance(Instance);
 
             return Instance;
@@ -162,6 +163,9 @@ namespace Workflow.Processes
             if (instance != null)
             {
                 Instance = instance;
+
+                // this may have been modified between workflow stages
+                Instance.SetScheduledDate();
 
                 if (Instance.WorkflowStatus.In(WorkflowStatus.PendingApproval, WorkflowStatus.Rejected, WorkflowStatus.Resubmitted))
                 {
@@ -197,9 +201,6 @@ namespace Workflow.Processes
                 {
                     throw new WorkflowException("Workflow instance " + Instance.Id + " is not pending any action.");
                 }
-
-                // this may have been modified between workflow stages
-                Instance.SetScheduledDate();
 
                 _instancesService.UpdateInstance(Instance);
             }
