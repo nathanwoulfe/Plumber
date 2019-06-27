@@ -1,5 +1,5 @@
 # version format
-version: 1.1.9.{build}
+version: 1.1.10.{build}
 
 image: Visual Studio 2017
 
@@ -31,7 +31,7 @@ deploy:
   - provider: NuGet
     server:
     api_key:
-      secure: ORGl5eR/eDby41oG+g9voQ+lmTDIK9SbEzPawNN9yKTvvdKn/XC97dfnOcX7vIOA
+      secure: DvzN77++eNMBd8IMR7bYlCiJV7D2M3bpk5kigX8yYwgDfnX12BkbL4w0OAJiFdQa
     skip_symbols: false      
     symbol_server:    
     artifact: /.*\.nupkg/
@@ -40,9 +40,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v1.1.9
-    release: Release 1.1.9
-    description: "Scheduled publish bug fix"
+    tag: v1.1.10
+    release: Release 1.1.10
+    description: "Max characters in comment should be 255"
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
