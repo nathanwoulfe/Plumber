@@ -162,20 +162,30 @@
             this.buttonGroup = {};
 
             if (workflowConfigured && defaultButtons.defaultButton !== null) {
-                const subButtons = saveAndPublish ?
-                    [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton] :
-                    [buttons.unpublishButton, buttons.saveButton];
+                if (this.isAdmin) {
+                    const subButtons = saveAndPublish
+                        ? [buttons.unpublishButton, defaultButtons.defaultButton, buttons.saveButton]
+                        : [buttons.unpublishButton, buttons.saveButton];
 
-                // insert the default unpublish button into the subbutton array
-                if (saveAndPublish && defaultUnpublish) {
-                    subButtons.splice(1, 0, defaultUnpublish);
+                    // insert the default unpublish button into the subbutton array
+                    if (saveAndPublish && defaultUnpublish) {
+                        subButtons.splice(1, 0, defaultUnpublish);
+                    }
+
+                    // if the content is dirty, show save. otherwise show request approval
+                    this.buttonGroup = {
+                        defaultButton: dirty ? buttons.saveButton : buttons.publishButton,
+                        subButtons: dirty ? (saveAndPublish ? [defaultButtons.defaultButton] : []) : subButtons
+                    };
+
+                } else {
+                    this.buttonGroup = {
+                        defaultButton: dirty ? buttons.saveButton : buttons.publishButton,
+                        subButtons: []
+                    };
                 }
 
-                // if the content is dirty, show save. otherwise show request approval
-                this.buttonGroup = {
-                    defaultButton: dirty ? buttons.saveButton : buttons.publishButton,
-                    subButtons: dirty ? (saveAndPublish ? [defaultButtons.defaultButton] : []) : subButtons
-                };
+
             } else {
                 if (defaultButtons.defaultButton !== null && !this.active) {
                     this.buttonGroup = defaultButtons;
