@@ -112,7 +112,6 @@
             this.task = task || this.task;
             this.canAction = false;
 
-            this.isAdmin = user.allowedSections.indexOf('workflow') !== -1;
             const currentTaskUsers = this.task.permissions[this.task.currentStep].userGroup.usersSummary;
 
             if (currentTaskUsers.indexOf(`|${user.id}|`) !== -1) {
@@ -161,6 +160,8 @@
             // default button will be null when the current user has browse-only permission
             this.buttonGroup = {};
 
+            this.isAdmin = user.allowedSections.indexOf('workflow') !== -1;
+
             if (workflowConfigured && defaultButtons.defaultButton !== null) {
                 if (this.isAdmin) {
                     const subButtons = saveAndPublish
@@ -175,13 +176,13 @@
                     // if the content is dirty, show save. otherwise show request approval
                     this.buttonGroup = {
                         defaultButton: dirty ? buttons.saveButton : buttons.publishButton,
-                        subButtons: dirty ? (saveAndPublish ? [defaultButtons.defaultButton] : []) : subButtons
+                        subButtons: dirty ? (saveAndPublish ? [defaultButtons.defaultButton] : null) : subButtons
                     };
 
                 } else {
                     this.buttonGroup = {
                         defaultButton: dirty ? buttons.saveButton : buttons.publishButton,
-                        subButtons: []
+                        subButtons: null
                     };
                 }
 
@@ -196,6 +197,17 @@
             if (this.active) {
                 checkUserAccess();
             }
+        };
+
+        /**
+         * User may not be available when responding to an event. Fetch it here, then update buttons
+         */
+        const getUserThenSetButtons = () => {
+            userService.getCurrentUser()
+                .then(resp => {
+                    user = resp;
+                    setButtons();
+                });
         };
 
         /**
@@ -220,7 +232,7 @@
                         checkUserAccess(currentTask);
                     } else {
                         this.active = false;
-                        setButtons();
+                        user ? setButtons() : getUserThenSetButtons();
                     }
                 },
                 () => { });
@@ -254,7 +266,7 @@
         // event is broadcast from the buttons directive, which watches the content form
         $rootScope.$on('contentFormDirty', (event, data) => {
             dirty = data;
-            setButtons();
+            user ? setButtons() : getUserThenSetButtons();
         });
 
         // ensures dash/buttons refresh
