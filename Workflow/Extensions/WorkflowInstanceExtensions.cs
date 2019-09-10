@@ -94,7 +94,7 @@ namespace Workflow.Extensions
         /// <returns>HTML tr inner html definition</returns>
         public static string BuildProcessSummary(this WorkflowInstancePoco instance)
         {
-            string result = $"<b>Workflow history</b><br/><br/>{instance.WorkflowType.Description(instance.ScheduledDate)} requested by {instance.AuthorUser.Name} on {instance.CreatedDate:dd/MM/yy}<br/>";
+            string result = $"<b>Workflow history</b><br/><br/>{instance.WorkflowType.Description(instance.ScheduledDate)} requested by {instance.AuthorUser.Name} on {instance.CreatedDate:yyyy-MM-dd}<br/>";
 
             if (instance.AuthorComment.HasValue())
             {
