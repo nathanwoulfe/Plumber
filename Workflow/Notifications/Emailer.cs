@@ -55,7 +55,7 @@ namespace Workflow.Notifications
         {
             var msg = new MailMessage();
 
-            if (!_settings.SendNotifications) return default;
+            if (!_settings.SendNotifications) return null;
 
             if (!instance.TaskInstances.Any())
             {
@@ -65,7 +65,7 @@ namespace Workflow.Notifications
             if (!instance.TaskInstances.Any())
             {
                 Log.Error($"Notifications not sent - no tasks exist for instance { instance.Id }");
-                return default;
+                return null;
             }
 
             try
@@ -97,12 +97,12 @@ namespace Workflow.Notifications
                 if (_finalTask == null)
                 {
                     Log.Error("No valid task found for email notifications");
-                    return default;
+                    return null;
                 }
 
                 // populate list of recipients
                 List<string> to = GetRecipients(emailType, instance, emailsForAllTaskUsers);
-                if (!to.Any()) return default;
+                if (!to.Any()) return null;
 
                 string body = GetBody(emailType, instance, out string typeDescription, errorDetail);
 
