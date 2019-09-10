@@ -193,6 +193,8 @@ namespace Workflow.Processes
                     {
                         Instance.Status = (int)WorkflowStatus.Rejected;
 
+                        _ = _emailer.Send(Instance, EmailType.ApprovalRejection);
+
                         // do not complete workflow - this would publish the rejected changes.
                         // document is not rolled back, but must be resubmitted for publishing.
                     }
@@ -241,7 +243,7 @@ namespace Workflow.Processes
 
                 // Send the notification
                 _instancesService.UpdateInstance(Instance);
-                _emailer.Send(Instance, EmailType.WorkflowCancelled);
+                _ = _emailer.Send(Instance, EmailType.WorkflowCancelled);
 
                 // emit an event
                 Cancelled?.Invoke(this, new InstanceEventArgs(Instance));
@@ -281,7 +283,7 @@ namespace Workflow.Processes
                 taskInstance.Status = (int)TaskStatus.PendingApproval;
                 Instance.Status = (int)WorkflowStatus.PendingApproval;
 
-                _emailer.Send(Instance, EmailType.ApprovalRequest);
+                _ = _emailer.Send(Instance, EmailType.ApprovalRequest);
 
                 _tasksService.UpdateTask(taskInstance);
             }
@@ -313,7 +315,7 @@ namespace Workflow.Processes
             // approval step is 0-indexed, total is a true count
             if (emailAction != null && taskInstance.ApprovalStep != Instance.TotalSteps - 1)
             {
-                _emailer.Send(Instance, emailAction.Value);
+                _ = _emailer.Send(Instance, emailAction.Value);
             }
 
             _tasksService.UpdateTask(taskInstance);

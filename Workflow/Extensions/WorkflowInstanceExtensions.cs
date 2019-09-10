@@ -94,17 +94,31 @@ namespace Workflow.Extensions
         /// <returns>HTML tr inner html definition</returns>
         public static string BuildProcessSummary(this WorkflowInstancePoco instance)
         {
-            string result = $"{instance.WorkflowType.Description(instance.ScheduledDate)} requested by {instance.AuthorUser.Name} on {instance.CreatedDate:dd/MM/yy} - {instance.StatusName}<br/>";
+            string result = $"<b>Workflow history</b><br/><br/>{instance.WorkflowType.Description(instance.ScheduledDate)} requested by {instance.AuthorUser.Name} on {instance.CreatedDate:dd/MM/yy}<br/>";
 
             if (instance.AuthorComment.HasValue())
             {
-                result += $"&nbsp;&nbsp;Comment: <i>{instance.AuthorComment}</i>";
+                result += $"&nbsp;&nbsp;Change description: <i>{instance.AuthorComment}</i><br/>";
             }
-            result += "<br/>";
 
-            foreach (WorkflowTaskPoco taskInstance in instance.TaskInstances.OrderBy(t => t.ApprovalStep))
+            var statusColor = instance.WorkflowStatus.In(WorkflowStatus.Errored, WorkflowStatus.Rejected, WorkflowStatus.Cancelled) ? "red" :
+                instance.WorkflowStatus.In(WorkflowStatus.PendingApproval, WorkflowStatus.Resubmitted) ? "orange" : "green";
+
+            result += $"<br/>Current status: <span style='color: {statusColor}'>{instance.StatusName}</span><br/><br/>";
+
+            bool first = true;
+
+            foreach (WorkflowTaskPoco taskInstance in instance.TaskInstances.OrderBy(t => t.ApprovalStep).ThenByDescending(t => t.Id))
             {
-                result += taskInstance.BuildTaskSummary() + "<br/>";
+                if (first)
+                {
+                    result += taskInstance.BuildTaskSummary(first);
+                    first = false;
+                }
+                else
+                {
+                    result += taskInstance.BuildTaskSummary(first);
+                }
             }
 
             return $"{result}<br/>";

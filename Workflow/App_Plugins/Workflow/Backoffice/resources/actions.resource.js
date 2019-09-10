@@ -135,10 +135,6 @@
                     title: 'Workflow detail',
                     subtitle: `Document: ${item.nodeName}`,
                     item: item,
-                    //comment: item.instanceComment,
-                    //guid: item.instanceGuid,
-                    //requestedBy: item.requestedBy,
-                    //requestedOn: item.requestedOn,
                     detail: true,
 
                     close: () => {

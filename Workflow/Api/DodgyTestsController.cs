@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Umbraco.Web.WebApi;
 using Workflow.Helpers;
@@ -30,19 +33,28 @@ namespace Workflow.Api
         /// <returns></returns>
         [HttpGet]
         [Route("notifications/{instanceGuid:guid}/{emailType:int}")]
-        public string GetNotifications(Guid instanceGuid, int emailType)
+        public async Task<HttpResponseMessage> GetNotifications(Guid instanceGuid, int emailType)
         {
             try
             {
                 WorkflowInstancePoco instance = _instancesService.GetByGuid(instanceGuid);
 
-                _emailer.Send(instance, (EmailType)emailType);
+                var msg = await _emailer.Send(instance, (EmailType)emailType);
 
-                return $"Notifications sent for { instance.Id }. Check the mail pickup folder.";
+                var response = new HttpResponseMessage
+                {
+                    Content = new StringContent(msg)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+
+                return response;
             }
             catch (Exception e)
             {
-                return ViewHelpers.ApiException(e).ToString();
+                return new HttpResponseMessage
+                {
+                    Content = new StringContent(ViewHelpers.ApiException(e).ToString())
+                };
             }
         }
     }

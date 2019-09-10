@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
+using System.Threading.Tasks;
 using log4net;
 using Umbraco.Core.Models;
 using Workflow.Extensions;
@@ -25,16 +26,15 @@ namespace Workflow.Notifications
 
         private readonly Utility _utility;
 
-        private const string EmailApprovalRequestString = "Dear {0},<br/><br/>Please review the following page for {5} approval: <a href=\"{1}\">{2}</a><br/><br/>Comment: {3}<br/><br/>{6}Thanks,<br/>{4}";
-        private const string EmailApprovedString = "Dear {0},<br/><br/>The following document's workflow has been approved and the document {3}: <a href=\"{1}\">{2}</a><br/>";
-        private const string EmailRejectedString = "Dear {0},<br/><br/>The {5} workflow was rejected by {4}: <a href=\"{1}\">{2}</a><br/><br/>Comment: {3}";
-        private const string EmailCancelledString = "Dear {0},<br/><br/>{1} workflow has been cancelled for the following page: <a href=\"{2}\">{3}</a> by {4}.<br/><br/>Reason: {5}.";
-        private const string EmailErroredString = "Dear {0},<br/><br/>{1} workflow encountered a publishing error when attempting to publish the following page: <a href=\"{2}\">{3}</a>.<br/><br/>Error: {4}.<br/><br/>Your changes have been saved, please re-request publishing.";
+        private const string EmailApprovalRequestString = "Please review the following page for {2} approval: <a href=\"{0}\">{1}</a><br/><br/>";
+        private const string EmailApprovedString = "The following document's workflow has been approved and the document {2}: <a href=\"{0}\">{1}</a><br/><br/>";
+        private const string EmailRejectedString = "The {4} workflow on <a href=\"{0}\">{1}</a> was rejected by {3}<br/><br/>";
+        private const string EmailCancelledString = "{0} workflow has been cancelled for the following page: <a href=\"{1}\">{2}</a> by {3}.<br/><br/>";
+        private const string EmailErroredString = "{0} workflow encountered a publishing error when attempting to publish the following page: <a href=\"{1}\">{2}</a>.<br/><br/>Error: {3}.<br/><br/>Your changes have been saved, please re-request publishing.";
 
-        private const string EmailOfflineApprovalString = "<a href=\"{0}/workflow-preview/{1}/{2}/{3}/{4}\">Offline approval</a> is permitted for this change (no login required).<br/><br/>";
+        private const string EmailOfflineApprovalString = "<br/><br/><a href=\"{0}/workflow-preview/{1}/{2}/{3}/{4}\">Offline approval</a> is permitted for this change (no login required).";
 
         private const string EmailBody = "<!DOCTYPE HTML SYSTEM><html><head><title>{0}</title></head><body><font face=\"verdana\" size=\"2\">{1}</font></body></html>";
-
 
         public Emailer()
         {
@@ -51,9 +51,11 @@ namespace Workflow.Notifications
         /// <param name="instance"></param>
         /// <param name="emailType">the type of email to be sent</param>
         /// <param name="errorDetail"></param>
-        public async void Send(WorkflowInstancePoco instance, EmailType emailType, string errorDetail = "")
+        public async Task<string> Send(WorkflowInstancePoco instance, EmailType emailType, string errorDetail = "")
         {
-            if (!_settings.SendNotifications) return;
+            var msg = new MailMessage();
+
+            if (!_settings.SendNotifications) return default;
 
             if (!instance.TaskInstances.Any())
             {
@@ -63,7 +65,7 @@ namespace Workflow.Notifications
             if (!instance.TaskInstances.Any())
             {
                 Log.Error($"Notifications not sent - no tasks exist for instance { instance.Id }");
-                return;
+                return default;
             }
 
             try
@@ -95,20 +97,22 @@ namespace Workflow.Notifications
                 if (_finalTask == null)
                 {
                     Log.Error("No valid task found for email notifications");
-                    return;
+                    return default;
                 }
-                
+
                 // populate list of recipients
                 List<string> to = GetRecipients(emailType, instance, emailsForAllTaskUsers);
-                if (!to.Any()) return;
+                if (!to.Any()) return default;
 
-                string body = GetBody(emailType, instance, to.Count == 1, out string typeDescription, errorDetail);
+                string body = GetBody(emailType, instance, out string typeDescription, errorDetail);
 
                 var client = new SmtpClient();
-                var msg = new MailMessage
+
+                msg = new MailMessage
                 {
                     Subject = $"{emailType.ToString().ToTitleCase()} - {instance.Node.Name} ({typeDescription})",
                     IsBodyHtml = true,
+                    Body = string.Format(EmailBody, msg.Subject, body)
                 };
 
                 if (_settings.Email.HasValue())
@@ -124,16 +128,13 @@ namespace Workflow.Notifications
 
                     foreach (User2UserGroupPoco user in _finalTask.UserGroup.Users)
                     {
-                        string offlineString = string.Format(EmailOfflineApprovalString, _settings.SiteUrl, instance.NodeId,
+                        var msgBody = body + string.Format(EmailOfflineApprovalString, _settings.SiteUrl, instance.NodeId,
                             user.UserId, _finalTask.Id, instance.Guid);
 
-                        body = string.Format(EmailApprovalRequestString,
-                            user.User.Name, docUrl, docTitle, instance.AuthorComment,
-                            instance.AuthorUser.Name, typeDescription, offlineString);
-                 
+                        msg.Body = string.Format(EmailBody, msg.Subject, msgBody);
+
                         msg.To.Clear();
                         msg.To.Add(user.User.Email);
-                        msg.Body = string.Format(EmailBody, msg.Subject, body);
 
                         client.Send(msg);
                     }
@@ -141,8 +142,6 @@ namespace Workflow.Notifications
                 else
                 {
                     msg.To.Add(string.Join(",", to.Distinct()));
-                    msg.Body = string.Format(EmailBody, msg.Subject, body);
-
                     client.Send(msg);
                 }
 
@@ -152,6 +151,8 @@ namespace Workflow.Notifications
             {
                 Log.Error($"Error sending notifications for task { _finalTask.Id }", e);
             }
+
+            return msg.Body;
         }
 
         /// <summary>
@@ -163,7 +164,7 @@ namespace Workflow.Notifications
         /// <param name="typeDescription"></param>
         /// <param name="errorDetail"></param>
         /// <returns></returns>
-        private string GetBody(EmailType emailType, WorkflowInstancePoco instance, bool useGenericName, out string typeDescription, string errorDetail = "")
+        private string GetBody(EmailType emailType, WorkflowInstancePoco instance, out string typeDescription, string errorDetail = "")
         {
             var body = "";
 
@@ -175,14 +176,12 @@ namespace Workflow.Notifications
             switch (emailType)
             {
                 case EmailType.ApprovalRequest:
-                    body = string.Format(EmailApprovalRequestString,
-                        useGenericName ? "Umbraco user" : _finalTask.UserGroup.Name, docUrl, docTitle, instance.AuthorComment,
-                        instance.AuthorUser.Name, typeDescription, string.Empty);
+                    body = string.Format(EmailApprovalRequestString, docUrl, docTitle, typeDescription.ToLower());
+
                     break;
 
                 case EmailType.ApprovalRejection:
-                    body = string.Format(EmailRejectedString,
-                        "Umbraco user", docUrl, docTitle, _finalTask.Comment,
+                    body = string.Format(EmailRejectedString, docUrl, docTitle, _finalTask.Comment,
                         _finalTask.ActionedByUser.Name, typeDescription.ToLower());
 
                     break;
@@ -194,31 +193,24 @@ namespace Workflow.Notifications
                         docUrl = UrlHelpers.GetFullyQualifiedSiteUrl(n.Url);
                     }
 
-                    body = string.Format(EmailApprovedString,
-                               "Umbraco user", docUrl, docTitle,
+                    body = string.Format(EmailApprovedString, docUrl, docTitle,
                                typeDescriptionPast.ToLower()) + "<br/>";
-
-                    body += instance.BuildProcessSummary();
 
                     break;
 
                 case EmailType.ApprovedAndCompletedForScheduler:
-                    body = string.Format(EmailApprovedString,
-                               "Umbraco user", docUrl, docTitle,
+                    body = string.Format(EmailApprovedString, docUrl, docTitle,
                                typeDescriptionPast.ToLower()) + "<br/>";
-
-                    body += instance.BuildProcessSummary();
 
                     break;
 
                 case EmailType.WorkflowCancelled:
-                    body = string.Format(EmailCancelledString,
-                        "Umbraco user", typeDescription, docUrl, docTitle, _finalTask.ActionedByUser.Name, _finalTask.Comment);
+                    body = string.Format(EmailCancelledString, typeDescription, docUrl, docTitle, _finalTask.ActionedByUser.Name);
+
                     break;
 
                 case EmailType.WorkflowErrored:
-                    body = string.Format(EmailErroredString, instance.AuthorUser.Name, typeDescription, docUrl,
-                        docTitle, errorDetail);
+                    body = string.Format(EmailErroredString, typeDescription, docUrl, docTitle, errorDetail);
 
                     break;
 
@@ -227,6 +219,8 @@ namespace Workflow.Notifications
                 default:
                     throw new ArgumentOutOfRangeException(nameof(emailType), emailType, null);
             }
+
+            body += instance.BuildProcessSummary();
 
             return body;
         }
@@ -246,7 +240,7 @@ namespace Workflow.Notifications
                 case EmailType.ApprovalRequest:
                     to = _finalTask.UserGroup.PreferredEmailAddresses();
                     break;
-                    
+
                 case EmailType.ApprovedAndCompleted:
                     to = emailsForAllTaskUsers;
                     to.Add(instance.AuthorUser.Email);

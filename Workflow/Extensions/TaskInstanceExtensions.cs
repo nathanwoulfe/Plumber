@@ -59,19 +59,26 @@ namespace Workflow.Extensions
         /// <param name="taskInstance">The task instance.</param>
         /// <param name="index"></param>
         /// <returns>HTML markup describing an active task instance.</returns>
-        public static string BuildTaskSummary(this WorkflowTaskPoco taskInstance)
+        public static string BuildTaskSummary(this WorkflowTaskPoco taskInstance, bool first)
         {
             var result = "";
 
             switch (taskInstance.Status)
             {
+                case (int)TaskStatus.PendingApproval:
                 case (int)TaskStatus.Approved:
                 case (int)TaskStatus.Rejected:
+                case (int)TaskStatus.Resubmitted:
                 case (int)TaskStatus.Cancelled:
-
+       
+                    if (first)
+                    {
+                        result += $"<b>Stage {taskInstance.ApprovalStep + 1}</b>: {taskInstance.StatusName}";
+                    }
+ 
                     if (taskInstance.CompletedDate != null)
                     {
-                        result += $"Stage {taskInstance.ApprovalStep + 1}: {taskInstance.StatusName} by {taskInstance.ActionedByUser.Name} on {taskInstance.CompletedDate.Value:dd/MM/yy}";
+                        result += $"<br/><br/>{taskInstance.StatusName} by {taskInstance.ActionedByUser.Name} on {taskInstance.CompletedDate.Value:dd/MM/yy} at {taskInstance.CompletedDate.Value:h:mmtt}";
                     }
 
                     if (taskInstance.Comment.HasValue())
