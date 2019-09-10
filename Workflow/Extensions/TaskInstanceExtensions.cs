@@ -78,7 +78,7 @@ namespace Workflow.Extensions
  
                     if (taskInstance.CompletedDate != null)
                     {
-                        result += $"<br/><br/>{taskInstance.StatusName} by {taskInstance.ActionedByUser.Name} on {taskInstance.CompletedDate.Value:dd/MM/yy} at {taskInstance.CompletedDate.Value:h:mmtt}";
+                        result += $"<br/><br/>{taskInstance.StatusName} by {taskInstance.ActionedByUser.Name} on {taskInstance.CompletedDate.Value:dd MMMM yyyy} at {taskInstance.CompletedDate.Value:h:mmtt}";
                     }
 
                     if (taskInstance.Comment.HasValue())
