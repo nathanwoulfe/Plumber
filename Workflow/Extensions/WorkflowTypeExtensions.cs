@@ -10,7 +10,7 @@ namespace Workflow.Extensions
             string typeString = type.ToString().ToTitleCase();
             if (scheduledDate.HasValue)
             {
-                return "Schedule for " + typeString + " at " + scheduledDate.Value.ToString("dd/MM/yy HH:mm");
+                return "Schedule for " + typeString + " at " + scheduledDate.Value.ToString("d MMM yyyy HH:mm");
             }
 
             return typeString;
