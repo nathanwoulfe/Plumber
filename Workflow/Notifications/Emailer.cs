@@ -104,7 +104,7 @@ namespace Workflow.Notifications
                 }
 
                 // populate list of recipients
-                var to = GetRecipients(emailType, instance, emailsForAllTaskUsers);
+                List<string> to = GetRecipients(emailType, instance, emailsForAllTaskUsers);
                 if (!to.Any()) return null;
 
                 string body = GetBody(emailType, instance, out string typeDescription, errorDetail);
@@ -185,6 +185,7 @@ namespace Workflow.Notifications
         private string GetBody(EmailType emailType, WorkflowInstancePoco instance, out string typeDescription, string errorDetail = "")
         {
             var body = "";
+
             typeDescription = instance.WorkflowType.Description(instance.ScheduledDate);
             string typeDescriptionPast = instance.WorkflowType.DescriptionPastTense(instance.ScheduledDate);
             string docTitle = instance.Node.Name;
