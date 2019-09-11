@@ -22,6 +22,10 @@
                                             <umb-control-group label="@general_email" description="@workflow_workflowGroupEmail">
                                                 <input type="email" class="umb-editor" ng-model="vm.group.groupEmail" name="groupEmail"/>
                                             </umb-control-group>
+
+                                            <umb-control-group label="@workflow_workflowCCGroupEmailLabel" description="@workflow_workflowCCGroupEmail">
+                                                <input type="email" class="umb-editor" ng-model="vm.group.ccGroupEmail" name="ccGroupEmail" />
+                                            </umb-control-group>
                                             
                                             <umb-control-group label="@workflow_offlineApproval" description="@workflow_offlineApprovalDescription">
                                                 <input type="checkbox" ng-model="vm.group.offlineApproval"/>

@@ -43,6 +43,7 @@ namespace Workflow.Models
         public string Name { get; set; }
         public string Alias { get; set; }
         public string GroupEmail { get; set; }
+        public string CCGroupEmail { get; set; }
         public bool Deleted { get; set; }
     }
 

@@ -94,6 +94,7 @@
     <Compile Include="Models\Enums\WorkflowType.cs" />
     <Compile Include="Models\ViewModels\UserGroupPermissionsViewModel.cs" />
     <Compile Include="Models\ViewModels\WorkflowInstanceViewModel.cs" />
+    <Compile Include="Notifications\EmailRecipients.cs" />
     <Compile Include="Repositories\InstancesRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInstancesRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITasksRepository.cs" />
