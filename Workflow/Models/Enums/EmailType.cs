@@ -11,6 +11,7 @@
         ApprovedAndCompletedForScheduler = 4,
         SchedulerActionCancelled = 5,
         WorkflowCancelled = 6,
-        WorkflowErrored = 7
+        WorkflowErrored = 7,
+        FYINotification = 8
     }
 }

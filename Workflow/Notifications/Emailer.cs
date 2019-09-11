@@ -33,6 +33,7 @@ namespace Workflow.Notifications
         private const string EmailErroredString = "{0} workflow encountered a publishing error when attempting to publish the following page: <a href=\"{1}\">{2}</a>.<br/><br/>Error: {3}.<br/><br/>Your changes have been saved, please re-request publishing.";
 
         private const string EmailOfflineApprovalString = "<br/><br/><a href=\"{0}/workflow-preview/{1}/{2}/{3}/{4}\">Offline approval</a> is permitted for this change (no login required).";
+        private const string EmailFYIOnlyString = "The {0} workflow on the {1} page was updated by {2}.";
 
         private const string EmailBody = "<!DOCTYPE HTML SYSTEM><html><head><title>{0}</title></head><body><font face=\"verdana\" size=\"2\">{1}</font></body></html>";
 
@@ -74,7 +75,8 @@ namespace Workflow.Notifications
 
                 // always take get the emails for all previous users, sometimes they will be discarded later
                 // easier to just grab em all, rather than doing so conditionally
-                var emailsForAllTaskUsers = new EmailRecipients();
+                List<string> emailsForAllTaskUsers = new List<string>();
+                List<string> emailsForAllFyiNotifications = new List<string>();
 
                 // in the loop, also store the last task to a variable, and keep the populated group
                 var taskIndex = 0;
@@ -87,8 +89,8 @@ namespace Workflow.Notifications
                     UserGroupPoco group = await _groupService.GetPopulatedUserGroupAsync(task.GroupId);
                     if (group == null) continue;
 
-                    emailsForAllTaskUsers.ToRecipients.AddRange(group.PreferredEmailAddresses());
-                    emailsForAllTaskUsers.CCRecipients.AddRange(group.CCEmailAddresses());
+                    emailsForAllTaskUsers.AddRange(group.PreferredEmailAddresses());
+                    emailsForAllFyiNotifications.AddRange(group.CCEmailAddresses());
                     if (taskIndex != taskCount) continue;
 
                     _finalTask = task;
@@ -103,7 +105,7 @@ namespace Workflow.Notifications
 
                 // populate list of recipients
                 var to = GetRecipients(emailType, instance, emailsForAllTaskUsers);
-                if (!to.ToRecipients.Any()) return null;
+                if (!to.Any()) return null;
 
                 string body = GetBody(emailType, instance, out string typeDescription, errorDetail);
 
@@ -142,12 +144,26 @@ namespace Workflow.Notifications
                 }
                 else
                 {
-                    msg.To.Add(string.Join(",", to.ToRecipients.Distinct()));
-                    msg.CC.Add(string.Join(",", to.CCRecipients.Distinct()));
+                    msg.To.Add(string.Join(",", to.Distinct()));
                     client.Send(msg);
                 }
 
                 Log.Info($"Email notifications sent for task { _finalTask.Id }, to { msg.To }");
+
+                // Send FYI notification if email address is set for any stage
+                if (emailsForAllFyiNotifications.Any())
+                {
+                    var msgBody = GetBody(EmailType.FYINotification, instance, out typeDescription);
+                    var fyiMessage = new MailMessage()
+                    {
+                        Subject = $"Content Change Notification - {instance.Node.Name} ({typeDescription})",
+                        IsBodyHtml = true,
+                        Body = msgBody
+                    };
+                    fyiMessage.To.Add(string.Join(",", emailsForAllFyiNotifications));
+
+                    client.Send(fyiMessage);
+                }
             }
             catch (Exception e)
             {
@@ -169,7 +185,6 @@ namespace Workflow.Notifications
         private string GetBody(EmailType emailType, WorkflowInstancePoco instance, out string typeDescription, string errorDetail = "")
         {
             var body = "";
-
             typeDescription = instance.WorkflowType.Description(instance.ScheduledDate);
             string typeDescriptionPast = instance.WorkflowType.DescriptionPastTense(instance.ScheduledDate);
             string docTitle = instance.Node.Name;
@@ -216,6 +231,10 @@ namespace Workflow.Notifications
 
                     break;
 
+                case EmailType.FYINotification:
+                    body = string.Format(EmailFYIOnlyString, typeDescription.ToLower(), docTitle, _finalTask.ActionedByUser.Name);
+                    break;
+
                 case EmailType.SchedulerActionCancelled:
                     break;
                 default:
@@ -234,41 +253,38 @@ namespace Workflow.Notifications
         /// <param name="instance"></param>
         /// <param name="emailsForAllTaskUsers"></param>
         /// <returns></returns>
-        private EmailRecipients GetRecipients(EmailType emailType, WorkflowInstancePoco instance, EmailRecipients emailsForAllTaskUsers)
+        private List<string> GetRecipients(EmailType emailType, WorkflowInstancePoco instance, List<string> emailsForAllTaskUsers)
         {
-            var recipients = new EmailRecipients();
+            List<string> to = new List<string>();
             switch (emailType)
             {
                 case EmailType.ApprovalRequest:
-                    recipients.ToRecipients = _finalTask.UserGroup.PreferredEmailAddresses();
-                    recipients.CCRecipients = _finalTask.UserGroup.CCEmailAddresses();
+                    to = _finalTask.UserGroup.PreferredEmailAddresses();
                     break;
 
                 case EmailType.ApprovedAndCompleted:
-                    recipients.ToRecipients = emailsForAllTaskUsers.ToRecipients;
-                    recipients.CCRecipients = emailsForAllTaskUsers.CCRecipients;
-                    recipients.ToRecipients.Add(instance.AuthorUser.Email);
+                    to = emailsForAllTaskUsers;
+                    to.Add(instance.AuthorUser.Email);
 
                     //Notify web admins
-                    recipients.ToRecipients.Add(_settings.Email);
+                    to.Add(_settings.Email);
 
                     break;
 
                 case EmailType.ApprovalRejection:
                 case EmailType.ApprovedAndCompletedForScheduler:
                 case EmailType.WorkflowCancelled:
-                    recipients.ToRecipients = emailsForAllTaskUsers.ToRecipients;
-                    recipients.CCRecipients = emailsForAllTaskUsers.CCRecipients;
+                    to = emailsForAllTaskUsers;
 
                     // include the initiator email
-                    recipients.ToRecipients.Add(instance.AuthorUser.Email);
+                    to.Add(instance.AuthorUser.Email);
                     break;
 
                 case EmailType.WorkflowErrored:
-                    recipients.ToRecipients.Add(instance.AuthorUser.Email);
+                    to.Add(instance.AuthorUser.Email);
 
                     //Notify web admins
-                    recipients.ToRecipients.Add(_settings.Email);
+                    to.Add(_settings.Email);
                     break;
 
                 case EmailType.SchedulerActionCancelled:
@@ -278,7 +294,7 @@ namespace Workflow.Notifications
                     throw new ArgumentOutOfRangeException(nameof(emailType), emailType, null);
             }
 
-            return recipients;
+            return to;
         }
     }
 }
