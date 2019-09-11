@@ -33,7 +33,7 @@ namespace Workflow.Notifications
         private const string EmailErroredString = "{0} workflow encountered a publishing error when attempting to publish the following page: <a href=\"{1}\">{2}</a>.<br/><br/>Error: {3}.<br/><br/>Your changes have been saved, please re-request publishing.";
 
         private const string EmailOfflineApprovalString = "<br/><br/><a href=\"{0}/workflow-preview/{1}/{2}/{3}/{4}\">Offline approval</a> is permitted for this change (no login required).";
-        private const string EmailFYIOnlyString = "The {0} workflow on the {1} page was updated by {2}.";
+        private const string EmailFYIOnlyString = "The {0} workflow on the {1} page was updated by {2}.<br/>";
 
         private const string EmailBody = "<!DOCTYPE HTML SYSTEM><html><head><title>{0}</title></head><body><font face=\"verdana\" size=\"2\">{1}</font></body></html>";
 
