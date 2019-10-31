@@ -94,9 +94,7 @@
             this.settings.defaultApprover = this.defaultApprover ? this.defaultApprover.groupId : '';
             this.settings.flowType = this.flowType.i;
 
-            if (this.excludeNodesModel.value) {
-                this.settings.excludeNodes = this.excludeNodesModel.value;
-            }
+            this.settings.excludeNodes = this.excludeNodesModel.value || '';            
 
             // convert the approval path group collection into a set of permissions objects for saving
             // means we're holding extra data, but makes it easier to manipulate as it's less abstract
