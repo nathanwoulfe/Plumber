@@ -1,5 +1,5 @@
 # version format
-version: 1.1.10.{build}
+version: 1.1.11.{build}
 
 image: Visual Studio 2017
 
@@ -40,9 +40,9 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v1.1.10
-    release: Release 1.1.10
-    description: "Max characters in comment should be 255"
+    tag: v1.1.11
+    release: Release 1.1.11
+    description: "Improve email notifications, fixes excluded node management."
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR

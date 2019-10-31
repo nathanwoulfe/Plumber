@@ -82,7 +82,7 @@ namespace Workflow.Api
 
                         if (instance.ScheduledDate.HasValue)
                         {
-                            msg += $" Page scheduled for publishing at {instance.ScheduledDate.Value.ToString("dd MMM YYYY", CultureInfo.CurrentCulture)}";
+                            msg += $" Page scheduled for publishing at {instance.ScheduledDate.Value.ToString("dd MMM yyyy", CultureInfo.CurrentCulture)}";
                         }
 
                         break;
@@ -168,7 +168,7 @@ namespace Workflow.Api
 
                         if (instance.ScheduledDate.HasValue)
                         {
-                            string scheduled = $" Page scheduled for {typeDescription} at {instance.ScheduledDate.Value.ToString("dd MMM YYYY", CultureInfo.CurrentCulture)}";
+                            string scheduled = $" Page scheduled for {typeDescription} at {instance.ScheduledDate.Value.ToString("dd MMM yyyy", CultureInfo.CurrentCulture)}";
                             msg += scheduled;
                             logMsg += scheduled;
                         }
