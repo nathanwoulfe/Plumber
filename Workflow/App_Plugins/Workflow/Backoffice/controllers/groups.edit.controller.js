@@ -157,7 +157,7 @@
                     description: '',
                     alias: '',
                     groupEmail: '',
-                    ccGroupEmail: '',
+                    additionalGroupEmails: '',
                     users: [],
                     usersSummary: ''
                 };

@@ -90,7 +90,7 @@ namespace Workflow.Notifications
                     if (group == null) continue;
 
                     emailsForAllTaskUsers.AddRange(group.PreferredEmailAddresses());
-                    emailsForAllFyiNotifications.AddRange(group.CCEmailAddresses());
+                    emailsForAllFyiNotifications.AddRange(group.AdditionalEmailAddresses());
                     if (taskIndex != taskCount) continue;
 
                     _finalTask = task;

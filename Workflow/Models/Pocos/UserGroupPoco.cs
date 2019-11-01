@@ -37,10 +37,10 @@ namespace Workflow.Models
         [JsonProperty("groupEmail")]
         public string GroupEmail { get; set; }
 
-        [Column("CCGroupEmail")]
+        [Column("AdditionalGroupEmails")]
         [NullSetting(NullSetting = NullSettings.Null)]
-        [JsonProperty("ccGroupEmail")]
-        public string CCGroupEmail { get; set; }
+        [JsonProperty("additionalGroupEmails")]
+        public string AdditionalGroupEmails { get; set; }
 
         [Column("OfflineApproval")]
         [NullSetting(NullSetting = NullSettings.NotNull)]
@@ -109,13 +109,15 @@ namespace Workflow.Models
         /// Gets the CC email addresses for a usergroup. 
         /// </summary>
         /// <returns>collection of email addresses</returns>
-        public List<string> CCEmailAddresses()
+        public List<string> AdditionalEmailAddresses()
         {
             List<string> addresses = new List<string>();
+            var emails = AdditionalGroupEmails.Split(',').Select(e => e.Trim()).ToList();
 
-            if (CCGroupEmail.IsValidEmailAddress())
-            {
-                addresses.Add(CCGroupEmail);
+            foreach (var email in emails) {
+                if (email.IsValidEmailAddress()) {
+                    addresses.Add(email);
+                }
             }
             return addresses;
         }
