@@ -22,7 +22,7 @@
         <key alias="defaultApprovalGroup">Default approval group</key>
         <key alias="workflowEmail">Workflow email</key>
         <key alias="workflowGroupEmail">Notifications will be sent to this address instead of group members (optional)</key>
-        <key alias="workflowAdditionalGroupEmails">Notifications will be also sent to these addresses, they will not override any other email recipients (optional, comma separated)</key>
+        <key alias="workflowAdditionalGroupEmails">Notifications will also be sent to these addresses, they will not override any other email recipients (optional, comma separated)</key>
         <key alias="workflowAdditionalGroupEmailsLabel">Additional Notification Emails</key>
         <key alias="sendNotifications">Send notifications</key>
         <key alias="editSiteUrl">Edit site URL</key>
