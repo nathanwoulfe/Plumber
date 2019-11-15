@@ -112,11 +112,13 @@ namespace Workflow.Models
         public List<string> AdditionalEmailAddresses()
         {
             List<string> addresses = new List<string>();
-            var emails = AdditionalGroupEmails.Split(',').Select(e => e.Trim()).ToList();
+            if (!string.IsNullOrWhiteSpace(AdditionalGroupEmails)) {
+                var emails = AdditionalGroupEmails.Split(',').Select(e => e.Trim()).ToList();
 
-            foreach (var email in emails) {
-                if (email.IsValidEmailAddress()) {
-                    addresses.Add(email);
+                foreach (var email in emails) {
+                    if (email.IsValidEmailAddress()) {
+                        addresses.Add(email);
+                    }
                 }
             }
             return addresses;
