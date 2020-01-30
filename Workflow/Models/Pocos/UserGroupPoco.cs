@@ -37,6 +37,11 @@ namespace Workflow.Models
         [JsonProperty("groupEmail")]
         public string GroupEmail { get; set; }
 
+        [Column("AdditionalGroupEmails")]
+        [NullSetting(NullSetting = NullSettings.Null)]
+        [JsonProperty("additionalGroupEmails")]
+        public string AdditionalGroupEmails { get; set; }
+
         [Column("OfflineApproval")]
         [NullSetting(NullSetting = NullSettings.NotNull)]
         [JsonProperty("offlineApproval")]
@@ -95,6 +100,26 @@ namespace Workflow.Models
                     .Where(u => u.User.IsApproved && 
                                 !u.User.IsLockedOut && 
                                 u.User.Email.IsValidEmailAddress()) where user.User.Email != null select user.User.Email);
+            }
+            
+            return addresses;
+        }
+
+        /// <summary>
+        /// Gets the CC email addresses for a usergroup. 
+        /// </summary>
+        /// <returns>collection of email addresses</returns>
+        public List<string> AdditionalEmailAddresses()
+        {
+            List<string> addresses = new List<string>();
+            if (!string.IsNullOrWhiteSpace(AdditionalGroupEmails)) {
+                var emails = AdditionalGroupEmails.Split(',').Select(e => e.Trim()).ToList();
+
+                foreach (var email in emails) {
+                    if (email.IsValidEmailAddress()) {
+                        addresses.Add(email);
+                    }
+                }
             }
             return addresses;
         }
