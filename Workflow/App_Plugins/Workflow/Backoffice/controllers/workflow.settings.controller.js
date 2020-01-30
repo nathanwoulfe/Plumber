@@ -1,7 +1,7 @@
 ﻿(() => {
     'use strict';
 
-    function settingsController($scope, $q, workflowResource, notificationsService, workflowGroupsResource, contentResource) {
+    function settingsController($q, workflowResource, notificationsService, workflowGroupsResource, contentResource) {
 
         const promises = [workflowResource.getSettings(), workflowResource.getContentTypes(), workflowGroupsResource.get()];
         const overlayBase = Umbraco.Sys.ServerVariables.workflow.overlayPath;
@@ -18,6 +18,7 @@
                 showEditButton: '0',
                 showOpenButton: '0',
                 showPathOnHover: '0',
+                currentNode: {},
                 startNode: {
                     type: 'content'
                 }
@@ -175,6 +176,6 @@
     }
 
     angular.module('plumber').controller('Workflow.Settings.Controller',
-        ['$scope', '$q', 'plmbrWorkflowResource', 'notificationsService', 'plmbrGroupsResource', 'contentResource', settingsController]);
+        ['$q', 'plmbrWorkflowResource', 'notificationsService', 'plmbrGroupsResource', 'contentResource', settingsController]);
 
 })();

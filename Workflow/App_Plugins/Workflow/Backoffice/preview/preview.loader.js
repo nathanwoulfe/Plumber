@@ -22,4 +22,6 @@
     jQuery(document).ready(function () {
         angular.bootstrap(document, ['plumber']);
     });
-});
+    });
+
+LazyLoad.css(['/app_plugins/workflow/backoffice/css/styles.css', '/app_plugins/workflow/backoffice/css/preview.css']);
