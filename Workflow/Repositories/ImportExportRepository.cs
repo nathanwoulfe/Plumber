@@ -110,6 +110,7 @@ namespace Workflow.Repositories
                     Deleted = m.Deleted,
                     Description = m.Description,
                     GroupEmail = m.GroupEmail,
+                    AdditionalGroupEmails = m.AdditionalEmails,
                     GroupId = m.GroupId,
                     Name = m.Name
                 });

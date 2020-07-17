@@ -33,6 +33,7 @@ namespace Workflow.Notifications
         private const string EmailErroredString = "{0} workflow encountered a publishing error when attempting to publish the following page: <a href=\"{1}\">{2}</a>.<br/><br/>Error: {3}.<br/><br/>Your changes have been saved, please re-request publishing.";
 
         private const string EmailOfflineApprovalString = "<br/><br/><a href=\"{0}/workflow-preview/{1}/{2}/{3}/{4}\">Offline approval</a> is permitted for this change (no login required).";
+        private const string EmailFYIOnlyString = "The {0} workflow on the {1} page was updated. See history below for full details.<br/><br/>";
 
         private const string EmailBody = "<!DOCTYPE HTML SYSTEM><html><head><title>{0}</title></head><body><font face=\"verdana\" size=\"2\">{1}</font></body></html>";
 
@@ -75,6 +76,7 @@ namespace Workflow.Notifications
                 // always take get the emails for all previous users, sometimes they will be discarded later
                 // easier to just grab em all, rather than doing so conditionally
                 List<string> emailsForAllTaskUsers = new List<string>();
+                List<string> emailsForAllFyiNotifications = new List<string>();
 
                 // in the loop, also store the last task to a variable, and keep the populated group
                 var taskIndex = 0;
@@ -88,6 +90,7 @@ namespace Workflow.Notifications
                     if (group == null) continue;
 
                     emailsForAllTaskUsers.AddRange(group.PreferredEmailAddresses());
+                    emailsForAllFyiNotifications.AddRange(group.AdditionalEmailAddresses());
                     if (taskIndex != taskCount) continue;
 
                     _finalTask = task;
@@ -146,6 +149,21 @@ namespace Workflow.Notifications
                 }
 
                 Log.Info($"Email notifications sent for task { _finalTask.Id }, to { msg.To }");
+
+                // Send FYI notification if email address is set for any stage
+                if (emailsForAllFyiNotifications.Any())
+                {
+                    var msgBody = GetBody(EmailType.FYINotification, instance, out typeDescription);
+                    var fyiMessage = new MailMessage()
+                    {
+                        Subject = $"Content Change Notification - {instance.Node.Name} ({typeDescription})",
+                        IsBodyHtml = true,
+                        Body = msgBody
+                    };
+                    fyiMessage.To.Add(string.Join(",", emailsForAllFyiNotifications));
+
+                    client.Send(fyiMessage);
+                }
             }
             catch (Exception e)
             {
@@ -212,6 +230,10 @@ namespace Workflow.Notifications
                 case EmailType.WorkflowErrored:
                     body = string.Format(EmailErroredString, typeDescription, docUrl, docTitle, errorDetail);
 
+                    break;
+
+                case EmailType.FYINotification:
+                    body = string.Format(EmailFYIOnlyString, typeDescription.ToLower(), docTitle);
                     break;
 
                 case EmailType.SchedulerActionCancelled:
