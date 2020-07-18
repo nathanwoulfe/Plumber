@@ -40,8 +40,8 @@ deploy:
         appveyor_repo_tag: true      
     
   - provider: GitHub
-    tag: v1.1.13
-    release: Release 1.1.13
+    tag: v1.1.14
+    release: Release 1.1.14
     description: "Remove obsolete log4net appender"
     force_update: true
     auth_token:
