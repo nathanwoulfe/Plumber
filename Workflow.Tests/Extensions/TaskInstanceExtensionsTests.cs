@@ -77,7 +77,7 @@ namespace Workflow.Tests.Extensions
                 ActionedByUserId = 0
             };
 
-            string summary = taskInstance.BuildTaskSummary();
+            string summary = taskInstance.BuildTaskSummary(true);
 
             Assert.NotNull(summary);
         }
