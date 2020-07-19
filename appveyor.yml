@@ -1,5 +1,5 @@
 # version format
-version: 1.1.13.{build}
+version: 1.1.14.{build}
 
 image: Visual Studio 2017
 
@@ -42,7 +42,7 @@ deploy:
   - provider: GitHub
     tag: v1.1.14
     release: Release 1.1.14
-    description: "Remove obsolete log4net appender"
+    description: "Bugfixing"
     force_update: true
     auth_token:
         secure: Otbl8p8qCwciDqJgSWCyN0Arfs5XS1CwiHcK+r0F6uz9Rxt4gzBFvlc3cjPV3NxR
