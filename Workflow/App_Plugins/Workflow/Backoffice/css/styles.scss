@@ -203,6 +203,11 @@
         flex:0 0 450px;
     }
 
+    // when task is rejected, don't show reject button in dashboard
+    [task-status*="rejected"] .warning {
+        display:none;
+    }
+
     // import scss partials
     @import "highcharts";
     @import "action-dialog";

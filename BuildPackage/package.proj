@@ -17,7 +17,7 @@
 	<!-- SHARED PROPERTIES -->
 	<PropertyGroup>
 		<PackageName>Plumber</PackageName>
-		<MinUmbracoVersion>7.9.0</MinUmbracoVersion>
+		<MinUmbracoVersion>7.15.5</MinUmbracoVersion>
 		<Readme>Add workflow functionality to Umbraco.</Readme>
 		<AuthorName>Nathan Woulfe</AuthorName>
 		<AuthorUrl>https://github.com/nathanwoulfe</AuthorUrl>

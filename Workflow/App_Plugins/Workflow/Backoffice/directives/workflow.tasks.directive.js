@@ -71,10 +71,10 @@
                     newVal => {
                         if (newVal && newVal.length && $scope.type === 0) {
                             $scope.items.forEach(i => {
-                                if (i.cssStatus === 'rejected') {
-                                    $scope.buttonGroup.defaultButton = buttons.editButton;
-                                    $scope.buttonGroup.subButtons = [buttons.cancelButton];
-                                }
+                                //if (i.cssStatus === 'rejected') {
+                                //    $scope.buttonGroup.defaultButton = buttons.editButton;
+                                //    $scope.buttonGroup.subButtons = [buttons.cancelButton];
+                                //}
                             });
                         }
                     });

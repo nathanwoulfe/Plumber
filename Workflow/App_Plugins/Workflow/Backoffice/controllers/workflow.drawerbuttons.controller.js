@@ -82,15 +82,15 @@
                     $scope.save().then(function(d) {
                         // There's no way to know if the Save succeeded from here, as Umbraco returns 200 when
                         // the Saving event is canceled, and the promise only rejects for 500 errors.  For now,
-                        // we'll determine success by looking for any "Success" notifications in the response.
-                        var saveSucceeded = d.notifications.some(function (notification) { return notification.type === 3 });
+                        // we'll determine success by looking for any notifications in the response.
+                        var saveSucceeded = d.notifications.length === 0;
 
                         if (saveSucceeded) {
                             that.workflowOverlay = workflowActionsService.initiate(editorState.current.name, editorState.current.id, true);
                         } else {
                             notificationsService.error('Workflow: Unable to request publish, saving the content failed');
                         }
-                    }, function() {
+                    }, function (e) {
                         notificationsService.error('Workflow', 'Unable to request publish, saving the content failed');
                     });
                 }
