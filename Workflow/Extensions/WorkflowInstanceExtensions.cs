@@ -66,7 +66,8 @@ namespace Workflow.Extensions
             var taskInstance = new WorkflowTaskPoco(TaskType.Approve)
             {
                 ApprovalStep = instance.TaskInstances.Count(x => x.TaskStatus.In(TaskStatus.Approved, TaskStatus.NotRequired)),
-                WorkflowInstanceGuid = instance.Guid
+                WorkflowInstanceGuid = instance.Guid,
+                NodeId = instance.NodeId
             };
 
             instance.TaskInstances.Add(taskInstance);

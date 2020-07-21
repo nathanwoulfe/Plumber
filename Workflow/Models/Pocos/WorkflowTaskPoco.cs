@@ -93,6 +93,9 @@ namespace Workflow.Models
         public virtual UserGroupPoco UserGroup { get; set; }
 
         [ResultColumn]
+        public int NodeId { get; set; }
+
+        [ResultColumn]
         public virtual WorkflowInstancePoco WorkflowInstance { get; set; }
     }
 }
