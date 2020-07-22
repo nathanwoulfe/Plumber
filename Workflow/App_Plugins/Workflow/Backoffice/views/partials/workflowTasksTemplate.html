@@ -62,10 +62,9 @@
                         <div class="umb-table-cell" ng-bind="item.approvalGroup"></div>
                         <div class="umb-table-cell umb-table-cell__fixed-170 show-overflow" ng-if="!noActions">
 
-                            <workflow-button-group ng-if="buttonGroup"
-                                                   default-button="buttonGroup.defaultButton"
-                                                   sub-buttons="buttonGroup.subButtons"
+                            <workflow-button-group ng-if="type !== 2"
                                                    direction="down"
+                                                   type="type"
                                                    item="item"
                                                    float="right">
                             </workflow-button-group>
