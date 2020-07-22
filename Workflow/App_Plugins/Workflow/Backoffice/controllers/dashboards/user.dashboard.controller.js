@@ -1,7 +1,7 @@
 ﻿(() => {
     'use strict';
 
-    function dashboardController($scope, $rootScope, $routeParams, workflowResource, authResource, notificationsService, plumberHub) {
+    function dashboardController($rootScope, workflowResource, authResource, notificationsService, plumberHub) {
 
         let notify = null;
 
@@ -13,7 +13,7 @@
                 .then(resp => {
                     this.tasks = resp.items;
                     this.taskPagination.pageNumber = resp.page;
-                    this.taskPagination.totalPages = resp.total / resp.count;
+                    this.taskPagination.totalPages = resp.totalPages;
                     this.loaded[0] = true;
                 },
                 err => {
@@ -29,7 +29,7 @@
                 .then(resp => { 
                     this.submissions = resp.items;
                     this.submissionPagination.pageNumber = resp.page;
-                    this.submissionPagination.totalPages = resp.total / resp.count;
+                    this.submissionPagination.totalPages = resp.totalPages;
                     this.loaded[1] = true;
                 },
                 err => {
@@ -205,5 +205,5 @@
 
     // register controller 
     angular.module('plumber').controller('Workflow.UserDashboard.Controller',
-        ['$scope', '$rootScope', '$routeParams', 'plmbrWorkflowResource', 'authResource', 'notificationsService', 'plumberHub', dashboardController]);
+        ['$rootScope', 'plmbrWorkflowResource', 'authResource', 'notificationsService', 'plumberHub', dashboardController]);
 })();

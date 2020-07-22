@@ -64,7 +64,8 @@ namespace Workflow.Services
                 .GroupBy(x => x.WorkflowInstanceGuid)
                 .Select(x => x.First());
 
-            List<WorkflowTaskViewModel> tasks = ConvertToWorkflowTaskList(taskInstances.Skip((page - 1) * count).Take(count).ToList());
+            var pagedTasks = taskInstances.Skip((page - 1) * count).Take(count).ToList();
+            List<WorkflowTaskViewModel> tasks = ConvertToWorkflowTaskList(pagedTasks);
 
             return tasks;
         }
