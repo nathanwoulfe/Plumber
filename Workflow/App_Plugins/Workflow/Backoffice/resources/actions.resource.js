@@ -27,7 +27,7 @@
                 notificationsService.success('SUCCESS', d.message);
                 buttonState('success', item.nodeId);
 
-                $rootScope.$emit('workflowActioned', { type });
+                $rootScope.$emit('workflowActioned', { type, id: item.nodeId });
 
             } else {
                 if (d.isUmbracoOperationError) {

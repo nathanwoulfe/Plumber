@@ -72,7 +72,7 @@
                     }
 
                     $rootScope.$on('workflowActioned', (event, data) => {
-                        if (data.type && data.type.toLowerCase() === 'reject') {
+                        if (data.type && data.type.toLowerCase() === 'reject' && data.id === scope.item.nodeId) {
                             scope.defaultButton = buttons.editButton;
                             scope.subButtons = [buttons.cancelButton];
                         }

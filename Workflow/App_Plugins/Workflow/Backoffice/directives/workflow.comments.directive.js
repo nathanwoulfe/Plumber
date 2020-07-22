@@ -2,7 +2,7 @@
 
     const template = `
                 <div>
-                    <p ng-bind="intro"></p>
+                    <p ng-bind="intro" style="white-space:pre-wrap"></p>
                     <label for="comments">
                         {{ labelText }} <span ng-bind="info"></span>
                     </label>
