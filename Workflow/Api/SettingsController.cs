@@ -74,8 +74,7 @@ namespace Workflow.Api
                     LatestVersion = latestVersion,
                     ReleaseDate = DateTime.Parse(content["published_at"].ToString()).ToString("d MMMM yyyy"),
                     ReleaseNotes = content["body"].ToString(),
-                    PackageUrl = content["assets"][0]["browser_download_url"].ToString(),
-                    PackageName = content["assets"][0]["name"].ToString(),
+                    PackageUrl = content["html_url"].ToString(),
                     OutOfDate = !string.Equals(currentVersion, latestVersion,
                         StringComparison.InvariantCultureIgnoreCase)
                 };
