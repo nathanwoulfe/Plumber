@@ -30,7 +30,7 @@
     "grunt-template": "1.0.0",
     "grunt-umbraco-package": "1.0.0",
     "load-grunt-tasks": "4.0.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "time-grunt": "2.0.0"
   }
 }
