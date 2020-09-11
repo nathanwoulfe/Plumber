@@ -25,10 +25,8 @@
 
             if (d.status === 200 && !d.isUmbracoOperationError) { // UmbracoOperationFailedExceptions return 200's, so need to check both cases for success
                 notificationsService.success('SUCCESS', d.message);
-                buttonState('success', item.nodeId);
-
                 $rootScope.$emit('workflowActioned', { type, id: item.nodeId });
-
+                buttonState('success', item.nodeId);
             } else {
                 if (d.isUmbracoOperationError) {
                     notificationsService.error('FAILURE', d.message);
@@ -47,7 +45,7 @@
                     show: true,
                     title: type + ' workflow process',
                     subtitle: `Document: ${item.nodeName}`,
-                    approvalComment: '',
+                    approvalComment: '', 
                     item: item,
                     submit: model => {
 
@@ -58,10 +56,10 @@
                         workflowResource[functionName](item.instanceGuid, model.approvalComment)
                             .then(
                                 resp => notify(resp, fromDash, item, type),
-                                err => notify(err, fromDash, item)
-                            );
+                                err => notify(err, fromDash, item),
+                        );
 
-                        workflowOverlay.close();
+                        workflowOverlay.close()
                     },
                     close: () => {
                         workflowOverlay.show = false;
@@ -88,7 +86,7 @@
                             .then(
                                 resp => notify(resp, false, { nodeId: id }),
                                 err => notify(err, false, { nodeId: id })
-                            );
+                        );
 
                         workflowOverlay.close();
                     },
@@ -116,7 +114,7 @@
                             .then(
                                 resp => notify(resp, fromDash, item, 'cancel'),
                                 err => notify(err, fromDash, item)
-                            );
+                        );
 
                         workflowOverlay.close();
                     },
