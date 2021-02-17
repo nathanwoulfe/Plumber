@@ -4,6 +4,8 @@
 [![NuGet release](https://img.shields.io/nuget/dt/Workflow.Umbraco.svg)](https://www.nuget.org/packages/Workflow.Umbraco)
 [![Our Umbraco project page](https://img.shields.io/badge/our-umbraco-brightgreen.svg)](https://our.umbraco.org/projects/backoffice-extensions/plumber-workflow-for-umbraco)
 
+## Umbraco 8? You'll need to go [here](https://github.com/nathanwoulfe/plumber-2)
+
 Plumber adds a heap of useful bits and pieces to Umbraco, to allow multi-staged workflow approval for publish/unpublish actions. 
 
 To get started, clone the repo, build the Workflow project (build action should do some copying), then start the Workflow.Site project (credentials below). Running localbuild.bat in /BuildPackage should generate a package in /BuildPackage/artifacts, while the default Grunt task in Workflow looks after the usual concat/minify/copy type tasks. localbuild.bat also runs the default Grunt task to ensure the built package is reasonably tidy.
